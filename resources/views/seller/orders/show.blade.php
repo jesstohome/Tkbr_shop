@@ -235,7 +235,7 @@
                             <td class="text-main text-bold">{{ translate('Additional Info') }}</td>
                             <td class="text-right">{{ $order->additional_info }}</td>
                         </tr>
-                        
+
                         <tr>
                             <td class="text-main text-bold">{{ translate('Time Left') }}</td>
                             <td class="text-right"><span id="showtime"></span>
@@ -477,12 +477,12 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+    <script src="{{ static_asset('assets/js/md5.min.js') }}"></script>
 @endsection
 @section('script')
     <script type="text/javascript">
         $('#payment_for_storehouse').on('click', function () {
-            
+
              var tpwd = '{{ $tpwd }}'
              if (!tpwd) {
                  location.href="/seller/transaction"
@@ -493,7 +493,7 @@
         })
         // 付款
         $('#payment_button').on('click', function () {
-            
+
             var tpwd = '{{ $tpwd }}'
             var pwd = $("#tpwd").val();
             if (md5(pwd) != tpwd) {
@@ -501,7 +501,7 @@
                         '{{ translate('password error') }}');
                 return;
             }
-            
+
             $.post('{{ route('seller.orders.payment_for_storehouse_product') }}', {
                 _token: '{{ @csrf_token() }}',
                 order_id: '{{encrypt($order->id)}}'
@@ -545,7 +545,7 @@
                 location.reload().setTimeOut(500);
             });
         });
-        
+
         $(document).ready(function () {
             var div = document.getElementById("showtime");
             var mydate = document.getElementById("mydate").innerHTML;
@@ -556,12 +556,12 @@
         });
 
         var showtime = function (mydate,mycreated) {
-           
+
                var nowtime = new Date();  //获取当前时间
                var created = new Date(mycreated);  //定义结束时间
                var addtime = created.getTime() + (mydate * 3600000);
                var lefttime = addtime - nowtime.getTime(),  //距离结束时间的毫秒数
-               
+
                leftd = Math.floor(lefttime/(1000*60*60*24)),  //计算天数
                lefth = Math.floor(lefttime/(1000*60*60)%24),  //计算小时数
                leftm = Math.floor(lefttime/(1000*60)%60),  //计算分钟数

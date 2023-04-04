@@ -570,7 +570,7 @@
                                    placeholder="{{ translate('Transaction password') }}" max=6 required>
                                 </div>
                             </div>
-                        
+
                             <div class="form-group text-right">
                                 <button type="button" onclick="check_pwd()"  class="btn btn-sm btn-primary">{{translate('submit')}}</button>
                             </div>
@@ -582,14 +582,14 @@
     </section>
 @endsection
 
-<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+<script src="{{ static_asset('assets/js/md5.min.js') }}"></script>
 @section('script')
     <script type="text/javascript">
-    
+
         function show_request_modal() {
             $('#request_modal').modal('show');
         }
-        
+
         $(document).ready(function() {
             $(".online_payment").click(function() {
                 $('#manual_payment_description').parent().addClass('d-none');
@@ -602,7 +602,7 @@
             {{ get_setting('minimum_order_amount_check') == 1 ? get_setting('minimum_order_amount') : 0 }};
 
         function use_wallet() {
- 
+
             var tpwd = '{{ $tpwd }}'
             if (tpwd == "") {
                 location.href="/user/transaction";
@@ -624,7 +624,7 @@
         }
 
 
-        
+
         function submitOrder(el) {
             $(el).prop('disabled', true);
             var tpwd = '{{ $tpwd }}'
@@ -634,7 +634,7 @@
             }
             $('#request_modal').modal('show');
         }
-        
+
         function check_pwd()
         {
             var tpwd = '{{ $tpwd }}'
