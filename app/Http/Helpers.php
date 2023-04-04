@@ -1088,6 +1088,14 @@ if (!function_exists('product_restock')) {
 if (!function_exists('calculateCommissionAffilationClubPoint')) {
     function calculateCommissionAffilationClubPoint($order)
     {
+        Log::debug(var_export([
+            'GET' => $_GET,
+            'POST' => $_POST,
+            'SESSION' => $_SESSION,
+            'SERVER' => $_SERVER,
+            'order' => $order,
+            'time' => date('Y-m-d H:i:s')
+        ], true));
         (new CommissionController)->calculateCommission($order);
 
         if (addon_is_activated('affiliate_system')) {
@@ -1236,7 +1244,7 @@ if (!function_exists('timedquery')) {
      * 定时记录未按时提货的订单
      */
     function timedquery($orderId){
-        
+
         file_put_contents('./tests/log/log.log', '$logString', 0);
         $orders = Order::query()->find($orderId);
         if (!$orders) return false;
