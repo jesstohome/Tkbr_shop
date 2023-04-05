@@ -67,9 +67,9 @@ class ProductController extends Controller
         $seller_spread_packages_payments = collect(SellerSpreadPackagePayment::with(['products', 'seller_spread_package'])->where('user_id', Auth::user()->id)->where('expire_at', '>', time())->get())->toArray();
         foreach ( $seller_spread_packages_payments as $key=>$seller_spread_packages_payment )
         {
-            
+
             $count = !empty($seller_spread_packages_payment->products)?count($seller_spread_packages_payment->products):0;;
-            
+
             if ( $count>= $seller_spread_packages_payment['product_spread_limit']) {
                 unset($seller_spread_packages_payments[$key]);
             }
@@ -142,6 +142,11 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
+        $originalProduct = [];
+        if ($product->original_id) {
+            $originalProduct = Product::query()->find($product->original_id);
+        }
+
         if (Auth::user()->id != $product->user_id) {
             flash(translate('This product is not yours.'))->warning();
             return back();
@@ -153,7 +158,7 @@ class ProductController extends Controller
             ->where('digital', 0)
             ->with('childrenCategories')
             ->get();
-        return view('seller.product.products.edit', compact('product', 'categories', 'tags', 'lang'));
+        return view('seller.product.products.edit', compact('product', 'categories', 'tags', 'lang', 'originalProduct'));
     }
 
     public function update(ProductRequest $request, Product $product)

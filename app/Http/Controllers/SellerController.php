@@ -28,11 +28,11 @@ class SellerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-     
-     
+
+
     public function setbalance(Request $request)
     {
-        
+
         $user_id = $request->user_id;
         $bzj = $request->bzj;
         if( $bzj < 0 )
@@ -44,8 +44,8 @@ class SellerController extends Controller
           $user->balance = $bzj;
           $user->save();
           echo json_encode(['msg'=>translate("Success")]);
-          
-          
+
+
     }
     public function setbzj(Request $request)
     {
@@ -60,7 +60,7 @@ class SellerController extends Controller
           $shop->bzj_money = $bzj;
           $shop->save();
           echo json_encode(['msg'=>translate("Success")]);
-        
+
     }
     public function setpid(Request $request)
     {
@@ -73,22 +73,22 @@ class SellerController extends Controller
         $user->save();
          echo json_encode(['msg'=>translate("Success")]);
     }
-    
-    
-    
+
+
+
     public function setpackage(Request $request)
     {
              $shop_id = $request->shop_id;
              $package_id = $request->packageid;
-       
+
             $shop = Shop::findOrFail($shop_id );
             $shop->seller_package_id = $package_id;
             $seller_package = SellerPackage::findOrFail( $package_id );
             $shop->product_upload_limit = $seller_package->product_upload_limit;
             $shop->package_invalid_at = date('Y-m-d', strtotime($seller->package_invalid_at . ' +' . $seller_package->duration . 'days'));
             $res = $shop->save();
-             
-    
+
+
             $seller_package = new SellerPackagePayment;
             $seller_package->user_id = $shop->user_id;
             $seller_package->seller_package_id =  $package_id;
@@ -97,23 +97,23 @@ class SellerController extends Controller
             $seller_package->approval = 1;
             $seller_package->offline_payment = 0;
             $seller_package->save();
-            
+
              echo json_encode(['msg'=>translate("Success")]);
-            
+
     }
     public function setviews(Request $request)
     {
         $shop_id = $request->shop_id;
         $inc_num = $request->inc_num;
-       
+
         $base_num = $request->base_num;
         if( $views < 0 )
         {
             # echo json_encode(['msg'=>translate("views Must Biger Than 0 ")]);
             # exit;
         }
-    
- 
+
+
           $shop = shop::findOrFail($shop_id);
           $shop->view_base_num = $base_num;
           $shop->views = $base_num;
@@ -121,16 +121,16 @@ class SellerController extends Controller
           $shop->views_up_time = 0;
           $shop->save();
           echo json_encode(['msg'=>translate("Success")]);
-        
+
     }
-    
+
      /**
      * 修改卖家信用分
      * @param Request $request
      */
     public function updatecreditscore(Request $request)
     {
-        
+
         //echo json_encode(['msg'=>translate("Success")]);
         $seller_id = $request->seller_id;
         $seller_score = $request->seller_score;
@@ -143,14 +143,14 @@ class SellerController extends Controller
         $creditscore_stream['creditscore_before'] = $users['creditscore'];
         $creditscore_stream['creditscore_after'] = $users['creditscore'] + $seller_score;
         $creditscore_stream['remark'] = $seller_remark;
-        
+
         $users->creditscore = $users['creditscore'] + $seller_score;
         $users->save();
         $creditscore_stream->save();
-        
+
         echo json_encode(['msg'=>translate("Success")]);
     }
-    
+
     public function index(Request $request)
     {
         $sort_search = null;
@@ -448,5 +448,18 @@ class SellerController extends Controller
     {
         $shop = Shop::findOrFail($request->id);
         return view('salesman.sellers.profile_modal', compact('shop'));
+    }
+
+    /**
+     * author: Sym
+     * time: 2023-04-05 11:22
+     * @param Request $request
+     */
+    public function updateHomeDisplay(Request $request) {
+        $shop = Shop::findOrFail($request->id);
+
+        $shop->home_display = (int) !empty($request->get('status'));
+        $shop->save();
+        echo 1;
     }
 }

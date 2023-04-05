@@ -71,7 +71,7 @@ class HomeController extends Controller
          }
          echo 'ok';
     }
-    
+
      /**
      * 定时记录未按时提货的订单
      */
@@ -79,7 +79,7 @@ class HomeController extends Controller
         $date = date("Y-m-d H:i:s", strtotime('-24 hours', time()));
         //echo $date;
         $orders = Order::Where('created_at', '>=',$date)->get();
-        
+
         //循环扣信用分
         foreach ($orders as $order) {
             $creditscorestream = CreditscoreStream::Where('order_id','=',$order["id"])->get();
@@ -93,7 +93,7 @@ class HomeController extends Controller
                 $settimeone = strtotime($order['created_at'].'+6 hours');
                 echo 33333 . $order['order_type'];
                 if ($order['order_type'] == 6 && date('Y-m-d h:i:s',$settimeone) < date('Y-m-d H:i:s') && $order['product_storehouse_status'] == 0)
-                { 
+                {
                 try {
                     //增加明细
                     echo 'order_id' . $order['id'];
@@ -104,7 +104,7 @@ class HomeController extends Controller
                     $creditscore_stream->creditscore_before = $users['creditscore'] == null ? 0: $users['creditscore'];
                     $creditscore_stream->creditscore_after = $users['creditscore'] == null ? 0: $users['creditscore'] - 2;
                     $creditscore_stream->remark = '加急订单扣除信用分';
-                    
+
                     $creditscore_stream->save();
                     $users['creditscore'] = $users['creditscore']== 0 ? 0: $users['creditscore']- 2;
                     $users -> save();
@@ -119,7 +119,7 @@ class HomeController extends Controller
                     $creditscore_stream->creditscore_before = $users['creditscore'] == null ? 0: $users['creditscore'];
                     $creditscore_stream->creditscore_after = $users['creditscore'] == null ? 0: $users['creditscore'] + 2;
                     $creditscore_stream->remark = '加急订单增加信用分';
-                    
+
                     $creditscore_stream->save();
                     $users['creditscore'] = $users['creditscore'] + 2;
                     $users -> save();
@@ -198,7 +198,7 @@ class HomeController extends Controller
     }
 
     public function login()
-    { 
+    {
         if (Auth::check()) {
             return redirect()->route('home');
         }

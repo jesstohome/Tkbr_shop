@@ -34,19 +34,19 @@
                             <div class="p-3">
                                 <div class="form-group">
                                     <label>{{ translate('Your Name')}} <span class="text-primary">*</span></label>
-                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" placeholder="{{  translate('Name') }}" name="name">
+                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" placeholder="{{  translate('Name') }}" name="name" required>
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Your Email')}} <span class="text-primary">*</span></label>
-                                    <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email">
+                                    <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email" required>
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Your Password')}} <span class="text-primary">*</span></label>
-                                    <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password">
+                                    <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password" required>
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Repeat Password')}} <span class="text-primary">*</span></label>
-                                    <input type="password" class="form-control" placeholder="{{  translate('Confirm Password') }}" name="password_confirmation">
+                                    <input type="password" class="form-control" placeholder="{{  translate('Confirm Password') }}" name="password_confirmation" required>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                                 <label>{{ translate('Address')}} <span class="text-primary">*</span></label>
                                 <input type="text" class="form-control mb-3" placeholder="{{ translate('Address')}}" name="address" required>
                             </div>
-                            
+
                              <div class="form-group">
                                 <label>{{ translate('Certificates Type')}} <span class="text-primary">*</span></label>
                                  <select class="form-control" name="certtype">
@@ -73,8 +73,8 @@
                                      <option value="driving license"> {{translate('driving license')}}</option>
                                      <option value="social security card"> {{translate('Social Security Card')}}</option>
                                  </select>
-                                 
-                                
+
+
                                 </div>
                             <div class="form-group">
                                 <label>{{ translate('Certificates Front')}} <span class="text-primary">*</span></label>
@@ -88,11 +88,11 @@
                                 <div class="file-preview box sm">
                                 </div>
                             </div>
-                            
-                            
+
+
                             <div class="form-group">
                                 <label>{{ translate('Certificates Back')}} <span class="text-primary">*</span></label>
-                             
+
                                 <div class="input-group" data-toggle="aizuploader" data-type="image">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
@@ -128,17 +128,30 @@
 <script type="text/javascript">
     // making the CAPTCHA  a required field for form submission
     $(document).ready(function(){
-        // alert('helloman');
+        console.log($("input[name=identity_card_front]").val(), $("input[name=identity_card_front]").val() == '')
         $("#shop").on("submit", function(evt)
         {
-            var response = grecaptcha.getResponse();
-            if(response.length == 0)
-            {
-            //reCaptcha not verified
-                alert("please verify you are humann!");
-                evt.preventDefault();
+            try {
+                var response = grecaptcha.getResponse();
+                if(response.length == 0)
+                {
+                    //reCaptcha not verified
+                    alert("please verify you are humann!");
+                    evt.preventDefault();
+                    return false;
+                }
+            } catch {}
+
+            // 校验两张图片
+            if ($("input[name=identity_card_front]").val() == '') {
+                alert('{{translate('Identity Card Front Not Allow Empty!')}}');
                 return false;
             }
+            if ($("input[name=identity_card_back]").val() == '') {
+                alert('{{translate('Identity Card Back Not Allow Empty!')}}');
+                return false;
+            }
+
             //captcha verified
             //do the rest of your validations here
             $("#reg-form").submit();

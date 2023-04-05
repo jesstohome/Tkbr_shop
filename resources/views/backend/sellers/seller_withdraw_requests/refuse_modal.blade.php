@@ -1,4 +1,4 @@
-<form class="form-horizontal" action="{{ route('commissions.refuse') }}" method="POST" enctype="multipart/form-data">
+<form id="refuse_form" class="form-horizontal" action="{{ route('commissions.refuse') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="modal-header">
     	<h5 class="modal-title h6">{{translate('Refuse')}}</h5>
@@ -38,9 +38,9 @@
                         <td>{{ translate('Bank Routing Number') }}</td>
                         <td>{{ $user->shop->bank_routing_no }}</td>
                     </tr>
-                 
+
                 @endif
-                
+
                    <tr>
                        <td colspan="2">
                            <div class="form-group row">
@@ -50,13 +50,21 @@
                 </div>
             </div></td>
             </tr>
-            
+
             </tbody>
         </table>
 
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-primary">{{translate('Confirm')}}</button>
+      <button id="btn_refuse" type="submit" class="btn btn-primary">{{translate('Confirm')}}</button>
       <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Cancel')}}</button>
     </div>
 </form>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#btn_refuse").on("click", function () {
+            $(this).attr("disabled", true)
+            $("#refuse_form").submit()
+        })
+    });
+</script>

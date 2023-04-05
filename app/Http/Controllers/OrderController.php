@@ -265,7 +265,7 @@ class OrderController extends Controller
         $orders = $orders->paginate(15);
         return view('backend.sales.seller_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date'));
     }
-    
+
      //Clocking Orders
     public function clocking_orders(Request $request)
     {
@@ -292,9 +292,9 @@ class OrderController extends Controller
         if ($date != null) {
             $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
- 
+
         $orders = $orders->paginate(15);
-        
+
         return view('backend.sales.clocking_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date'));
     }
 
@@ -552,8 +552,9 @@ class OrderController extends Controller
             /*添加是否开启提货*/
             $order->picking_switch = get_setting('picking_switch');
             $order->save();
-            if ( get_setting('picking_switch') != 1 )
-            {//如果不需要提货，直接修改订单为已提货状态
+            if ( get_setting('picking_switch') != 1 || empty($productStorehouseTotal))
+            {
+                //如果不需要提货，直接修改订单为已提货状态
                 $shop = $order->shop;
                 $shop->admin_to_pay += ( $order->grand_total - $order->product_storehouse_total );
                 $shop->save();

@@ -91,7 +91,7 @@
                                 data-role="tagsinput">
                         </div>
                     </div>
-                    
+
                     @if (addon_is_activated('pos_system'))
                     <div class="form-group row">
                         <label class="col-lg-3 col-from-label">{{translate('Barcode')}}</label>
@@ -304,6 +304,15 @@
             <h5 class="mb-0 h6">{{translate('Product price + stock')}}</h5>
         </div>
         <div class="card-body">
+            @if(!empty($originalProduct))
+                <div class="form-group row">
+                    <label class="col-lg-3 col-from-label">{{ translate('Storehouse Price') }}</label>
+                    <div class="col-lg-6">
+                        <input type="text" placeholder="{{ translate('Storehouse Price') }}" class="form-control" value="{{$originalProduct->unit_price}}" readonly>
+                    </div>
+                </div>
+            @endif
+
             <div class="form-group row">
                 <label class="col-lg-3 col-from-label">{{translate('Unit price')}}</label>
                 <div class="col-lg-6">

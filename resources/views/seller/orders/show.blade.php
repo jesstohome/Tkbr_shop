@@ -29,7 +29,7 @@
                     @endif
                     <div class="col-md-3 ml-auto">
                         <label for="update_payment_status">{{ translate('Payment Status') }}</label>
-                        @if ($order->payment_type == 'cash_on_delivery' && $payment_status == 'unpaid')
+                        @if ($payment_status == 'unpaid')
                             <select class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity"
                                     id="update_payment_status">
                                 <option value="unpaid" @if ($payment_status == 'unpaid') selected @endif>
@@ -517,7 +517,6 @@
             });
         })
         $('#update_delivery_status').on('change', function () {
-            return false;
             var order_id = {{ $order->id }};
             var status = $('#update_delivery_status').val();
             $.post('{{ route('seller.orders.update_delivery_status') }}', {

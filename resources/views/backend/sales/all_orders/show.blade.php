@@ -15,25 +15,23 @@
                     $payment_status = $order->payment_status;
                 @endphp
 
-                @if ($order->product_storehouse_total > 0)
-                    @if (!$order->freeze_expired_at)
-                        <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
-                            <button type="button" class="btn btn-primary" disabled>{{ translate('Free up frozen funds') }}</button>
-                        </div>
-                    @else
-                        <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
-                            <button id="free_up_btn" type="button" class="btn btn-primary confirm-alert" data-href="{{route('product-storehouse-order-free-up', $order->id)}}" data-target="#free-up-modal">{{ translate('Free up frozen funds') }}</button>
-                        </div>
-                    @endif
-                    @if ($order->product_storehouse_status)
-                        <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
-                            <button type="button" class="btn btn-info" disabled>{{ translate('Picked up') }}</button>
-                        </div>
-                    @else
-                        <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
-                            <button type="button" class="btn btn-info" disabled>{{ translate('Unpaid') }}</button>
-                        </div>
-                    @endif
+                @if (!$order->freeze_expired_at)
+                    <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
+                        <button type="button" class="btn btn-primary" disabled>{{ translate('Free up frozen funds') }}</button>
+                    </div>
+                @else
+                    <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
+                        <button id="free_up_btn" type="button" class="btn btn-primary confirm-alert" data-href="{{route('product-storehouse-order-free-up', $order->id)}}" data-target="#free-up-modal">{{ translate('Free up frozen funds') }}</button>
+                    </div>
+                @endif
+                @if ($order->product_storehouse_status)
+                    <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
+                        <button type="button" class="btn btn-info" disabled>{{ translate('Picked up') }}</button>
+                    </div>
+                @else
+                    <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
+                        <button type="button" class="btn btn-info" disabled>{{ translate('Unpaid') }}</button>
+                    </div>
                 @endif
                 <!--Assign Delivery Boy-->
                 @if (addon_is_activated('delivery_boy'))
@@ -95,9 +93,9 @@
                         value="{{ $order->tracking_code }}">
                 </div>
             </div>
-            
-  
-            
+
+
+
             <div class="mb-3">
                 @php
                     $removedXML = '<?xml version="1.0" encoding="UTF-8"';
@@ -329,7 +327,7 @@
                 #wuliu .form-control{ width:150px; display:inline-block; margin-top:10px;}
                 #wuliu .btn-add{   margin-left:10px; width:50px;}
             </style>
-                 
+
         @php error_reporting(0); @endphp
         <div class="row gutters-5" id="wuliu">
             <div class="col-md-12 ml-auto" style="margin-top:10px;">
@@ -346,16 +344,16 @@
                         <br><br>
                         物流信息：<br><br>
                         <div class="exp">
-                                @if( $express->express_info ) 
+                                @if( $express->express_info )
                                 @foreach ($express->express_info as $key => $ex )
-                               
+
                               信息：<input type="text" class="form-control" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;快递时间：<input class="form-control"  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" value="{{ $express->express_stime[$key] }}" name="express_stime[]" />&nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button"  value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
                                <br><br>
                               @endforeach
                               @else
                               信息：<input type="text" class="form-control" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;&nbsp;&nbsp;显示时间：<input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" class="form-control" value="{{ $express->express_stime[$key] }}" name="express_stime[]" />&nbsp;&nbsp;显示时间：<input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" class="form-control" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button" value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
                                <br><br>
-                              
+
                               @endif
                         </div>
                     </div>
@@ -365,11 +363,11 @@
                 </div>
               </div>
         </div>
-            
+
         </div>
-        
-        
-        
+
+
+
     </div>
 @endsection
 @section('modal')
@@ -391,27 +389,27 @@
 @endsection
 @section('script')
     <script type="text/javascript">
-    
-    
+
+
       function addinfo()
         {
             var html = '<div>信息：<input type="text" class="form-control" name="express_info[]" /> &nbsp;&nbsp;快递时间：<input class="form-control" type="text"  onclick="WdatePicker({dateFmt:\'yyyy:MM:dd HH:mm:ss\'})" name="express_stime[]" readonly />&nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:\'yyyy:MM:dd HH:mm:ss\'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input class="btn btn-primary btn-add" type="button" value="+" onclick="addinfo()" /></div>';
             $('.exp').append( html );
         }
-        
+
         function save_express_info()
         {
              $.post('{{ route('orders.update_delivery_info') }}', {
                     _token:'{{ @csrf_token() }}',
-                    data:$("#form1").serialize() 
+                    data:$("#form1").serialize()
                 }, function(data){
                     alert( data )
                 },'text');
-                    
-                    
+
+
         }
-        
-        
+
+
         $('#assign_deliver_boy').on('change', function() {
             var order_id = {{ $order->id }};
             var delivery_boy = $('#assign_deliver_boy').val();
