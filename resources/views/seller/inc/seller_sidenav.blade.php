@@ -264,7 +264,7 @@
                         <span class="aiz-side-nav-text">{{ translate('Commission History') }}</span>
                     </a>
                 </li>
-                
+
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('seller.creditscore_streams.index') }}"
                         class="aiz-side-nav-link {{ areActiveRoutes(['seller.creditscore_streams.index']) }}">
@@ -273,7 +273,7 @@
                     </a>
                 </li>
 
-                
+
 
                 @if (get_setting('product_query_activation') == 1)
                     <li class="aiz-side-nav-item">
@@ -435,7 +435,7 @@
 
 
       @php
-          /*$shopid = Auth::user()->shop->id;
+          $shopid = Auth::user()->shop->id;
           $shop = DB::table('shops')->find($shopid);
           $bzj_money = $shop->bzj_money;
           $must_bzj = get_setting('must_guarantee');
@@ -450,8 +450,9 @@
           {
              $show_modal2 = 1;
           }
-          $must_guarantee_close = get_setting('must_guarantee_close') == 'on' ? 1 : 0;*/
-          $shopid = Auth::user()->shop->id;
+          $must_guarantee_close = get_setting('must_guarantee_close') == 'on' ? 1 : 0;
+
+          /*$shopid = Auth::user()->shop->id;
           $shop = DB::table('shops')->find($shopid);
           $bzj_money = $shop->bzj_money;
           $must_bzj = $shop->mandatory_payment_switch;
@@ -465,7 +466,7 @@
           {
              $show_modal2 = 1;
           }
-          $must_guarantee_close = get_setting('must_guarantee_close') == 'on' ? 1 : 0;
+          $must_guarantee_close = get_setting('must_guarantee_close') == 'on' ? 1 : 0;*/
       @endphp
     <div class="modal fade shop" id="payment_modalsss">
 	    <div class="modal-dialog">
