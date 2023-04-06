@@ -236,12 +236,20 @@
                 @endif
 
                  <!--退款-->
+                @php
+                    $refund_count = \App\Models\RefundRequest::where('refund_status', 0)->where('seller_id', Auth::id())
+                                        ->select('id')
+                                        ->count();
+                @endphp
                 @if (addon_is_activated('refund_request'))
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('vendor_refund_request') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['vendor_refund_request', 'reason_show']) }}">
                             <i class="las la-backward aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Received Refund Request') }}</span>
+                            @if($refund_count > 0)
+                                <span class="badge badge-info">{{ $refund_count }}</span>
+                            @endif
                         </a>
                     </li>
                 @endif

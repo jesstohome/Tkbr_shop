@@ -86,7 +86,7 @@
                                     </a>
                                 </li>
                             @endif
-                            
+
                             <!--
                             <li class="aiz-side-nav-item">
                                 <a href="{{route('digitalproducts.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['digitalproducts.index', 'digitalproducts.create', 'digitalproducts.edit']) }}">
@@ -283,7 +283,7 @@
                    <!--     @if(Auth::user()->user_type == 'admin' || in_array('6', json_decode(Auth::user()->staff->role->permissions)))
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('pick_up_point.order_index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['pick_up_point.order_index','pick_up_point.order_show'])}}">
-                                    <span class="aiz-side-nav-text">{{translate('Pick-up Point Order')}}</span>  
+                                    <span class="aiz-side-nav-text">{{translate('Pick-up Point Order')}}</span>
                                 </a>
                             </li>  -->
                         @endif
@@ -352,27 +352,27 @@
                                     <span class="aiz-side-nav-text">{{ translate('Customer list') }}</span>        <!-- 顾客列表  -->
                                 </a>
                             </li>
-                            
-                            
+
+
                               <li class="aiz-side-nav-item">
                                 <a href="{{ route('withdraw_requests_by_customer') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{ translate('Payout Requests') }}</span>
                                 </a>
                             </li>
-                            
-                            
+
+
                              <li class="aiz-side-nav-item">
                                 <a href="{{ route('sellers.payment_histories_cus') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{ translate('Payouts') }}</span>
                                 </a>
                             </li>
-                            
-                            
-                            
+
+
+
                             @if(get_setting('classified_product') == 1)
                                 <li class="aiz-side-nav-item">
                                     <a href="{{route('classified_products')}}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{translate('Classified Products')}}</span>       
+                                        <span class="aiz-side-nav-text">{{translate('Classified Products')}}</span>
                                     </a>
                                 </li>
                                 <li class="aiz-side-nav-item">
@@ -393,7 +393,7 @@
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
                             <i class="las la-user aiz-side-nav-icon"></i>
-                            <span class="aiz-side-nav-text">{{ translate('Sellers') }}</span>      
+                            <span class="aiz-side-nav-text">{{ translate('Sellers') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
@@ -406,7 +406,7 @@
                                     @if($sellers > 0)<span class="badge badge-info">{{ $sellers }}</span> @endif
                                 </a>
                             </li>
-                         
+
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('withdraw_requests_all') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{ translate('Payout Requests') }}</span>
@@ -423,11 +423,11 @@
                                     <span class="aiz-side-nav-text">{{ translate('Seller Commission') }}</span>
                                 </a>
                             </li> -->
-                            
-                           
 
 
-                         
+
+
+
                            <!-- <li class="aiz-side-nav-item">
                                 <a href="{{ route('seller_verification_form.index') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{ translate('Seller Verification Form') }}</span>
@@ -437,7 +437,7 @@
                     </li>
                 @endif
 
-                     <!--推销员-->  
+                     <!--推销员-->
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-user-tie aiz-side-nav-icon"></i>
@@ -452,13 +452,13 @@
                         </li>
                     </ul>
                 </li>
-      
-      
+
+
                     <!--卖家功能-->
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-user-tie aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{translate('Seller Functions')}}</span>     
+                        <span class="aiz-side-nav-text">{{translate('Seller Functions')}}</span>
                         <span class="aiz-side-nav-arrow"></span>
                     </a>
                     <ul class="aiz-side-nav-list level-2">
@@ -467,13 +467,13 @@
                                 <span class="aiz-side-nav-text">{{ translate('Seller Spread Packages') }}</span>
                             </a>
                         </li>
-                        
+
                          <li class="aiz-side-nav-item">
                                 <a href="{{ route('website.guarantee') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{translate('Guarantee')}}</span>
                                 </a>
                             </li>
-                        
+
                            @if (addon_is_activated('seller_subscription'))
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('seller_packages.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['seller_packages.index', 'seller_packages.create', 'seller_packages.edit'])}}">
@@ -484,14 +484,14 @@
                                     </a>
                                 </li>
                             @endif
-                        
-                        
-                        
+
+
+
                     </ul>
                 </li>
 
 
-                   
+
                 <!-- 离线支付-->
                 @if (addon_is_activated('offline_payment'))
                     @if(Auth::user()->user_type == 'admin' || in_array('16', json_decode(Auth::user()->staff->role->permissions)))
@@ -544,9 +544,9 @@
                         </li>
                     @endif
                 @endif
-                
-                
-                                    
+
+
+
                  <!-- 三级分销 -->
                 @if (addon_is_activated('affiliate_system'))
                     @if(Auth::user()->user_type == 'admin' || in_array('15', json_decode(Auth::user()->staff->role->permissions)))
@@ -598,6 +598,11 @@
                 <!-- 退款 -->
                 @if (addon_is_activated('refund_request'))
                     @if(Auth::user()->user_type == 'admin' || in_array('7', json_decode(Auth::user()->staff->role->permissions)))
+                        @php
+                            $refund_count = \App\Models\RefundRequest::where('refund_status', 0)
+                                                ->select('id')
+                                                ->count();
+                        @endphp
                         <li class="aiz-side-nav-item">
                             <a href="#" class="aiz-side-nav-link">
                                 <i class="las la-backward aiz-side-nav-icon"></i>
@@ -611,6 +616,9 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{route('refund_requests_all')}}" class="aiz-side-nav-link {{ areActiveRoutes(['refund_requests_all', 'reason_show'])}}">
                                         <span class="aiz-side-nav-text">{{translate('Refund Requests')}}</span>
+                                        @if($refund_count > 0)
+                                            <span class="badge badge-info">{{ $refund_count }}</span>
+                                        @endif
                                     </a>
                                 </li>
                                 <li class="aiz-side-nav-item">
@@ -902,8 +910,8 @@
                                     <span class="aiz-side-nav-text">{{translate('Appearance')}}</span>
                                 </a>
                             </li>
-                            
-                            
+
+
                              <li class="aiz-side-nav-item">
                                 <a href="{{route('general_setting.index')}}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{translate('General Settings')}}</span>
@@ -935,7 +943,7 @@
                                 <a href="{{ route('payment_method.index') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{translate('Payment Methods')}}</span>
                                 </a>
-                            </li>                            
+                            </li>
                                 <li class="aiz-side-nav-item">
                                 <a href="javascript:void(0);" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{translate('Shipping')}}</span>
@@ -961,8 +969,8 @@
                                         <a href="{{route('cities.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['cities.index','cities.edit','cities.update'])}}">
                                             <span class="aiz-side-nav-text">{{translate('Shipping Cities')}}</span>
                                         </a>
-                                    </li>                          
-                            
+                                    </li>
+
 
 
 
@@ -986,7 +994,7 @@
                                 <a href="{{route('tax.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['tax.index', 'tax.create', 'tax.store', 'tax.show', 'tax.edit'])}}">
                                     <span class="aiz-side-nav-text">{{translate('Vat & TAX')}}</span>
                                 </a>
-                            </li> 
+                            </li>
                             <li class="aiz-side-nav-item">
                                 <a href="{{route('pick_up_points.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['pick_up_points.index','pick_up_points.create','pick_up_points.edit'])}}">
                                     <span class="aiz-side-nav-text">{{translate('Pickup point')}}</span>
@@ -998,7 +1006,7 @@
                                 <a href="{{ route('order_configuration.index') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{translate('Order Configuration')}}</span>
                                 </a>
-                            </li> --> 
+                            </li> -->
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('file_system.index') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{translate('File System & Cache Configuration')}}</span>
@@ -1065,7 +1073,7 @@
                     @if(Auth::user()->user_type == 'admin' || in_array('18', json_decode(Auth::user()->staff->role->permissions)))
                         <li class="aiz-side-nav-item">
                             <a href="#" class="aiz-side-nav-link">
-                              
+
                                 <span class="aiz-side-nav-text">{{translate('Club Point System')}}</span>
                                 @if (env("DEMO_MODE") == "On")
                                     <span class="badge badge-inline badge-danger">Addon</span>
@@ -1091,13 +1099,13 @@
                             </ul>
                         </li>
                     @endif
-                @endif              
-                
+                @endif
+
                  <!--博客系统-->
                 @if(Auth::user()->user_type == 'admin' || in_array('23', json_decode(Auth::user()->staff->role->permissions)))
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
-                             
+
                             <span class="aiz-side-nav-text">{{ translate('Blog System') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
@@ -1119,7 +1127,7 @@
                 @if(Auth::user()->user_type == 'admin' || in_array('20', json_decode(Auth::user()->staff->role->permissions)))
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
-                            
+
                             <span class="aiz-side-nav-text">{{translate('Staffs')}}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
@@ -1137,12 +1145,12 @@
                         </ul>
                     </li>
                 @endif
-                      
-                 <!-- 系统 -->               
+
+                 <!-- 系统 -->
                 @if(Auth::user()->user_type == 'admin' || in_array('24', json_decode(Auth::user()->staff->role->permissions)))
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
-                           
+
                             <span class="aiz-side-nav-text">{{translate('System')}}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
@@ -1159,32 +1167,32 @@
                             </li>
                         </ul>
                     </li>
-                @endif                               
+                @endif
                 <!--上传的文件-->
                 @if(Auth::user()->user_type == 'admin' || in_array('22', json_decode(Auth::user()->staff->role->permissions)))
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('uploaded-files.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['uploaded-files.create'])}}">
-                            
+
                             <span class="aiz-side-nav-text">{{ translate('Uploaded Files') }}</span>
                         </a>
                     </li>
                 @endif
-                
+
 
                 @endif
                  <!-- 插件管理器 -->
                 @if(Auth::user()->user_type == 'admin' || in_array('21', json_decode(Auth::user()->staff->role->permissions)))
                     <li class="aiz-side-nav-item">
                         <a href="{{route('addons.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['addons.index', 'addons.create'])}}">
-                      
+
                             <span class="aiz-side-nav-text">{{translate('Addon Manager')}}</span>
                         </a>
                     </li>
-                @endif 
+                @endif
 
 
-   
-                
+
+
 
 
 
