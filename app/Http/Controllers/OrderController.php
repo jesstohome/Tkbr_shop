@@ -552,17 +552,26 @@ class OrderController extends Controller
             /*添加是否开启提货*/
             $order->picking_switch = get_setting('picking_switch');
             $order->save();
-            if ( get_setting('picking_switch') != 1 || empty($productStorehouseTotal))
+            if ( get_setting('picking_switch') != 1)
             {
                 //如果不需要提货，直接修改订单为已提货状态
                 $shop = $order->shop;
                 $shop->admin_to_pay += ( $order->grand_total - $order->product_storehouse_total );
                 $shop->save();
+
                 // 保存订单冻结资金过期时间
                 $freezeDays = get_setting('frozen_funds_unfrozen_days', 15);
                 $order->freeze_expired_at = Carbon::now()->addDays($freezeDays)->timestamp;
                 $order->product_storehouse_status = 1;
                 $order->save();
+            } else {
+                if (empty($productStorehouseTotal)) {
+                    // 如果都是卖家自己的商品，则直接修改订单为已提货状态，并保存订单冻结资金过期时间
+                    $freezeDays = get_setting('frozen_funds_unfrozen_days', 15);
+                    $order->freeze_expired_at = Carbon::now()->addDays($freezeDays)->timestamp;
+                    $order->product_storehouse_status = 1;
+                    $order->save();
+                }
             }
         }
 
