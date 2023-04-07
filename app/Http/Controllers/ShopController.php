@@ -68,7 +68,7 @@ class ShopController extends Controller
         {
             if ( $request->has('invitation_code') )
             {
-                Cookie::queue('invitation_code', $request->invitation_code);
+                Cookie::queue('invitation_code', $request->invitation_code, 720);
             }
             return view('frontend.seller_form');
         }
