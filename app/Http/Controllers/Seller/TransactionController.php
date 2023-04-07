@@ -15,21 +15,22 @@ class TransactionController extends Controller
      */
     public function index()
     {
+        $http_referer = $_SERVER['HTTP_REFERER'];
         $user = Auth::user();
-        return view('seller.transaction.index',compact('user'));
+        return view('seller.transaction.index',compact('user', 'http_referer'));
     }
-    
+
     public function find()
     {
 
     }
-    
+
     public function update()
     {
         $user = Auth::user();
-        $userModel = User::findOrFail($user->id);  
+        $userModel = User::findOrFail($user->id);
         if ($_POST["type"] == 1) {
-     
+
             if ($user->tpwd) {
                  flash(translate('You have set a trading password .'))->error();
                  return back();
@@ -58,6 +59,9 @@ class TransactionController extends Controller
             $userModel->tpwd = $pwd;
             $userModel->save();
             flash(translate('Your password has been updated successfully!'))->success();
+            if (!empty($_POST['http_referer'])) {
+                return redirect($_POST['http_referer']);
+            }
             return back();
         } else {
             if (!$_POST["spwd"]) {
@@ -81,7 +85,7 @@ class TransactionController extends Controller
                 flash(translate('Password does not match.'))->error();
                 return back();
             }
-            
+
             $reg = "/^[0-9]{6}$/";
             $result = preg_match($reg, $_POST["password"]);
 
@@ -93,10 +97,13 @@ class TransactionController extends Controller
             $userModel->tpwd = $pwd;
             $userModel->save();
             flash(translate('Your password has been updated successfully!'))->success();
+            if (!empty($_POST['http_referer'])) {
+                return redirect($_POST['http_referer']);
+            }
             return back();
         }
-        
- 
+
+
 
     }
 
