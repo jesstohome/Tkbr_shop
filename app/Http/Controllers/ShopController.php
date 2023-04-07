@@ -13,6 +13,8 @@ use App\Models\SellerPackagePayment;
 use Auth;
 use Hash;
 use App\Notifications\EmailVerificationNotification;
+use Illuminate\Support\Facades\Log;
+use Monolog\Logger;
 use function dd;
 use function view;
 
@@ -80,11 +82,11 @@ class ShopController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store( Request $request ) {
-        
+
          $package = SellerPackage::where(['is_default' => 1 ])->first();
          $package_id = $package['id'];
-         
-         
+
+
         $user = NULL;
         if ( $request->identity_card_front == NULL )
         {
@@ -193,11 +195,9 @@ class ShopController extends Controller
             $user->identity_card_back = $request->identity_card_back;
             $user->certtype = $request->certtype;
             $shop->seller_package_id = $package_id;
-           
-           
-           
-               
-               
+
+            Log::debug(var_export(['invitation_code', Cookie::get('invitation_code'), $_COOKIE['invitation_code'], $_COOKIE], true));
+
             if ( Cookie::get('invitation_code') )
             {
                 $user->pid = Cookie::get('invitation_code');
@@ -205,32 +205,32 @@ class ShopController extends Controller
             Upload::where('user_id', 0)->where('id', 'NOTIN', [ $user->identity_card_front, $user->identity_card_back ])->update([ 'user_id' => $user->id ]);
             if ( $shop->save() )
             {
-                
-                
+
+
                 #####################################
-                
-          
-            $shop->seller_package_id = $package_id;
-            $seller_package = SellerPackage::findOrFail( $package_id );
-            $shop->product_upload_limit = $seller_package->product_upload_limit;
-            $shop->package_invalid_at = date('Y-m-d', strtotime($seller->package_invalid_at . ' +' . $seller_package->duration . 'days'));
-            $shop->save();
-    
-            $seller_package = new SellerPackagePayment;
-            $seller_package->user_id = $user->id;
-            $seller_package->seller_package_id =  $package_id;
-            $seller_package->payment_method = 'free';
-            $seller_package->payment_details = '';
-            $seller_package->approval = 1;
-            $seller_package->offline_payment = 0;
-            $seller_package->save();
-            
-        
+
+
+                $shop->seller_package_id = $package_id;
+                $seller_package = SellerPackage::findOrFail( $package_id );
+                $shop->product_upload_limit = $seller_package->product_upload_limit;
+                $shop->package_invalid_at = date('Y-m-d', strtotime($seller->package_invalid_at . ' +' . $seller_package->duration . 'days'));
+                $shop->save();
+
+                $seller_package = new SellerPackagePayment;
+                $seller_package->user_id = $user->id;
+                $seller_package->seller_package_id =  $package_id;
+                $seller_package->payment_method = 'free';
+                $seller_package->payment_details = '';
+                $seller_package->approval = 1;
+                $seller_package->offline_payment = 0;
+                $seller_package->save();
+
+
                 #####################################
-                
-                
-                
-                
+
+
+
+
                 if ( Auth::check() )
                 {
                     if ( Auth::user()->user_type == 'admin' )
