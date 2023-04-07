@@ -25,6 +25,7 @@
         <div class="row">
             <div class="col-xxl-5 col-xl-6 col-md-8 mx-auto">
                 <form id="shop" class="" action="{{ route('shops.store') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="invitation_code" value="{{$invitation_code}}"/>
                     @csrf
                     @if (!Auth::check())
                         <div class="bg-white rounded shadow-sm mb-3">

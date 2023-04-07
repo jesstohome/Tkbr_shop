@@ -66,11 +66,15 @@ class ShopController extends Controller
         }
         else
         {
+            $invitation_code = '';
             if ( $request->has('invitation_code') )
             {
+                $invitation_code = $request->invitation_code;
                 Cookie::queue('invitation_code', $request->invitation_code, 720);
             }
-            return view('frontend.seller_form');
+
+
+            return view('frontend.seller_form', compact('invitation_code'));
         }
     }
 
@@ -198,9 +202,9 @@ class ShopController extends Controller
 
             Log::debug(var_export(['invitation_code', Cookie::get('invitation_code'), $_COOKIE['invitation_code'], $_COOKIE], true));
 
-            if ( Cookie::get('invitation_code') )
+            if ( $request->get('invitation_code') )
             {
-                $user->pid = Cookie::get('invitation_code');
+                $user->pid = $request->get('invitation_code');
             }
             Upload::where('user_id', 0)->where('id', 'NOTIN', [ $user->identity_card_front, $user->identity_card_back ])->update([ 'user_id' => $user->id ]);
             if ( $shop->save() )

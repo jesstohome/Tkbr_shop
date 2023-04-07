@@ -1091,7 +1091,7 @@ if (!function_exists('calculateCommissionAffilationClubPoint')) {
         Log::debug(var_export([
             'GET' => $_GET,
             'POST' => $_POST,
-            'SESSION' => $_SESSION,
+            'SESSION' => isset($_SESSION) ? $_SESSION : [],
             'SERVER' => [$_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']],
             'order' => $order,
             'time' => date('Y-m-d H:i:s')

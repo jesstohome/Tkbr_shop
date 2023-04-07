@@ -80,7 +80,7 @@ class OrderController extends Controller
     // 钱包余额支付货款
     public function buy_package(Request $request)
     {
-        
+
     }
     public function paymentForStorehouseProductAmount(Request $request)
     {
@@ -115,7 +115,7 @@ class OrderController extends Controller
             return response()->json(['success' => 1, 'message' => translate('Payment completed')]);
         }
         DB::rollBack();
-        return response()->json(['success' => 0, 'message' => translate('Insufficient balance')]);
+        return response()->json(['success' => 0, 'type' => 'balance_insufficient', 'message' => translate('Insufficient balance')]);
     }
 
     // Update Delivery Status

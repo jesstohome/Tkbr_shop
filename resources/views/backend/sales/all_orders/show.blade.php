@@ -347,11 +347,11 @@
                                 @if( $express->express_info )
                                 @foreach ($express->express_info as $key => $ex )
 
-                              信息：<input type="text" class="form-control" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;快递时间：<input class="form-control"  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" value="{{ $express->express_stime[$key] }}" name="express_stime[]" />&nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button"  value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
+                              信息：<input type="text" class="form-control" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button"  value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
                                <br><br>
                               @endforeach
                               @else
-                              信息：<input type="text" class="form-control" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;&nbsp;&nbsp;显示时间：<input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" class="form-control" value="{{ $express->express_stime[$key] }}" name="express_stime[]" />&nbsp;&nbsp;显示时间：<input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" class="form-control" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button" value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
+                              信息：<input type="text" class="form-control" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;显示时间：<input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" class="form-control" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button" value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
                                <br><br>
 
                               @endif
@@ -393,7 +393,7 @@
 
       function addinfo()
         {
-            var html = '<div>信息：<input type="text" class="form-control" name="express_info[]" /> &nbsp;&nbsp;快递时间：<input class="form-control" type="text"  onclick="WdatePicker({dateFmt:\'yyyy:MM:dd HH:mm:ss\'})" name="express_stime[]" readonly />&nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:\'yyyy:MM:dd HH:mm:ss\'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input class="btn btn-primary btn-add" type="button" value="+" onclick="addinfo()" /></div>';
+            var html = '<div>信息：<input type="text" class="form-control" name="express_info[]" /> &nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:\'yyyy:MM:dd HH:mm:ss\'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input class="btn btn-primary btn-add" type="button" value="+" onclick="addinfo()" /></div>';
             $('.exp').append( html );
         }
 

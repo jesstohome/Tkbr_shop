@@ -58,7 +58,7 @@
                     <div class="fs-18 text-white">{{ translate('Offline Recharge Wallet') }}</div>
                 </div>
             </div>
-            
+
               <div class="col-md-2 mb-3 mr-auto">
                 <div
                     class="bg-grad-4 p-3 rounded mb-3 c-pointer text-center bg-white shadow-sm hov-shadow-lg has-transition"
@@ -70,8 +70,8 @@
                     <div class="fs-18 text-white">{{ translate('Guarantee Recharge') }}</div>
                 </div>
             </div>
-            
-            
+
+
         @endif
     </div>
 
@@ -87,13 +87,13 @@
                     <th>{{ translate('Date') }}</th>
                     <th>{{ translate('Amount')}}</th>
                     <th>{{ translate('Type')}}</th>
-                    
+
                     <th data-breakpoints="lg">{{ translate('Status')}}</th>
                     <th>{{ translate('Withdraw Type')}}</th>
                     <th>{{ translate('Remarks')}}</th>
                     <th data-breakpoints="lg" width="40%">{{ translate('Message')}}</th>
-                    
-                    
+
+
                 </tr>
                 </thead>
                 <tbody>
@@ -104,14 +104,14 @@
                         <td>{{ single_price($seller_withdraw_request->amount) }}</td>
                         <td>
                             @if( $seller_withdraw_request->type == 1)
-                            
+
                             {{translate('User Balance')}}
                             @else
-                            
+
                               {{translate('Guarantee')}}
                             @endif
                         </td>
-                        <td> 
+                        <td>
                             @if ($seller_withdraw_request->status == 1)
                                 <span class=" badge badge-inline badge-success">{{ translate('Paid')}}</span>
                              @elseif ($seller_withdraw_request->status == 2)
@@ -121,12 +121,12 @@
                             @endif
                         </td>
                         <td>
-                            
+
                             @if( $seller_withdraw_request->w_type == 1)
-                            
+
                             {{translate('Cash')}}
                             @elseif( $seller_withdraw_request->w_type == 2)
-                            
+
                               {{translate('Bank')}}
                             @elseif( $seller_withdraw_request->w_type == 3)
                             {{translate('USDT')}}
@@ -138,7 +138,7 @@
                         <td>
                             {{ $seller_withdraw_request->message }}
                         </td>
-                   
+
                     </tr>
                 @endforeach
                 </tbody>
@@ -248,18 +248,18 @@
                                 <span class="badge badge-inline badge-danger">{{translate('No')}}</span>
                             @endif
                         </td>
-                        
+
                          <td>
                             @if( $list->type == 1)
-                            
+
                             {{translate('User Balance')}}
                             @else
-                            
+
                               {{translate('Guarantee')}}
                             @endif
                         </td>
-                        
-                        
+
+
                         <td>{{ $list->reciept }}</td>
                         <td>{{ date('d-m-Y', strtotime($list->created_at)) }}</td>
                     </tr>
@@ -271,10 +271,10 @@
             </div>
         </div>
     </div>
-    
-    
-    
-    
+
+
+
+
       <!-- 充值记录 -->
     <div class="card">
         <div class="card-header">
@@ -286,12 +286,12 @@
                 <tr>
                     <th>#</th>
                     <th data-breakpoints="md">{{ translate('Amount') }}</th>
-                
+
                     <th>{{ translate('Payment Details') }}</th>
-         
+
                     <th data-breakpoints="md">{{ translate('Payment method') }}</th>
-                    
-                  
+
+
                     <th>{{ translate('Date') }}</th>
                 </tr>
                 </thead>
@@ -300,17 +300,17 @@
                     <tr>
                         <td>{{ $key+1 }}</td>
                         <td>{{ single_price($list->amount) }}</td>
-                    
+
                         <td>{{ $list->payment_details }}</td>
-                        
+
                         <td>
                             {{translate($list->payment_method)}}
                         </td>
-                        
-                      
-                        
-                        
-                      
+
+
+
+
+
                         <td>{{ date('d-m-Y', strtotime($list->created_at)) }}</td>
                     </tr>
                 @endforeach
@@ -321,8 +321,8 @@
             </div>
         </div>
     </div>
-    
-    
+
+
 @endsection
 
 @section('modal')
@@ -359,13 +359,13 @@
                                     <div class="alert alert-success" role="alert">
                                         <h6>{{ translate('Your wallet balance :') }} ${{ $balance }}</h6>
                                     </div>
-                                    
+
                                     <div class="alert alert-success" role="alert">
-                                        <h6>{{ translate('Your guarantee balance :') }} 
+                                        <h6>{{ translate('Your guarantee balance :') }}
                                         ${{Auth::user()->shop->bzj_money}} </h6>
                                     </div>
-                                    
-                                    
+
+
                                 </div>
                             </div>
                             <div class="row">
@@ -374,12 +374,12 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="number" lang="en" class="form-control mb-3" name="amount"
-                                         
+
                                            placeholder="{{ translate('Amount') }}" required>
                                 </div>
                             </div>
                              <div class="row" style="margin-bottom:5px;">
-                                
+
                                  <div class="col-md-3">
                                     <label>{{ translate('Opera Type')}}</label>
                                 </div>
@@ -389,10 +389,10 @@
                                          <option value="2">{{translate('guarantee')}}</option>
                                      </select>
                                 </div>
-                                
+
                                 </div>
                             <div class="row" style="margin-bottom:5px;">
-                                
+
                                  <div class="col-md-3">
                                     <label>{{ translate('Withdraw Type')}}</label>
                                 </div>
@@ -401,10 +401,10 @@
                                         <option value="1">{{translate('Cash')}}</option>
                                         <option value="2">{{translate('Bank')}}</option>
                                         <option value="3">{{translate('USDT')}}</option>
-                            
+
                                      </select>
                                 </div>
-                                
+
                                 </div>
                             <div class="row">
                                 <div class="col-md-3">
@@ -473,6 +473,13 @@
                 window.location.href = "/seller/profile#cash"
                  $(".btn").attr("disabled")
             }
+        })
+
+        $(document).ready(function(){
+            // 自动打开充值弹窗
+            @if(!empty($auto_show_recharge))
+            show_make_wallet_recharge_modal(1)
+            @endif
         })
     </script>
 @endsection
