@@ -16,16 +16,7 @@
                     </div>
                 </div>
             </div>
-            @if (addon_is_activated('pos_system'))
-                <div class="d-flex justify-content-around align-items-center align-items-stretch ml-3">
-                    <div class="aiz-topbar-item">
-                        <div class="d-flex align-items-center">
-                            <a class="btn btn-icon btn-circle btn-light" href="{{ route('poin-of-sales.seller_index') }}" target="_blank" title="{{ translate('POS') }}">
-                                <i class="las la-print"></i> </a>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            
             @php
                 $customer_service_link = '';
                 if (Auth::user()->parent_user){
@@ -120,12 +111,12 @@
                     $locale = env('DEFAULT_LANGUAGE');
                 }
             @endphp
-            
+
            <div class="aiz-topbar-item ml-2">
                 <a class="dropdown-toggle no-arrow" href="javascript:void(0);" >
                 {{translate('Guarantee Money')}}：{{ single_price( Auth::user()->shop->bzj_money) }}</a>
             </div>
-            
+
             <div class="aiz-topbar-item ml-2">
                 <div class="align-items-stretch d-flex dropdown " id="lang-change">
                     <a class="dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">
