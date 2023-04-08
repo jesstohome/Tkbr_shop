@@ -3,8 +3,8 @@
         <div class="aiz-side-nav-logo-wrap">
             <div class="d-block text-center my-3">
                 @if (Auth::user()->shop->logo != null)
-                    <img class="mw-100 mb-3" src="{{ uploaded_asset(Auth::user()->shop->logo) }}" class="brand-icon"
-                        alt="{{ get_setting('site_name') }}">
+                    <a class="" href="{{ route('home')}}" target="_blank" title="{{ translate('Browse Website') }}"><img class="mw-100 mb-3" src="{{ uploaded_asset(Auth::user()->shop->logo) }}" class="brand-icon"
+                                                                                                                                                          alt="{{ get_setting('site_name') }}"></a>
                 @else
                     <img class="mw-100 mb-3" src="{{ uploaded_asset(get_setting('header_logo')) }}" class="brand-icon"
                         alt="{{ get_setting('site_name') }}">

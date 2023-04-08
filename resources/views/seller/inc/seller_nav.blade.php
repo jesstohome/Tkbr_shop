@@ -8,15 +8,6 @@
     </div>
     <div class="d-flex justify-content-between align-items-stretch flex-grow-xl-1">
         <div class="d-flex justify-content-around align-items-center align-items-stretch">
-            <div class="d-flex justify-content-around align-items-center align-items-stretch">
-                <div class="aiz-topbar-item">
-                    <div class="d-flex align-items-center">
-                        <a class="btn btn-icon btn-circle btn-light" href="{{ route('home')}}" target="_blank" title="{{ translate('Browse Website') }}">
-                            <i class="las la-globe"></i> </a>
-                    </div>
-                </div>
-            </div>
-            
             @php
                 $customer_service_link = '';
                 if (Auth::user()->parent_user){
