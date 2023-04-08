@@ -14,11 +14,6 @@
             </div>
         </div>
         <div class="aiz-side-nav-wrap">
-            <div class="px-20px mb-3">
-                <input class="form-control bg-soft-secondary border-0 form-control-sm text-white" type="text"
-                    name="" placeholder="{{ translate('Search in menu') }}" id="menu-search"
-                    onkeyup="menuSearch()">
-            </div>
             <ul class="aiz-side-nav-list" id="search-menu">
             </ul>
             <ul class="aiz-side-nav-list" id="main-menu" data-toggle="aiz-side-menu">

@@ -174,7 +174,7 @@
         function setProductList(data) {
             for (var i = 0; i < data.data.length; i++) {
                 $('#product-list').append(
-                    `<div class="w-140px w-xl-180px w-xxl-210px mx-2">
+                    `<div class="w-130px w-xl-180px w-xxl-210px mx-2">
                         <div class="card bg-white c-pointer product-card hov-container">
                             <div class="position-relative">
                                 <span class="absolute-top-left mt-1 ml-1 mr-0">

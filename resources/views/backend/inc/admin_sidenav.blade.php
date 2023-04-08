@@ -417,12 +417,12 @@
                                     <span class="aiz-side-nav-text">{{ translate('Payouts') }}</span>
                                 </a>
                             </li>
-                            <!--
+
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('business_settings.vendor_commission') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{ translate('Seller Commission') }}</span>
                                 </a>
-                            </li> -->
+                            </li>
 
 
 

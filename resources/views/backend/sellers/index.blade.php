@@ -75,7 +75,7 @@
             <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
         </div>
 
-        <div class="card-body">
+        <div class="card-body" style="overflow-x: auto">
             <table class="table aiz-table mb-0">
                 <thead>
                 <tr>
@@ -266,11 +266,11 @@
                                      <span onclick="show_view({{$shop->id}},{{$shop->view_inc_num}},{{$shop->view_base_num}})" class="dropdown-item" style="cursor:pointer;">
                                         {{translate('Views')}}
                                     </span>
-                                    
+
                                      <span onclick="update_creditscore({{$shop->user->id}})" class="dropdown-item" style="cursor:pointer;">
                                         {{translate('Modified Credit Score')}}
                                     </span>
-                                    
+
                                     <span onclick="show_package({{$shop->id}},{{$shop->seller_package_id}})" class="dropdown-item" style="cursor:pointer;">
                                         {{translate('Set Package')}}
                                     </span>
@@ -638,7 +638,7 @@
             });
 
         }
-        
+
     /**
          * 修改以后信用分
          * @param shop_id
@@ -655,7 +655,7 @@
             +'<input id="creditscore" type="text" value="" class="form-control" placeholder="信用分">'
             +'</div>'
             +'</div>'
-            
+
             +'<div class="col-sm-12" style="margin-top:3px;">'
             +'<div class="input-group">'
             +'<span class="input-group-addon"> 备  注：</span>'

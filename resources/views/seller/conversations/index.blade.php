@@ -68,6 +68,9 @@
                                   </div>
                               </div>
                           </div>
+                          <div class="col-auto col-lg-1 text-right">
+                              <button type="button" class="btn btn-primary" onclick="location.href='{{ route('seller.conversations.show', encrypt($conversation->id)) }}'">{{ translate('Reply') }}</button>
+                          </div>
                       </div>
                     </li>
               @endif

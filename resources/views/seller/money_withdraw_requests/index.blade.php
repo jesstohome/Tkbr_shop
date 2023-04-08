@@ -1,7 +1,11 @@
 @extends('seller.layouts.app')
 
 @section('panel_content')
-
+<style type="text/css">
+    .card .card-body {
+        padding: 20px 5px;
+    }
+</style>
     <div class="aiz-titlebar mt-2 mb-4">
         <div class="row align-items-center">
             <div class="col-md-6">
