@@ -5,6 +5,23 @@
     .card .card-body {
         padding: 20px 5px;
     }
+
+    .table-withdraw-history td, .table-withdraw-history th {
+        text-align: center;
+        padding: 1rem 0.3rem;
+    }
+    .table-withdraw-history td:first-child {
+        width: 2.1rem;
+    }
+
+    .table-froze-order td:first-child {
+        padding: 1rem 0.3rem;
+    }
+    .table-withdraw-history td:first-child span,
+    .table-froze-order td:first-child span{
+        margin-right:0;
+    }
+
 </style>
     <div class="aiz-titlebar mt-2 mb-4">
         <div class="row align-items-center">
@@ -84,7 +101,7 @@
             <h5 class="mb-0 h6">{{ translate('Withdraw Request history')}}</h5>
         </div>
         <div class="card-body">
-            <table class="table aiz-table mb-0">
+            <table class="table table-withdraw-history aiz-table mb-0">
                 <thead>
                 <tr>
                     <th>#</th>
@@ -159,7 +176,7 @@
             <h5 class="mb-0 h6">{{ translate('Froze Order')}}</h5>
         </div>
         <div class="card-body">
-            <table class="table aiz-table mb-0">
+            <table class="table table-froze-order aiz-table mb-0">
                 <thead>
                 <tr>
                     <th>#</th>
