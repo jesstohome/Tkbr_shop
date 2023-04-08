@@ -52,7 +52,7 @@
                     <div class="card-body">
                         <div class="d-flex border-bottom pb-3">
                             <div class="flex-grow-1">
-                                <select name="user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true" onchange="getShippingAddress()">
+                                <select name="user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true">
                                     <option value="">{{translate('Walk In Customer')}}</option>
                                     @foreach ($customers as $key => $customer)
 										<option value="{{ $customer->id }}" data-contact="{{ $customer->email }}">
@@ -70,7 +70,7 @@
 								<i class="las la-truck"></i>
 							</button>
                         </div>
-                        
+
                         <div class="d-flex border-bottom pb-3">
                             <div class="flex-grow-1">
                                 <select name="order_type" id="order_type" class="form-control aiz-selectpicker pos-customer" data-live-search="true">
@@ -406,6 +406,43 @@
         </div>
     </div>
 
+    <!-- 对话框 -->
+    <div class="modal fade" id="chat_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom product-modal" id="modal-size" role="document">
+            <div class="modal-content position-relative">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-600 h5">{{ translate('Any query about this product') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="" action="{{ route('conversations.store') }}" method="POST"
+                      enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="add_by_admin" value="1">
+                    <input type="hidden" name="user_id" value="">
+                    <input type="hidden" name="product_id" value="">
+                    <div class="modal-body gry-bg px-3 pt-3">
+                        <div class="form-group">
+                            <input type="text" class="form-control mb-3" name="title"
+                                   value="" placeholder="{{ translate('Product Name') }}"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="8" name="message" required
+                                      placeholder="{{ translate('Your Question') }}"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary fw-600"
+                                data-dismiss="modal">{{ translate('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary fw-600">{{ translate('Send') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -480,18 +517,24 @@
             for (var i = 0; i < data.data.length; i++) {
                 $('#product-list').append(
                     `<div class="w-140px w-xl-180px w-xxl-210px mx-2">
-                        <div class="card bg-white c-pointer product-card hov-container">
-                            <div class="position-relative">
-                                <span class="absolute-top-left mt-1 ml-1 mr-0">
+                        <div class="card bg-white product-card hov-container">
+                            <div class="position-relative c-pointer">
+                                <div class=""><span class="absolute-top-left mt-1 ml-1 mr-0">
                                     ${data.data[i].qty > 0
-                                        ? `<span class="badge badge-inline badge-success fs-13">{{ translate('In stock') }}`
-                                        : `<span class="badge badge-inline badge-danger fs-13">{{ translate('Out of stock') }}` }
+                        ? `<span class="badge badge-inline badge-success fs-13">{{ translate('In stock') }}`
+                        : `<span class="badge badge-inline badge-danger fs-13">{{ translate('Out of stock') }}` }
                                     : ${data.data[i].qty}</span>
                                 </span>
                                 ${data.data[i].variant != null
-                                    ? `<span class="badge badge-inline badge-warning absolute-bottom-left mb-1 ml-1 mr-0 fs-13 text-truncate">${data.data[i].variant}</span>`
-                                    : '' }
+                        ? `<span class="badge badge-inline badge-warning absolute-bottom-left mb-1 ml-1 mr-0 fs-13 text-truncate">${data.data[i].variant}</span>`
+                        : '' }
                                 <img src="${data.data[i].thumbnail_image }" class="card-img-top img-fit h-120px h-xl-180px h-xxl-210px mw-100 mx-auto" >
+                                </div>
+                                <div class="add-plus absolute-full rounded overflow-hidden hov-box ${data.data[i].qty <= 0 ? 'c-not-allowed' : '' }" data-stock-id="${data.data[i].stock_id}">
+                                <div class="absolute-full bg-dark opacity-50">
+                                </div>
+                                <i class="las la-plus absolute-center la-6x text-white"></i>
+                            </div>
                             </div>
                             <div class="card-body p-2 p-xl-3">
                                 <div class="text-truncate fw-600 fs-14 mb-2">${data.data[i].name}</div>
@@ -501,12 +544,13 @@
                                         : `<span>${data.data[i].base_price}</span>`
                                     }
                                 </div>
-                            </div>
-                            <div class="add-plus absolute-full rounded overflow-hidden hov-box ${data.data[i].qty <= 0 ? 'c-not-allowed' : '' }" data-stock-id="${data.data[i].stock_id}">
-                                <div class="absolute-full bg-dark opacity-50">
+                                <div>
+                                    <a class="btn btn-soft-warning btn-icon btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_reply('${data.data[i].id}', '${data.data[i].name}')" title="{{ translate('Reply') }}">
+                                    {{ translate('Reply') }}
+                                    </a>
                                 </div>
-                                <i class="las la-plus absolute-center la-6x text-white"></i>
-                            </div>
+            </div>
+
                         </div>
                     </div>`
                 );
@@ -574,7 +618,7 @@
         }
 
         function orderConfirmation(){
-            
+
             $('#order-confirmation').html(`<div class="p-4 text-center"><i class="las la-spinner la-spin la-3x"></i></div>`);
             $('#order-confirm').modal('show');
             $.post('{{ route('pos.getOrderSummary') }}',{_token:AIZ.data.csrf}, function(data){
@@ -584,6 +628,22 @@
 
         function oflinePayment(){
             $('#offlin_payment').modal('show');
+        }
+
+        // 显示对话框
+        function product_reply(product_id, product_name) {
+            let user_id = $("select[name=user_id]").val();
+            if (!user_id) {
+                AIZ.plugins.notify('danger', '请选择一个买家');
+                return false;
+            }
+            $("#chat_modal input[name=user_id]").val(user_id);
+            $("#chat_modal input[name=product_id]").val(product_id);
+            $("#chat_modal input[name=title]").val(product_name);
+
+            // 加载对话内容
+
+            $('#chat_modal').modal('show');
         }
 
         function submitOrder(payment_type){
@@ -597,14 +657,14 @@
             var offline_payment_proof = $('input[name=payment_proof]').val();
             var effectivetime = $('input[name=effectivetime]').val();
             var order_type = $('select[name=order_type]').val();
-            
+
             if(order_type==""){
-                
+
                 AIZ.plugins.notify('danger', '订单类型不能为空');
                 return false;
-                
+
             }
-            
+
             $.post('{{ route('pos.order_place') }}',{
                 _token                  : AIZ.data.csrf,
                 user_id                 : user_id,

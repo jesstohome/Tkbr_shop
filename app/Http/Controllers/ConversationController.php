@@ -22,15 +22,15 @@ class ConversationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-     
+
         public function check_new_msg()
     {
-      
+
         $uid =  $pid = Auth::user()->id;
         if( $uid )
         {
             $have_no_read = Conversation::where( 'receiver_id',$uid )->where('is_tip',0 )->first();
-           
+
             if( $have_no_read['id'] )
             {
                 $c = Conversation::findOrFail( $have_no_read['id'] );
@@ -40,13 +40,13 @@ class ConversationController extends Controller
             }
         }
          echo json_encode( ['code'=>0, 'msg'=> 'No'] );exit;
-         
+
     }
-    
-    
+
+
       public function check_new_reply()
     {
-       
+
         $uid =  $pid = Auth::user()->id;
         if( $uid )
         {
@@ -55,12 +55,12 @@ class ConversationController extends Controller
             foreach($list as $v)
             {
                 array_push( $ids, $v['id']);
-                
+
             }
             $message = Message::whereIn('conversation_id', $ids)->where('is_tip',0)->first();
-            
-             
-            
+
+
+
             if( $message['id'] )
             {
                 $c = Message::findOrFail( $message['id'] );
@@ -70,10 +70,10 @@ class ConversationController extends Controller
             }
         }
          echo json_encode( ['code'=>0, 'msg'=> 'No'] );exit;
-         
+
     }
-    
-    
+
+
     public function index()
     {
         if (BusinessSetting::where('type', 'conversation_system')->first()->value == 1) {
@@ -123,15 +123,19 @@ class ConversationController extends Controller
     {
         $user_type = Product::findOrFail($request->product_id)->user->user_type;
 
+        $add_by_admin = (int) $request->post('add_by_admin');
+        $sender_id = $request->post('user_id', Auth::user()->id);
+
         $conversation = new Conversation;
-        $conversation->sender_id = Auth::user()->id;
+        $conversation->sender_id = $sender_id;
         $conversation->receiver_id = Product::findOrFail($request->product_id)->user->id;
         $conversation->title = $request->title;
+        $conversation->add_by_admin = $add_by_admin;
 
         if($conversation->save()) {
             $message = new Message;
             $message->conversation_id = $conversation->id;
-            $message->user_id = Auth::user()->id;
+            $message->user_id = $sender_id;
             $message->message = $request->message;
 
             if ($message->save()) {

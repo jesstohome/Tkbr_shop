@@ -49,6 +49,13 @@
                                         <span class="aiz-side-nav-text">{{translate('POS Configuration')}}</span><!-- pos配置  -->
                                     </a>
                                 </li>
+                                @if (get_setting('conversation_system') == 1)
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{route('poin-of-sales.conversation')}}" class="aiz-side-nav-link">
+                                        <span class="aiz-side-nav-text">{{translate('Conversations')}}</span><!-- 对话  -->
+                                    </a>
+                                </li>
+                                @endif
                             </ul>
                         </li>
                     @endif

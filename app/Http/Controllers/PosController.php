@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BusinessSetting;
+use App\Models\Conversation;
+use App\Models\Message;
 use Illuminate\Http\Request;
 use App\Models\OrderDetail;
 use App\Models\ProductStock;
@@ -26,14 +29,14 @@ class PosController extends Controller
 {
     public function index()
     {
-         
+
         $customers = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->orderBy('created_at', 'desc')->get();
         if (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff') {
             return view('pos.index', compact('customers'));
         }elseif (Auth::user()->user_type == 'salesman'){
-            
+
             $customers = User::where('user_type', 'customer')->where('referred_by', '=', Auth::user()->id )->orderBy('created_at', 'desc')->get();
-              
+
             return view('pos.salesman.index', compact('customers'));
         }
         else {
@@ -321,7 +324,7 @@ class PosController extends Controller
                 $order->updated_at = $effectivetime;
                 $order->created_at = $effectivetime;
             }
-            
+
             //return array('success' => 0, 'message' => $effectivetime);
             $order->order_type = $order_type;
             //return array('success' => 0, 'message' => translate($today. ' '.$order_type));
@@ -477,19 +480,69 @@ class PosController extends Controller
             else {
                 return array('success' => 0, 'message' => translate('Please input customer information.'));
             }
-            
+
         }
         return array('success' => 0, 'message' => translate("Please select a product."));
          } catch (Exception $e) {
 
             return array('success' => 0, 'message' => translate($e));
-            
-            
+
+
             }
     }
 
     public function pos_activation()
     {
         return view('pos.pos_activation');
+    }
+
+    /**
+     * 对话
+     * author: Sym
+     * time: 2023-04-08 12:31
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|mixed
+     */
+    public function pos_conversation() {
+        if (BusinessSetting::where('type', 'conversation_system')->first()->value == 1) {
+            $conversations = Conversation::where('add_by_admin', 1)->orderBy('created_at', 'desc')->paginate(5);
+            return view('pos.conversations.index', compact('conversations'));
+        } else {
+            flash(translate('Conversation is disabled at this moment'))->warning();
+            return back();
+        }
+    }
+
+    /**
+     * 对话详情
+     * author: Sym
+     * time: 2023-04-08 12:31
+     * @param $id
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|mixed
+     */
+    public function pos_conversation_show($id) {
+        $conversation = Conversation::findOrFail(decrypt($id));
+        $conversation->sender_viewed = 1;
+        $conversation->save();
+        return view('pos.conversations.show', compact('conversation'));
+    }
+
+    /**
+     * 回复对话
+     * author: Sym
+     * time: 2023-04-08 12:54
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function pos_conversation_message_store(Request $request) {
+        $conversation = Conversation::findOrFail( $request->conversation_id );
+        $message = new Message;
+        $message->conversation_id = $request->conversation_id;
+        $message->user_id = $conversation->sender_id;
+        $message->message = $request->message;
+        $message->save();
+
+        $conversation->sender_viewed = "1";
+        $conversation->save();
+        return back();
     }
 }
