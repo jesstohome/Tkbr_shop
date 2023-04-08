@@ -52,7 +52,7 @@
                     <div class="card-body">
                         <div class="d-flex border-bottom pb-3">
                             <div class="flex-grow-1">
-                                <select name="user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true">
+                                <select name="user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true" onchange="getShippingAddress()">
                                     <option value="">{{translate('Walk In Customer')}}</option>
                                     @foreach ($customers as $key => $customer)
 										<option value="{{ $customer->id }}" data-contact="{{ $customer->email }}">
