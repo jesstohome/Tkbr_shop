@@ -387,10 +387,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
         // Seller Orders
         Route::get('/seller_orders', 'seller_orders')->name('seller_orders.index');
         Route::get('/seller_orders/{id}/show', 'seller_orders_show')->name('seller_orders.show');
-        
+
         // Clocking Orders
         Route::get('/clocking_orders', 'clocking_orders')->name('clocking_orders.index');
         Route::get('/clocking_orders/{id}/show', 'clocking_orders_show')->name('clocking_orders.show');
+
+        // Cashier Orders
+        Route::get('/cashier_orders', 'cashier_orders')->name('cashier_orders.index');
+        Route::get('/cashier_orders/{id}/show', 'cashier_orders_show')->name('cashier_orders.show');
 
         Route::post('/bulk-order-status', 'bulk_order_status')->name('bulk-order-status');
 
@@ -409,6 +413,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
         //Delivery Boy Assign
         Route::post('/orders/delivery-boy-assign', 'assign_delivery_boy')->name('orders.delivery-boy-assign');
+
+        Route::post('/orders/get_not_view_count', 'get_not_view_count')->name('orders.get_not_view_count');
     });
 
     Route::post('/pay_to_seller', [CommissionController::class, 'pay_to_seller'])->name('commissions.pay_to_seller');
@@ -472,6 +478,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     //conversation of seller customer
     Route::controller(ConversationController::class)->group(function () {
         Route::get('conversations', 'admin_index')->name('conversations.admin_index');
+        Route::get('conversations/admin_message_count', 'admin_message_count')->name('conversations.admin_message_count');
         Route::get('conversations/{id}/show', 'admin_show')->name('conversations.admin_show');
         Route::post('conversations/store', 'admin_store')->name('conversations.admin_store');
 

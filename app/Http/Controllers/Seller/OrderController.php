@@ -243,4 +243,22 @@ class OrderController extends Controller
         return 1;
     }
 
+    /**
+     * 未查看数量
+     * author: Sym
+     * time: 2023-04-09 11:56
+     */
+    public function get_not_view_count() {
+        $orders = DB::table('orders')
+            ->orderBy('id', 'desc')
+            ->where('seller_id', Auth::user()->id)
+            ->where('viewed', 0)
+            ->select('orders.id')
+            ->distinct();
+        $orders = $orders->where('created_at', '<=', date('Y-m-d H:i:s'));
+
+        return response()->json([
+            'result' => $orders->count(),
+        ]);
+    }
 }

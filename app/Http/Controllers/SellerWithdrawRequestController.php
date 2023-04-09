@@ -23,7 +23,7 @@ class SellerWithdrawRequestController extends Controller
 
     public function index()
     {
-        
+        \Cache::delete('new_withdraw_tip');
         $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',1)->latest()->paginate(15);
         return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests'));
     }
@@ -36,19 +36,19 @@ class SellerWithdrawRequestController extends Controller
 
     public function index_by_user( Request $request)
     {
-        $seller_withdraw_requests = SellerWithdrawRequest::where('user_id',$request->user_id )->get(); 
-        
+        $seller_withdraw_requests = SellerWithdrawRequest::where('user_id',$request->user_id )->get();
+
        # $seller_withdraw_requests =  SellerWithdrawRequest::latest()->paginate(15);
         return view('backend.sellers.seller_withdraw_requests_all_by_user.index', compact('seller_withdraw_requests'));
-    } 
-    
+    }
+
     public function index_by_customer( Request $request)
     {
-        
-       
+
+
        $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',2)->latest()->paginate(15);
-        
-        
+
+
        # $seller_withdraw_requests =  SellerWithdrawRequest::latest()->paginate(15);
         return view('backend.sellers.seller_withdraw_requests_all_by_user.index2', compact('seller_withdraw_requests'));
     }
@@ -139,7 +139,7 @@ class SellerWithdrawRequestController extends Controller
     public function payment_modal(Request $request)
     {
         $user = User::findOrFail($request->id);
-       
+
         $seller_withdraw_request = SellerWithdrawRequest::where('id', $request->seller_withdraw_request_id)->first();
          $user2 = $user;
         $seller_withdraw_request_id = $request->seller_withdraw_request_id;

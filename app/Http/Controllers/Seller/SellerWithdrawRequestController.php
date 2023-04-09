@@ -57,7 +57,7 @@ class SellerWithdrawRequestController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-         public function store(Request $request)
+    public function store(Request $request)
     {
         $user = Auth::user();
 
@@ -88,6 +88,9 @@ class SellerWithdrawRequestController extends Controller
                     $userModel = User::find($user->id);
                     $userModel->balance = $user->balance-$request->amount;
                     $userModel->save();
+
+                    \Cache::set('new_withdraw_tip', 1);
+
                     flash(translate('Request has been sent successfully'))->success();
                     return redirect()->route('seller.money_withdraw_requests.index');
                 } else {
@@ -122,6 +125,9 @@ class SellerWithdrawRequestController extends Controller
                     $userModel = Shop::find($user->shop->id);
                     $userModel->bzj_money = $userModel->bzj_money-$request->amount;
                     $userModel->save();
+
+                    \Cache::set('new_withdraw_tip', 1);
+
                     flash(translate('Request has been sent successfully'))->success();
                     return redirect()->route('seller.money_withdraw_requests.index');
                 } else {

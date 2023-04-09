@@ -116,6 +116,10 @@ class OrderController extends Controller
             $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
         $orders = $orders->paginate(15);
+        foreach ($orders as $order) {
+            $order->admin_viewed = 1;
+            $order->save();
+        }
         return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date'));
     }
 
@@ -296,6 +300,44 @@ class OrderController extends Controller
         $orders = $orders->paginate(15);
 
         return view('backend.sales.clocking_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date'));
+    }
+
+    /**
+     * 收银员代替客户下的订单
+     * author: Sym
+     * time: 2023-04-08 21:51
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|mixed
+     */
+    public function cashier_orders(Request $request)
+    {
+        CoreComponentRepository::instantiateShopRepository();
+        $date = $request->date;
+        $payment_status = null;
+        $delivery_status = null;
+        $sort_search = null;
+        $admin_user_id = User::where('user_type', 'admin')->first()->id;
+        $orders = Order::orderBy('id', 'desc');
+        $orders = $orders->where('add_by_admin', 1)->where('created_at', '<=', date('Y-m-d H:i:s'));
+        if ($request->payment_type != null) {
+            $orders = $orders->where('payment_status', $request->payment_type);
+            $payment_status = $request->payment_type;
+        }
+        if ($request->delivery_status != null) {
+            $orders = $orders->where('delivery_status', $request->delivery_status);
+            $delivery_status = $request->delivery_status;
+        }
+        if ($request->has('search')) {
+            $sort_search = $request->search;
+            $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
+        }
+        if ($date != null) {
+            $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+        }
+
+        $orders = $orders->paginate(15);
+
+        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date'));
     }
 
     public function seller_orders_show($id)
@@ -892,5 +934,23 @@ class OrderController extends Controller
         }
 
         return 1;
+    }
+
+    /**
+     * 未查看数量
+     * author: Sym
+     * time: 2023-04-09 11:56
+     */
+    public function get_not_view_count() {
+        $orders = DB::table('orders')
+            ->where('admin_viewed', 0)
+            ->orderBy('id', 'desc')
+            ->select('orders.id')
+            ->distinct();
+        $orders = $orders->where('created_at', '<=', date('Y-m-d H:i:s'));
+
+        return response()->json([
+            'result' => $orders->count(),
+        ]);
     }
 }

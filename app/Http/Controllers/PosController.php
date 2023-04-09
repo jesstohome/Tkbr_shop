@@ -312,6 +312,7 @@ class PosController extends Controller
             $order->shipping_address = json_encode($data);
 
             $order->payment_type = $request->payment_type;
+            $order->add_by_admin = 1;
             $order->delivery_viewed = '0';
             $order->payment_status_viewed = '0';
             $order->code = date('Ymd-His').rand(10,99);
@@ -522,6 +523,7 @@ class PosController extends Controller
     public function pos_conversation_show($id) {
         $conversation = Conversation::findOrFail(decrypt($id));
         $conversation->sender_viewed = 1;
+        $conversation->admin_viewed = 1;
         $conversation->save();
         return view('pos.conversations.show', compact('conversation'));
     }

@@ -89,6 +89,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::post('/orders/payment/storehouse', 'paymentForStorehouseProductAmount')->name('orders.payment_for_storehouse_product');
         Route::post('/orders/update_delivery_status', 'update_delivery_status')->name('orders.update_delivery_status');
         Route::post('/orders/update_payment_status', 'update_payment_status')->name('orders.update_payment_status');
+        Route::post('/orders/get_not_view_count', 'get_not_view_count')->name('orders.get_not_view_count');
     });
 
     Route::controller(InvoiceController::class)->group(function () {
@@ -112,7 +113,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
 
     //Payments
     Route::resource('payments', PaymentController::class);
-    
+
     //Creditscore Streams
     Route::resource('creditscore_streams', CreditscoreStreamController::class);
 

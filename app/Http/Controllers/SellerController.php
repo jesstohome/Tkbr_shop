@@ -174,6 +174,8 @@ class SellerController extends Controller
             $shops = $shops->where('verification_status', $approved);
         }
         $shops = $shops->paginate(15);
+
+        Cache::delete('new_shop_created_tip');
         return view('backend.sellers.index', compact('shops', 'sort_search', 'approved'));
     }
 

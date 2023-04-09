@@ -52,7 +52,9 @@
                                 @if (get_setting('conversation_system') == 1)
                                 <li class="aiz-side-nav-item">
                                     <a href="{{route('poin-of-sales.conversation')}}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{translate('Conversations')}}</span><!-- 对话  -->
+                                        <span class="aiz-side-nav-text">{{translate('Conversations')}}</span>
+                                        <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations" style="display: none"> </span>
+                                        <!-- 对话  -->
                                     </a>
                                 </li>
                                 @endif
@@ -253,7 +255,9 @@
                         @if(Auth::user()->user_type == 'admin' || in_array('3', json_decode(Auth::user()->staff->role->permissions)))
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('all_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['all_orders.index', 'all_orders.show'])}}">
-                                    <span class="aiz-side-nav-text">{{translate('All Orders')}}</span>  <!-- 所有订单  -->
+                                    <span class="aiz-side-nav-text">{{translate('All Orders')}}</span>
+                                    <span class="badge badge-danger badge-circle badge-sm badge-dot" id="order-red-tip" style="display: none"> </span>
+                                    <!-- 所有订单  -->
                                 </a>
                             </li>
                         @endif
@@ -285,6 +289,11 @@
                                     <span class="aiz-side-nav-text">{{translate('Clocking orders')}}</span>  <!-- 预订订单  -->
                                 </a>
                             </li>
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('cashier_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['cashier_orders.index', 'cashier_orders.show'])}}" >
+                                        <span class="aiz-side-nav-text">{{translate('Cashier orders')}}</span>  <!-- cashier_orders  -->
+                                    </a>
+                                </li>
                         @endif
 
                    <!--     @if(Auth::user()->user_type == 'admin' || in_array('6', json_decode(Auth::user()->staff->role->permissions)))
@@ -411,12 +420,14 @@
                                 <a href="{{ route('sellers.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['sellers.index', 'sellers.create', 'sellers.edit', 'sellers.payment_history','sellers.approved','sellers.profile_modal','sellers.show_verification_request'])}}">
                                     <span class="aiz-side-nav-text">{{ translate('All Seller') }}</span>
                                     @if($sellers > 0)<span class="badge badge-info">{{ $sellers }}</span> @endif
+                                    @if(!empty(Cache::get('new_shop_created_tip')))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
                                 </a>
                             </li>
 
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('withdraw_requests_all') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{ translate('Payout Requests') }}</span>
+                                    @if(!empty(Cache::get('new_withdraw_tip')))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
                                 </a>
                             </li>
                                <li class="aiz-side-nav-item">
@@ -1210,3 +1221,44 @@
     </div><!-- .aiz-sidebar -->
     <div class="aiz-sidebar-overlay"></div>
 </div><!-- .aiz-sidebar -->
+
+<script type="text/javascript">
+    function getConversations() {
+        $.ajax( {
+            type: "get",
+            url: '{{ route('conversations.admin_message_count') }}',
+            success: function (data)
+            {
+                if ( data.result > 0 ) {
+                    $( '#conversations' ).show();
+                }
+                else {
+                    $( '#conversations' ).hide();
+                }
+            }
+        } );
+    }
+
+    function get_not_view_count() {
+        $.ajax( {
+            type: "post",
+            url: '{{ route('orders.get_not_view_count') }}',
+            success: function (data)
+            {
+                if ( data.result > 0 ) {
+                    $( '#order-red-tip' ).show();
+                }
+                else {
+                    $( '#order-red-tip' ).hide();
+                }
+            }
+        } );
+    }
+
+    setInterval( function ()
+    {
+        getConversations();
+
+        get_not_view_count();
+    }, 10000 )
+</script>

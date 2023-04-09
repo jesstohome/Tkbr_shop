@@ -545,7 +545,7 @@
                                     }
                                 </div>
                                 <div>
-                                    <a class="btn btn-soft-warning btn-icon btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_reply('${data.data[i].id}', '${data.data[i].name}')" title="{{ translate('Reply') }}">
+                                    <a class="btn btn-soft-warning btn-icon btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_reply('${data.data[i].id}', '{{addslashes('${data.data[i].name}')}}')" title="{{ translate('Reply') }}">
                                     {{ translate('Reply') }}
                                     </a>
                                 </div>

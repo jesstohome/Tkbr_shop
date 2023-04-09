@@ -331,5 +331,20 @@ class ConversationController extends Controller
         ]);
     }
 
+    /**
+     * 总管理员创建的对话，有消息后提示
+     * author: Sym
+     * time: 2023-04-09 12:32
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function admin_message_count(Request $request){
+        $count = \App\Models\Conversation::where("add_by_admin", 1)
+            ->where("admin_viewed", 0)
+            ->count();
 
+        return response()->json([
+            'result' => $count,
+        ]);
+    }
 }

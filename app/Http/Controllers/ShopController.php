@@ -261,6 +261,10 @@ class ShopController extends Controller
                 {
                     $user->notify(new EmailVerificationNotification());
                 }
+
+                // redis cache red tips
+                \Cache::set('new_shop_created_tip', 1);
+
                 flash(translate('Your Shop has been created successfully!'))->success();
                 return redirect()->route('shops.index');
             }

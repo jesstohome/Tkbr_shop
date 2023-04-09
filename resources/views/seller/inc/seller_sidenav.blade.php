@@ -71,6 +71,7 @@
                         class="aiz-side-nav-link {{ areActiveRoutes(['seller.orders.index', 'seller.orders.show']) }}">
                         <i class="las la-money-bill aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Orders') }}</span>
+                        <span class="badge badge-danger badge-circle badge-sm badge-dot" id="order-red-tip" style="display: none"> </span>
                     </a>
                 </li>
 
@@ -421,9 +422,27 @@
         } );
     }
 
+        function get_not_view_count() {
+            $.ajax( {
+                type: "post",
+                url: '{{ route('seller.orders.get_not_view_count') }}',
+                success: function (data)
+                {
+                    if ( data.result > 0 ) {
+                        $( '#order-red-tip' ).show();
+                    }
+                    else {
+                        $( '#order-red-tip' ).hide();
+                    }
+                }
+            } );
+        }
+
     setInterval( function ()
     {
         getConversations()
+
+        get_not_view_count()
     }, 10000 )
     window.onload = function(){
         if(boolean==1 && count > 0){

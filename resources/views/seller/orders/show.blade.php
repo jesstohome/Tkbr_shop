@@ -431,8 +431,8 @@
                                 @foreach ($express->express_info as $key => $ex )
                                  <?php
 
-                                 if( strtotime( $express->express_time[$key] ) < time()   ){ ?>
-                          <tr><td colspan="2">     {{ $express->express_stime[$key] }} {{ $ex }}  </td></tr>
+                                 if( strtotime( $express->express_time[$key] ) < time() ){ ?>
+                          <tr><td colspan="2">     {{ !empty($express->express_time[$key]) ? $express->express_time[$key] : '' }} {{ $ex }}  </td></tr>
                                 <?php  } ?>
                               @endforeach
 
