@@ -164,7 +164,7 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">
+        <div class="col-sm-6 col-md-6 col-lg-4 mb-4">
             <div class="card shadow-none bg-soft-primary">
                 <div class="card-body">
                     <div class="card-title text-primary fs-16 fw-600">
@@ -207,7 +207,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-6 col-lg-3 mb-4" style="display: flex;flex-direction: column;justify-content: space-between;">
+        <div class="col-sm-6 col-md-6 col-lg-4 mb-4" style="display: flex;flex-direction: column;justify-content: space-between;">
             <div class="card shadow-none mb-0">
                 <div class="card-body">
                     <div class="card-title text-primary fs-16 fw-600">
@@ -245,7 +245,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">
+        <div class="col-sm-6 col-md-6 col-lg-4 mb-4">
             <div class="card h-450px mb-0 h-100">
                 <div class="card-body">
                     <div class="card-title text-primary fs-16 fw-600">
@@ -396,59 +396,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">
-            @if (addon_is_activated('seller_subscription'))
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title">
-                            <h6 class="mb-0">{{ translate('Purchased Package') }}</h6>
-                        </div>
-                        @if (Auth::user()->shop->seller_package)
-                            <div class="d-flex">
-                                <div>
-                                    <img src="{{ uploaded_asset(Auth::user()->shop->seller_package->logo) }}"
-                                        class="img-fluid mb-4 w-64px">
-                                </div>
-                                <div class="ml-3">
-                                    <a class="fw-600 mb-3 text-primary">{{ translate('Current Package') }}:</a>
-                                    <h6 class="text-primary">
-                                        {{ Auth::user()->shop->seller_package->name }}
-                                        </h3>
-                                        <p class="mb-1 text-muted">{{ translate('Product Upload Limit') }}:
-                                            {{ Auth::user()->shop->product_upload_limit }} {{ translate('Times') }}
-                                        </p>
-                                        <p class="text-muted mb-4">{{ translate('Package Expires at') }}:
-                                            {{ Auth::user()->shop->package_invalid_at }}
-                                        </p>
-                                        <div class="">
-                                            <a href="{{ route('seller.seller_packages_list') }}"
-                                                class="btn btn-soft-primary">{{ translate('Upgrade Package') }}</a>
-                                        </div>
-                                </div>
-                            </div>
-                        @else
-                            <h6 class="fw-600 mb-3 text-primary">{{ translate('Package Not Found') }}</h6>
-                        @endif
-
-                    </div>
-                </div>
-            @endif
-            <div
-                class="card mb-0 @if (addon_is_activated('seller_subscription')) px-4 py-5 @else p-5 h-100 @endif d-flex align-items-center justify-content-center">
-                @if (Auth::user()->shop->verification_status == 0)
-                    <div class="my-n4 py-1 text-center">
-                        <img src="{{ static_asset('assets/img/non_verified.png') }}" alt=""
-                            class="w-xxl-130px w-90px d-block">
-                        <a href="{{ route('seller.shop.verify') }}"
-                            class="btn btn-sm btn-primary">{{ translate('Verify Now') }}</a>
-                    </div>
-                @else
-                    <div class="my-2 py-1">
-                        <img src="{{ static_asset('assets/img/verified.png') }}" alt="" width="">
-                    </div>
-                @endif
-            </div>
-        </div>
     </div>
 
     <div class="row">
@@ -476,9 +423,9 @@
             </a>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-3">
-            <a href="{{ route('seller.products') }}" class="card mb-4 p-4 text-center h-180px">
+            <a href="{{ route('seller.product_storehouse.index') }}" class="card mb-4 p-4 text-center h-180px">
                 <div class="fs-16 fw-600 text-primary">
-                    {{ translate('Add New Product') }}
+                    {{ translate('Product Storehouse') }}
                 </div>
                 <div class="m-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">

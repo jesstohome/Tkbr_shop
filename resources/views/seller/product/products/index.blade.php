@@ -35,25 +35,6 @@
               </div>
             </a>
         </div>
-
-        @if (addon_is_activated('seller_subscription'))
-        @php
-            $seller_package = \App\Models\SellerPackage::find(Auth::user()->shop->seller_package_id);
-        @endphp
-        <div class="col-md-4">
-            <a href="{{ route('seller.seller_packages_list') }}" class="text-center bg-white shadow-sm hov-shadow-lg text-center d-block p-3 rounded">
-                @if($seller_package != null)
-                    <img src="{{ uploaded_asset($seller_package->logo) }}" height="44" class="mw-100 mx-auto">
-                    <span class="d-block sub-title mb-2">{{ translate('Current Package')}}: {{ $seller_package->getTranslation('name') }}</span>
-                @else
-                    <i class="la la-frown-o mb-2 la-3x"></i>
-                    <div class="d-block sub-title mb-2">{{ translate('No Package Found')}}</div>
-                @endif
-                <div class="btn btn-outline-primary py-1">{{ translate('Upgrade Package')}}</div>
-            </a>
-        </div>
-        @endif
-
     </div>
 
     <div class="card">

@@ -375,14 +375,16 @@
                                         <i class="la la-share"></i> {{ translate($detailedProduct->external_link_btn) }}
                                     </a>
                                 @else
-                                    <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600"
-                                        onclick="addToCart()">
-                                        <i class="las la-shopping-bag"></i>
-                                        <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
-                                    </button>
-                                    <button type="button" class="btn btn-primary buy-now fw-600" onclick="buyNow()">
-                                        <i class="la la-shopping-cart"></i> {{ translate('Buy Now') }}
-                                    </button>
+                                    @if(Auth::user()->user_type == 'customer')
+                                        <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600"
+                                                onclick="addToCart()">
+                                            <i class="las la-shopping-bag"></i>
+                                            <span class="d-none d-md-inline-block"> {{ translate('Add to cart') }}</span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary buy-now fw-600" onclick="buyNow()">
+                                            <i class="la la-shopping-cart"></i> {{ translate('Buy Now') }}
+                                        </button>
+                                    @endif
                                 @endif
                                 <button type="button" class="btn btn-secondary out-of-stock fw-600 d-none" disabled>
                                     <i class="la la-cart-arrow-down"></i> {{ translate('Out of Stock') }}

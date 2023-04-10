@@ -49,15 +49,6 @@
                                         <span class="aiz-side-nav-text">{{translate('POS Configuration')}}</span><!-- pos配置  -->
                                     </a>
                                 </li>
-                                @if (get_setting('conversation_system') == 1)
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{route('poin-of-sales.conversation')}}" class="aiz-side-nav-link">
-                                        <span class="aiz-side-nav-text">{{translate('Conversations')}}</span>
-                                        <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations" style="display: none"> </span>
-                                        <!-- 对话  -->
-                                    </a>
-                                </li>
-                                @endif
                             </ul>
                         </li>
                     @endif
@@ -785,14 +776,14 @@
                             @endif
 
                             @php
-                                $conversation = \App\Models\Conversation::where('receiver_id', Auth::user()->id)->where('receiver_viewed', '1')->get();
+                                $conversation_count = \App\Models\Conversation::where('admin_viewed', 0)->count();
                             @endphp
                             @if(Auth::user()->user_type == 'admin' || in_array('12', json_decode(Auth::user()->staff->role->permissions)))
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('conversations.admin_index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['conversations.admin_index', 'conversations.admin_show'])}}">
                                         <span class="aiz-side-nav-text">{{translate('Product Conversations')}}</span>
-                                        @if (count($conversation) > 0)
-                                            <span class="badge badge-info">{{ count($conversation) }}</span>
+                                        @if ($conversation_count > 0)
+                                            <span class="badge badge-info">{{ $conversation_count }}</span>
                                         @endif
                                     </a>
                                 </li>
@@ -805,6 +796,16 @@
                                     </li>
                                 @endif
                             @endif
+
+                                @if (get_setting('conversation_system') == 1)
+                                    <li class="aiz-side-nav-item">
+                                        <a href="{{route('poin-of-sales.conversation')}}" class="aiz-side-nav-link">
+                                            <span class="aiz-side-nav-text">{{translate('Conversations')}}</span>
+                                            <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations" style="display: none"> </span>
+                                            <!-- 对话  -->
+                                        </a>
+                                    </li>
+                                @endif
                         </ul>
                     </li>
                 @endif

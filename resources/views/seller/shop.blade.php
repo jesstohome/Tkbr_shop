@@ -5,9 +5,7 @@
     <div class="aiz-titlebar mt-2 mb-4">
       <div class="row align-items-center">
         <div class="col-md-6">
-            <h1 class="h3">{{ translate('Shop Settings')}}
-                <a href="{{ route('shop.visit', $shop->slug) }}" class="btn btn-link btn-sm" target="_blank">({{ translate('Visit Shop')}})<i class="la la-external-link"></i>)</a>
-            </h1>
+            <h1 class="h3">{{ translate('Shop Settings')}}</h1>
         </div>
       </div>
     </div>

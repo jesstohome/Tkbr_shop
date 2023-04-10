@@ -545,7 +545,7 @@
                                     }
                                 </div>
                                 <div>
-                                    <a class="btn btn-soft-warning btn-icon btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_reply('${data.data[i].id}', '{{addslashes('${data.data[i].name}')}}')" title="{{ translate('Reply') }}">
+                                    <a class="btn btn-soft-warning btn-icon btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_reply('${data.data[i].id}', '${data.data[i].name2}', '${data.data[i].slug_url}')" title="{{ translate('Reply') }}">
                                     {{ translate('Reply') }}
                                     </a>
                                 </div>
@@ -631,7 +631,7 @@
         }
 
         // 显示对话框
-        function product_reply(product_id, product_name) {
+        function product_reply(product_id, product_name, slug) {
             let user_id = $("select[name=user_id]").val();
             if (!user_id) {
                 AIZ.plugins.notify('danger', '请选择一个买家');
@@ -640,6 +640,7 @@
             $("#chat_modal input[name=user_id]").val(user_id);
             $("#chat_modal input[name=product_id]").val(product_id);
             $("#chat_modal input[name=title]").val(product_name);
+            $("#chat_modal textarea[name=message]").val(slug);
 
             // 加载对话内容
 

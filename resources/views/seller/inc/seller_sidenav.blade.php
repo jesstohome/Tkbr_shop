@@ -11,6 +11,7 @@
                 @endif
                 <h3 class="fs-16  m-0 text-primary">{{ Auth::user()->shop->name }}</h3>
                 <p class="text-primary">{{ Auth::user()->email }}</p>
+                <p class="text-primary" style="margin-bottom: 0;"><a style="padding: 0" href="{{ route('shop.visit', Auth::user()->shop->slug) }}" class="btn btn-link btn-sm" target="_blank">({{ translate('Visit Shop')}})<i class="la la-external-link"></i>)</a></p>
             </div>
         </div>
         <div class="aiz-side-nav-wrap">
@@ -77,7 +78,7 @@
 
                  <!--店铺等级-->
                 @if (addon_is_activated('seller_subscription'))
-                    <li class="aiz-side-nav-item">
+                    <li class="aiz-side-nav-item" style="display: none">
                         <a href="#" class="aiz-side-nav-link">
                             <i class="las la-shopping-cart aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Package') }}</span>
@@ -100,7 +101,7 @@
                 @endif
 
                  <!--店铺直通车-->
-                <li class="aiz-side-nav-item">
+                <li class="aiz-side-nav-item" style="display: none">
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-shopping-cart aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Spread Packages') }}</span>

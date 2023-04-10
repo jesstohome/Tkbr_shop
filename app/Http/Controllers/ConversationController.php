@@ -259,6 +259,9 @@ class ConversationController extends Controller
         elseif($conversation->receiver_id == Auth::user()->id) {
             $conversation->receiver_viewed = 1;
         }
+        if (Auth::user()->user_type == 'admin'){
+            $conversation->admin_viewed = 1;
+        }
         $conversation->save();
         return view('backend.support.conversations.show', compact('conversation'));
     }

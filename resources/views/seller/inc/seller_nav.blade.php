@@ -105,7 +105,7 @@
 
            <div class="aiz-topbar-item ml-2">
                 <a class="dropdown-toggle no-arrow" href="javascript:void(0);" >
-                {{translate('Guarantee Money')}}：{{ single_price( Auth::user()->shop->bzj_money) }}</a>
+                {{translate('Wallet Money')}}：{{ single_price( Auth::user()->balance) }}</a>
             </div>
 
             <div class="aiz-topbar-item ml-2">
