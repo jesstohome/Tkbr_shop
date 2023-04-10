@@ -287,10 +287,12 @@ class PosController extends Controller
 
     //order place
     public function order_store(Request $request){
-         try {
+        try {
         if(Session::get('pos.shipping_info') == null || Session::get('pos.shipping_info')['name'] == null || Session::get('pos.shipping_info')['phone'] == null || Session::get('pos.shipping_info')['address'] == null){
             return array('success' => 0, 'message' => translate("Please Add Shipping Information."));
         }
+
+
 
         if(Session::has('pos.cart') && count(Session::get('pos.cart')) > 0){
             $order = new Order;
@@ -302,6 +304,7 @@ class PosController extends Controller
             else {
                 $order->user_id = $request->user_id;
             }
+
             $data['name']           = $shipping_info['name'];
             $data['email']          = $shipping_info['email'];
             $data['address']        = $shipping_info['address'];
@@ -405,6 +408,17 @@ class PosController extends Controller
                 if(Session::has('pos.discount')){
                     $order->grand_total -= Session::get('pos.discount');
                     $order->coupon_discount = Session::get('pos.discount');
+                }
+
+                // 查看余额是否足够
+                if ($request->payment_type == 'wallet') {
+                    $user = User::findOrFail($order->user_id);
+                    if ($user->balance < $order->grand_total) {
+                        $order->delete();
+                        return array('success' => 0, 'message' => translate("Insufficient balance"));
+                    }
+                    $user->balance -= $order->grand_total;
+                    $user->save();
                 }
 
                 $order->seller_id = $product->user_id;

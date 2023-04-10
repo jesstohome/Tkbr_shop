@@ -201,13 +201,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="dropdown dropup">
-                                <div class="my-2 my-md-0">
-                                    <div class="form-group">
-                                        <input class="form-control" type="datetime-local" name="effectivetime" placeholder="{{ translate('Search by Product Name/Barcode') }}" >
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="my-2 my-md-0">
                             <button type="button" class="btn btn-primary btn-block" onclick="orderConfirmation()">{{ translate('Place Order') }}</button>
@@ -340,10 +333,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-base-3" data-dismiss="modal">{{translate('Close')}}</button>
-                    <button type="button" onclick="oflinePayment()" class="btn btn-base-1 btn-warning">{{translate('Offline Payment')}}</button>
-                    <button type="button" onclick="submitOrder('cash_on_delivery')" class="btn btn-base-1 btn-info">{{translate('Confirm with COD')}}</button>
-                    <button type="button" onclick="submitOrder('cash')" class="btn btn-base-1 btn-success">{{translate('Confirm with Cash')}}</button>
+                    <button type="button" onclick="submitOrder('wallet')" class="btn btn-base-1 btn-success">{{translate('Confirm')}}</button>
                 </div>
             </div>
         </div>
