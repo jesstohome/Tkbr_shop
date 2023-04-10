@@ -89,7 +89,7 @@ class SellerWithdrawRequestController extends Controller
                     $userModel->balance = $user->balance-$request->amount;
                     $userModel->save();
 
-                    \Cache::set('new_withdraw_tip', 1);
+                    \Redis::hset('new_withdraw_tip', $seller_withdraw_request->id, 1);
 
                     flash(translate('Request has been sent successfully'))->success();
                     return redirect()->route('seller.money_withdraw_requests.index');
@@ -126,7 +126,7 @@ class SellerWithdrawRequestController extends Controller
                     $userModel->bzj_money = $userModel->bzj_money-$request->amount;
                     $userModel->save();
 
-                    \Cache::set('new_withdraw_tip', 1);
+                    \Redis::hset('new_withdraw_tip', $seller_withdraw_request->id, 1);
 
                     flash(translate('Request has been sent successfully'))->success();
                     return redirect()->route('seller.money_withdraw_requests.index');

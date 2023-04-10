@@ -165,7 +165,14 @@ class WalletController extends Controller
         $wallet->reciept = $request->photo;
         $wallet->type = $request->type ?? 1;
         $wallet->save();
+
+        \Redis::hset('new_offline_recharge_tip', $wallet->id, 1);
+
         flash(translate('Offline Recharge has been done. Please wait for response.'))->success();
+
+        if (Auth::user()->user_type == 'seller') {
+            return redirect()->route('seller.money_withdraw_requests.index');
+        }
         return redirect()->route('wallet.index');
     }
 
@@ -261,6 +268,7 @@ class WalletController extends Controller
         }
         if ( $wallet->save() )
         {
+            \Redis::hdel('new_offline_recharge_tip', $wallet->id);
             return 1;
         }
         return 0;

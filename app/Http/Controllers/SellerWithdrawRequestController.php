@@ -23,7 +23,6 @@ class SellerWithdrawRequestController extends Controller
 
     public function index()
     {
-        \Cache::delete('new_withdraw_tip');
         $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',1)->latest()->paginate(15);
         return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests'));
     }

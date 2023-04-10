@@ -401,6 +401,7 @@
                         <a href="#" class="aiz-side-nav-link">
                             <i class="las la-user aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Sellers') }}</span>
+                            @if(!empty(Redis::HLEN('new_withdraw_tip')) || !empty(Cache::get('new_shop_created_tip')))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
@@ -418,7 +419,7 @@
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('withdraw_requests_all') }}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{ translate('Payout Requests') }}</span>
-                                    @if(!empty(Cache::get('new_withdraw_tip')))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
+                                    @if(!empty(Redis::HLEN('new_withdraw_tip')))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
                                 </a>
                             </li>
                                <li class="aiz-side-nav-item">
@@ -511,6 +512,7 @@
                                 @if (env("DEMO_MODE") == "On")
                                     <span class="badge badge-inline badge-danger">Addon</span>
                                 @endif
+                                @if(!empty(\Redis::hlen('new_offline_recharge_tip')))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
                                 <span class="aiz-side-nav-arrow"></span>
                             </a>
                             <ul class="aiz-side-nav-list level-2">
@@ -522,6 +524,7 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('offline_wallet_recharge_request.index') }}" class="aiz-side-nav-link">
                                         <span class="aiz-side-nav-text">{{translate('Offline Wallet Recharge')}}</span>
+                                        @if(!empty(\Redis::hlen('new_offline_recharge_tip')))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
                                     </a>
                                 </li>
                                 @if(get_setting('classified_product') == 1)
