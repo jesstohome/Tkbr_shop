@@ -38,8 +38,8 @@
               </div>
           </div>
       @endif
-      
-      
+
+
          <div class="col-md-3 mb-3 mx-auto">
             <div
                 class="bg-grad-2 p-3 rounded mb-3 c-pointer text-center bg-white shadow-sm hov-shadow-lg has-transition"
@@ -51,8 +51,8 @@
                 <div class="fs-18 text-white">{{ translate('Send Withdraw Request') }}</div>
             </div>
         </div>
-        
-        
+
+
     </div>
     <div class="card">
       <div class="card-header">
@@ -97,10 +97,10 @@
             </div>
         </div>
     </div>
-    
-    
-    
-    
+
+
+
+
     <div class="card">
         <div class="card-header">
             <h5 class="mb-0 h6">{{ translate('Withdraw Request history')}}</h5>
@@ -113,13 +113,13 @@
                     <th>{{ translate('Date') }}</th>
                     <th>{{ translate('Amount')}}</th>
                     <th>{{ translate('Type')}}</th>
-                    
+
                     <th data-breakpoints="lg">{{ translate('Status')}}</th>
                     <th>{{ translate('Withdraw Type')}}</th>
                     <th>{{ translate('Remarks')}}</th>
                     <th data-breakpoints="lg" width="40%">{{ translate('Message')}}</th>
-                    
-                    
+
+
                 </tr>
                 </thead>
                 <tbody>
@@ -130,14 +130,14 @@
                         <td>{{ single_price($seller_withdraw_request->amount) }}</td>
                         <td>
                             @if( $seller_withdraw_request->type == 1)
-                            
+
                             {{translate('User Balance')}}
                             @else
-                            
+
                               {{translate('Guarantee')}}
                             @endif
                         </td>
-                        <td> 
+                        <td>
                             @if ($seller_withdraw_request->status == 1)
                                 <span class=" badge badge-inline badge-success">{{ translate('Paid')}}</span>
                              @elseif ($seller_withdraw_request->status == 2)
@@ -147,12 +147,12 @@
                             @endif
                         </td>
                         <td>
-                            
+
                             @if( $seller_withdraw_request->w_type == 1)
-                            
+
                             {{translate('Cash')}}
                             @elseif( $seller_withdraw_request->w_type == 2)
-                            
+
                               {{translate('Bank')}}
                             @elseif( $seller_withdraw_request->w_type == 3)
                             {{translate('USDT')}}
@@ -164,7 +164,7 @@
                         <td>
                             {{ $seller_withdraw_request->message }}
                         </td>
-                   
+
                     </tr>
                 @endforeach
                 </tbody>
@@ -294,7 +294,7 @@
           </div>
       </div>
   </div>
- 
+
     @php
     $balance = \App\Models\User::where(['id'=>Auth::user()->id])->first()['balance'];
     @endphp
@@ -306,7 +306,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">{{ translate('Send A Withdraw Request') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
-                @if ($balance > 5)
+                @if ($balance >= 5)
                     <form class="" action="{{ route('wallet.do_money_withdraw_request') }}" method="post">
                         @csrf
                         <div class="modal-body gry-bg px-3 pt-3">
@@ -315,10 +315,10 @@
                                     <div class="alert alert-success" role="alert">
                                         <h6>{{ translate('Your wallet balance :') }} ${{ $balance }}</h6>
                                     </div>
-                                    
-                              
-                                    
-                                    
+
+
+
+
                                 </div>
                             </div>
                             <div class="row">
@@ -327,25 +327,25 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="number" lang="en" class="form-control mb-3" name="amount"
-                                         
+
                                            placeholder="{{ translate('Amount') }}" required>
                                 </div>
                             </div>
                              <div class="row" style="margin-bottom:5px; display:none;">
-                                
+
                                  <div class="col-md-3">
                                     <label>{{ translate('Opera Type')}}</label>
                                 </div>
                                  <div class="col-md-9">
                                      <select name="type" class="form-control">
                                          <option value="1">{{translate('User Balance')}}</option>
-                                         
+
                                      </select>
                                 </div>
-                                
+
                                 </div>
                             <div class="row" style="margin-bottom:5px;">
-                                
+
                                  <div class="col-md-3">
                                     <label>{{ translate('Withdraw Type')}}</label>
                                 </div>
@@ -354,10 +354,10 @@
                                         <option value="1">{{translate('Cash')}}</option>
                                         <option value="2">{{translate('Bank')}}</option>
                                         <option value="3">{{translate('USDT')}}</option>
-                            
+
                                      </select>
                                 </div>
-                                
+
                                 </div>
                             <div class="row">
                                 <div class="col-md-3">
@@ -375,19 +375,19 @@
                 @else
                     <div class="modal-body gry-bg px-3 pt-3">
                         <div class="p-5 heading-3">
-                            {{ translate('You do not have enough balance to send withdraw request') }}
+                            {{ translate('The minimum withdrawal amount is 5 yuan') }}
                         </div>
                     </div>
                 @endif
             </div>
         </div>
     </div>
-    
+
 @endsection
 
 @section('script')
     <script type="text/javascript">
-    
+
         function show_request_modal() {
             $('#request_modal').modal('show');
         }
@@ -404,9 +404,9 @@
                 $('#offline_wallet_recharge_modal').modal('show');
             });
         }
-        
+
         $(function(){
-            @php 
+            @php
             $user = \App\Models\User::find(Auth::user()->id);
             @endphp
          $("#p").change(function(){
@@ -427,8 +427,8 @@
                  $(".btn").attr("disabled")
             }
         })
-        
-        
+
+
         })
     </script>
 @endsection

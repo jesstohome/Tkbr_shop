@@ -18,8 +18,8 @@
                 @if (get_setting('product_manage_by_admin') == 0)
                     @if ($order->product_storehouse_total > 0)
                         @if (!$order->product_storehouse_status)
-                            <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
-                                <button id="payment_for_storehouse" type="button" class="btn btn-primary">{{ translate('Payment For Storehouse') }}</button>
+                            <div class="col-md-4 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
+                                <button id="payment_for_storehouse" type="button" class="btn btn-primary">{{ translate('Pay the manufacturer and notify the shipment') }}</button>
                             </div>
                         @else
                             <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
@@ -43,35 +43,10 @@
                     </div>
                     <div class="col-md-3 ml-auto">
                         <label for="update_delivery_status">{{ translate('Delivery Status') }}</label>
-                        @if ($delivery_status != 'delivered' && $delivery_status != 'cancelled')
-                            <select class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity"
-                                    id="update_delivery_status">
-                                <option value="pending" @if ($delivery_status == 'pending') selected @endif>
-                                    {{ translate('Pending') }}</option>
-                                <option value="confirmed" @if ($delivery_status == 'confirmed') selected @endif>
-                                    {{ translate('Confirmed') }}</option>
-                                <option value="picked_up" @if ($delivery_status == 'picked_up') selected @endif>
-                                    {{ translate('Picked Up') }}</option>
-                                <option value="on_the_way" @if ($delivery_status == 'on_the_way') selected @endif>
-                                    {{ translate('On The Way') }}</option>
-                                <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>
-                                    {{ translate('Delivered') }}</option>
-                                <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>
-                                    {{ translate('Cancel') }}</option>
-                            </select>
-                        @else
-                            <input type="text" class="form-control" value="{{ $delivery_status }}" disabled>
-                        @endif
+                        <input type="text" class="form-control" value="{{ $delivery_status }}" disabled>
                     </div>
                 @endif
             </div>
-
-
-
-
-
-
-
 
 
             <div class="row gutters-5 mt-2">

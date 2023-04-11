@@ -270,16 +270,6 @@
                     </a>
                 </li>
 
-                <li class="aiz-side-nav-item">
-                    <a href="{{ route('seller.creditscore_streams.index') }}"
-                        class="aiz-side-nav-link {{ areActiveRoutes(['seller.creditscore_streams.index']) }}">
-                        <i class="las la-history aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{ translate('CreditscoreStream History') }}</span>
-                    </a>
-                </li>
-
-
-
                 @if (get_setting('product_query_activation') == 1)
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('seller.product_query.index') }}"
