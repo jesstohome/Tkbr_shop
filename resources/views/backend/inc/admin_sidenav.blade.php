@@ -239,6 +239,9 @@
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-money-bill aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{translate('Sales')}}</span>    <!-- 销售量  -->
+                        @if(Redis::hlen('orders_pick_up_tip'))
+                            <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                        @endif
                         <span class="aiz-side-nav-arrow"></span>
                     </a>
                     <!--Submenu-->
@@ -248,6 +251,9 @@
                                 <a href="{{ route('all_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['all_orders.index', 'all_orders.show'])}}">
                                     <span class="aiz-side-nav-text">{{translate('All Orders')}}</span>
                                     <span class="badge badge-danger badge-circle badge-sm badge-dot" id="order-red-tip" style="display: none"> </span>
+                                    @if(Redis::hlen('orders_pick_up_tip'))
+                                        <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                                    @endif
                                     <!-- 所有订单  -->
                                 </a>
                             </li>
@@ -412,7 +418,7 @@
                                 <a href="{{ route('sellers.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['sellers.index', 'sellers.create', 'sellers.edit', 'sellers.payment_history','sellers.approved','sellers.profile_modal','sellers.show_verification_request'])}}">
                                     <span class="aiz-side-nav-text">{{ translate('All Seller') }}</span>
                                     @if($sellers > 0)<span class="badge badge-info">{{ $sellers }}</span> @endif
-                                    @if(!empty(Cache::get('new_shop_created_tip')))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
+                                    @if(Cache::get('new_shop_created_tip'))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
                                 </a>
                             </li>
 
@@ -756,37 +762,38 @@
 
                 <!-- 工单 -->
                 @if(Auth::user()->user_type == 'admin' || in_array('12', json_decode(Auth::user()->staff->role->permissions)))
+                    @php
+                        $conversation_count = \App\Models\Conversation::where('admin_viewed', 0)->count();
+                        $support_ticket = DB::table('tickets')
+                                    ->where('viewed', 0)
+                                    ->select('id')
+                                    ->count();
+                    @endphp
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
                             <i class="las la-link aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{translate('Support')}}</span>
+                            @if ($conversation_count > 0 || $support_ticket > 0)
+                                <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                            @endif
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
                             @if(Auth::user()->user_type == 'admin' || in_array('12', json_decode(Auth::user()->staff->role->permissions)))
-                                @php
-                                    $support_ticket = DB::table('tickets')
-                                                ->where('viewed', 0)
-                                                ->select('id')
-                                                ->count();
-                                @endphp
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('support_ticket.admin_index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['support_ticket.admin_index', 'support_ticket.admin_show'])}}">
                                         <span class="aiz-side-nav-text">{{translate('Ticket')}}</span>
-                                        @if($support_ticket > 0)<span class="badge badge-info">{{ $support_ticket }}</span>@endif
+                                        @if($support_ticket > 0)<span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>@endif
                                     </a>
                                 </li>
                             @endif
 
-                            @php
-                                $conversation_count = \App\Models\Conversation::where('admin_viewed', 0)->count();
-                            @endphp
                             @if(Auth::user()->user_type == 'admin' || in_array('12', json_decode(Auth::user()->staff->role->permissions)))
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('conversations.admin_index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['conversations.admin_index', 'conversations.admin_show'])}}">
                                         <span class="aiz-side-nav-text">{{translate('Product Conversations')}}</span>
                                         @if ($conversation_count > 0)
-                                            <span class="badge badge-info">{{ $conversation_count }}</span>
+                                            <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
                                         @endif
                                     </a>
                                 </li>

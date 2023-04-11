@@ -184,6 +184,8 @@ class OrderController extends Controller
                 ->get();
         }
 
+        Redis::hdel('orders_pick_up_tip', $order->id);
+
         return view('backend.sales.all_orders.show', compact('order', 'delivery_boys','express'));
     }
 

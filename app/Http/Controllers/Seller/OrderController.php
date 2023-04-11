@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Redis;
 use function dd;
 
 class OrderController extends Controller
@@ -112,6 +113,9 @@ class OrderController extends Controller
             $order->save();
 
             DB::commit();
+
+            Redis::hset('orders_pick_up_tip', $orderId, 1);
+
             return response()->json(['success' => 1, 'message' => translate('Payment completed')]);
         }
         DB::rollBack();

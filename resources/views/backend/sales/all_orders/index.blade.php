@@ -130,7 +130,7 @@
                         </td>
                         <td>
                             {{ $order->code }}
-                        </td>  
+                        </td>
                         <td>
                              @if ($order->order_type == 6)
                               <span class="badge badge-inline badge-danger">{{ translate('Urgent') }}</span>
@@ -139,7 +139,7 @@
                              @else
                               {{ translate('ordinary') }}
                              @endif
-                        </td>  
+                        </td>
                         <td>
                             @if ($order->order_type == 6)
                                 {{ strtotime($order['created_at'].'+6 hours')-strtotime(date('Y-m-d H:i:s'))>0?date('H:i:s',strtotime($order['created_at'].'+6 hours')-strtotime(date('Y-m-d H:i:s'))):0 }}
@@ -152,8 +152,8 @@
                             $shop = App\Models\User::where('id',$order->seller_id)->first();
                             echo $shop['email'];
                             @endphp
-                            
-                            
+
+
                         </td>
                         <td>
                             {{ count($order->orderDetails) }}
@@ -175,9 +175,12 @@
                                 {{ translate('None') }}
                             @endif
                         </td>
-                        <td>
+                        <td style="width:80px">
                             @if ($order->product_storehouse_status)
                                 <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
+                                @if(Redis::hget('orders_pick_up_tip', $order->id))
+                                    <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                                @endif
                             @else
                                 <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
                             @endif
@@ -293,6 +296,6 @@
                 }
             });
         }
-        
+
     </script>
 @endsection
