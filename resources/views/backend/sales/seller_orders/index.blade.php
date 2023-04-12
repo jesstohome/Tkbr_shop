@@ -15,11 +15,11 @@
             </div>
             <div class="col-lg-2">
                 <div class="form-group mb-0">
-                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="seller_id" name="seller_id">
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="seller_id" name="seller_id" data-live-search="true">
                         <option value="">{{ translate('All Sellers') }}</option>
                         @foreach (App\Models\User::where('user_type', '=', 'seller')->get() as $key => $seller)
                             <option value="{{ $seller->id }}" @if ($seller->id == $seller_id) selected @endif>
-                                {{ $seller->shop->name }} ({{ $seller->name }})
+                                {{ $seller->shop->name }} ({{ $seller->email }})
                             </option>
                         @endforeach
                     </select>
@@ -27,7 +27,7 @@
             </div>
             <div class="col-lg-2">
                 <div class="form-group mb-0">
-                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="customer_id" name="customer_id">
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="customer_id" name="customer_id" data-live-search="true">
                         <option value="">{{ translate('All Customers') }}</option>
                         @foreach (App\Models\User::where('user_type', '=', 'customer')->get() as $key => $customer)
                             <option value="{{ $customer->id }}" @if ($customer->id == $customer_id) selected @endif>
