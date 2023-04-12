@@ -289,6 +289,9 @@
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('cashier_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['cashier_orders.index', 'cashier_orders.show'])}}" >
                                         <span class="aiz-side-nav-text">{{translate('Cashier orders')}}</span>  <!-- cashier_orders  -->
+                                        @if(Redis::hlen('orders_pick_up_tip'))
+                                            <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                                        @endif
                                     </a>
                                 </li>
                         @endif

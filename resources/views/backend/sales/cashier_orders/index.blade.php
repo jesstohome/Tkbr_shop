@@ -70,6 +70,30 @@
             </div>
             <div class="col-lg-2">
                 <div class="form-group mb-0">
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="seller_id" name="seller_id">
+                        <option value="">{{ translate('All Sellers') }}</option>
+                        @foreach (App\Models\User::where('user_type', '=', 'seller')->get() as $key => $seller)
+                            <option value="{{ $seller->id }}" @if ($seller->id == $seller_id) selected @endif>
+                                {{ $seller->shop->name }} ({{ $seller->name }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group mb-0">
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="customer_id" name="customer_id">
+                        <option value="">{{ translate('All Customers') }}</option>
+                        @foreach (App\Models\User::where('user_type', '=', 'customer')->get() as $key => $customer)
+                            <option value="{{ $customer->id }}" @if ($customer->id == $customer_id) selected @endif>
+                                {{ $customer->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group mb-0">
                     <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
             </div>
@@ -107,6 +131,7 @@
                         @if (addon_is_activated('refund_request'))
                         <th>{{ translate('Refund') }}</th>
                         @endif
+                        <th>{{ translate('Has the loan been released') }}</th>
                         <th class="text-right" width="15%">{{translate('options')}}</th>
                     </tr>
                 </thead>
@@ -128,15 +153,15 @@
                         </td>
                         <td>
                             {{ $order->code }}
-                        </td>  
-                        
+                        </td>
+
                         <td>
                             @php
              $shop = App\Models\User::where('id',$order->seller_id)->first();
              echo $shop['email'];
              @endphp
-                            
-                            
+
+
                         </td>
                         <td>
                             {{ count($order->orderDetails) }}
@@ -158,9 +183,12 @@
                                 {{ translate('None') }}
                             @endif
                         </td>
-                        <td>
+                        <td style="width: 80px;">
                             @if ($order->product_storehouse_status)
                                 <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
+                                @if(Redis::hget('orders_pick_up_tip', $order->id))
+                                    <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                                @endif
                             @else
                                 <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
                             @endif
@@ -190,8 +218,20 @@
                             {{ translate('No Refund') }}
                             @endif
                         </td>
+                        <td>
+                            @if (!$order->freeze_expired_at)
+                            {{translate('Yes')}}
+                            @else
+                            {{translate('No')}}
+                            @endif
+                        </td>
                         @endif
                         <td class="text-right">
+                            @if(count($order->orderDetails) == 1)
+                            <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_review('{{ $order->orderDetails[0]->product_id }}', '{{$order->user_id}}')" title="{{ translate('Review') }}">
+                                {{ translate('Review') }}
+                            </a>
+                            @endif
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
                             </a>
@@ -219,10 +259,29 @@
 
 @section('modal')
     @include('modals.delete_modal')
+
+    <!-- Product Review Modal -->
+    <div class="modal fade" id="product-review-modal">
+
+    </div>
 @endsection
 
 @section('script')
     <script type="text/javascript">
+        function product_review(product_id, user_id) {
+            $.post('{{ route('product_review_modal.show') }}', {
+                _token: '{{ @csrf_token() }}',
+                product_id: product_id,
+                user_id: user_id
+            }, function(data) {
+                $('#product-review-modal').html(data);
+                $('#product-review-modal').modal('show', {
+                    backdrop: 'static'
+                });
+                AIZ.extra.inputRating();
+            });
+        }
+
         $(document).on("change", ".check-all", function() {
             if(this.checked) {
                 // Iterate each checkbox

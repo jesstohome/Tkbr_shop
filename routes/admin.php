@@ -394,6 +394,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
         // Cashier Orders
         Route::get('/cashier_orders', 'cashier_orders')->name('cashier_orders.index');
+        Route::post('/cashier_orders/product_review_modal', 'product_review_modal')->name('product_review_modal.show');
         Route::get('/cashier_orders/{id}/show', 'cashier_orders_show')->name('cashier_orders.show');
 
         Route::post('/bulk-order-status', 'bulk_order_status')->name('bulk-order-status');

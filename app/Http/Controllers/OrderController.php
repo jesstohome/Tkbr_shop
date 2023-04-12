@@ -98,6 +98,8 @@ class OrderController extends Controller
     {
         //CoreComponentRepository::instantiateShopRepository();
         $date = $request->date;
+        $seller_id = $request->seller_id;
+        $customer_id = $request->customer_id;
         $sort_search = null;
         $delivery_status = null;
         //echo date('Y-m-d H:i:s');
@@ -115,12 +117,19 @@ class OrderController extends Controller
         if ($date != null) {
             $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
+        if ($seller_id) {
+            $orders = $orders->where('seller_id', $seller_id);
+        }
+        if ($customer_id) {
+            $orders = $orders->where('user_id', $customer_id);
+        }
+
         $orders = $orders->paginate(15);
         foreach ($orders as $order) {
             $order->admin_viewed = 1;
             $order->save();
         }
-        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date'));
+        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'seller_id', 'customer_id'));
     }
 
     // Storehouse Orders
@@ -242,6 +251,7 @@ class OrderController extends Controller
 
         $date = $request->date;
         $seller_id = $request->seller_id;
+        $customer_id = $request->customer_id;
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
@@ -267,9 +277,12 @@ class OrderController extends Controller
         if ($seller_id) {
             $orders = $orders->where('seller_id', $seller_id);
         }
+        if ($customer_id) {
+            $orders = $orders->where('user_id', $customer_id);
+        }
 
         $orders = $orders->paginate(15);
-        return view('backend.sales.seller_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date'));
+        return view('backend.sales.seller_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'customer_id', 'date'));
     }
 
      //Clocking Orders
@@ -315,6 +328,8 @@ class OrderController extends Controller
     {
         CoreComponentRepository::instantiateShopRepository();
         $date = $request->date;
+        $seller_id = $request->seller_id;
+        $customer_id = $request->customer_id;
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
@@ -336,10 +351,16 @@ class OrderController extends Controller
         if ($date != null) {
             $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
+        if ($seller_id) {
+            $orders = $orders->where('seller_id', $seller_id);
+        }
+        if ($customer_id) {
+            $orders = $orders->where('user_id', $customer_id);
+        }
 
         $orders = $orders->paginate(15);
 
-        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date'));
+        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'seller_id', 'customer_id'));
     }
 
     public function seller_orders_show($id)
@@ -954,5 +975,19 @@ class OrderController extends Controller
         return response()->json([
             'result' => $orders->count(),
         ]);
+    }
+
+    /**
+     * author: Sym
+     * time: 2023-04-12 13:25
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|mixed
+     */
+    public function product_review_modal(Request $request) {
+        $product_id = $request->post('product_id');
+        $user_id = $request->post('user_id');
+        $product = Product::findOrFail($product_id);
+
+        return view('backend.sales.cashier_orders.product_review_modal', compact('product', 'user_id'));
     }
 }

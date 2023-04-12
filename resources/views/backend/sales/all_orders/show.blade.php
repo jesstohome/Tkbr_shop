@@ -196,8 +196,10 @@
                                 </th>
                                 <th data-breakpoints="lg" class="min-col text-uppercase text-center">
                                     {{ translate('Price') }}</th>
-                                <th data-breakpoints="lg" class="min-col text-uppercase text-right">
+                                <th data-breakpoints="lg" class="min-col text-uppercase text-center">
                                     {{ translate('Total') }}</th>
+                                <th data-breakpoints="lg" class="min-col text-uppercase text-center">
+                                    {{ translate('options') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -247,6 +249,11 @@
                                     <td class="text-center">
                                         {{ single_price($orderDetail->price / $orderDetail->quantity) }}</td>
                                     <td class="text-center">{{ single_price($orderDetail->price) }}</td>
+                                    <td align="center">
+                                        <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_review('{{ $orderDetail->product_id }}', '{{$order->user_id}}')" title="{{ translate('Review') }}">
+                                            {{ translate('Review') }}
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -386,10 +393,27 @@
             </div>
         </div>
     </div>
+
+    <!-- Product Review Modal -->
+    <div class="modal fade" id="product-review-modal">
+
+    </div>
 @endsection
 @section('script')
     <script type="text/javascript">
-
+        function product_review(product_id, user_id) {
+            $.post('{{ route('product_review_modal.show') }}', {
+                _token: '{{ @csrf_token() }}',
+                product_id: product_id,
+                user_id: user_id
+            }, function(data) {
+                $('#product-review-modal').html(data);
+                $('#product-review-modal').modal('show', {
+                    backdrop: 'static'
+                });
+                AIZ.extra.inputRating();
+            });
+        }
 
       function addinfo()
         {

@@ -364,6 +364,7 @@ class PosController extends Controller
             if($order->save()){
                 $subtotal = 0;
                 $tax = 0;
+                $shipping_cost = 0;
                 $productStorehouseTotal = 0;
                 foreach (Session::get('pos.cart') as $key => $cartItem){
                     $product_stock = ProductStock::find($cartItem['stock_id']);
@@ -403,8 +404,9 @@ class PosController extends Controller
                         $order_detail->quantity = $cartItem['quantity'];
                         $order_detail->shipping_type = null;
 
-                        if (Session::get('pos.shipping', 0) >= 0){
-                            $order_detail->shipping_cost = Session::get('pos.shipping', 0)/count(Session::get('pos.cart'));
+                        if ($product->shipping_cost > 0) {
+                            $order_detail->shipping_cost = $product->shipping_cost;
+                            $shipping_cost += $product->shipping_cost;
                         }
                         else {
                             $order_detail->shipping_cost = 0;
@@ -417,7 +419,7 @@ class PosController extends Controller
                     }
                 }
 
-                $order->grand_total = $subtotal + $tax + Session::get('pos.shipping', 0);
+                $order->grand_total = $subtotal + $tax + $shipping_cost;
 
                 if(Session::has('pos.discount')){
                     $order->grand_total -= Session::get('pos.discount');

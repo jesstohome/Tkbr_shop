@@ -25,6 +25,18 @@
                     </select>
                 </div>
             </div>
+            <div class="col-lg-2">
+                <div class="form-group mb-0">
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="customer_id" name="customer_id">
+                        <option value="">{{ translate('All Customers') }}</option>
+                        @foreach (App\Models\User::where('user_type', '=', 'customer')->get() as $key => $customer)
+                            <option value="{{ $customer->id }}" @if ($customer->id == $customer_id) selected @endif>
+                                {{ $customer->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <div class="col-lg-3">
                 <div class="form-group mb-0">
                     <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
@@ -69,17 +81,17 @@
                         <td>
                             {{ $order->code }}@if($order->viewed == 0) <span class="badge badge-inline badge-info">{{translate('New')}}</span>@endif
                         </td>
-                        
+
                          <td>
                             @php
                             $shop = App\Models\User::where('id',$order->seller_id)->first();
                             echo $shop['email'];
                             @endphp
-                            
-                            
+
+
                         </td>
-                        
-                        
+
+
                         <td>
                             {{ count($order->orderDetails->where('seller_id', '!=', $admin_user_id)) }}
                         </td>
