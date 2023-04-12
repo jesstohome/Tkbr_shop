@@ -223,6 +223,21 @@ class PosController extends Controller
             return view('pos.guest_shipping_address');
         }
         else{
+            $address = Address::where('user_id',$user_id)->get();
+            if ($address->count() == 1) {
+                $address = $address[0];
+                $data['name'] = $address->user->name;
+                $data['email'] = $address->user->email;
+                $data['address'] = $address->address;
+                $data['country'] = $address->country->name;
+                $data['state'] = $address->state->name;
+                $data['city'] = $address->city->name;
+                $data['postal_code'] = $address->postal_code;
+                $data['phone'] = $address->phone;
+                $shipping_info = $data;
+                $request->session()->put('pos.shipping_info', $shipping_info);
+                return '';
+            }
             return view('pos.shipping_address', compact('user_id'));
         }
     }
@@ -345,7 +360,6 @@ class PosController extends Controller
             }
 
 
-            $shipping_info = Session::get('pos.shipping_info');
             $order->picking_switch = get_setting('picking_switch');
             if($order->save()){
                 $subtotal = 0;

@@ -2,6 +2,7 @@
     @php
         $subtotal = 0;
         $tax = 0;
+        $total_shipping = 0;
     @endphp
     @if (Session::has('pos.cart'))
         <ul class="list-group list-group-flush">
@@ -9,9 +10,11 @@
             @php
                 $stock = \App\Models\ProductStock::find($cartItem['stock_id']);
                 if ($stock){
-                $subtotal += $cartItem['price']*$cartItem['quantity'];
-                $tax += $cartItem['tax']*$cartItem['quantity'];
-                    }
+                    $subtotal += $cartItem['price']*$cartItem['quantity'];
+                    $tax += $cartItem['tax']*$cartItem['quantity'];
+
+                    $total_shipping += (float) $stock->product->shipping_cost;
+                }
             @endphp
                 @if ($stock)
             <li class="list-group-item py-0 pl-2">
@@ -70,7 +73,7 @@
     </div>
     <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
         <span>{{translate('Shipping')}}</span>
-        <span>{{ single_price(Session::get('pos.shipping', 0)) }}</span>
+        <span>{{ single_price($total_shipping) }}</span>
     </div>
     <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
         <span>{{translate('Discount')}}</span>
@@ -78,6 +81,6 @@
     </div>
     <div class="d-flex justify-content-between fw-600 fs-18 border-top pt-2">
         <span>{{translate('Total')}}</span>
-        <span>{{ single_price($subtotal+$tax+Session::get('pos.shipping', 0) - Session::get('pos.discount', 0)) }}</span>
+        <span>{{ single_price($subtotal+$tax+$total_shipping - Session::get('pos.discount', 0)) }}</span>
     </div>
 </div>

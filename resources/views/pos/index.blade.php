@@ -77,7 +77,7 @@
                                         <option value="">订单类型</option>
 										<option value="24">普通订单</option>
                                         <option value="24">常规订单</option>
-                                        <option value="6">加急订单</option>
+                                        <option value="6" selected>加急订单</option>
                                 </select>
                             </div>
                         </div>
@@ -87,9 +87,6 @@
                                 @php
                                     $subtotal = 0;
                                     $tax = 0;
-                                    /*if (Session::has('pos.cart')){
-                                        dd(Session::get('pos.cart'));
-                                    }*/
                                 @endphp
                                 @if (Session::has('pos.cart'))
                                     <ul class="list-group list-group-flush">
@@ -175,29 +172,10 @@
                 <div class="pos-footer mar-btm">
                     <div class="d-flex flex-column flex-md-row justify-content-between">
                         <div class="d-flex">
-                            <div class="dropdown mr-3 ml-0 dropup">
-                                <button class="btn btn-outline-dark btn-styled dropdown-toggle" type="button" data-toggle="dropdown">
-                                    {{translate('Shipping')}}
-                                </button>
-                                <div class="dropdown-menu p-3 dropdown-menu-lg">
-                                    <div class="input-group">
-                                        <input type="number" min="0" placeholder="Amount" name="shipping" class="form-control" value="{{ Session::get('pos.shipping', 0) }}" required onchange="setShipping()">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">{{ translate('Flat') }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="dropdown dropup">
-                                <button class="btn btn-outline-dark btn-styled dropdown-toggle" type="button" data-toggle="dropdown">
-                                    {{translate('Discount')}}
-                                </button>
-                                <div class="dropdown-menu p-3 dropdown-menu-lg">
-                                    <div class="input-group">
-                                        <input type="number" min="0" placeholder="Amount" name="discount" class="form-control" value="{{ Session::get('pos.discount', 0) }}" required onchange="setDiscount()">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">{{ translate('Flat') }}</span>
-                                        </div>
+                                <div class="my-2 my-md-0">
+                                    <div class="form-group">
+                                        <input class="form-control" type="datetime-local" name="effectivetime" placeholder="{{ translate('Search by Product Name/Barcode') }}" >
                                     </div>
                                 </div>
                             </div>
@@ -594,8 +572,10 @@
             console.log($('select[name=user_id]').val(),88888)
             if($('select[name=user_id]').val() !=''){
                 $.post('{{ route('pos.getShippingAddress') }}',{_token:AIZ.data.csrf, id:$('select[name=user_id]').val()}, function(data){
-                    $('#new-customer').modal('show');
-                    $('#shipping_address').html(data);
+                    if (data) {
+                        $('#new-customer').modal('show');
+                        $('#shipping_address').html(data);
+                    }
                 });
             }
         }

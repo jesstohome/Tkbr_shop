@@ -93,7 +93,9 @@ class ConversationController extends Controller
         } elseif ($conversation->receiver_id == Auth::user()->id) {
             $conversation->sender_viewed = "1";
         }
+        $conversation->admin_viewed = 0;
         $conversation->save();
+
         return back();
     }
 

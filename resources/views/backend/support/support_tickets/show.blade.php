@@ -10,8 +10,8 @@
                <div class="mt-2">
                    <span> {{ $ticket->user->name }} </span>
                    <span class="ml-2"> {{ $ticket->created_at }} </span>
-                   <span class="badge badge-inline badge-secondary ml-2 text-capitalize"> 
-                       {{ translate($ticket->status) }} 
+                   <span class="badge badge-inline badge-secondary ml-2 text-capitalize">
+                       {{ translate($ticket->status) }}
                    </span>
                </div>
             </div>
@@ -39,9 +39,9 @@
                 </div>
                 <div class="form-group mb-0 text-right">
                     <button type="submit" class="btn btn-sm btn-dark" onclick="submit_reply('pending')">
-                        {{ translate('Submit as') }} 
+                        {{ translate('Submit as') }}
                         <strong>
-                            <span class="text-capitalize"> 
+                            <span class="text-capitalize">
                                 {{ translate($ticket->status) }}
                             </span>
                         </strong>
@@ -132,6 +132,8 @@
             $('input[name=status]').val(status);
             if($('textarea[name=reply]').val().length > 0){
                 $('#ticket-reply-form').submit();
+            } else {
+                AIZ.plugins.notify('danger', '请先填写内容');
             }
         }
     </script>

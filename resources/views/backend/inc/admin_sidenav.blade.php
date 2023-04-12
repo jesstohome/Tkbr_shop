@@ -775,6 +775,8 @@
                             <span class="aiz-side-nav-text">{{translate('Support')}}</span>
                             @if ($conversation_count > 0 || $support_ticket > 0)
                                 <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                            @else
+                                <span class="badge badge-danger badge-circle badge-sm badge-dot conversations" style="display: none"> </span>
                             @endif
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
@@ -811,7 +813,7 @@
                                     <li class="aiz-side-nav-item">
                                         <a href="{{route('poin-of-sales.conversation')}}" class="aiz-side-nav-link">
                                             <span class="aiz-side-nav-text">{{translate('Conversations')}}</span>
-                                            <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations" style="display: none"> </span>
+                                            <span class="badge badge-danger badge-circle badge-sm badge-dot conversations" style="display: none"> </span>
                                             <!-- 对话  -->
                                         </a>
                                     </li>
@@ -1233,6 +1235,7 @@
     <div class="aiz-sidebar-overlay"></div>
 </div><!-- .aiz-sidebar -->
 
+
 <script type="text/javascript">
     function getConversations() {
         $.ajax( {
@@ -1241,10 +1244,10 @@
             success: function (data)
             {
                 if ( data.result > 0 ) {
-                    $( '#conversations' ).show();
+                    $( '.conversations' ).show();
                 }
                 else {
-                    $( '#conversations' ).hide();
+                    $( '.conversations' ).hide();
                 }
             }
         } );
@@ -1257,14 +1260,20 @@
             success: function (data)
             {
                 if ( data.result > 0 ) {
-                    $( '#order-red-tip' ).show();
+                    $( '.order-red-tip' ).show();
                 }
                 else {
-                    $( '#order-red-tip' ).hide();
+                    $( '.order-red-tip' ).hide();
                 }
             }
         } );
     }
+
+    setTimeout(function () {
+        getConversations();
+
+        get_not_view_count();
+    }, 2000);
 
     setInterval( function ()
     {

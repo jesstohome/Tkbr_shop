@@ -52,12 +52,20 @@
                                                   @if ((Auth::user()->id == $conversation->sender_id && $conversation->sender_viewed == 0) || (Auth::user()->id == $conversation->receiver_id && $conversation->receiver_viewed == 0))
                                                       <span class="badge badge-inline badge-danger">{{ translate('New') }}</span>
                                                   @else
-                                                      @foreach ($conversation->messages as $messages)
-                                                          @if ( $messages->updated_at == $messages->created_at && $messages->user_id != Auth::user()->id )
-                                                              <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
-                                                              @break
-                                                          @endif
-                                                      @endforeach
+
+                                                      @if(Auth::user()->user_type != 'admin')
+                                                          @foreach ($conversation->messages as $messages)
+                                                              @if ( $messages->updated_at == $messages->created_at && $messages->user_id != Auth::user()->id )
+                                                                  <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                                                                  @break
+                                                              @endif
+                                                          @endforeach
+                                                      @endif
+
+                                                  @endif
+
+                                                  @if ( Auth::user()->user_type == 'admin' && $conversation->admin_viewed == 0)
+                                                      <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
                                                   @endif
                                               </h6>
                                           </div>
