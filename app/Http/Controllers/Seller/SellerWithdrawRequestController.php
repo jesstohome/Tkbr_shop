@@ -70,6 +70,12 @@ class SellerWithdrawRequestController extends Controller
                     flash(translate('You do not have enough balance to send withdraw request'))->error();
                     return back();
                 }
+
+                $minimum_seller_amount_withdraw = (float) get_setting('minimum_seller_amount_withdraw');
+                if ($request->amount < $minimum_seller_amount_withdraw) {
+                    flash(sprintf(translate('The minimum withdrawal amount is %s yuan'), $minimum_seller_amount_withdraw))->error();
+                    return back();
+                }
                 $exits = SellerWithdrawRequest::where('status', '0')->where('type',1)->where('user_id', $user->id)->count();
 
                 if ($exits !== 0) {

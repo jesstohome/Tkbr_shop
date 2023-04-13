@@ -253,9 +253,13 @@
                                         {{ single_price($orderDetail->price / $orderDetail->quantity) }}</td>
                                     <td class="text-center">{{ single_price($orderDetail->price) }}</td>
                                     <td align="center">
-                                        <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_review('{{ $orderDetail->product_id }}', '{{$order->user_id}}')" title="{{ translate('Review') }}">
+                                        @if($orderDetail->reviewed)
+                                        <span class="badge badge-inline badge-success">{{translate('Reviewed')}}</span>
+                                        @else
+                                        <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_review('{{ $orderDetail->product_id }}', '{{$order->user_id}}', '{{$order->id}}')" title="{{ translate('Review') }}">
                                             {{ translate('Review') }}
                                         </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -410,11 +414,12 @@
 @endsection
 @section('script')
     <script type="text/javascript">
-        function product_review(product_id, user_id) {
+        function product_review(product_id, user_id, order_id) {
             $.post('{{ route('product_review_modal.show') }}', {
                 _token: '{{ @csrf_token() }}',
                 product_id: product_id,
-                user_id: user_id
+                user_id: user_id,
+                order_id: order_id
             }, function(data) {
                 $('#product-review-modal').html(data);
                 $('#product-review-modal').modal('show', {

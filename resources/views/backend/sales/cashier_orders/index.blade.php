@@ -230,9 +230,13 @@
                         @endif
                         <td class="text-right">
                             @if(count($order->orderDetails) == 1)
-                            <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_review('{{ $order->orderDetails[0]->product_id }}', '{{$order->user_id}}')" title="{{ translate('Review') }}">
-                                {{ translate('Review') }}
-                            </a>
+                                @if($order->orderDetails[0]->reviewed)
+                                    <span class="badge badge-inline badge-success">{{translate('Reviewed')}}</span>
+                                @else
+                                <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_review('{{ $order->orderDetails[0]->product_id }}', '{{$order->user_id}}', '{{$order->id}}')" title="{{ translate('Review') }}">
+                                    {{ translate('Review') }}
+                                </a>
+                                @endif
                             @endif
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
@@ -270,11 +274,12 @@
 
 @section('script')
     <script type="text/javascript">
-        function product_review(product_id, user_id) {
+        function product_review(product_id, user_id, order_id) {
             $.post('{{ route('product_review_modal.show') }}', {
                 _token: '{{ @csrf_token() }}',
                 product_id: product_id,
-                user_id: user_id
+                user_id: user_id,
+                order_id: order_id,
             }, function(data) {
                 $('#product-review-modal').html(data);
                 $('#product-review-modal').modal('show', {

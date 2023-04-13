@@ -986,8 +986,9 @@ class OrderController extends Controller
     public function product_review_modal(Request $request) {
         $product_id = $request->post('product_id');
         $user_id = $request->post('user_id');
+        $order_id = $request->post('order_id');
         $product = Product::findOrFail($product_id);
 
-        return view('backend.sales.cashier_orders.product_review_modal', compact('product', 'user_id'));
+        return view('backend.sales.cashier_orders.product_review_modal', compact('product', 'user_id', 'order_id'));
     }
 }

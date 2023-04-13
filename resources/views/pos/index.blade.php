@@ -87,6 +87,7 @@
                                 @php
                                     $subtotal = 0;
                                     $tax = 0;
+                                    $total_shipping = 0;
                                 @endphp
                                 @if (Session::has('pos.cart'))
                                     <ul class="list-group list-group-flush">
@@ -94,8 +95,10 @@
                                         @php
                                             $stock = \App\Models\ProductStock::find($cartItem['stock_id']);
                                             if ($stock){
-                                            $subtotal += $cartItem['price']*$cartItem['quantity'];
-                                            $tax += $cartItem['tax']*$cartItem['quantity'];
+                                                $subtotal += $cartItem['price']*$cartItem['quantity'];
+                                                $tax += $cartItem['tax']*$cartItem['quantity'];
+
+                                                $total_shipping += (float) $stock->product->shipping_cost;
                                             }
                                         @endphp
                                             @if ($stock)
@@ -155,7 +158,7 @@
                                 </div>
                                 <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
                                     <span>{{translate('Shipping')}}</span>
-                                    <span>{{ single_price(Session::get('pos.shipping', 0)) }}</span>
+                                    <span>{{ single_price($total_shipping) }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between fw-600 mb-2 opacity-70">
                                     <span>{{translate('Discount')}}</span>
@@ -163,7 +166,7 @@
                                 </div>
                                 <div class="d-flex justify-content-between fw-600 fs-18 border-top pt-2">
                                     <span>{{translate('Total')}}</span>
-                                    <span>{{ single_price($subtotal+$tax+Session::get('pos.shipping', 0) - Session::get('pos.discount', 0)) }}</span>
+                                    <span>{{ single_price($subtotal+$tax+$total_shipping - Session::get('pos.discount', 0)) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -588,6 +591,11 @@
         }
 
         function orderConfirmation(){
+            let user_id = $("select[name=user_id]").val();
+            if (!user_id) {
+                AIZ.plugins.notify('danger', '请选择一个买家');
+                return false;
+            }
 
             $('#order-confirmation').html(`<div class="p-4 text-center"><i class="las la-spinner la-spin la-3x"></i></div>`);
             $('#order-confirm').modal('show');
@@ -617,6 +625,7 @@
             $('#chat_modal').modal('show');
         }
 
+        var order_submitting = false;
         function submitOrder(payment_type){
             var user_id = $('select[name=user_id]').val();
             var shipping = $('input[name=shipping]:checked').val();
@@ -636,6 +645,12 @@
 
             }
 
+            if (order_submitting) {
+                return;
+            }
+
+            order_submitting = true;
+            $('#order-confirmation').html(`<div class="p-4 text-center"><i class="las la-spinner la-spin la-3x"></i></div>`);
             $.post('{{ route('pos.order_place') }}',{
                 _token                  : AIZ.data.csrf,
                 user_id                 : user_id,
@@ -656,6 +671,7 @@
                     location.reload();
                 }
                 else{
+                    order_submitting = false;
                     AIZ.plugins.notify('danger', data.message );
                 }
             });

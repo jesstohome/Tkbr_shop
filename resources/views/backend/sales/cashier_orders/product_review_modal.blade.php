@@ -10,6 +10,7 @@
                 @csrf
                 <input type="hidden" name="product_id" value="{{$product->id}}">
                 <input type="hidden" name="user_id" value="{{$user_id}}">
+                <input type="hidden" name="order_id" value="{{$order_id}}">
             </div>
             <div class="modal-body">
                 <div class="form-group">

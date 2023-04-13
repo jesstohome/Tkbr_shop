@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrderDetail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Review;
@@ -17,7 +18,7 @@ class ReviewController extends Controller
      */
     public function index(Request $request)
     {
-         
+
         $reviews = Review::orderBy('created_at', 'desc')->paginate(15);
         return view('backend.product.reviews.index', compact('reviews'));
     }
@@ -61,6 +62,14 @@ class ReviewController extends Controller
             $seller->rating = (($seller->rating*$seller->num_of_reviews)+$review->rating)/($seller->num_of_reviews + 1);
             $seller->num_of_reviews += 1;
             $seller->save();
+        }
+
+        if ($request->order_id) {
+            // 更新对应产品为已评论
+            OrderDetail::query()
+                ->where('order_id', $request->order_id)
+                ->where('product_id', $request->product_id)
+                ->update(['reviewed' => 1]);
         }
 
         flash(translate('Review has been submitted successfully'))->success();
