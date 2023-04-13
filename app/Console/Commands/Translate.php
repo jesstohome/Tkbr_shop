@@ -13,7 +13,7 @@ class Translate extends Command
      *
      * @var string
      */
-    protected $signature = 'translate:run {code}';
+    protected $signature = 'translate:run {code?}';
 
     /**
      * The console command description.
