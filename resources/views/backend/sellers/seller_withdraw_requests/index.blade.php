@@ -11,10 +11,16 @@
                         <th data-breakpoints="lg">#</th>
                         <th data-breakpoints="lg">{{translate('Date')}}</th>
                         <th>{{translate('Seller')}}</th>
-                        <th data-breakpoints="lg">{{translate('Total Amount to Pay')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Amount to freezing')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Amount to buyer pay')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Amount to pickup pay')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Amount to profit')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Amount to wallet recharge')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Amount to wallet withdraw')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Amount to commission')}}</th>
                         <th>{{translate('Requested Amount')}}</th>
                         <th>{{translate('Type')}}</th>
-                                                <th data-breakpoints="lg">{{ translate('Withdraw type') }}</th>
+                        <th data-breakpoints="lg">{{ translate('Withdraw type') }}</th>
                         <th data-breakpoints="lg" width="20%">{{ translate('Message') }}</th>
                         <th data-breakpoints="lg">{{ translate('Status') }}</th>
                         <th data-breakpoints="lg" width="15%" class="text-right">{{translate('Options')}}</th>
@@ -24,19 +30,33 @@
                     @foreach($seller_withdraw_requests as $key => $seller_withdraw_request)
                         @php $user = \App\Models\User::find($seller_withdraw_request->user_id); @endphp
                         @if ($user && $user->shop)
+                            @php
+                            $total_buyer_pay = (float) \App\Models\Order::query()->where(['seller_id' => $user->id])->sum('grand_total');
+                            $total_pickup_pay = (float) \App\Models\Order::query()->where(['seller_id' => $user->id, 'product_storehouse_status' => 1])->sum('product_storehouse_total');
+                            $total_storehouse = (float) \App\Models\Order::query()->where(['seller_id' => $user->id])->sum('product_storehouse_total');
+                            $total_wallet_recharge = (float) \App\Models\Wallet::query()->where('offline_payment', 1)->where('user_id', $user->id)->where('approval', 1)->sum('amount');
+                            $total_wallet_withdraw = (float) \App\Models\SellerWithdrawRequest::query()->where('type', 1)->where('user_id', $user->id)->where('status', 1)->sum('amount');
+                            $total_commission = (float) \App\Models\AffiliateLog::query()->where('referred_by_user', $user->id)->sum('amount');
+                            @endphp
                             <tr>
                                 <td>{{ ($key+1) + ($seller_withdraw_requests->currentPage() - 1)*$seller_withdraw_requests->perPage() }}</td>
                                 <td>{{ $seller_withdraw_request->created_at }}</td>
                                 <td>{{ $user->name }} ({{ $user->shop->name }})</td>
                                 <td>{{ single_price($user->shop->admin_to_pay) }}</td>
+                                <td>{{ single_price($total_buyer_pay) }}</td>
+                                <td>{{ single_price($total_pickup_pay) }}</td>
+                                <td>{{ single_price($total_buyer_pay - $total_storehouse) }}</td>
+                                <td>{{ single_price($total_wallet_recharge) }}</td>
+                                <td>{{ single_price($total_wallet_withdraw) }}</td>
+                                <td>{{ single_price($total_commission) }}</td>
                                 <td>{{ single_price($seller_withdraw_request->amount) }}</td>
-                                
+
                                   <td>
                             @if( $seller_withdraw_request->type == 1)
-                            
+
                             {{translate('User Balance')}}
                             @else
-                            
+
                               {{translate('Guarantee')}}
                             @endif
                         </td>
