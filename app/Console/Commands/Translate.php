@@ -13,7 +13,7 @@ class Translate extends Command
      *
      * @var string
      */
-    protected $signature = 'translate:run';
+    protected $signature = 'translate:run {code}';
 
     /**
      * The console command description.
@@ -51,7 +51,11 @@ class Translate extends Command
             ]
         ];*/
         $values = Translation::query()->where(['lang' => 'en'])->get();
-        $langs = Language::where('status', 1)->get();
+        $langs = Language::where('status', 1);
+        if (!empty($this->argument('code'))) {
+            $langs = $langs->where('code', $this->argument('code'));
+        }
+        $langs = $langs->get();
 
         $pb = $this->output->createProgressBar(count($values) * count($langs));
 
