@@ -244,10 +244,6 @@
                 if(data == 1){
                     AIZ.plugins.notify('success', '{{ translate('Published products updated successfully') }}');
                 }
-                else if(data == 2){
-                    AIZ.plugins.notify('danger', '{{ translate('Please upgrade your package.') }}');
-                    location.reload();
-                }
                 else{
                     AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
                     location.reload();

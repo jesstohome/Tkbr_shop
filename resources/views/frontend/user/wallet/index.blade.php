@@ -306,7 +306,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">{{ translate('Send A Withdraw Request') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
-                @if ($balance >= 5)
+                @if ($balance >= (int) get_setting('minimum_seller_amount_withdraw'))
                     <form class="" action="{{ route('wallet.do_money_withdraw_request') }}" method="post">
                         @csrf
                         <div class="modal-body gry-bg px-3 pt-3">
@@ -375,7 +375,7 @@
                 @else
                     <div class="modal-body gry-bg px-3 pt-3">
                         <div class="p-5 heading-3">
-                            {{ translate('The minimum withdrawal amount is 5 yuan') }}
+                            {{ sprintf(translate('The minimum withdrawal amount is %s yuan'), (int) get_setting('minimum_seller_amount_withdraw')) }}
                         </div>
                     </div>
                 @endif

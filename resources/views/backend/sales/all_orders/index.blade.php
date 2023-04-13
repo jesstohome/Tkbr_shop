@@ -133,6 +133,7 @@
                         @if (addon_is_activated('refund_request'))
                         <th>{{ translate('Refund') }}</th>
                         @endif
+                        <th>{{ translate('Has the loan been released') }}</th>
                         <th class="text-right" width="15%">{{translate('options')}}</th>
                     </tr>
                 </thead>
@@ -200,13 +201,15 @@
                             @endif
                         </td>
                         <td style="width:80px">
-                            @if ($order->product_storehouse_status)
-                                <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
-                                @if(Redis::hget('orders_pick_up_tip', $order->id))
-                                    <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                            @if ($order->product_storehouse_total > 0)
+                                @if ($order->product_storehouse_status)
+                                    <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
+                                    @if(Redis::hget('orders_pick_up_tip', $order->id))
+                                        <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                                    @endif
+                                @else
+                                    <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
                                 @endif
-                            @else
-                                <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
                             @endif
                         </td>
                         <td>
@@ -235,6 +238,13 @@
                             @endif
                         </td>
                         @endif
+                        <td>
+                            @if ($order->product_storehouse_status && !$order->freeze_expired_at)
+                                {{translate('Yes')}}
+                            @else
+                                {{translate('No')}}
+                            @endif
+                        </td>
                         <td class="text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>

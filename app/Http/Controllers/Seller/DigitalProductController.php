@@ -35,10 +35,6 @@ class DigitalProductController  extends Controller
                 $categories = Category::where('digital', 1)->get();
                 return view('seller.product.digitalproducts.create', compact('categories'));
             }
-            else {
-                flash(translate('Please upgrade your package.'))->warning();
-                return back();
-            }
         }
         $categories = Category::where('digital', 1)->get();
         return view('seller.product.digitalproducts.create', compact('categories'));
@@ -52,12 +48,6 @@ class DigitalProductController  extends Controller
      */
     public function store(Request $request)
     {
-        if(addon_is_activated('seller_subscription')){
-            if(!seller_package_validity_check()){
-                flash(translate('Please upgrade your package.'))->warning();
-                return redirect()->route('seller.digitalproducts');
-            }
-        }
 
         $product                    = new Product;
         $product->name              = $request->name;
@@ -93,7 +83,7 @@ class DigitalProductController  extends Controller
         $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->name)).'-'.rand(10000,99999);
 
         if($product->save()){
-            
+
             $product_stock              = new ProductStock;
             $product_stock->product_id  = $product->id;
             $product_stock->variant     = '';
@@ -183,7 +173,7 @@ class DigitalProductController  extends Controller
         foreach ($product->stocks as $key => $stock) {
             $stock->delete();
         }
-        
+
         if($product->save()){
             // Insert Into Product Stock
             $product_stock              = new ProductStock;
@@ -193,7 +183,7 @@ class DigitalProductController  extends Controller
             $product_stock->sku         = '';
             $product_stock->qty         = 0;
             $product_stock->save();
-            
+
             // Product Translations
             $product_translation                = ProductTranslation::firstOrNew(['lang' => $request->lang, 'product_id' => $product->id]);
             $product_translation->name          = $request->name;

@@ -79,18 +79,6 @@ class ProductController extends Controller
 
     public function create(Request $request)
     {
-        if (addon_is_activated('seller_subscription')) {
-            if (seller_package_validity_check()) {
-                $categories = Category::where('parent_id', 0)
-                    ->where('digital', 0)
-                    ->with('childrenCategories')
-                    ->get();
-                return view('seller.product.products.create', compact('categories'));
-            } else {
-                flash(translate('Please upgrade your package.'))->warning();
-                return back();
-            }
-        }
         $categories = Category::where('parent_id', 0)
             ->where('digital', 0)
             ->with('childrenCategories')
@@ -100,13 +88,6 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request)
     {
-        if (addon_is_activated('seller_subscription')) {
-            if (!seller_package_validity_check()) {
-                flash(translate('Please upgrade your package.'))->warning();
-                return redirect()->route('seller.products');
-            }
-        }
-
         $product = $this->productService->store($request->except([
             '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
         ]));
@@ -339,13 +320,6 @@ class ProductController extends Controller
             flash(translate('This product is not yours.'))->warning();
             return back();
         }
-//        dd(seller_package_validity_check());
-//        if (addon_is_activated('seller_subscription')) {
-            if (!seller_package_validity_check()) {
-                flash(translate('Please upgrade your package.'))->warning();
-                return back();
-            }
-//        }
 
         if (Auth::user()->id == $product->user_id) {
             $product_new = $product->replicate();

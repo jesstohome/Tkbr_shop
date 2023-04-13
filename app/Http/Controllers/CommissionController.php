@@ -41,7 +41,7 @@ class CommissionController extends Controller
             //退款回支付账户
             $user->balance = $user->balance+$withdrawRequest->amount;
             $user->save();
-            return redirect()->route('sellers.index');
+            return redirect()->route('withdraw_requests_all');
         }
         else
         {
@@ -60,7 +60,7 @@ class CommissionController extends Controller
 
 
 
-            return redirect()->route('sellers.index');
+            return redirect()->route('withdraw_requests_all');
         }
     }
 
@@ -254,7 +254,7 @@ id: 1
             $payment->save();
 
             flash(translate('Payment completed'))->success();
-            return redirect()->route('sellers.withdraw_requests_all.index');
+            return redirect()->route('withdraw_requests_all');
         }
     }
 

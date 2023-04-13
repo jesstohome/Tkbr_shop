@@ -15,15 +15,18 @@
                     $payment_status = $order->payment_status;
                 @endphp
 
+                @if ($order->product_storehouse_status)
                 @if (!$order->freeze_expired_at)
                     <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
-                        <button type="button" class="btn btn-primary" disabled>{{ translate('Free up frozen funds') }}</button>
+                        <button type="button" class="btn btn-primary" disabled>{{ translate('Already free up') }}</button>
                     </div>
                 @else
                     <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
                         <button id="free_up_btn" type="button" class="btn btn-primary confirm-alert" data-href="{{route('product-storehouse-order-free-up', $order->id)}}" data-target="#free-up-modal">{{ translate('Free up frozen funds') }}</button>
                     </div>
                 @endif
+                @endif
+
                 @if ($order->product_storehouse_status)
                     <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
                         <button type="button" class="btn btn-info" disabled>{{ translate('Picked up') }}</button>
@@ -84,7 +87,7 @@
                                 {{ translate('Cancel') }}</option>
                         </select>
                     @else
-                        <input type="text" class="form-control" value="{{ $delivery_status }}" disabled>
+                        <input type="text" class="form-control" value="{{ translate($delivery_status == 'delivered' ? 'Delivered' : 'Cancel') }}" disabled>
                     @endif
                 </div>
                 <div class="col-md-3 ml-auto">
@@ -385,11 +388,17 @@
                     <h4 class="modal-title h6">{{translate('Free Up Of Freeze Funds Confirmation')}}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 </div>
-                <div class="modal-body text-center">
-                    <h5 class="mt-1 text-">{{translate('Are you sure to free this up?')}}</h5>
-                    <button type="button" class="btn btn-link mt-2" data-dismiss="modal">{{translate('Cancel')}}</button>
-                    <a href="" id="comfirm-link" class="btn btn-primary mt-2">{{translate('Free Up')}}</a>
-                </div>
+                @if ($delivery_status == 'delivered')
+                    <div class="modal-body text-center">
+                        <h5 class="mt-1 text-">{{translate('Are you sure to free this up?')}}</h5>
+                        <button type="button" class="btn btn-link mt-2" data-dismiss="modal">{{translate('Cancel')}}</button>
+                        <a href="" id="comfirm-link" class="btn btn-primary mt-2">{{translate('Free Up')}}</a>
+                    </div>
+                @else
+                    <div class="modal-body text-center">
+                        <h5 class="mt-1 text-">{{translate('The order mailing status is incomplete and cannot be released')}}</h5>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -455,6 +464,9 @@
                 status: status
             }, function(data) {
                 AIZ.plugins.notify('success', '{{ translate('Delivery status has been updated') }}');
+                setTimeout(function () {
+                    location.reload();
+                }, 100)
             });
         });
 

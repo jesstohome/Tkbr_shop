@@ -184,13 +184,15 @@
                             @endif
                         </td>
                         <td style="width: 80px;">
-                            @if ($order->product_storehouse_status)
-                                <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
-                                @if(Redis::hget('orders_pick_up_tip', $order->id))
-                                    <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                            @if ($order->product_storehouse_total > 0)
+                                @if ($order->product_storehouse_status)
+                                    <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
+                                    @if(Redis::hget('orders_pick_up_tip', $order->id))
+                                        <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                                    @endif
+                                @else
+                                    <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
                                 @endif
-                            @else
-                                <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
                             @endif
                         </td>
                         <td>
@@ -219,7 +221,7 @@
                             @endif
                         </td>
                         <td>
-                            @if (!$order->freeze_expired_at)
+                            @if ($order->product_storehouse_status && !$order->freeze_expired_at)
                             {{translate('Yes')}}
                             @else
                             {{translate('No')}}
