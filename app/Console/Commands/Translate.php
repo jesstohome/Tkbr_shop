@@ -50,7 +50,7 @@ class Translate extends Command
                 'lang_value' => 'Reviewed',
             ]
         ];*/
-        $values = Translation::query()->where(['lang' => 'en'])->get();
+        $values = Translation::query()->where(['lang' => 'en'])->whereNotIn('lang_key', ['paystack'])->get();
         $langs = Language::where('status', 1);
         if (!empty($this->argument('code'))) {
             $langs = $langs->where('code', $this->argument('code'));
@@ -74,9 +74,11 @@ class Translate extends Command
                 //初始化
                 $curl = curl_init();
 
-                /*curl_setopt($curl, CURLOPT_PROXY, "127.0.0.1");
-                curl_setopt($curl, CURLOPT_PROXYPORT, "19180");
-                curl_setopt($curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);  // CURLPROXY_SOCKS5*/
+                if (env('APP_ENV', 'production') == 'local') {
+                    curl_setopt($curl, CURLOPT_PROXY, "127.0.0.1");
+                    curl_setopt($curl, CURLOPT_PROXYPORT, "19180");
+                    curl_setopt($curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);  // CURLPROXY_SOCKS5
+                }
 
                 $headers = [
                     'referer:*.joinf.com',
