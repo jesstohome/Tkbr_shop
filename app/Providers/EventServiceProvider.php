@@ -29,6 +29,32 @@ class EventServiceProvider extends ServiceProvider
   {
     parent::boot();
 
-    //
+    // 打印SQL 日志
+      \DB::listen(
+          function ($db) {
+              foreach ($db->bindings as $k => $binding) {
+                  if ($binding instanceof \DateTime) {
+                      $db->bindings[$k] = $binding->format('\'Y-m-d H:i:s\'');
+                  } else {
+                      if (is_string($binding)) {
+                          $db->bindings[$k] = "'$binding'";
+                      }
+                  }
+              }
+
+              $query = str_replace(array('%', '?'), array('%%', '%s'), $db->sql);
+
+              $query = vsprintf($query, $db->bindings);
+
+              // 保存文件
+              $logFile = fopen(
+                  storage_path('logs' . DIRECTORY_SEPARATOR . date('Y-m-d') . '_query.log'),
+                  'a+'
+              );
+              fwrite($logFile, date('Y-m-d H:i:s') . "《《《\n" . 'time : ' . $db->time . "\n" . 'sql : ' . $query .
+                  PHP_EOL . "》》》\n");
+              fclose($logFile);
+          }
+      );
   }
 }
