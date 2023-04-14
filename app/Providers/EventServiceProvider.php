@@ -30,7 +30,7 @@ class EventServiceProvider extends ServiceProvider
     parent::boot();
 
     // 打印SQL 日志
-      \DB::listen(
+      /*\DB::listen(
           function ($db) {
               foreach ($db->bindings as $k => $binding) {
                   if ($binding instanceof \DateTime) {
@@ -55,6 +55,6 @@ class EventServiceProvider extends ServiceProvider
                   PHP_EOL . "》》》\n");
               fclose($logFile);
           }
-      );
+      );*/
   }
 }

@@ -228,6 +228,12 @@ if (!function_exists('cart_product_price')) {
             $price = $product_stock->price;
         }
 
+        file_put_contents(storage_path('logs/order_store.log'), var_export([
+
+            '$str' => $str,
+            '$price' => $price,
+        ], true), FILE_APPEND);
+
 
         //discount calculation
         $discount_applicable = false;
