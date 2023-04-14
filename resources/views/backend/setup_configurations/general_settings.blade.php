@@ -120,6 +120,16 @@
                         </div>
 
                         <hr>
+                <div class="form-group row">
+                            <label class="col-md-3 col-from-label">{{translate('Automatically Unfrozen')}} ( {{translate('Days')}} )</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="frozen_funds_unfrozen_days">
+                                <input   type="text" class="form-control"  value="{{ get_setting('frozen_funds_unfrozen_days') }}" placeholder="{{translate('Automatically Unfrozen')}}" name="frozen_funds_unfrozen_days"  >
+
+                            </div>
+                        </div>
+
+
 
                         <div class="text-right">
     						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>

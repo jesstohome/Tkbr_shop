@@ -1245,7 +1245,6 @@ if (!function_exists('timedquery')) {
      */
     function timedquery($orderId){
 
-        file_put_contents('./tests/log/log.log', '$logString', 0);
         $orders = Order::query()->find($orderId);
         if (!$orders) return false;
         // 判断是否已经支付

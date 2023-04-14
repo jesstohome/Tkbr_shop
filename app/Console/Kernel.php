@@ -27,7 +27,10 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () {
             $timestamp = now()->timestamp;
-            Order::query()->whereNotNull('freeze_expired_at')->where('freeze_expired_at', '<=', $timestamp)
+            Order::query()->whereNotNull('freeze_expired_at')
+                ->where('freeze_expired_at', '<=', $timestamp)
+                ->where('delivery_status', 'delivered')
+                ->where('product_storehouse_total', '>', 0)
                 ->chunk(100, function ($orders) {
                     foreach ($orders as $order) {
                         \product_storehouse_order_free_up($order->id);
@@ -38,7 +41,7 @@ class Kernel extends ConsoleKernel
                     foreach ($orders as $order) {
                         \timedquery($order->id);
                     }
-                });    
+                });
         })->everyMinute();
     }
 
