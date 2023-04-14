@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\OTPVerificationController;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ClubPointController;
 use App\Models\Order;
@@ -45,9 +46,24 @@ class OrderController extends Controller
        # echo "<PRE>";
         #print_r( $_POST['data'] );
         parse_str( $_POST['data'] , $arr );
+
         $json = json_encode( $arr );
         $order = Order::findOrFail( $arr['order_id'] );
         $order->express_info = $json;
+
+        // 根据物流信息 自动定位发货状态
+        if (!empty($arr['express_info'])) {
+            foreach ($arr['express_info'] as $text) {
+                if ($text == 'The product has been shipped and is in transit') {
+                    $order->delivery_status = 'on_the_way';
+                } elseif ($text == "The product has arrived at the customer's courier receiving point") {
+                    $order->delivery_status = 'arrived';
+                }  elseif ($text == 'Customer has signed for confirmation of receipt') {
+                    $order->delivery_status = 'delivered';
+                }
+            }
+        }
+
         $order->save();
         echo 'Save Success';
     }
@@ -990,5 +1006,18 @@ class OrderController extends Controller
         $product = Product::findOrFail($product_id);
 
         return view('backend.sales.cashier_orders.product_review_modal', compact('product', 'user_id', 'order_id'));
+    }
+
+    public function product_review_detail_modal(Request $request) {
+        $product_id = $request->post('product_id');
+        $user_id = $request->post('user_id');
+        $order_id = $request->post('order_id');
+        $review = Review::query()->where([
+            'order_id' => $order_id,
+            'product_id' => $product_id,
+            'user_id' => $user_id,
+        ])->orderByDesc('id')->first();
+
+        return view('backend.sales.cashier_orders.product_review_detail_modal', compact('review'));
     }
 }

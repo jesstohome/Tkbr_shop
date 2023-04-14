@@ -111,6 +111,13 @@ class ProductStorehouseController extends Controller
         }, ARRAY_FILTER_USE_BOTH);
         $shop = Auth::user()->shop;
         if ($shop->verification_status==0) return response()->json(['success' => 0, 'message' => translate('Shop under review.')]);
+
+        $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+        if (
+            $package->product_upload_limit < ($shop->user->products()->count() + count($productIds))
+        ) {
+            return response()->json(['success' => 0, 'message' => sprintf(translate('Up to %d products can be uploaded'), $package->product_upload_limit)]);
+        }
         try {
             DB::beginTransaction();
             // 获取最大利润

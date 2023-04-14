@@ -1318,11 +1318,10 @@ if (!function_exists('seller_package_validity_check')) {
     {
         $user = $user_id == null ? \App\Models\User::find(Auth::user()->id) : \App\Models\User::find($user_id);
         $shop = $user->shop;
+        $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
         $package_validation = false;
         if (
-            $shop->product_upload_limit > $shop->user->products()->count()
-            && $shop->package_invalid_at != null
-            && Carbon::now()->diffInDays(Carbon::parse($shop->package_invalid_at), false) >= 0
+            $package->product_upload_limit > $shop->user->products()->count()
         ) {
             $package_validation = true;
         }

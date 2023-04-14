@@ -59,6 +59,7 @@
                     <option value="confirmed" @if ($delivery_status == 'confirmed') selected @endif>{{translate('Confirmed')}}</option>
                     <option value="picked_up" @if ($delivery_status == 'picked_up') selected @endif>{{translate('Picked Up')}}</option>
                     <option value="on_the_way" @if ($delivery_status == 'on_the_way') selected @endif>{{translate('On The Way')}}</option>
+                    <option value="arrived" @if ($delivery_status == 'arrived') selected @endif>{{ translate('Arrived') }}</option>
                     <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>{{translate('Delivered')}}</option>
                     <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>{{translate('Cancel')}}</option>
                 </select>
@@ -231,7 +232,9 @@
                         <td class="text-right">
                             @if(count($order->orderDetails) == 1)
                                 @if($order->orderDetails[0]->reviewed)
-                                    <span class="badge badge-inline badge-success">{{translate('Reviewed')}}</span>
+                                    <a class="btn btn-soft-success btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_review_detail('{{ $order->orderDetails[0]->product_id }}', '{{$order->user_id}}', '{{$order->id}}')">
+                                        {{translate('Reviewed')}}
+                                    </a>
                                 @else
                                 <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_review('{{ $order->orderDetails[0]->product_id }}', '{{$order->user_id}}', '{{$order->id}}')" title="{{ translate('Review') }}">
                                     {{ translate('Review') }}
@@ -270,6 +273,10 @@
     <div class="modal fade" id="product-review-modal">
 
     </div>
+
+    <div class="modal fade" id="product-review-detail-modal">
+
+    </div>
 @endsection
 
 @section('script')
@@ -286,6 +293,20 @@
                     backdrop: 'static'
                 });
                 AIZ.extra.inputRating();
+            });
+        }
+
+        function product_review_detail(product_id, user_id, order_id) {
+            $.post('{{ route('product_review_detail.show') }}', {
+                _token: '{{ @csrf_token() }}',
+                product_id: product_id,
+                user_id: user_id,
+                order_id: order_id,
+            }, function(data) {
+                $('#product-review-detail-modal').html(data);
+                $('#product-review-detail-modal').modal('show', {
+                    backdrop: 'static'
+                });
             });
         }
 

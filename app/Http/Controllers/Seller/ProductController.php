@@ -60,9 +60,6 @@ class ProductController extends Controller
             $products = $products->where('name', 'like', '%' . $search . '%');
         }
         $products = $products->paginate(10);
-//        dd($products);
-
-
 
         $seller_spread_packages_payments = collect(SellerSpreadPackagePayment::with(['products', 'seller_spread_package'])->where('user_id', Auth::user()->id)->where('expire_at', '>', time())->get())->toArray();
         foreach ( $seller_spread_packages_payments as $key=>$seller_spread_packages_payment )
@@ -74,11 +71,26 @@ class ProductController extends Controller
                 unset($seller_spread_packages_payments[$key]);
             }
         }
-        return view('seller.product.products.index', compact('products', 'search', 'seller_spread_packages_payments'));
+
+        $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+        return view('seller.product.products.index', compact('products', 'search', 'seller_spread_packages_payments', 'package'));
     }
 
     public function create(Request $request)
     {
+        if (addon_is_activated('seller_subscription')) {
+            if (seller_package_validity_check()) {
+                $categories = Category::where('parent_id', 0)
+                    ->where('digital', 0)
+                    ->with('childrenCategories')
+                    ->get();
+                return view('seller.product.products.create', compact('categories'));
+            } else {
+                $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+                flash(sprintf(translate('Up to %d products can be uploaded'), $package->product_upload_limit))->warning();
+                return back();
+            }
+        }
         $categories = Category::where('parent_id', 0)
             ->where('digital', 0)
             ->with('childrenCategories')
@@ -88,6 +100,14 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request)
     {
+        if (addon_is_activated('seller_subscription')) {
+            if (!seller_package_validity_check()) {
+                $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+                flash(sprintf(translate('Up to %d products can be uploaded'), $package->product_upload_limit))->warning();
+                return redirect()->route('seller.products');
+            }
+        }
+
         $product = $this->productService->store($request->except([
             '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
         ]));
@@ -318,6 +338,12 @@ class ProductController extends Controller
         if (Auth::user()->id != $product->user_id) {
             dd($product->user_id);
             flash(translate('This product is not yours.'))->warning();
+            return back();
+        }
+
+        if (!seller_package_validity_check()) {
+            $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+            flash(sprintf(translate('Up to %d products can be uploaded'), $package->product_upload_limit))->warning();
             return back();
         }
 

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Review;
 use App\Models\Product;
 use Auth;
+use Illuminate\Support\Facades\Redis;
 
 class ReviewController extends Controller
 {
@@ -43,6 +44,7 @@ class ReviewController extends Controller
     {
         $review = new Review;
         $review->product_id = $request->product_id;
+        $review->order_id = (int) $request->get('order_id', 0);
         $review->user_id = Auth::user()->user_type == 'admin'?$request->user_id:Auth::user()->id;
         $review->rating = $request->rating;
         $review->comment = $request->comment;
@@ -71,6 +73,8 @@ class ReviewController extends Controller
                 ->where('product_id', $request->product_id)
                 ->update(['reviewed' => 1]);
         }
+
+        Redis::hset('new_review_tip', $request->product_id, 1);
 
         flash(translate('Review has been submitted successfully'))->success();
         return back();

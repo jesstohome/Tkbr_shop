@@ -81,6 +81,8 @@
                                 {{ translate('Picked Up') }}</option>
                             <option value="on_the_way" @if ($delivery_status == 'on_the_way') selected @endif>
                                 {{ translate('On The Way') }}</option>
+                            <option value="arrived" @if ($delivery_status == 'arrived') selected @endif>
+                                {{ translate('Arrived') }}</option>
                             <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>
                                 {{ translate('Delivered') }}</option>
                             <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>
@@ -361,11 +363,11 @@
                                 @if( $express->express_info )
                                 @foreach ($express->express_info as $key => $ex )
 
-                              信息：<input type="text" class="form-control" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button"  value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
+                              信息：<input type="text" class="form-control" list="express_info_list" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button"  value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
                                <br><br>
                               @endforeach
                               @else
-                              信息：<input type="text" class="form-control" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;显示时间：<input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" class="form-control" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button" value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
+                              信息：<input type="text" class="form-control" list="express_info_list" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;显示时间：<input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" class="form-control" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button" value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
                                <br><br>
 
                               @endif
@@ -373,6 +375,12 @@
                     </div>
                     <br>
                         <input type="button" value="保存物流信息" class="btn btn-info" onclick="save_express_info()" />
+
+                        <datalist id="express_info_list">
+                            <option>The product has been shipped and is in transit</option>
+                            <option>The product has arrived at the customer's courier receiving point</option>
+                            <option>Customer has signed for confirmation of receipt</option>
+                        </datalist>
                     </form>
                 </div>
               </div>
@@ -431,7 +439,7 @@
 
       function addinfo()
         {
-            var html = '<div>信息：<input type="text" class="form-control" name="express_info[]" /> &nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:\'yyyy:MM:dd HH:mm:ss\'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input class="btn btn-primary btn-add" type="button" value="+" onclick="addinfo()" /></div>';
+            var html = '<div>信息：<input type="text" list="express_info_list" class="form-control" name="express_info[]" /> &nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:\'yyyy:MM:dd HH:mm:ss\'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input class="btn btn-primary btn-add" type="button" value="+" onclick="addinfo()" /></div>';
             $('.exp').append( html );
         }
 
@@ -441,7 +449,10 @@
                     _token:'{{ @csrf_token() }}',
                     data:$("#form1").serialize()
                 }, function(data){
-                    alert( data )
+                 AIZ.plugins.notify('success', data);
+                 setTimeout(function () {
+                     location.reload();
+                 }, 100)
                 },'text');
 
 

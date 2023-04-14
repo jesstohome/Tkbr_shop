@@ -24,6 +24,8 @@ class ReviewController extends Controller
             $review->save();
         }
 
+        \Redis::del('new_review_tip');
+
         return view('seller.reviews', compact('reviews'));
     }
 
