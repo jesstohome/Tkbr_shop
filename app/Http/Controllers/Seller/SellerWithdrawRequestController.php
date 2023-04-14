@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Seller;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Wallet;
+use App\Models\WalletExpenseLog;
 use Illuminate\Http\Request;
 use App\Models\SellerWithdrawRequest;
 use App\Models\User;
@@ -45,8 +46,10 @@ class SellerWithdrawRequestController extends Controller
 
         $paymentList = Payment::orderBy('created_at', 'desc')->where('t_type',1)->where('seller_id',Auth::user()->id)->paginate(15);
 
+        $walletExpenseList = WalletExpenseLog::orderBy('id', 'desc')->where('user_id',Auth::user()->id)->paginate(15);
+
         $auto_show_recharge = $request->get('auto_show_recharge', 0);
-        return view('seller.money_withdraw_requests.index', compact('paymentList','seller_withdraw_requests', 'freezeOrders', 'rechargeList', 'balance', 'shop', 'auto_show_recharge'));
+        return view('seller.money_withdraw_requests.index', compact('paymentList','seller_withdraw_requests', 'freezeOrders', 'rechargeList', 'balance', 'shop', 'auto_show_recharge', 'walletExpenseList'));
     }
 
 
@@ -94,6 +97,13 @@ class SellerWithdrawRequestController extends Controller
                     $userModel = User::find($user->id);
                     $userModel->balance = $user->balance-$request->amount;
                     $userModel->save();
+
+                    // 记录支出日志
+                    $walletExpenseLog = new WalletExpenseLog();
+                    $walletExpenseLog->user_id = $user->id;
+                    $walletExpenseLog->amount = $request->amount;
+                    $walletExpenseLog->type = '提现';
+                    $walletExpenseLog->save();
 
                     \Redis::hset('new_withdraw_tip', $seller_withdraw_request->id, 1);
 

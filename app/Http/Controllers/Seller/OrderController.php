@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\ProductStock;
 use App\Models\SmsTemplate;
 use App\Models\User;
+use App\Models\WalletExpenseLog;
 use App\Utility\NotificationUtility;
 use App\Utility\SmsUtility;
 use Illuminate\Http\Request;
@@ -101,6 +102,14 @@ class OrderController extends Controller
             $user->balance -= $order->product_storehouse_total;
             $user->save();
 
+            // 记录钱包支出日志
+            $walletExpenseLog = new WalletExpenseLog();
+            $walletExpenseLog->user_id = $user->id;
+            $walletExpenseLog->amount = $order->product_storehouse_total;
+            $walletExpenseLog->type = '提货';
+            $walletExpenseLog->save();
+
+            // 累计冻结资金
             $shop->admin_to_pay += $order->grand_total;
             $shop->save();
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Models\Payment;
+use App\Models\WalletExpenseLog;
 use Auth;
 
 class PaymentController extends Controller
@@ -15,6 +16,7 @@ class PaymentController extends Controller
     public function index()
     {
         $payments = Payment::where('seller_id', Auth::user()->id)->paginate(9);
-        return view('seller.payment_history', compact('payments'));
+        $walletExpenseList = WalletExpenseLog::orderBy('id', 'desc')->where('user_id',Auth::user()->id)->paginate(15);
+        return view('seller.payment_history', compact('payments', 'walletExpenseList'));
     }
 }
