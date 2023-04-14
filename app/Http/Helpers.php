@@ -222,15 +222,17 @@ if (!function_exists('cart_product_price')) {
                 $str = $cart_product['variation'];
             }
         }
-        $price = 0;
+
+        $price = $product->unit_price;
         $product_stock = $product->stocks->where('variant', $str)->first();
         if ($product_stock) {
             $price = $product_stock->price;
         }
 
         file_put_contents(storage_path('logs/order_store.log'), var_export([
-
             '$str' => $str,
+            'unit_price' => $product->unit_price,
+            'price' => $product_stock ? $product_stock->price : '',
             '$price' => $price,
         ], true), FILE_APPEND);
 
