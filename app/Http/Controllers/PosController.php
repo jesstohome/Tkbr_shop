@@ -377,8 +377,18 @@ class PosController extends Controller
 
                         // 计算产品仓库的产品货款
                         $originalProduct = null;
+                        file_put_contents(storage_path('logs/order_store.log'), var_export([
+                            'order_id' => $order->id,
+                            'product_id' => $product->id,
+                            'original_id' => $product->original_id,
+                        ], true), FILE_APPEND);
                         if ($product->original_id) {
                             $originalProduct = Product::query()->find($product->original_id);
+                            file_put_contents(storage_path('logs/order_store.log'), var_export([
+                                'order_id' => $order->id,
+                                'originalProductId' => $originalProduct->id,
+                                'original_id' => $product->original_id,
+                            ], true), FILE_APPEND);
                             if ($originalProduct) {
                                 $productStorehouseTotal += cart_product_price($cartItem, $originalProduct, false, false) * $cartItem['quantity'];
                             }
