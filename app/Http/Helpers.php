@@ -1350,3 +1350,12 @@ if (!function_exists('get_url_params')) {
         return $query_params[$key] ?? '';
     }
 }
+
+// 生成指定长度的字符数字串
+if (!function_exists('gen_rand_no')) {
+    function gen_rand_no($len)
+    {
+        $pow = pow(10, $len - 1);
+        return mt_rand(1 * $pow, 9 * $pow);
+    }
+}

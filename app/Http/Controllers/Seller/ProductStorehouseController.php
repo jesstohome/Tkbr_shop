@@ -118,6 +118,7 @@ class ProductStorehouseController extends Controller
         ) {
             return response()->json(['success' => 0, 'message' => sprintf(translate('Up to %d products can be uploaded'), $package->product_upload_limit)]);
         }
+
         try {
             DB::beginTransaction();
             // 获取最大利润
@@ -127,8 +128,20 @@ class ProductStorehouseController extends Controller
             }
             $maxProfit = $sellerPackage->max_profit / 100;
 
+            // 判断每件商品最多能让N个卖家同时上架在店铺上
+            $hasLimitShopProduct = false;
+            $limitShop = (int) get_setting('warehouse_product_merchant_limit');
+
             // 循环复制产品
             foreach ($productIds as $productId) {
+                if ($limitShop) {
+                    $alreadyShopNum = Product::query()->where('original_id', $productId)->count();
+                    if ($alreadyShopNum >= $limitShop) {
+                        $hasLimitShopProduct = true;
+                        continue;
+                    }
+                }
+
                 $product = Product::find($productId);
                 $profitPrice = $product->unit_price * $maxProfit;
 
@@ -171,7 +184,7 @@ class ProductStorehouseController extends Controller
             }
 
             DB::commit();
-            return response()->json(['success' => 1]);
+            return response()->json(['success' => $hasLimitShopProduct ? 2 : 1]);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json(['success' => 0]);

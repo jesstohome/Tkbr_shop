@@ -190,7 +190,7 @@
                     <div class="card-title text-primary fs-16 fw-600">
                         {{ translate('Sold Amount') }}
                     </div>
-                    <p>{{ translate('Your Sold Amount (Current month)') }}</p>
+                    <p>{{ translate('Your Sold Amount (Current month)') }} {{translate('Including freight')}}</p>
                     <h3 class="text-primary fw-600 fs-30">
                         {{ single_price($orderTotal) }}
                     </h3>

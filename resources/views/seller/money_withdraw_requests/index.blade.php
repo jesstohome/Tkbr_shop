@@ -366,7 +366,7 @@
                     <td>{{ $key+1 }}</td>
                     <td>{{ single_price($list->amount) }}</td>
 
-                    <td>{{ $list->type }}</td>
+                    <td>{{ translate($list->type) }}</td>
 
                     <td>{{ date('d-m-Y', strtotime($list->created_at)) }}</td>
                 </tr>

@@ -243,6 +243,11 @@
                 if (data.success == 1) {
                     AIZ.plugins.notify('success', data.message ? data.message : '{{ translate('Product has been updated successfully') }}');
                     location.reload();
+                } else if (data.success == 2) {
+                    AIZ.plugins.notify('warning', data.message ? data.message : '{{ translate('Due to restrictions on the number of product merchants, some products were not successfully uploaded') }}');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000)
                 } else {
                     AIZ.plugins.notify('danger', data.message ? data.message : '{{ translate('Something went wrong') }}');
                 }

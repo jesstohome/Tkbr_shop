@@ -106,7 +106,7 @@ class OrderController extends Controller
             $walletExpenseLog = new WalletExpenseLog();
             $walletExpenseLog->user_id = $user->id;
             $walletExpenseLog->amount = $order->product_storehouse_total;
-            $walletExpenseLog->type = '提货';
+            $walletExpenseLog->type = 'pick up';
             $walletExpenseLog->save();
 
             // 累计冻结资金

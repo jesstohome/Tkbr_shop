@@ -102,7 +102,7 @@ class SellerWithdrawRequestController extends Controller
                     $walletExpenseLog = new WalletExpenseLog();
                     $walletExpenseLog->user_id = $user->id;
                     $walletExpenseLog->amount = $request->amount;
-                    $walletExpenseLog->type = '提现';
+                    $walletExpenseLog->type = 'withdrawal';
                     $walletExpenseLog->save();
 
                     \Redis::hset('new_withdraw_tip', $seller_withdraw_request->id, 1);

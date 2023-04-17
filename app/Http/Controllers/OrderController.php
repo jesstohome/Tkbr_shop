@@ -43,12 +43,19 @@ class OrderController extends Controller
 
      public function update_delivery_info(Request $request)
     {
-       # echo "<PRE>";
-        #print_r( $_POST['data'] );
         parse_str( $_POST['data'] , $arr );
+        $arr['express_info'] = array_filter($arr['express_info']);
+
+        $order = Order::findOrFail( $arr['order_id'] );
+        $orderExpress = json_decode($order->express_info, true);
+
+        // 有选择具体物流信息的时候，物流公司统一显示为FedEx，物流单号为12位数字随机（注意 没有物流信息的时候物流公司和物流单号都不显示）
+        if (empty($orderExpress['express_code']) && !empty($arr['express_info'])) {
+            $arr['express_name'] = 'FedEx';
+            $arr['express_code'] = gen_rand_no(12);
+        }
 
         $json = json_encode( $arr );
-        $order = Order::findOrFail( $arr['order_id'] );
         $order->express_info = $json;
 
         // 根据物流信息 自动定位发货状态

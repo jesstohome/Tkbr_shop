@@ -120,7 +120,7 @@
                         </div>
 
                         <hr>
-                <div class="form-group row">
+                        <div class="form-group row">
                             <label class="col-md-3 col-from-label">{{translate('Automatically Unfrozen')}} ( {{translate('Days')}} )</label>
                             <div class="col-md-8">
                                 <input type="hidden" name="types[]" value="frozen_funds_unfrozen_days">
@@ -129,7 +129,14 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">{{translate('Warehouse Product Merchant Limit')}}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="warehouse_product_merchant_limit">
+                                <input   type="number" class="form-control"  value="{{ get_setting('warehouse_product_merchant_limit') }}" placeholder="{{translate('Each item can have up to N sellers listed simultaneously')}}" name="warehouse_product_merchant_limit"  >
 
+                            </div>
+                        </div>
 
                         <div class="text-right">
     						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
