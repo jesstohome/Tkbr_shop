@@ -11,7 +11,8 @@
                         <th data-breakpoints="lg">#</th>
                         <th data-breakpoints="lg">{{translate('Date')}}</th>
                         <th>{{translate('Seller')}}</th>
-                        <th data-breakpoints="lg">{{translate('Total Amount to freezing')}}</th>
+                        <th data-breakpoints="lg">{{translate('Outstanding Balance')}}</th>
+                        <th data-breakpoints="lg">{{translate('Balance')}}</th>
                         <th data-breakpoints="lg">{{translate('Total Amount to buyer pay')}}</th>
                         <th data-breakpoints="lg">{{translate('Total Amount to pickup pay')}}</th>
                         <th data-breakpoints="lg">{{translate('Total Amount to profit')}}</th>
@@ -43,6 +44,7 @@
                                 <td>{{ $seller_withdraw_request->created_at }}</td>
                                 <td>{{ $user->name }} ({{ $user->shop->name }})</td>
                                 <td>{{ single_price($user->shop->admin_to_pay) }}</td>
+                                <td>{{ single_price($user->balance) }}</td>
                                 <td>{{ single_price($total_buyer_pay) }}</td>
                                 <td>{{ single_price($total_pickup_pay) }}</td>
                                 <td>{{ single_price($total_buyer_pay - $total_storehouse) }}</td>
