@@ -27,7 +27,9 @@
                     <th>{{translate('Name')}}</th>
                     <th data-breakpoints="lg">{{translate('Email')}}</th>
                     <th data-breakpoints="lg">{{translate('Phone')}}</th>
+                    <th data-breakpoints="lg">{{translate('Bloc')}}</th>
                     <th data-breakpoints="lg">{{translate('Role')}}</th>
+                    <th data-breakpoints="lg">{{translate('Invite code')}}</th>
                     <th width="10%">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -39,11 +41,13 @@
                             <td>{{$staff->user->name}}</td>
                             <td>{{$staff->user->email}}</td>
                             <td>{{$staff->user->phone}}</td>
+                            <td>{{$staff->bloc->name}}</td>
                             <td>
 								@if ($staff->role != null)
 									{{ $staff->role->getTranslation('name') }}
 								@endif
 							</td>
+                            <td>{{$staff->invite_code}}</td>
                             <td class="text-right">
 		                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('staffs.edit', encrypt($staff->id))}}" title="{{ translate('Edit') }}">
 		                                <i class="las la-edit"></i>

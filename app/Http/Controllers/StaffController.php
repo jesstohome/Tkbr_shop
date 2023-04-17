@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bloc;
 use Illuminate\Http\Request;
 use App\Models\Staff;
 use App\Models\Role;
@@ -29,7 +30,8 @@ class StaffController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return view('backend.staff.staffs.create', compact('roles'));
+        $blocs = Bloc::all();
+        return view('backend.staff.staffs.create', compact('roles', 'blocs'));
     }
 
     /**
@@ -51,6 +53,8 @@ class StaffController extends Controller
                 $staff = new Staff;
                 $staff->user_id = $user->id;
                 $staff->role_id = $request->role_id;
+                $staff->bloc_id = $request->bloc_id;
+                $staff->invite_code = $request->invite_code;
                 if($staff->save()){
                     flash(translate('Staff has been inserted successfully'))->success();
                     return redirect()->route('staffs.index');
@@ -83,7 +87,8 @@ class StaffController extends Controller
     {
         $staff = Staff::findOrFail(decrypt($id));
         $roles = Role::all();
-        return view('backend.staff.staffs.edit', compact('staff', 'roles'));
+        $blocs = Bloc::all();
+        return view('backend.staff.staffs.edit', compact('staff', 'roles', 'blocs'));
     }
 
     /**
@@ -105,6 +110,8 @@ class StaffController extends Controller
         }
         if($user->save()){
             $staff->role_id = $request->role_id;
+            $staff->bloc_id = $request->bloc_id;
+            $staff->invite_code = $request->invite_code;
             if($staff->save()){
                 flash(translate('Staff has been updated successfully'))->success();
                 return redirect()->route('staffs.index');

@@ -37,7 +37,18 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-3 col-from-label" for="name">{{translate('Role')}}</label>
+                        <label class="col-sm-3 col-from-label" for="name">{{translate('Bloc')}}</label>
+                        <div class="col-sm-9">
+                            <select name="bloc_id" required class="form-control aiz-selectpicker">
+                                <option value=""></option>
+                                @foreach($blocs as $bloc)
+                                    <option value="{{$bloc->id}}">{{$bloc->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-from-label" for="name">{{translate('Group identity')}}</label>
                         <div class="col-sm-9">
                             <select name="role_id" required class="form-control aiz-selectpicker">
                                 @foreach($roles as $role)
@@ -46,6 +57,14 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-from-label" for="invite_code">{{translate('Invite code')}}</label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="{{translate('Invite code')}}" id="invite_code" name="invite_code" class="form-control" required>
+                        </div>
+                    </div>
+
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
                     </div>

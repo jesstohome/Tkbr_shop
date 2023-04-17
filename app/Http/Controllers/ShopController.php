@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ShopManage;
+use App\Models\Staff;
 use App\Models\Upload;
 use Cookie;
 use Illuminate\Http\Request;
@@ -200,19 +202,35 @@ class ShopController extends Controller
             $user->certtype = $request->certtype;
             $shop->seller_package_id = $package_id;
 
-            Log::debug(var_export(['invitation_code', Cookie::get('invitation_code'), $_COOKIE['invitation_code'], $_COOKIE], true));
-
-            if ( $request->get('invitation_code') )
-            {
+            // 先判断是否是由内部员工邀请码申请的
+            $staff_user_id = 0;
+            if ($request->get('staff_invite_code')) {
+                $staff = Staff::query()->where('invite_code', $request->get('staff_invite_code'))->first();
+                if (!empty($staff->user_id)) {
+                    $staff_user_id = $staff->user_id;
+                    $user->pid = $staff->user_id;
+                }
+            } elseif ( $request->get('invitation_code') ) {
+                // 再判断是否是通过其他卖家分销邀请码申请
                 $user->pid = $request->get('invitation_code');
+
+                // 卖家A推广邀请的下级卖家B， 默认和卖家A 属于相同的员工账号负责
+                $leadSeller = User::find($request->get('invitation_code'));
+                if (!empty($leadSeller)) {
+                    $staff_user_id = ShopManage::query()->where('shop_id', $leadSeller->shop->id)->value("admin_id");
+                }
             }
             Upload::where('user_id', 0)->where('id', 'NOTIN', [ $user->identity_card_front, $user->identity_card_back ])->update([ 'user_id' => $user->id ]);
             if ( $shop->save() )
             {
-
-
+                // 绑定负责人
+                if ($staff_user_id) {
+                    $sm = new ShopManage();
+                    $sm->shop_id = $shop->id;
+                    $sm->admin_id = $staff_user_id;
+                    $sm->save();
+                }
                 #####################################
-
 
                 $shop->seller_package_id = $package_id;
                 $seller_package = SellerPackage::findOrFail( $package_id );
@@ -263,7 +281,7 @@ class ShopController extends Controller
                 }
 
                 // redis cache red tips
-                \Cache::set('new_shop_created_tip', 1);
+                \Redis::hset('new_shop_created_tip', $shop->id, 1);
 
                 flash(translate('Your Shop has been created successfully!'))->success();
                 return redirect()->route('shops.index');

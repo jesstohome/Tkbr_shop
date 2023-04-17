@@ -180,7 +180,6 @@ class SellerController extends Controller
         }
         $shops = $shops->select("shops.*")->paginate(15);
 
-        Cache::delete('new_shop_created_tip');
         return view('backend.sellers.index', compact('shops', 'sort_search', 'approved'));
     }
 
@@ -392,6 +391,7 @@ class SellerController extends Controller
                     $sm->save();
                 }
             }
+            \Redis::hdel('new_shop_created_tip', $shop->id);
             Cache::forget('verified_sellers_id');
             return 1;
         }

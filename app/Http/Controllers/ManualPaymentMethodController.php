@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bloc;
 use Illuminate\Http\Request;
 use App\Models\ManualPaymentMethod;
 use App\Http\Controllers\OrderController;
@@ -71,6 +72,7 @@ class ManualPaymentMethodController extends Controller
 
             $manual_payment_method->bank_info = json_encode($banks_informations);
         }
+        $manual_payment_method->bloc_ids = join(",", $request->get('bloc_id'));
 
         $manual_payment_method->save();
         flash(translate('Method has been inserted successfully'))->success();
@@ -129,6 +131,7 @@ class ManualPaymentMethodController extends Controller
 
             $manual_payment_method->bank_info = json_encode($banks_informations);
         }
+        $manual_payment_method->bloc_ids = join(",", $request->get('bloc_id'));
         $manual_payment_method->photo = $request->photo;
         $manual_payment_method->save();
         flash(translate('Method has been updated successfully'))->success();

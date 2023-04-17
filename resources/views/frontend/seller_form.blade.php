@@ -61,10 +61,13 @@
                                 <label>{{ translate('Shop Name')}} <span class="text-primary">*</span></label>
                                 <input type="text" class="form-control" placeholder="{{ translate('Shop Name')}}" name="name" required>
                             </div>
+
+                            @if(empty($invitation_code))
                             <div class="form-group">
-                                <label>{{ translate('Address')}} <span class="text-primary">*</span></label>
-                                <input type="text" class="form-control mb-3" placeholder="{{ translate('Address')}}" name="address" required>
+                                <label>{{ translate('Invite code')}} <span class="text-primary">*</span></label>
+                                <input type="text" class="form-control mb-3" placeholder="{{ translate('Invite code')}}" name="staff_invite_code" required>
                             </div>
+                            @endif
 
                              <div class="form-group">
                                 <label>{{ translate('Certificates Type')}} <span class="text-primary">*</span></label>

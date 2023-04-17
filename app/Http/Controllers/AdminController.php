@@ -17,7 +17,7 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function admin_dashboard(Request $request)
-    {   
+    {
         CoreComponentRepository::initializeCache();
         $root_categories = Category::where('level', 0)->get();
 
@@ -54,5 +54,15 @@ class AdminController extends Controller
         Artisan::call('cache:clear');
         flash(translate('Cache cleared successfully'))->success();
         return back();
+    }
+
+    /**
+     * 声音提示
+     * author: Sym
+     * time: 2023-04-17 20:32
+     * @return bool
+     */
+    public function check_new_msg() {
+        echo json_encode( ['code'=> (int) \Redis::hlen("new_shop_created_tip") > 0, 'msg'=> 'Yes'] );exit;
     }
 }

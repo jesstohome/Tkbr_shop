@@ -48,6 +48,18 @@
                         <textarea class="aiz-text-editor" name="description">@php echo $manual_payment_method->description @endphp</textarea>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-from-label" for="name">{{translate('Bloc')}}</label>
+                    <div class="col-sm-10">
+                        <select name="bloc_id[]" required class="form-control aiz-selectpicker" multiple>
+                            <option value=""></option>
+                            @foreach($blocs = \App\Models\Bloc::all() as $bloc)
+                                <option value="{{$bloc->id}}" @if(in_array($bloc->id, explode(",", $manual_payment_method->bloc_ids))) selected @endif>{{$bloc->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
                 <div id="bank_payment_data">
                     <div id="bank_payment_informations">
                         @if($manual_payment_method->bank_info != null)

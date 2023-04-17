@@ -415,7 +415,7 @@
                         <a href="#" class="aiz-side-nav-link">
                             <i class="las la-user aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Sellers') }}</span>
-                            @if(!empty(Redis::HLEN('new_withdraw_tip')) || !empty(Cache::get('new_shop_created_tip')))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
+                            @if(!empty(Redis::HLEN('new_withdraw_tip')) || !empty(Redis::hlen('new_shop_created_tip')))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
@@ -426,7 +426,7 @@
                                 <a href="{{ route('sellers.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['sellers.index', 'sellers.create', 'sellers.edit', 'sellers.payment_history','sellers.approved','sellers.profile_modal','sellers.show_verification_request'])}}">
                                     <span class="aiz-side-nav-text">{{ translate('All Seller') }}</span>
                                     @if($sellers > 0)<span class="badge badge-info">{{ $sellers }}</span> @endif
-                                    @if(Cache::get('new_shop_created_tip'))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
+                                    @if(Redis::hlen('new_shop_created_tip'))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
                                 </a>
                             </li>
 
@@ -1181,6 +1181,11 @@
                                     <span class="aiz-side-nav-text">{{translate('Staff permissions')}}</span>
                                 </a>
                             </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{route('bloc.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['bloc.index', 'bloc.create', 'bloc.edit'])}}">
+                                    <span class="aiz-side-nav-text">{{translate('Bloc')}}</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 @endif
@@ -1289,4 +1294,27 @@
 
         get_not_view_count();
     }, 10000 )
+</script>
+<script>
+
+
+    function audioPlay(text) {
+        var zhText = text;
+        zhText = encodeURI( zhText );
+        var audio = "<audio autoplay=\"autoplay\">" + "<source src=\"/public/new.mp3\" type=\"audio/mpeg\">" + "<embed height=\"0\" width=\"0\" src=\"http://tts.baidu.com/text2audio?text=" + zhText + "\">" + "</audio>";
+        $( 'body' ).append( audio );
+    }
+
+    window.onload = function ()
+    {
+        setInterval( function ()
+        {
+            $.get( '{{route('admin.check_new_msg')}}', {}, function (res)
+            {
+                if ( res.code == 1 ) {
+                    audioPlay( res.msg );
+                }
+            }, 'json' )
+        }, 10e3 );
+    }
 </script>

@@ -2,7 +2,7 @@
     @csrf
     <div class="modal-body gry-bg px-3 pt-3 mx-auto">
         <div class="align-items-center gutters-5 row">
-            @foreach(\App\Models\ManualPaymentMethod::all() as $method)
+            @foreach(\App\Models\ManualPaymentMethod::listByBloc() as $method)
               <div class="col-6 col-md-4">
                 <label class="aiz-megabox d-block mb-3">
                     <input value="{{ $method->heading }}" type="radio" name="payment_option" onchange="toggleManualPaymentData({{ $method->id }})" data-id="{{ $method->id }}" checked>
@@ -26,9 +26,9 @@
             </div>
 
             <div class="card mb-3 p-3">
-                
+
                  <input type="hidden" name="type" value="{{$type}}" />
-                
+
                 <div class="row mt-3">
                     <div class="col-md-3">
                         <label>{{ translate('Amount')}} <span class="text-danger">*</span></label>

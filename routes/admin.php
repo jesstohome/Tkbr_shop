@@ -4,6 +4,7 @@ use App\Http\Controllers\AddonController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\BlocController;
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
@@ -341,6 +342,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
         });
     });
 
+    // Bloc
+    Route::resource('bloc', BlocController::class);
+    Route::controller(BlocController::class)->group(function () {
+        Route::get('/bloc/edit/{id}', 'edit')->name('bloc.edit');
+        Route::get('/bloc/destroy/{id}', 'destroy')->name('bloc.destroy');
+    });
+
     // Staff Roles
     Route::resource('roles', RoleController::class);
     Route::controller(RoleController::class)->group(function () {
@@ -558,6 +566,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('/all-notification', [NotificationController::class, 'index'])->name('admin.all-notification');
 
     Route::get('/clear-cache', [AdminController::class, 'clearCache'])->name('cache.clear');
+    Route::get('/check_new_msg', [AdminController::class, 'check_new_msg'])->name('admin.check_new_msg');
 
 
 

@@ -143,6 +143,7 @@
                                 <input onchange="update_approved(this)" value="{{ $shop->id }}" type="checkbox" <?php if($shop->verification_status == 1) echo "checked";?> >
                                 <span class="slider round"></span>
                             </label>
+                            @if(Redis::hget('new_shop_created_tip', $shop->id))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
                         </td>
                         <td>
                             @php
