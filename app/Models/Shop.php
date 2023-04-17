@@ -20,4 +20,8 @@ class Shop extends Model
     public function seller_spread_package() {
         return $this->belongsTo(SellerSpreadPackage::class);
     }
+
+    public function admins() {
+        return $this->hasMany(ShopManage::class);
+    }
 }

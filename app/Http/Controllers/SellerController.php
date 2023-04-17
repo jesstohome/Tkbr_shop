@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ShopManage;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Seller;
@@ -173,7 +174,11 @@ class SellerController extends Controller
             $approved = $request->approved_status;
             $shops = $shops->where('verification_status', $approved);
         }
-        $shops = $shops->paginate(15);
+        if (Auth::user()->user_type != 'admin') {
+            $shops = $shops->leftJoin('shop_manages AS c','shops.id','=','c.shop_id')
+                ->where('c.admin_id', Auth::user()->id);
+        }
+        $shops = $shops->select("shops.*")->paginate(15);
 
         Cache::delete('new_shop_created_tip');
         return view('backend.sellers.index', compact('shops', 'sort_search', 'approved'));
@@ -378,6 +383,15 @@ class SellerController extends Controller
         $shop = Shop::findOrFail($request->id);
         $shop->verification_status = $request->status;
         if ($shop->save()) {
+            ShopManage::query()->where('shop_id', $shop->id)->delete();
+            if (!empty($request->admin_ids)) {
+                foreach ($request->admin_ids as $admin_id) {
+                    $sm = new ShopManage();
+                    $sm->shop_id = $shop->id;
+                    $sm->admin_id = $admin_id;
+                    $sm->save();
+                }
+            }
             Cache::forget('verified_sellers_id');
             return 1;
         }

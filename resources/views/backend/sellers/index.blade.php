@@ -94,6 +94,7 @@
                     <th data-breakpoints="lg">{{translate('Email Address')}}</th>
                     <th data-breakpoints="lg">{{translate('Verification Info')}}</th>
                     <th data-breakpoints="lg">{{translate('Approval')}}</th>
+                    <th data-breakpoints="lg">{{translate('Responsible sub account')}}</th>
                     <th data-breakpoints="lg">{{ translate('Num. of Products') }}</th>
                     <th data-breakpoints="lg">{{ translate('Pending Balance') }}</th>
                     <th data-breakpoints="lg">{{ translate('Creditscore') }}</th>
@@ -142,6 +143,20 @@
                                 <input onchange="update_approved(this)" value="{{ $shop->id }}" type="checkbox" <?php if($shop->verification_status == 1) echo "checked";?> >
                                 <span class="slider round"></span>
                             </label>
+                        </td>
+                        <td>
+                            @php
+                            $manages = \App\Models\User::query()->where('user_type', 'staff')->get();
+                            $admin_ids = [];
+                            foreach ($shop->admins as $admin) {
+                                $admin_ids[] = $admin->admin_id;
+                            }
+                            @endphp
+                            <select class="form-control selectpicker admin_ids" multiple data-max-options="50" data-live-search="true" name="admin_ids[]" data-selected="{{$admin_ids}}">
+                                @foreach($manages as $manage)
+                                <option value="{{$manage->id}}" @if(in_array($manage->id, $admin_ids)) selected @endif>{{$manage->name}}</option>
+                                @endforeach
+                            </select>
                         </td>
                         <td>{{ $shop->user->products->count() }}</td>
                         <td>
@@ -428,7 +443,7 @@
 @endsection
 
 @section('script')
-<script src="https://cdn.bootcdn.net/ajax/libs/layer/3.5.1/layer.min.js"></script>
+    <script src="{{ static_asset('assets/js/layer.min.js') }}"></script>
     <script type="text/javascript">
 
 
@@ -746,14 +761,24 @@
             });
         }
 
-        function update_approved(el){
+        function update_approved(el) {
+            var admin_ids = [];
             if(el.checked){
                 var status = 1;
+                admin_ids = $(el).parents("td").next().find("select.admin_ids").val();
+                if (admin_ids.length == 0) {
+                    setTimeout(() => {
+                        el.checked = false
+                    }, 100)
+                    AIZ.plugins.notify('danger', '{{ translate('Please select a responsible person') }}');
+                    return false;
+                }
             }
             else{
                 var status = 0;
             }
-            $.post('{{ route('sellers.approved') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+
+            $.post('{{ route('sellers.approved') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status, admin_ids: admin_ids}, function(data){
                 if(data == 1){
                     AIZ.plugins.notify('success', '{{ translate('Approved sellers updated successfully') }}');
                 }
