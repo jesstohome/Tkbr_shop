@@ -374,10 +374,20 @@
 }
 
 </style>
+             @php
+                $show_express = false;
+                 if( $express->express_info ) {
+                    foreach ($express->express_info as $key => $ex ) {
+                        if( strtotime( $express->express_time[$key] ) < time() ) $show_express = true;
+                    }
+                 }
+
+             @endphp
                      <table class="table">
                         <tr>
                             <td colspan="2" style="text-align:center; background-color:#f0fafe;"><b>{{ translate('Express information') }} </b> </td>
                         </tr>
+                         @if($show_express)
                         <tr>
                             <td style="width:100px;"> {{ translate('courier company') }}：</td>
                             <td>  {{ $express->express_name }} </td>
@@ -387,6 +397,7 @@
                             <td> {{ translate('shipment number') }} ：</td>
                             <td>  {{ $express->express_code }} </td>
                         </tr>
+                         @endif
 
 
                         <tr>
@@ -400,7 +411,7 @@
                                  <?php
 
                                  if( strtotime( $express->express_time[$key] ) < time() ){ ?>
-                          <tr><td colspan="2">     {{ !empty($express->express_time[$key]) ? $express->express_time[$key] : '' }} {{ $ex }}  </td></tr>
+                                <tr><td colspan="2">     {{ !empty($express->express_time[$key]) ? $express->express_time[$key] : '' }} {{ $ex }}  </td></tr>
                                 <?php  } ?>
                               @endforeach
 
