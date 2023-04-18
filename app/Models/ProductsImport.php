@@ -5,20 +5,32 @@ namespace App\Models;
 use App\Models\Product;
 use App\Models\ProductStock;
 use App\Models\User;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithMappedCells;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Str;
 use Auth;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Storage;
 
+// 表格中的字段名不做任何处理
+HeadingRowFormatter::default('none');
+
 //class ProductsImport implements ToModel, WithHeadingRow, WithValidation
-class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, ToModel
+class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, ToModel, SkipsEmptyRows
 {
     private $rows = 0;
+
+    // 表格的第二行是字段名
+    public function headingRow(): int
+    {
+        return 2;
+    }
 
     public function collection(Collection $rows)
     {
@@ -26,12 +38,34 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
         $user = Auth::user();
         if ($canImport) {
             foreach ($rows as $row) {
+                $row = [
+                    'name' => $row['产品名称'],
+                    'description' => $row['产品短描述'],
+                    'category_id' => $this->getCategoryIdByName($row['分类']),
+                    'brand_id' => $this->getBrandIdByName($row['品牌']),
+                    'unit' => $row['单元'],
+                    'unit_price' => (float) $row['原价'] * 0.6,
+                    'video_link' => '',
+                    'video_provider' => '',
+                    'meta_title' => $row['产品名称'],
+                    'meta_description' => '',
+                    'thumbnail_img' => $this->getImages($row, '缩略图地址', 1),
+                    'photos' => $this->getImages($row, '高清图地址', 8),
+                    'current_stock' => mt_rand(999, 5000),
+                    'sku' => '',
+                    'slug' => Str::random(5),
+                ];
+                $row['description'] = $this->mergeImages2Desc($row['description'], $row['photos']);
+
+                // 有些备注行直接过滤掉
+                if (empty($row['name']) || empty($row['unit_price'])) continue;
+
                 $approved = 1;
                 if ($user->user_type == 'seller' && get_setting('product_approve_by_admin') == 1) {
                     $approved = 0;
                 }
 
-                $productId = Product::create([
+                $saveData = [
                     'name' => $row['name'],
                     'description' => $row['description'],
                     'added_by' => $user->user_type == 'seller' ? 'seller' : 'admin',
@@ -46,13 +80,18 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                     'unit' => $row['unit'],
                     'meta_title' => $row['meta_title'],
                     'meta_description' => $row['meta_description'],
+                    'meta_image' => $row['meta_image'],
+                    'discount' => 0, // 折扣为0
                     'colors' => json_encode(array()),
                     'choice_options' => json_encode(array()),
                     'variations' => json_encode(array()),
                     'slug' => preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($row['slug']))) . '-' . Str::random(5),
                     'thumbnail_img' => $this->downloadThumbnail($row['thumbnail_img']),
                     'photos' => $this->downloadGalleryImages($row['photos']),
-                ]);
+                ];
+                $saveData['meta_image'] = $saveData['thumbnail_img'];
+                $productId = Product::create($saveData);
+
                 ProductStock::create([
                     'product_id' => $productId->id,
                     'qty' => $row['current_stock'],
@@ -84,8 +123,52 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                 if (!is_numeric($value)) {
                     $onFailure('Unit price is not numeric');
                 }
-            }
+            },
+            '产品名称' => [
+                'required',
+                'string',
+            ],
         ];
+    }
+
+    public function getCategoryIdByName($name) {
+        if (empty($name)) return 0;
+
+        $category = Category::query()->where('name', $name)->first();
+        if ($category) {
+            return $category->id;
+        }
+
+        $category = new Category();
+        $category->name = $name;
+        $category->save();
+
+        return $category->id;
+    }
+
+    public function getBrandIdByName($name) {
+        if (empty($name)) return 0;
+
+        $brand = Brand::query()->where('name', $name)->first();
+        if ($brand) {
+            return $brand->id;
+        }
+
+        /*$category = new Category();
+        $category->name = $name;*/
+
+        return 0;
+    }
+
+    public function getImages($row, $cellKeyName, $num) {
+        $images = '';
+        for($i = 1; $i <= $num; $i++) {
+            if (!empty($row[$cellKeyName . $i])) {
+                $images .= $row[$cellKeyName . $i] . ",";
+            }
+        }
+
+        return rtrim($images, ',');
     }
 
     public function downloadThumbnail($url)
@@ -109,5 +192,15 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
             $data[] = $this->downloadThumbnail($url);
         }
         return implode(',', $data);
+    }
+
+    private function mergeImages2Desc($description, $photos)
+    {
+        $photos = is_string($photos) ? explode(",", $photos) : $photos;
+        foreach ($photos as $photo) {
+            $description .= "<img src='{$photo}' /><br/>";
+        }
+
+        return $description;
     }
 }
