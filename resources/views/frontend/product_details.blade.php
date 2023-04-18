@@ -148,7 +148,7 @@
                                     </a>
                                 @endif
 
-                                @if ($detailedProduct->brand != null)
+                                @if ($detailedProduct->brand != null && false)
                                     <div class="col-auto">
                                         <a href="{{ route('products.brand', $detailedProduct->brand->slug) }}">
                                             <img src="{{ uploaded_asset($detailedProduct->brand->logo) }}"
@@ -375,7 +375,7 @@
                                         <i class="la la-share"></i> {{ translate($detailedProduct->external_link_btn) }}
                                     </a>
                                 @else
-                                    @if(Auth::user()->user_type == 'customer')
+                                    @if(empty(Auth::user()) || Auth::user()->user_type == 'customer')
                                         <button type="button" class="btn btn-soft-primary mr-2 add-to-cart fw-600"
                                                 onclick="addToCart()">
                                             <i class="las la-shopping-bag"></i>

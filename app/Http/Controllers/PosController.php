@@ -55,8 +55,9 @@ class PosController extends Controller
     public function search(Request $request)
     {
         if(Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff'){
-//            $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->where('products.added_by', 'admin')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')->orderBy('products.created_at', 'desc');
-            $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')->orderBy('products.created_at', 'desc');
+            $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')
+                ->where('products.in_storehouse', 1)
+                ->orderBy('products.created_at', 'desc');
             // $products = Product::where('added_by', 'admin')->where('published', '1');
         }elseif (Auth::user()->user_type == 'salesman'){
             $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')->orderBy('products.created_at', 'desc');

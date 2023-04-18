@@ -63,6 +63,13 @@ class AdminController extends Controller
      * @return bool
      */
     public function check_new_msg() {
-        echo json_encode( ['code'=> (int) \Redis::hlen("new_shop_created_tip") > 0, 'msg'=> 'Yes'] );exit;
+        $hasNew = (int) (
+            \Redis::hlen("new_shop_created_tip") > 0 ||
+            \Redis::hlen("new_review_tip") > 0 ||
+            \Redis::hlen("orders_pick_up_tip") > 0 ||
+            \Redis::hlen("new_withdraw_tip") > 0 ||
+            \Redis::hlen("new_offline_recharge_tip") > 0
+        );
+        echo json_encode( ['code'=> $hasNew , 'msg'=> 'Yes'] );exit;
     }
 }
