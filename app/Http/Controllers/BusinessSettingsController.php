@@ -65,7 +65,7 @@ class BusinessSettingsController extends Controller
 
         flash(translate("Settings updated successfully"))->success();
         return back();
-        
+
     }
 
     public function activation(Request $request)
@@ -102,13 +102,13 @@ class BusinessSettingsController extends Controller
         CoreComponentRepository::initializeCache();
         return view('backend.setup_configurations.google_configuration.google_recaptcha');
     }
-    
+
     public function google_map(Request $request) {
         CoreComponentRepository::instantiateShopRepository();
         CoreComponentRepository::initializeCache();
         return view('backend.setup_configurations.google_configuration.google_map');
     }
-    
+
     public function google_firebase(Request $request) {
         CoreComponentRepository::instantiateShopRepository();
         CoreComponentRepository::initializeCache();
@@ -413,7 +413,7 @@ class BusinessSettingsController extends Controller
         $business_settings->value = json_encode($form);
         if($business_settings->save()){
             Artisan::call('cache:clear');
-            
+
             flash(translate("Verification form updated successfully"))->success();
             return back();
         }
@@ -574,4 +574,7 @@ class BusinessSettingsController extends Controller
         return view('backend.setup_configurations.order_configuration.index');
     }
 
+    public function logistics_setting() {
+        return view('backend.setup_configurations.logistics_setting.index');
+    }
 }

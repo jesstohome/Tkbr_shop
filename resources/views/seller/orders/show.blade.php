@@ -211,13 +211,6 @@
                             <td class="text-right">{{ $order->additional_info }}</td>
                         </tr>
 
-                        <tr>
-                            <td class="text-main text-bold">{{ translate('Time Left') }}</td>
-                            <td class="text-right"><span id="showtime"></span>
-                            <span id="mydate" style="display:none">{{ $order->order_type }}</span>
-                            <span id="mycreated" style="display:none">{{ $order->created_at }}</span>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -523,15 +516,6 @@
                 AIZ.plugins.notify('success', '{{ translate('Payment status has been updated') }}');
                 location.reload().setTimeOut(500);
             });
-        });
-
-        $(document).ready(function () {
-            var div = document.getElementById("showtime");
-            var mydate = document.getElementById("mydate").innerHTML;
-            var mycreated = document.getElementById("mycreated").innerHTML;
-            setInterval (function () {
-                div.innerHTML = showtime(mydate,mycreated);
-            }, 1000);  //反复执行函数本身
         });
 
         var showtime = function (mydate,mycreated) {

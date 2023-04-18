@@ -285,6 +285,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
         // Order Configuration
         Route::get('/order-configuration', 'order_configuration')->name('order_configuration.index');
+
+        // 自动物流配置
+        Route::get('/logistics_setting', 'logistics_setting')->name('logistics_setting.index');
     });
 
 

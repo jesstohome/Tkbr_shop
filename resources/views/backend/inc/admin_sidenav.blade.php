@@ -308,6 +308,12 @@
                                 </a>
                             </li>  -->
                         @endif
+
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('logistics_setting.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['logistics_setting.index'])}}" >
+                                    <span class="aiz-side-nav-text">{{translate('Automatic logistics settings')}}</span>
+                                </a>
+                            </li>
                     </ul>
                 </li>
 

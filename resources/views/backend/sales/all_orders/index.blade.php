@@ -122,7 +122,6 @@
                         </th>
                         <th>{{ translate('Order Code') }}</th>
                         <th>{{ translate('Order Type') }}</th>
-                        <th>{{ translate('Time Left') }}</th>
                         <th>{{ translate('Shop') }}</th>
                         <th data-breakpoints="md">{{ translate('Num. of Products') }}</th>
                         <th data-breakpoints="md">{{ translate('Customer') }}</th>
@@ -165,13 +164,6 @@
                              @else
                               {{ translate('ordinary') }}
                              @endif
-                        </td>
-                        <td>
-                            @if ($order->order_type == 6)
-                                {{ strtotime($order['created_at'].'+6 hours')-strtotime(date('Y-m-d H:i:s'))>0?date('H:i:s',strtotime($order['created_at'].'+6 hours')-strtotime(date('Y-m-d H:i:s'))):0 }}
-                            @else
-                                {{ strtotime($order['created_at'].'+24 hours')-strtotime(date('Y-m-d H:i:s')) >0?date('H:i:s',strtotime($order['created_at'].'+24 hours')-strtotime(date('Y-m-d H:i:s'))):0}}
-                            @endif
                         </td>
                         <td>
                             @php
