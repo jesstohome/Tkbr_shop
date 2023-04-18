@@ -119,8 +119,23 @@ class OrderController extends Controller
             $order->freeze_expired_at = Carbon::now()->addDays($freezeDays)->timestamp;
 
             $order->product_storehouse_status = 1;
-            $order->save();
 
+            // 按自动物流配置生成物流信息
+            $express['express_name'] = 'FedEx';
+            $express['express_code'] = gen_rand_no(12);
+            $express['express_info'] = [
+                'The product has been shipped and is in transit',
+                'The product has arrived at the customer\'s courier receiving point',
+                'Customer has signed for confirmation of receipt',
+            ];
+            $express['express_time'] = [];
+            $logistics_times = json_decode(get_setting('logistics_times'), true);
+            foreach (array_chunk($logistics_times, 2) as $time_value) {
+                $express['express_time'][] = date('Y:m:d H:i:s', time() + mt_rand(...$time_value));
+            }
+            $order->express_info = json_encode($express);
+
+            $order->save();
             DB::commit();
 
             Redis::hset('orders_pick_up_tip', $orderId, 1);

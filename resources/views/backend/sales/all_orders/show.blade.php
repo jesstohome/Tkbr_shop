@@ -61,7 +61,7 @@
                 <div class="col-md-3 ml-auto">
                     <label for="update_payment_status">{{ translate('Payment Status') }}</label>
                     <select class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity"
-                        id="update_payment_status">
+                        id="update_payment_status" disabled>
                         <option value="unpaid" @if ($payment_status == 'unpaid') selected @endif>{{ translate('Unpaid') }}
                         </option>
                         <option value="paid" @if ($payment_status == 'paid') selected @endif>{{ translate('Paid') }}
@@ -72,7 +72,7 @@
                     <label for="update_delivery_status">{{ translate('Delivery Status') }}</label>
                     @if ($delivery_status != 'delivered' && $delivery_status != 'cancelled')
                         <select class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity"
-                            id="update_delivery_status">
+                            id="update_delivery_status" disabled>
                             <option value="pending" @if ($delivery_status == 'pending') selected @endif>
                                 {{ translate('Pending') }}</option>
                             <option value="confirmed" @if ($delivery_status == 'confirmed') selected @endif>
@@ -363,7 +363,7 @@
                                 @if( $express->express_info )
                                 @foreach ($express->express_info as $key => $ex )
 
-                              信息：<input type="text" class="form-control" list="express_info_list" name="express_info[]"  value="{{ $ex }}"/> &nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button"  value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
+                              信息：<input type="text" class="form-control" list="express_info_list" name="express_info[]"  value="{{ $ex }}" readonly/> &nbsp;&nbsp;显示时间：<input class="form-control" onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" readonly type="text" value="{{ $express->express_time[$key] }}" name="express_time[]" /><input type="button"  value="+" onclick="addinfo()" class="btn btn-primary btn-add" />
                                <br><br>
                               @endforeach
                               @else

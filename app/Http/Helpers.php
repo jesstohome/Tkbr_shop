@@ -1307,6 +1307,36 @@ if (!function_exists('timedquery')) {
     }
 }
 
+// 按物流时间，定时更新发货状态
+if (!function_exists('scheduled_update_delivery_status')) {
+    function scheduled_update_delivery_status($order) {
+        if (empty($order) || empty($order->express_info)) return;
+
+        $now = time();
+        $status = [
+            'on_the_way',
+            'arrived',
+            'delivered',
+        ];
+        $express = json_decode($order->express_info, true);
+        if (!empty($express['express_time'])) {
+            $delivery_status = '';
+            foreach ($express['express_time'] as $key => $time) {
+                $time = strtotime(is_array($time) ? $time[0] : $time);
+                if ($now >= $time) {
+                    $delivery_status = $status[$key];
+                }
+            }
+
+            echo $order->id, ' ', $delivery_status, ' ', $order->delivery_status . PHP_EOL;
+            if (!empty($delivery_status) && $order->delivery_status != $delivery_status) {
+                $order->delivery_status = $delivery_status;
+                $order->save();
+            }
+        }
+    }
+}
+
 // Addon Activation Check
 if (!function_exists('addon_is_activated')) {
     function addon_is_activated($identifier, $default = null)

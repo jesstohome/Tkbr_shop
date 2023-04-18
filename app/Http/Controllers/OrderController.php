@@ -59,7 +59,7 @@ class OrderController extends Controller
         $order->express_info = $json;
 
         // 根据物流信息 自动定位发货状态
-        if (!empty($arr['express_info'])) {
+        /*if (!empty($arr['express_info'])) {
             foreach ($arr['express_info'] as $text) {
                 if ($text == 'The product has been shipped and is in transit') {
                     $order->delivery_status = 'on_the_way';
@@ -69,7 +69,7 @@ class OrderController extends Controller
                     $order->delivery_status = 'delivered';
                 }
             }
-        }
+        }*/ // 改由定时程序按物流时间确定了
 
         $order->save();
         echo 'Save Success';
