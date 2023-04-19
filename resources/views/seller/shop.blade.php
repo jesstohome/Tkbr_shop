@@ -48,9 +48,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col-md-2 col-form-label">{{ translate('Shop Address') }} <span class="text-danger text-danger">*</span></label>
+                    <label class="col-md-2 col-form-label">{{ translate('Invite Code') }} </label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control mb-3" placeholder="{{ translate('Address')}}" name="address" value="{{ $shop->address }}" required>
+                        <input type="text" class="form-control mb-3" readonly value="{{ $invite_code }}" required>
                     </div>
                 </div>
                 @if (get_setting('shipping_type') == 'seller_wise_shipping')
@@ -82,6 +82,7 @@
         </div>
     </div>
 
+    @if(false)
     <form action="{{ route('seller.shop.online_service_update') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
@@ -107,6 +108,7 @@
             </div>
         </div>
     </form>
+    @endif
 
     @if (addon_is_activated('delivery_boy'))
         <div class="card">

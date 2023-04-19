@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Models\BusinessSetting;
+use App\Models\Staff;
 use Illuminate\Http\Request;
 use App\Models\Shop;
 use Auth;
@@ -12,7 +13,13 @@ class ShopController extends Controller
     public function index()
     {
         $shop = Auth::user()->shop;
-        return view('seller.shop', compact('shop'));
+
+        $invite_code = '';
+        if (!empty($pid)) {
+            $invite_code = Staff::query()->where('user_id', Auth::user()->pid)->value('invite_code');
+        }
+
+        return view('seller.shop', compact('shop', 'invite_code'));
     }
 
     public function update(Request $request)

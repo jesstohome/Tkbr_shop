@@ -11,7 +11,7 @@
                     <div class="row gutters-5 mb-3">
                         <div class="col-md-6 mb-2 mb-md-0">
                             <div class="form-group mb-0">
-                                <input class="form-control form-control-lg" type="text" name="keyword" placeholder="Search by Product Name/Barcode" onkeyup="filterProducts()">
+                                <input class="form-control form-control-lg" type="text" name="keyword" placeholder="{{ translate('Search by Product Name/Barcode') }}" onkeyup="filterProducts()">
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
