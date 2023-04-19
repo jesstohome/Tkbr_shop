@@ -94,7 +94,7 @@
                                     <a onclick="show_message_modal('{{ $seller_withdraw_request->id }}');" class="btn btn-soft-success btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Message View') }}">
                                         <i class="las la-eye"></i>
                                     </a>
-                                    <a href="{{route('sellers.payment_history', encrypt($seller_withdraw_request->user_id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm"  title="{{ translate('Payment History') }}">
+                                    <a onclick="show_history_modal('{{ $seller_withdraw_request->id }}');" href="javascript:void(0);" class="btn btn-soft-primary btn-icon btn-circle btn-sm"  title="{{ translate('Payment History') }}">
                                         <i class="las la-history"></i>
                                     </a>
                                 </td>
@@ -139,6 +139,14 @@
   </div>
 </div>
 
+<!-- History View Modal -->
+<div class="modal fade" id="history_modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="history-modal-content">
+
+        </div>
+    </div>
+</div>
 
 @endsection
 
@@ -164,6 +172,13 @@
           $.post('{{ route('withdraw_request.message_modal') }}',{_token:'{{ @csrf_token() }}', id:id}, function(data){
               $('#message-modal-content').html(data);
               $('#message_modal').modal('show', {backdrop: 'static'});
+          });
+      }
+
+      function show_history_modal(id){
+          $.get('{{ route('withdraw_request.history_modal') }}',{_token:'{{ @csrf_token() }}', id:id}, function(data){
+              $('#history-modal-content').html(data);
+              $('#history_modal').modal('show', {backdrop: 'static'});
           });
       }
   </script>

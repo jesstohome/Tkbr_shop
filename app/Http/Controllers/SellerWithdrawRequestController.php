@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CommissionHistory;
 use App\Models\Order;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use App\Models\SellerWithdrawRequest;
 use App\Models\User;
@@ -164,6 +166,20 @@ class SellerWithdrawRequestController extends Controller
         elseif (Auth::user()->user_type == 'salesman' ) {
             return view('salesman.seller_withdraw_requests.withdraw_message_modal', compact('seller_withdraw_request'));
         }
+    }
+
+    public function history_modal(Request $request)
+    {
+        $seller_withdraw_request = SellerWithdrawRequest::findOrFail($request->id);
+        $seller_id = $seller_withdraw_request->user_id;
+
+        $size = 100;
+        $orders = Order::orderBy('id', 'desc')->where('seller_id', $seller_id)->latest()->paginate($size);
+        $wallets_recharge = Wallet::where('offline_payment', 1)->where("user_id", $seller_id)->latest()->paginate($size);
+        $wallets_withdraw = SellerWithdrawRequest::where("user_id", $seller_id)->where('type', 1)->latest()->paginate($size);
+        $commission_records = CommissionHistory::where("seller_id", $seller_id)->latest()->paginate($size);
+
+        return view('backend.sellers.seller_withdraw_requests.withdraw_history_modal', compact('orders', 'wallets_recharge', 'wallets_withdraw', 'commission_records'));
     }
 
 

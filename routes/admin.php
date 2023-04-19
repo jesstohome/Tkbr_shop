@@ -206,6 +206,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
 
 
         Route::post('/withdraw_request/message_modal', 'message_modal')->name('withdraw_request.message_modal');
+        Route::get('/withdraw_request/history_modal', 'history_modal')->name('withdraw_request.history_modal');
         Route::any('/withdraw_request/refuse_modal', 'refuse_modal')->name('withdraw_request.refuse_modal');
     });
 
