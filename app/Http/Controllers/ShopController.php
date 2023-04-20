@@ -46,7 +46,7 @@ class ShopController extends Controller
          Upload::where('user_id', 0)->delete();
         if ( Auth::check() )
         {
-            if ( Auth::user()->user_type == 'admin' )
+            if ( Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff')
             {
                 return view('backend.sellers.seller_form');
             }
@@ -92,7 +92,6 @@ class ShopController extends Controller
          $package = SellerPackage::where(['is_default' => 1 ])->first();
          $package_id = $package['id'];
 
-
         $user = NULL;
         if ( $request->identity_card_front == NULL )
         {
@@ -106,6 +105,8 @@ class ShopController extends Controller
         }
         if ( !Auth::check() )
         {
+            $bloc_id = 0;
+
             if ( User::where('email', $request->email)->first() != NULL )
             {
                 flash(translate('Email already exists!'))->error();
@@ -128,14 +129,20 @@ class ShopController extends Controller
             }
         }
         else
-        {//如果有登录用户
-            if ( Auth::user()->user_type == 'admin' )
-            {//管理后台
+        {
+            // 归属集团Id
+            $bloc_id = Auth::user()->bloc_id;
+
+            //如果有登录用户
+            if ( Auth::user()->user_type == 'admin' ||  Auth::user()->user_type == 'staff')
+            {
+                //管理后台
                 if ( User::where('email', $request->email)->first() != NULL )
                 {
                     flash(translate('Email already exists!'))->error();
                     return back();
                 }
+
                 if ( $request->password == $request->password_confirmation )
                 {
                     $user = new User;
@@ -154,7 +161,8 @@ class ShopController extends Controller
                 }
             }
             else if ( Auth::user()->user_type == 'salesman' )
-            {//推销员
+            {
+                //推销员
                 if ( User::where('email', $request->email)->first() != NULL )
                 {
                     flash(translate('Email already exists!'))->error();
@@ -167,6 +175,7 @@ class ShopController extends Controller
                     $user->email = $request->email;
                     $user->user_type = "seller";
                     $user->is_virtual = "1";
+                    $user->bloc_id = Auth::user()->bloc_id;
                     $user->pid = Auth::user()->id;
                     $user->password = Hash::make($request->password);
                     $user->email_verified_at = date('Y-m-d H:m:s');
@@ -181,10 +190,6 @@ class ShopController extends Controller
             else
             {
                 $user = Auth::user();
-                if ( $user->customer != NULL )
-                {
-                    $user->customer->delete();
-                }
                 $user->user_type = "seller";
                 $user->save();
             }
@@ -203,24 +208,34 @@ class ShopController extends Controller
             $shop->seller_package_id = $package_id;
 
             // 先判断是否是由内部员工邀请码申请的
-            $staff_user_id = 0;
+            $staff_user_id = Auth::check() ? Auth::user()->id : 0;
             if ($request->get('staff_invite_code')) {
                 $staff = Staff::query()->where('invite_code', $request->get('staff_invite_code'))->first();
-                if (!empty($staff->user_id)) {
-                    $staff_user_id = $staff->user_id;
-                    $user->pid = $staff->user_id;
+                if (!empty($staff)) {
+                    $bloc_id = $staff->bloc_id;
+                    if (!empty($staff->user_id)) {
+                        $staff_user_id = $staff->user_id;
+                        $user->pid = $staff->user_id;
+                    }
                 }
+
             } elseif ( $request->get('invitation_code') ) {
                 // 再判断是否是通过其他卖家分销邀请码申请
                 $user->pid = $request->get('invitation_code');
 
                 // 卖家A推广邀请的下级卖家B， 默认和卖家A 属于相同的员工账号负责
-                $leadSeller = User::find($request->get('invitation_code'));
+                $leadSeller = User::find($user->pid);
                 if (!empty($leadSeller)) {
+                    $bloc_id = $leadSeller->bloc_id;
                     $staff_user_id = ShopManage::query()->where('shop_id', $leadSeller->shop->id)->value("admin_id");
                 }
             }
             Upload::where('user_id', 0)->where('id', 'NOTIN', [ $user->identity_card_front, $user->identity_card_back ])->update([ 'user_id' => $user->id ]);
+
+            $user->bloc_id = $bloc_id;
+            $user->save();
+
+            $shop->bloc_id = $bloc_id;
             if ( $shop->save() )
             {
                 // 绑定负责人
@@ -284,7 +299,12 @@ class ShopController extends Controller
                 \Redis::hset('new_shop_created_tip', $shop->id, 1);
 
                 flash(translate('Your Shop has been created successfully!'))->success();
-                return redirect()->route('shops.index');
+
+                if (!Auth::check() || Auth::check()->user_type == 'customer') {
+                    return redirect()->route('shops.index');
+                } else {
+                    return redirect()->route('sellers.index');
+                }
             }
             else
             {

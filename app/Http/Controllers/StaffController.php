@@ -47,6 +47,7 @@ class StaffController extends Controller
             $user->name = $request->name;
             $user->email = $request->email;
             $user->phone = $request->mobile;
+            $user->bloc_id = $request->bloc_id;
             $user->user_type = "staff";
             $user->password = Hash::make($request->password);
             if($user->save()){
@@ -105,6 +106,7 @@ class StaffController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->mobile;
+        $user->bloc_id = $request->bloc_id;
         if(strlen($request->password) > 0){
             $user->password = Hash::make($request->password);
         }

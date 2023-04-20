@@ -175,6 +175,7 @@ class SellerController extends Controller
             $shops = $shops->where('verification_status', $approved);
         }
         if (Auth::user()->user_type != 'admin') {
+            $shops = $shops->where("bloc_id", Auth::user()->bloc_id);
             $shops = $shops->leftJoin('shop_manages AS c','shops.id','=','c.shop_id')
                 ->where('c.admin_id', Auth::user()->id);
         }
