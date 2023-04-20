@@ -267,10 +267,12 @@
                     <!--    @if(Auth::user()->user_type == 'admin' || in_array('3', json_decode(Auth::user()->staff->role->permissions)))
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('storehouse_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['storehouse_orders.index', 'storehouse_orders.show'])}}">
-                                    <span class="aiz-side-nav-text">{{translate('Storehouse Orders')}}</span>    -->
+                                    <span class="aiz-side-nav-text">{{translate('Storehouse Orders')}}</span>
                                 </a>
                             </li>
+
                         @endif
+                            -->
                         @if(Auth::user()->user_type == 'admin' || in_array('5', json_decode(Auth::user()->staff->role->permissions)))
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('seller_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['seller_orders.index', 'seller_orders.show'])}}">
@@ -306,8 +308,9 @@
                                 <a href="{{ route('pick_up_point.order_index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['pick_up_point.order_index','pick_up_point.order_show'])}}">
                                     <span class="aiz-side-nav-text">{{translate('Pick-up Point Order')}}</span>
                                 </a>
-                            </li>  -->
+                            </li>
                         @endif
+                            -->
 
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('logistics_setting.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['logistics_setting.index'])}}" >
