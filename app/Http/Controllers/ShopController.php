@@ -300,11 +300,7 @@ class ShopController extends Controller
 
                 flash(translate('Your Shop has been created successfully!'))->success();
 
-                if (!Auth::check() || Auth::check()->user_type == 'customer') {
-                    return redirect()->route('shops.index');
-                } else {
-                    return redirect()->route('sellers.index');
-                }
+                return redirect()->route('shops.index');
             }
             else
             {
