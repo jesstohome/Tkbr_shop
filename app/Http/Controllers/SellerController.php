@@ -174,11 +174,8 @@ class SellerController extends Controller
             $approved = $request->approved_status;
             $shops = $shops->where('verification_status', $approved);
         }
-        if (Auth::user()->user_type != 'admin') {
-            $shops = $shops->where("bloc_id", Auth::user()->bloc_id);
-            $shops = $shops->leftJoin('shop_manages AS c','shops.id','=','c.shop_id')
-                ->where('c.admin_id', Auth::user()->id);
-        }
+
+        $shops = filter_by_bloc($shops);
         $shops = $shops->select("shops.*")->paginate(15);
 
         return view('backend.sellers.index', compact('shops', 'sort_search', 'approved'));

@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\ProductStock;
 use App\Models\Address;
 use App\Models\CustomerPackage;
+use App\Models\Staff;
 use App\Models\Upload;
 use App\Models\Translation;
 use App\Models\City;
@@ -1390,22 +1391,36 @@ if (!function_exists('gen_rand_no')) {
     }
 }
 
-
+// 数据分离-过滤条件
 if (!function_exists('filter_by_bloc')) {
     function filter_by_bloc($model) {
         if (\Auth::user()->user_type != 'admin') {
-            return $model->where("bloc_id", \Auth::user()->bloc_id);
+            // 按集团过滤
+            $model = $model->where("bloc_id", \Auth::user()->bloc_id);
+
+            // 按员工过滤
+            $staff = Staff::query()->where("user_id", \Auth::user()->id)->first();
+            if (!empty($staff) && $staff->role && !$staff->role->is_manage) {
+                $model = $model->where("staff_id", $staff->id);
+            }
         }
 
         return $model;
     }
 }
 
-
+// 数据分离-获取员工ID
 if (!function_exists("get_staff_id")) {
     function get_staff_id() {
         if (!Auth::check() || Auth::user()->user_type == 'admin') return 0;
 
-        return (int) \Auth::user()->staff_id ?: (int) \Auth::user()->id;
+        if (empty(\Auth::user()->staff_id)) {
+            $staff = Staff::query()->where("user_id", \Auth::user()->id)->first();
+            if (!empty($staff)) {
+                return $staff->id;
+            }
+        }
+
+        return (int) \Auth::user()->staff_id;
     }
 }

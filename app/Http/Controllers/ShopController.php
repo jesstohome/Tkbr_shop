@@ -132,7 +132,7 @@ class ShopController extends Controller
         {
             // 归属集团Id
             $bloc_id = Auth::user()->bloc_id;
-            $staff_id = Auth::user()->id;
+            $staff_id = get_staff_id();
 
             //如果有登录用户
             if ( Auth::user()->user_type == 'admin' ||  Auth::user()->user_type == 'staff')
