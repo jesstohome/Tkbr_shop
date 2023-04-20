@@ -83,7 +83,12 @@ class PageController extends Controller
    {
         $lang = $request->lang;
         $page_name = $request->page;
-        $page = Page::where('slug', $id)->first();
+        if (is_numeric($id)) {
+            $page = Page::where('id', $id)->first();
+        } else {
+            $page = Page::where('slug', $id)->first();
+        }
+
         if($page != null){
           if ($page_name == 'home') {
             return view('backend.website_settings.pages.home_page_edit', compact('page','lang'));
