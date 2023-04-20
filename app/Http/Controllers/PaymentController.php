@@ -30,14 +30,19 @@ class PaymentController extends Controller
      */
     public function payment_histories(Request $request)
     {
-         
-        $payments = Payment::orderBy('created_at', 'desc')->where('t_type',1)->paginate(15);
+
+        $payments = Payment::orderBy('created_at', 'desc')->where('t_type',1);
+        $payments = filter_by_bloc($payments);
+        $payments = $payments->paginate(15);
+
         return view('backend.sellers.payment_histories.index', compact('payments'));
     }
    public function payment_histories_cus(Request $request)
     {
-         
-        $payments = Payment::orderBy('created_at', 'desc')->where('t_type',2)->paginate(15);
+
+        $payments = Payment::orderBy('created_at', 'desc')->where('t_type',2);
+        $payments = filter_by_bloc($payments);
+        $payments = $payments->paginate(15);
         return view('backend.sellers.payment_histories.index2', compact('payments'));
     }
 

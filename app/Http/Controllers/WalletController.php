@@ -10,6 +10,7 @@ use App\Models\SellerWithdrawRequest;
 use Auth;
 use Session;
 use function array_column;
+use function Aws\filter;
 use function back;
 use function date;
 use function dd;
@@ -35,29 +36,6 @@ class WalletController extends Controller
     public function do_money_withdraw_request( Request $request ) {
         $user = Auth::user();
 
-        /*
-        if( $request->w_type == 2 )//银行
-        {
-            if( empty($user->bank_acc_name) || empty($user->bank_name) || $user->bank_payment_status == 0 || empty($user->bank_acc_no) || empty($user->bank_routing_no))
-            {
-
-                 flash(translate('You Should Fill Bank Info'))->error();
-               return back();
-
-            }
-        }
-         if( $request->w_type == 3 )//USDT
-        {
-            if( empty($user->usdt_address) || empty($user->usdt_type) || $user->usdt_payment_status == 0   )
-            {
-                 flash(translate('You Should Fill USDT Info'))->error();
-                 return back();
-
-            }
-        }
-        */
-
-
         if ( $request->amount > $user->balance )
         {
             flash(translate('You do not have enough balance to send withdraw request'))->error();
@@ -65,12 +43,12 @@ class WalletController extends Controller
         }
         $exits = SellerWithdrawRequest::where('status', '0')->where('type', 1)->where('user_id', $user->id)->count();
 
-        if ( $exits !== 0 )
-        {
-            #flash(translate('withdraw exited'))->error();
-            # return back();
+        if ( $exits !== 0 ) {
+            flash(translate('withdraw exited'))->error();
+            return back();
         }
         $seller_withdraw_request = new SellerWithdrawRequest;
+        $seller_withdraw_request->bloc_id = $user->bloc_id;
         $seller_withdraw_request->user_id = $user->id;
         $seller_withdraw_request->amount = $request->amount;
         $seller_withdraw_request->message = $request->message;
@@ -80,7 +58,8 @@ class WalletController extends Controller
         $seller_withdraw_request->t_type = 2; //客户
 
         if ( $seller_withdraw_request->save() )
-        {//扣除余额
+        {
+            //扣除余额
             $userModel = User::find($user->id);
             $userModel->balance = $user->balance - $request->amount;
             $userModel->save();
@@ -140,6 +119,7 @@ class WalletController extends Controller
             }
             $wallet = new Wallet;
             $wallet->user_id = $user->id;
+            $wallet->bloc_id = $user->bloc_id;
             $wallet->amount = $request->amount;
             $wallet->payment_method = $request->payment_option;
             $wallet->payment_details = '';
@@ -157,6 +137,7 @@ class WalletController extends Controller
 
         $wallet = new Wallet;
         $wallet->user_id = Auth::user()->id;
+        $wallet->bloc_id = Auth::user()->bloc_id;
         $wallet->amount = $request->amount;
         $wallet->payment_method = $request->payment_option;
         $wallet->payment_details = $request->trx_id;
@@ -210,6 +191,7 @@ class WalletController extends Controller
             return view('manual_payment_methods.wallet_request_salesman', compact('wallets'));
         }
 
+        $wallets = filter_by_bloc($wallets);
         $wallets = $wallets->latest()->paginate(10);
         return view('manual_payment_methods.wallet_request', compact('wallets', 'name', 'operator', 'date'));
     }

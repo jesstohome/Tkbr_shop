@@ -25,7 +25,10 @@ class SellerWithdrawRequestController extends Controller
 
     public function index()
     {
-        $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',1)->latest()->paginate(15);
+        $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',1)->latest();
+        $seller_withdraw_requests = filter_by_bloc($seller_withdraw_requests);
+        $seller_withdraw_requests = $seller_withdraw_requests->paginate(15);
+
         return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests'));
     }
 
@@ -45,12 +48,12 @@ class SellerWithdrawRequestController extends Controller
 
     public function index_by_customer( Request $request)
     {
+        $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',2)->latest();
+        $seller_withdraw_requests = filter_by_bloc($seller_withdraw_requests);
+        $seller_withdraw_requests = $seller_withdraw_requests->paginate(15);
 
 
-       $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',2)->latest()->paginate(15);
-
-
-       # $seller_withdraw_requests =  SellerWithdrawRequest::latest()->paginate(15);
+        # $seller_withdraw_requests =  SellerWithdrawRequest::latest()->paginate(15);
         return view('backend.sellers.seller_withdraw_requests_all_by_user.index2', compact('seller_withdraw_requests'));
     }
     /**

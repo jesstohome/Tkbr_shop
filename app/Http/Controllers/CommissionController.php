@@ -126,6 +126,7 @@ id: 1
 
             $payment = new Payment;
             $payment->seller_id = $user->id;
+            $payment->bloc_id = $user->bloc_id;
             $payment->amount = $amount;
             $payment->payment_method = 'Pay From admin';
             $payment->txn_code = date("YmdHis");
@@ -185,6 +186,7 @@ id: 1
 
             $payment = new Payment;
             $payment->seller_id = $user->id;
+            $payment->bloc_id = $user->bloc_id;
             $payment->amount = $payment_data['amount'];
             $payment->payment_method = 'Seller paid to admin';
             $payment->txn_code = $payment_data['txn_code'];
@@ -245,6 +247,7 @@ id: 1
             $user->save();
 
             $payment = new Payment;
+            $payment->bloc_id = $user->bloc_id;
             $payment->seller_id = $user->id;
             $payment->amount = $payment_data['amount'];
             $payment->payment_method = 'Seller paid to admin';
@@ -278,6 +281,7 @@ id: 1
 
         $payment = new Payment;
         $payment->seller_id = $user->id;
+        $payment->bloc_id = $user->bloc_id;
         $payment->amount = $payment_data['amount'];
         $payment->payment_method = $payment_data['payment_method'];
         $payment->txn_code = $payment_data['txn_code'];
