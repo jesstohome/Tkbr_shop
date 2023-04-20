@@ -131,7 +131,6 @@ class ConversationController extends Controller
 
         $conversation = new Conversation;
         $conversation->bloc_id = $product->bloc_id;
-        $conversation->staff_id = $product->staff_id;
         $conversation->sender_id = $sender_id;
         $conversation->receiver_id = Product::findOrFail($request->product_id)->user->id;
         $conversation->title = $request->title;

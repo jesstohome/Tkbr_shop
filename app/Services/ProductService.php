@@ -142,7 +142,6 @@ class ProductService
         ))->toArray();
 
         $data['bloc_id'] = (int) \Auth::user()->bloc_id;
-        $data['staff_id'] = get_staff_id();
         return Product::create($data);
     }
 
@@ -286,7 +285,6 @@ class ProductService
         ))->toArray();
 
         $data['bloc_id'] = (int) \Auth::user()->bloc_id;
-        $data['staff_id'] = get_staff_id();
 
         $product->update($data);
 

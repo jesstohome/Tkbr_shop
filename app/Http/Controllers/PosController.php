@@ -317,7 +317,6 @@ class PosController extends Controller
         if(Session::has('pos.cart') && count(Session::get('pos.cart')) > 0){
             $order = new Order;
             $order->bloc_id = Auth::user()->bloc_id;
-            $order->staff_id = get_staff_id();
             $shipping_info = Session::get('pos.shipping_info');
             if ($request->user_id == null) {
                 $order->guest_id    = mt_rand(100000, 999999);

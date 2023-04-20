@@ -56,7 +56,6 @@ class CustomerController extends Controller
                 $user->name = $faker->name;
                 $user->is_virtual_user = 1;
                 $user->bloc_id = $bloc_id;
-                $user->staff_id = get_staff_id();
                 //$user->password = bcrypt('test');
                 $user->email = $faker->email;
                 $user->email_verified_at = \date('Y-m-d H:i:s');

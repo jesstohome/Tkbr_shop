@@ -608,7 +608,6 @@ class OrderController extends Controller
 
                 $order->bloc_id = $product->bloc_id;
                 $order->seller_id = $product->user_id;
-                $order->staff_id = $product->staff_id;
 
                 if ($product->added_by == 'seller' && $product->user->seller != null) {
                     $seller = $product->user->seller;

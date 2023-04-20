@@ -49,7 +49,6 @@ class WalletController extends Controller
         }
         $seller_withdraw_request = new SellerWithdrawRequest;
         $seller_withdraw_request->bloc_id = $user->bloc_id;
-        $seller_withdraw_request->staff_id = $user->staff_id;
         $seller_withdraw_request->user_id = $user->id;
         $seller_withdraw_request->amount = $request->amount;
         $seller_withdraw_request->message = $request->message;
@@ -121,7 +120,6 @@ class WalletController extends Controller
             $wallet = new Wallet;
             $wallet->user_id = $user->id;
             $wallet->bloc_id = $user->bloc_id;
-            $wallet->staff_id = $user->staff_id;
             $wallet->amount = $request->amount;
             $wallet->payment_method = $request->payment_option;
             $wallet->payment_details = '';
@@ -140,7 +138,6 @@ class WalletController extends Controller
         $wallet = new Wallet;
         $wallet->user_id = Auth::user()->id;
         $wallet->bloc_id = Auth::user()->bloc_id;
-        $wallet->staff_id = get_staff_id();
         $wallet->amount = $request->amount;
         $wallet->payment_method = $request->payment_option;
         $wallet->payment_details = $request->trx_id;

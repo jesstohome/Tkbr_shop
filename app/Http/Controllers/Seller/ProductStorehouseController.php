@@ -86,7 +86,6 @@ class ProductStorehouseController extends Controller
     {
         $userId = Auth::user()->id;
         $bloc_id = Auth::user()->bloc_id;
-        $staff_id = get_staff_id();
         if (!$request->all && !$request->product_ids) return response()->json(['success' => 0, 'message' => translate('Please select a product')]);
 
         // 排除已复制产品
@@ -152,7 +151,6 @@ class ProductStorehouseController extends Controller
                 $product_new->added_by = 'seller';
                 $product_new->user_id = $userId;
                 $product_new->bloc_id = $bloc_id;
-                $product_new->staff_id = $staff_id;
                 $product_new->unit_price = $product->unit_price + $profitPrice;
                 $product_new->original_id = $productId;
                 $product_new->published = 1;
