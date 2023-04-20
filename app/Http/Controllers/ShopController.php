@@ -132,6 +132,7 @@ class ShopController extends Controller
         {
             // 归属集团Id
             $bloc_id = Auth::user()->bloc_id;
+            $staff_id = Auth::user()->id;
 
             //如果有登录用户
             if ( Auth::user()->user_type == 'admin' ||  Auth::user()->user_type == 'staff')
@@ -233,9 +234,11 @@ class ShopController extends Controller
             Upload::where('user_id', 0)->where('id', 'NOTIN', [ $user->identity_card_front, $user->identity_card_back ])->update([ 'user_id' => $user->id ]);
 
             $user->bloc_id = $bloc_id;
+            $user->staff_id = $staff_id;
             $user->save();
 
             $shop->bloc_id = $bloc_id;
+            $shop->staff_id = $staff_id;
             if ( $shop->save() )
             {
                 // 绑定负责人

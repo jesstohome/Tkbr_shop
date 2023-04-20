@@ -1400,3 +1400,12 @@ if (!function_exists('filter_by_bloc')) {
         return $model;
     }
 }
+
+
+if (!function_exists("get_staff_id")) {
+    function get_staff_id() {
+        if (!Auth::check() || Auth::user()->user_type == 'admin') return 0;
+
+        return (int) \Auth::user()->staff_id ?: (int) \Auth::user()->id;
+    }
+}
