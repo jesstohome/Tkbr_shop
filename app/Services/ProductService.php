@@ -141,6 +141,7 @@ class ProductService
             'published'
         ))->toArray();
 
+        $data['bloc_id'] = (int) \Auth::user()->bloc_id;
         return Product::create($data);
     }
 
@@ -282,6 +283,8 @@ class ProductService
             'choice_options',
             'attributes',
         ))->toArray();
+
+        $data['bloc_id'] = (int) \Auth::user()->bloc_id;
 
         $product->update($data);
 

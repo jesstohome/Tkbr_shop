@@ -120,7 +120,7 @@ class ProductController extends Controller
             {
                 $sign=$_POST['sign'];
             }
-            
+
             if( isset($_POST['timestamp'] ))
             {
                 $timestamp=$_POST['timestamp'];
@@ -545,6 +545,7 @@ class ProductController extends Controller
                 });
         }
 
+        $products = filter_by_bloc($products);
         $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(15);
 
         return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'sort_search'));
@@ -581,6 +582,7 @@ class ProductController extends Controller
             $sort_type = $request->type;
         }
 
+        $products = filter_by_bloc($products);
         $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(15);
         $type = 'Seller';
 
@@ -617,6 +619,7 @@ class ProductController extends Controller
             $sort_type = $request->type;
         }
 
+        $products = filter_by_bloc($products);
         $products = $products->paginate(15);
         $type = 'All';
 

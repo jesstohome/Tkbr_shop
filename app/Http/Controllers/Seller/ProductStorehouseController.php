@@ -85,6 +85,7 @@ class ProductStorehouseController extends Controller
     public function addProduct(Request $request)
     {
         $userId = Auth::user()->id;
+        $bloc_id = Auth::user()->bloc_id;
         if (!$request->all && !$request->product_ids) return response()->json(['success' => 0, 'message' => translate('Please select a product')]);
 
         // 排除已复制产品
@@ -149,6 +150,7 @@ class ProductStorehouseController extends Controller
                 $product_new->slug = $product_new->slug . '-' . Str::random(5);
                 $product_new->added_by = 'seller';
                 $product_new->user_id = $userId;
+                $product_new->bloc_id = $bloc_id;
                 $product_new->unit_price = $product->unit_price + $profitPrice;
                 $product_new->original_id = $productId;
                 $product_new->published = 1;

@@ -29,13 +29,16 @@ class PosController extends Controller
 {
     public function index()
     {
-
-        $customers = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->orderBy('created_at', 'desc')->get();
+        $customers = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->orderBy('created_at', 'desc');
+        $customers = filter_by_bloc($customers);
+        $customers = $customers->get();
         if (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff') {
             return view('pos.index', compact('customers'));
         }elseif (Auth::user()->user_type == 'salesman'){
 
-            $customers = User::where('user_type', 'customer')->where('referred_by', '=', Auth::user()->id )->orderBy('created_at', 'desc')->get();
+            $customers = User::where('user_type', 'customer')->where('referred_by', '=', Auth::user()->id )->orderBy('created_at', 'desc');
+            $customers = filter_by_bloc($customers);
+            $customers = $customers->get();
 
             return view('pos.salesman.index', compact('customers'));
         }
@@ -93,6 +96,7 @@ class PosController extends Controller
 
         dd($p);*/
 
+        $products = filter_by_bloc($products);
         $stocks = new PosProductCollection($products->paginate(16));
         $stocks->appends(['keyword' =>  $request->keyword,'category' => $request->category, 'brand' => $request->brand, 'user_id' => $request->user_id]);
         return $stocks;
@@ -312,7 +316,7 @@ class PosController extends Controller
 
         if(Session::has('pos.cart') && count(Session::get('pos.cart')) > 0){
             $order = new Order;
-
+            $order->bloc_id = Auth::user()->bloc_id;
             $shipping_info = Session::get('pos.shipping_info');
             if ($request->user_id == null) {
                 $order->guest_id    = mt_rand(100000, 999999);

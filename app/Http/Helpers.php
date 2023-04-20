@@ -1389,3 +1389,14 @@ if (!function_exists('gen_rand_no')) {
         return mt_rand(1 * $pow, 9 * $pow);
     }
 }
+
+
+if (!function_exists('filter_by_bloc')) {
+    function filter_by_bloc($model) {
+        if (\Auth::user()->user_type != 'admin') {
+            return $model->where("bloc_id", \Auth::user()->bloc_id);
+        }
+
+        return $model;
+    }
+}

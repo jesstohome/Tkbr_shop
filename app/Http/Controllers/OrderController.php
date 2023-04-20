@@ -147,6 +147,7 @@ class OrderController extends Controller
             $orders = $orders->where('user_id', $customer_id);
         }
 
+        $orders = filter_by_bloc($orders);
         $orders = $orders->paginate(15);
         foreach ($orders as $order) {
             $order->admin_viewed = 1;
@@ -250,6 +251,7 @@ class OrderController extends Controller
             $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
 
+        $orders = filter_by_bloc($orders);
         $orders = $orders->paginate(15);
         return view('backend.sales.inhouse_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'date'));
     }
@@ -304,6 +306,7 @@ class OrderController extends Controller
             $orders = $orders->where('user_id', $customer_id);
         }
 
+        $orders = filter_by_bloc($orders);
         $orders = $orders->paginate(15);
         return view('backend.sales.seller_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'customer_id', 'date'));
     }
@@ -335,6 +338,7 @@ class OrderController extends Controller
             $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
 
+        $orders = filter_by_bloc($orders);
         $orders = $orders->paginate(15);
 
         return view('backend.sales.clocking_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date'));
@@ -381,6 +385,7 @@ class OrderController extends Controller
             $orders = $orders->where('user_id', $customer_id);
         }
 
+        $orders = filter_by_bloc($orders);
         $orders = $orders->paginate(15);
 
         return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'seller_id', 'customer_id'));
@@ -601,6 +606,7 @@ class OrderController extends Controller
                 $product->num_of_sale += $cartItem['quantity'];
                 $product->save();
 
+                $order->bloc_id = $product->bloc_id;
                 $order->seller_id = $product->user_id;
 
                 if ($product->added_by == 'seller' && $product->user->seller != null) {

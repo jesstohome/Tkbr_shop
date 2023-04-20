@@ -34,6 +34,8 @@ class CustomerController extends Controller
                 $q->where('name', 'like', '%' . $sort_search . '%')->orWhere('email', 'like', '%' . $sort_search . '%');
             });
         }
+
+        $users = filter_by_bloc($users);
         $users = $users->paginate(15);
         return view('backend.customer.customers.index', compact('users', 'sort_search'));
     }
@@ -44,6 +46,7 @@ class CustomerController extends Controller
         {
             \DB::beginTransaction();
 
+            $bloc_id = Auth::user()->bloc_id;
             $max = \intval($request->input('max')) < 1 ? 1 : ( \intval($request->input('max')) > 100 ? 100 : \intval($request->input('max')) );
             for ( $i = 0; $i < $max; $i++ )
             {
@@ -52,6 +55,7 @@ class CustomerController extends Controller
                 $user = new User();
                 $user->name = $faker->name;
                 $user->is_virtual_user = 1;
+                $user->bloc_id = $bloc_id;
                 //$user->password = bcrypt('test');
                 $user->email = $faker->email;
                 $user->email_verified_at = \date('Y-m-d H:i:s');

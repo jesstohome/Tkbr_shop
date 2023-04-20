@@ -70,6 +70,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                     'description' => $row['description'],
                     'added_by' => $user->user_type == 'seller' ? 'seller' : 'admin',
                     'user_id' => $user->user_type == 'seller' ? $user->id : User::where('user_type', 'admin')->first()->id,
+                    'bloc_id' => $user->bloc_id,
                     'approved' => $approved,
                     'category_id' => $row['category_id'],
                     'brand_id' => $row['brand_id'],
