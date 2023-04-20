@@ -94,7 +94,9 @@ class ConversationController extends Controller
     public function admin_index()
     {
         if (BusinessSetting::where('type', 'conversation_system')->first()->value == 1) {
-            $conversations = Conversation::orderBy('created_at', 'desc')->get();
+            $conversations = Conversation::orderBy('created_at', 'desc');
+            $conversations = filter_by_bloc($conversations);
+            $conversations = $conversations->paginate(15);
             return view('backend.support.conversations.index', compact('conversations'));
         }
         else {
@@ -121,12 +123,14 @@ class ConversationController extends Controller
      */
     public function store(Request $request)
     {
-        $user_type = Product::findOrFail($request->product_id)->user->user_type;
+        $product = Product::findOrFail($request->product_id);
+        $user_type = $product->user->user_type;
 
         $add_by_admin = (int) $request->post('add_by_admin');
         $sender_id = $request->post('user_id', Auth::user()->id);
 
         $conversation = new Conversation;
+        $conversation->bloc_id = $product->bloc_id;
         $conversation->sender_id = $sender_id;
         $conversation->receiver_id = Product::findOrFail($request->product_id)->user->id;
         $conversation->title = $request->title;

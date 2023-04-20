@@ -540,7 +540,9 @@ class PosController extends Controller
      */
     public function pos_conversation() {
         if (BusinessSetting::where('type', 'conversation_system')->first()->value == 1) {
-            $conversations = Conversation::where('add_by_admin', 1)->orderBy('created_at', 'desc')->paginate(5);
+            $conversations = Conversation::where('add_by_admin', 1)->orderBy('created_at', 'desc');
+            $conversations = filter_by_bloc($conversations);
+            $conversations = $conversations->paginate(5);
             return view('pos.conversations.index', compact('conversations'));
         } else {
             flash(translate('Conversation is disabled at this moment'))->warning();

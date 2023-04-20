@@ -153,7 +153,9 @@ class AffiliateController extends Controller
     }
 
     public function affiliate_logs_admin() {
-        $affiliate_logs = AffiliateLog::latest()->paginate(10);
+        $affiliate_logs = AffiliateLog::latest();
+        $affiliate_logs = filter_by_bloc($affiliate_logs);
+        $affiliate_logs = $affiliate_logs->paginate(10);
         return view('affiliate.affiliate_logs', compact('affiliate_logs'));
     }
 
@@ -559,7 +561,11 @@ class AffiliateController extends Controller
                     },
                 ]);
             },
-        ])->paginate(10);
+        ]);
+
+        $refferal_users = filter_by_bloc($refferal_users);
+        $refferal_users = $refferal_users->paginate(10);
+
         return view('affiliate.refferal_users', compact('refferal_users'));
     }
 

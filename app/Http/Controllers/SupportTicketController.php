@@ -31,6 +31,7 @@ class SupportTicketController extends Controller
             $sort_search = $request->search;
             $tickets = $tickets->where('code', 'like', '%'.$sort_search.'%');
         }
+        $tickets = filter_by_bloc($tickets);
         $tickets = $tickets->paginate(15);
         return view('backend.support.support_tickets.index', compact('tickets', 'sort_search'));
     }
@@ -57,6 +58,7 @@ class SupportTicketController extends Controller
         $ticket = new Ticket;
         $ticket->code = max(100000, (Ticket::latest()->first() != null ? Ticket::latest()->first()->code + 1 : 0)).date('s');
         $ticket->user_id = Auth::user()->id;
+        $ticket->bloc_id = Auth::user()->bloc_id;
         $ticket->subject = $request->subject;
         $ticket->details = $request->details;
         $ticket->files = $request->attachments;

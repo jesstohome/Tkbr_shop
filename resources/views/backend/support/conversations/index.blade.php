@@ -52,6 +52,10 @@
                 @endforeach
             </tbody>
         </table>
+
+        <div class="aiz-pagination">
+            {{ $conversations->links() }}
+        </div>
     </div>
 </div>
 
