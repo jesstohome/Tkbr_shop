@@ -35,6 +35,7 @@ class SupportTicketController extends Controller
         $ticket->code = max(100000, (Ticket::latest()->first() != null ? Ticket::latest()->first()->code + 1 : 0)).date('s');
         $ticket->user_id = Auth::user()->id;
         $ticket->bloc_id = Auth::user()->bloc_id;
+        $ticket->staff_id = get_staff_id();
         $ticket->subject = $request->subject;
         $ticket->details = $request->details;
         $ticket->files = $request->attachments;
