@@ -346,6 +346,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
         });
     });
 
+    // Menu
+    Route::resource('menu', \App\Http\Controllers\MenuController::class);
+
     // Bloc
     Route::resource('bloc', BlocController::class);
     Route::controller(BlocController::class)->group(function () {

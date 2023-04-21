@@ -25,6 +25,14 @@
                         <span class="aiz-side-nav-text">{{translate('Dashboard')}}</span>
                     </a>
                 </li>
+                @if (env("APP_ENV") == "local")
+                    <li class="aiz-side-nav-item">
+                        <a href="{{route('menu.index')}}" class="aiz-side-nav-link">
+                            <i class="las la-home aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{translate('Menu')}}</span>
+                        </a>
+                    </li>
+                @endif
 
                 <!-- POS 系统-->
                 @if (addon_is_activated('pos_system'))
