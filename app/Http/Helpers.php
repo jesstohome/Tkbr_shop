@@ -1324,7 +1324,7 @@ if (!function_exists('scheduled_update_delivery_status')) {
             $delivery_status = '';
             foreach ($express['express_time'] as $key => $time) {
                 $time = strtotime(is_array($time) ? $time[0] : $time);
-                if ($now >= $time) {
+                if ($now >= $time && isset($status[$key])) {
                     $delivery_status = $status[$key];
                 }
             }
