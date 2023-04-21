@@ -244,7 +244,7 @@
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-money-bill aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{translate('Sales')}}</span>    <!-- 销售量  -->
-                        @if(Redis::hlen('orders_pick_up_tip'))
+                        @if(Redis::hlen('orders_pick_up_tip') or Redis::hlen('new_order_tip'))
                             <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
                         @endif
                         <span class="aiz-side-nav-arrow"></span>
@@ -256,7 +256,7 @@
                                 <a href="{{ route('all_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['all_orders.index', 'all_orders.show'])}}">
                                     <span class="aiz-side-nav-text">{{translate('All Orders')}}</span>
                                     <span class="badge badge-danger badge-circle badge-sm badge-dot" id="order-red-tip" style="display: none"> </span>
-                                    @if(Redis::hlen('orders_pick_up_tip'))
+                                    @if(Redis::hlen('orders_pick_up_tip') or Redis::hlen('new_order_tip'))
                                         <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
                                     @endif
                                     <!-- 所有订单  -->
@@ -1310,7 +1310,7 @@
     function audioPlay(text) {
         var zhText = text;
         zhText = encodeURI( zhText );
-        var audio = "<audio autoplay=\"autoplay\">" + "<source src=\"/public/new.mp3\" type=\"audio/mpeg\">" + "<embed height=\"0\" width=\"0\" src=\"http://tts.baidu.com/text2audio?text=" + zhText + "\">" + "</audio>";
+        var audio = "<audio autoplay=\"autoplay\">" + "<source src=\"/public/new2.mp3\" type=\"audio/mpeg\">" + "<embed height=\"0\" width=\"0\" src=\"http://tts.baidu.com/text2audio?text=" + zhText + "\">" + "</audio>";
         $( 'body' ).append( audio );
     }
 

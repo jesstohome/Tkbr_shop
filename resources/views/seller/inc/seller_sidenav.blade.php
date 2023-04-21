@@ -569,7 +569,7 @@
         function audioPlay(text) {
             var zhText = text;
             zhText = encodeURI( zhText );
-            var audio = "<audio autoplay=\"autoplay\">" + "<source src=\"/public/new.mp3\" type=\"audio/mpeg\">" + "<embed height=\"0\" width=\"0\" src=\"http://tts.baidu.com/text2audio?text=" + zhText + "\">" + "</audio>";
+            var audio = "<audio autoplay=\"autoplay\">" + "<source src=\"/public/new2.mp3\" type=\"audio/mpeg\">" + "<embed height=\"0\" width=\"0\" src=\"http://tts.baidu.com/text2audio?text=" + zhText + "\">" + "</audio>";
             $( 'body' ).append( audio );
         }
 
@@ -583,7 +583,7 @@
                         audioPlay( res.msg );
                     }
                 }, 'json' )
-            }, '3000' );
+            }, 3000 );
         }
     </script>
 

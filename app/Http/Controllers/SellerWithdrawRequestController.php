@@ -176,13 +176,70 @@ class SellerWithdrawRequestController extends Controller
         $seller_withdraw_request = SellerWithdrawRequest::findOrFail($request->id);
         $seller_id = $seller_withdraw_request->user_id;
 
-        $size = 100;
+        $size = 500;
         $orders = Order::orderBy('id', 'desc')->where('seller_id', $seller_id)->latest()->paginate($size);
         $wallets_recharge = Wallet::where('offline_payment', 1)->where("user_id", $seller_id)->latest()->paginate($size);
         $wallets_withdraw = SellerWithdrawRequest::where("user_id", $seller_id)->where('type', 1)->latest()->paginate($size);
-        $commission_records = CommissionHistory::where("seller_id", $seller_id)->latest()->paginate($size);
+//        $commission_records = CommissionHistory::where("seller_id", $seller_id)->latest()->paginate($size);
 
-        return view('backend.sellers.seller_withdraw_requests.withdraw_history_modal', compact('orders', 'wallets_recharge', 'wallets_withdraw', 'commission_records'));
+        $shops = [];
+        //总商家数
+        $users_1 = User::where('pid', '=', $seller_id)->where('user_type', '=', 'seller')->get();//下一级商家
+        foreach ( $users_1 as $user_1 )
+        {
+            $users_2 = User::where('pid', '=', $user_1->id)->where('user_type', '=', 'seller')->get();//下二级商家
+            //查询所有订单
+            $orders_1 = $orders = Order::where('seller_id', $user_1->id)->get();
+            $one = [
+                'shop_name' => $user_1->shop->name,
+                'order_number' => count($orders_1),
+                'brokerage' =>0,
+                'level' => '一级',
+            ];
+            foreach ( $orders_1 as $order_1 )
+            {
+                $one['brokerage'] += $order_1->grand_total*get_setting('commission_ratio_level_1')/100;
+            }
+            $shops[] = $one;
+
+            foreach ( $users_2 as $user_2 )
+            {
+                $users_3 = User::where('pid', '=', $user_2->id)->where('user_type', '=', 'seller')->get();//下二级商家
+                //查询所有订单
+                $orders_2 = $orders = Order::where('seller_id', $user_2->id)->get();
+                $two = [
+                    'shop_name' => $user_2->shop->name,
+                    'order_number' => count($orders_2),
+                    'brokerage' =>0,
+                    'level' => '二级',
+                ];
+                foreach ( $orders_2 as $order_2 )
+                {
+                    $two['brokerage'] += $order_2->grand_total*get_setting('commission_ratio_level_2')/100;
+                }
+                $shops[] = $two;
+
+
+                foreach ( $users_3 as $user_3 )
+                {
+                    //查询所有订单
+                    $orders_3 = $orders = Order::where('seller_id', $user_3->id)->get();
+                    $three = [
+                        'shop_name' => $user_3->shop->name,
+                        'order_number' => count($orders_3),
+                        'brokerage' =>0,
+                        'level' => '三级',
+                    ];
+                    foreach ( $orders_3 as $order_3 )
+                    {
+                        $three['brokerage'] += $order_3->grand_total*get_setting('commission_ratio_level_3')/100;
+                    }
+                    $shops[] = $three;
+                }
+            }
+        }
+
+        return view('backend.sellers.seller_withdraw_requests.withdraw_history_modal', compact('orders', 'wallets_recharge', 'wallets_withdraw', 'commission_records', 'shops'));
     }
 
 

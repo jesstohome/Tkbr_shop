@@ -121,6 +121,9 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
+        flash(translate('Your region currently does not support buyer account registration. We will provide services to that region as soon as possible'));
+        return back();
+
         if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
             if(User::where('email', $request->email)->first() != null){
                 flash(translate('Email or Phone already exists.'));

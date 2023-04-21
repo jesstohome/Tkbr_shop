@@ -39,12 +39,15 @@ class ConversationController extends Controller
                 echo json_encode( ['code'=>1, 'msg'=> 'Yes'] );exit;
             }
         }
+
+        // 检测下是否有新的产品
+
          echo json_encode( ['code'=>0, 'msg'=> 'No'] );exit;
 
     }
 
 
-      public function check_new_reply()
+    public function check_new_reply()
     {
 
         $uid =  $pid = Auth::user()->id;

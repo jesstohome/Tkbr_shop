@@ -15,6 +15,7 @@ use App\Models\Product;
 use App\Utility\PayhereUtility;
 use App\Utility\NotificationUtility;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Session;
 use Auth;
 
@@ -62,6 +63,8 @@ class CheckoutController extends Controller
                     foreach ($combined_order->orders as $order) {
                         $order->manual_payment = 1;
                         $order->save();
+
+                        Redis::hset("new_order_tip", $order->id, 1);
                     }
                     flash(translate('Your order has been placed successfully. Please submit payment information from purchase history'))->success();
                     return redirect()->route('order_confirmed');
@@ -84,8 +87,10 @@ class CheckoutController extends Controller
             $order->payment_details = $payment;
             $order->save();
 
+            Redis::hset("new_order_tip", $order->id, 1);
             calculateCommissionAffilationClubPoint($order);
         }
+
         Session::put('combined_order_id', $combined_order_id);
         return redirect()->route('order_confirmed');
     }

@@ -155,6 +155,9 @@
                         </td>
                         <td>
                             {{ $order->code }}
+                            @if(Redis::hget('new_order_tip', $order->id))
+                                <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                            @endif
                         </td>
                         <td>
                              @if ($order->order_type == 6)

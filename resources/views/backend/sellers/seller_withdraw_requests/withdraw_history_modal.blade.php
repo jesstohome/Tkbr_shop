@@ -90,26 +90,22 @@
         <div class="tab-pane fade" id="commission">
             <table class="table mb-0">
                 <thead>
-                    <th data-breakpoints="lg">{{ translate('Order Code') }}</th>
-                    <th>{{ translate('Admin Commission') }}</th>
-                    <th>{{ translate('Earning') }}</th>
-                    <th data-breakpoints="lg">{{ translate('Created At') }}</th>
+                <th>{{ translate('shop name')}}</th>
+                <th data-breakpoints="lg">{{ translate('Order number')}}</th>
+                <th data-breakpoints="lg">{{ translate('brokerage amount') }}</th>
+                <th data-breakpoints="lg">{{ translate('level') }}</th>
                 </thead>
                 <tbody>
-                @foreach($commission_records as $history)
+                @foreach($shops as $shop)
                     <tr>
                         <td>
-                            @if(isset($history->order))
-                                {{ $history->order->code }}
-                            @else
-                                <span class="badge badge-inline badge-danger">
-                                    {{ translate('Order Deleted') }}
-                                </span>
-                            @endif
+                            {{ $shop['shop_name'] }}
                         </td>
-                        <td>{{ $history->admin_commission }}</td>
-                        <td>{{ $history->seller_earning }}</td>
-                        <td>{{ $history->created_at }}</td>
+                        <td>{{ $shop['order_number'] }}</td>
+                        <td>
+                            {{ single_price($shop['brokerage']) }}
+                        </td>
+                        <td>{{ $shop['level'] }}</td>
                     </tr>
                 @endforeach
                 </tbody>

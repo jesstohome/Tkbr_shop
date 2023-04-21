@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use Auth;
+use Illuminate\Support\Facades\Redis;
 
 class MessageController extends Controller
 {
@@ -48,8 +49,11 @@ class MessageController extends Controller
         elseif($conversation->receiver_id == Auth::user()->id) {
             $conversation->sender_viewed ="1";
         }
+        $conversation->is_tip = 0;
         $conversation->save();
-        
+
+        Redis::hset('new_review_tip', 1, 1);
+
         return back();
     }
 
