@@ -58,13 +58,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
-                        <label class="col-sm-3 col-from-label" for="invite_code">{{translate('Invite code')}}</label>
-                        <div class="col-sm-9">
-                            <input type="text" placeholder="{{translate('Invite code')}}" id="invite_code" name="invite_code" class="form-control" required>
-                        </div>
-                    </div>
-
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
                     </div>

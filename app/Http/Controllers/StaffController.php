@@ -57,7 +57,7 @@ class StaffController extends Controller
                 $staff->user_id = $user->id;
                 $staff->role_id = $request->role_id;
                 $staff->bloc_id = $request->bloc_id;
-                $staff->invite_code = $request->invite_code;
+                $staff->invite_code = mt_rand(10000000, 99999999);
                 if($staff->save()){
                     flash(translate('Staff has been inserted successfully'))->success();
                     return redirect()->route('staffs.index');
