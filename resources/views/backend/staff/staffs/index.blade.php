@@ -52,9 +52,15 @@
 		                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('staffs.edit', encrypt($staff->id))}}" title="{{ translate('Edit') }}">
 		                                <i class="las la-edit"></i>
 		                            </a>
-		                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('staffs.destroy', $staff->id)}}" title="{{ translate('Delete') }}">
-		                                <i class="las la-trash"></i>
-		                            </a>
+                                @if($staff->user->banned != 1)
+                                    <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm" onclick="confirm_ban('{{route('customers.ban', encrypt($staff->user->id))}}');" title="{{ translate('Ban this Customer') }}">
+                                        <i class="las la-user-slash"></i>
+                                    </a>
+                                @else
+                                    <a href="#" class="btn btn-soft-success btn-icon btn-circle btn-sm" onclick="confirm_unban('{{route('customers.ban', encrypt($staff->user->id))}}');" title="{{ translate('Unban this Customer') }}">
+                                        <i class="las la-user-check"></i>
+                                    </a>
+                                @endif
 		                        </td>
                         </tr>
                     @endif
@@ -71,4 +77,55 @@
 
 @section('modal')
     @include('modals.delete_modal')
+
+    <div class="modal fade" id="confirm-ban">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h6">{{translate('Confirmation')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{translate('Do you really want to ban this Customer?')}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Cancel')}}</button>
+                    <a type="button" id="confirmation" class="btn btn-primary">{{translate('Proceed!')}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirm-unban">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h6">{{translate('Confirmation')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{translate('Do you really want to unban this Customer?')}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Cancel')}}</button>
+                    <a type="button" id="confirmationunban" class="btn btn-primary">{{translate('Proceed!')}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@endsection
+
+@section('script')
+<script type="text/javascript">
+    function confirm_ban(url) {
+        $( '#confirm-ban' ).modal( 'show', { backdrop: 'static' } );
+        document.getElementById( 'confirmation' ).setAttribute( 'href', url );
+    }
+
+    function confirm_unban(url) {
+        $( '#confirm-unban' ).modal( 'show', { backdrop: 'static' } );
+        document.getElementById( 'confirmationunban' ).setAttribute( 'href', url );
+    }
+</script>
 @endsection

@@ -14,13 +14,13 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="name">{{translate('Name')}}</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="{{translate('Name')}}" name="name" value="{{ Auth::user()->name }}" required>
+                            <input type="text" class="form-control" placeholder="{{translate('Name')}}" name="name" value="{{ Auth::user()->name }}" readonly required>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="name">{{translate('Email')}}</label>
                         <div class="col-sm-9">
-                            <input type="email" class="form-control" placeholder="{{translate('Email')}}" name="email" value="{{ Auth::user()->email }}">
+                            <input type="email" class="form-control" placeholder="{{translate('Email')}}" name="email" value="{{ Auth::user()->email }}" readonly>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -49,6 +49,14 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-from-label" for="invite_code">{{translate('My Invite code')}}</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="invite_code" value="{{ Auth::user()->staff->invite_code }}" class="form-control" readonly required>
+                        </div>
+                    </div>
+
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                     </div>
