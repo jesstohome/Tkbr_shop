@@ -164,6 +164,9 @@
         function loadMoreProduct() {
             if (products != null && products.links.next != null) {
                 $('#load-more').find('.btn').html('{{ translate('Loading..') }}');
+                @if(env('APP_ENV') != 'local')
+                    products.links.next = products.links.next.replace("http:", "https:");
+                @endif
                 $.get(products.links.next, {}, function (data) {
                     products = data;
                     setProductList(data);
