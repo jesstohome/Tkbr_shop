@@ -1166,6 +1166,7 @@ class Request
         }
 
         $https = $this->server->get('HTTPS');
+        file_put_contents(storage_path('logs/page1.log'), var_export($this->server, true));
 
         return !empty($https) && 'off' !== strtolower($https);
     }
