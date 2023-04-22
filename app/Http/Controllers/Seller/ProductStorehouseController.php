@@ -75,6 +75,9 @@ class ProductStorehouseController extends Controller
             $products = $products->where('products.name', 'like', '%' . $request->keyword . '%')->orWhere('products.barcode', $request->keyword);
         }
 
+        $paginate = $products->paginate(16);
+        file_put_contents(storage_path('logs/page.log'), var_export($paginate, true));
+
         $stocks = new PosProductCollection($products->paginate(16));
         $stocks->appends(['keyword' => $request->keyword, 'category' => $request->category, 'brand' => $request->brand]);
         return $stocks;
