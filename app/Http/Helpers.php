@@ -1400,7 +1400,7 @@ if (!function_exists('filter_by_bloc')) {
 
             // 按员工过滤
             $staff = Staff::query()->where("user_id", \Auth::user()->id)->first();
-            if (!empty($staff) && $staff->role && !$staff->role->is_manage) {
+            if (!empty($staff) && $staff->role && !$staff->role->is_manage && !($model->getModel() instanceof Staff)) {
                 $model = $model->where("staff_id", $staff->id);
             }
         }
