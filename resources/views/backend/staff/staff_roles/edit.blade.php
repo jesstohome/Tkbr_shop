@@ -60,7 +60,7 @@
                     "keep_selected_style" : false
                 },
                 'core' : {
-                    'data' : JSON.parse("{{\App\Models\Menu::getMenuJsTreeJson()}}".replace(/&quot;/g, '"'))
+                    'data' : JSON.parse("{{\App\Models\Menu::getMenuJsTreeJson($role->id)}}".replace(/&quot;/g, '"'))
                 }
             });
 
@@ -68,11 +68,6 @@
                 let menu_ids = (data.selected || []).concat($(this).jstree('get_undetermined') || []);
                 $("input[name=menu_ids]").val(menu_ids)
             });
-
-            $("#role-form").on("submit", function () {
-                alert($('#jstree_demo_div').get_selected())
-                return false;
-            })
         });
     </script>
 @endsection
