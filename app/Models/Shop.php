@@ -13,6 +13,10 @@ class Shop extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function staff() {
+        return $this->belongsTo(Staff::class);
+    }
+
     public function seller_package() {
         return $this->belongsTo(SellerPackage::class);
     }

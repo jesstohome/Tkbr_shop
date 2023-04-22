@@ -380,15 +380,6 @@ class SellerController extends Controller
         $shop = Shop::findOrFail($request->id);
         $shop->verification_status = $request->status;
         if ($shop->save()) {
-            ShopManage::query()->where('shop_id', $shop->id)->delete();
-            if (!empty($request->admin_ids)) {
-                foreach ($request->admin_ids as $admin_id) {
-                    $sm = new ShopManage();
-                    $sm->shop_id = $shop->id;
-                    $sm->admin_id = $admin_id;
-                    $sm->save();
-                }
-            }
             \Redis::hdel('new_shop_created_tip', $shop->id);
             Cache::forget('verified_sellers_id');
             return 1;
