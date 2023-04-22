@@ -275,6 +275,9 @@ class Request
      */
     public function initialize(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
+        if (!empty($server['REQUEST_SCHEME']) && strtolower($server['REQUEST_SCHEME']) == 'https') {
+            $server['HTTPS'] = 'on';
+        }
         $this->request = new InputBag($request);
         $this->query = new InputBag($query);
         $this->attributes = new ParameterBag($attributes);
@@ -282,11 +285,6 @@ class Request
         $this->files = new FileBag($files);
         $this->server = new ServerBag($server);
         $this->headers = new HeaderBag($this->server->getHeaders());
-
-        file_put_contents(storage_path('logs/page2.log'), var_export([$this->server->get('REQUEST_SCHEME')], true));
-        if (!empty($this->server->get('REQUEST_SCHEME')) && strtolower($this->server->get('REQUEST_SCHEME')) == 'https') {
-            $this->server->set('HTTPS', 'on');
-        }
 
         $this->content = $content;
         $this->languages = null;
