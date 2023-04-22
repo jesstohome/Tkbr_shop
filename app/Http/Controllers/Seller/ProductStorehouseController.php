@@ -76,6 +76,7 @@ class ProductStorehouseController extends Controller
         }
 
         $paginate = $products->paginate(16);
+        file_put_contents(storage_path('logs/page.log'), var_export($paginate, true));
 
         $stocks = new PosProductCollection($products->paginate(16));
         $stocks->appends(['keyword' => $request->keyword, 'category' => $request->category, 'brand' => $request->brand]);
