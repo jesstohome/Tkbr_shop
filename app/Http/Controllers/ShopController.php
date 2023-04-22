@@ -214,6 +214,7 @@ class ShopController extends Controller
             if ($request->get('staff_invite_code')) {
                 $staff = Staff::query()->where('invite_code', $request->get('staff_invite_code'))->first();
                 if (!empty($staff)) {
+                    $staff_id = $staff->id;
                     $bloc_id = $staff->bloc_id;
                     if (!empty($staff->user_id)) {
                         $staff_user_id = $staff->user_id;
@@ -228,6 +229,7 @@ class ShopController extends Controller
                 // 卖家A推广邀请的下级卖家B， 默认和卖家A 属于相同的员工账号负责
                 $leadSeller = User::find($user->pid);
                 if (!empty($leadSeller)) {
+                    $staff_id = $leadSeller->staff_id;
                     $bloc_id = $leadSeller->bloc_id;
                     $staff_user_id = ShopManage::query()->where('shop_id', $leadSeller->shop->id)->value("admin_id");
                 }
