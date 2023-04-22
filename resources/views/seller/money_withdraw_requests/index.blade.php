@@ -68,17 +68,6 @@
             </div>
         </div>
         @if (addon_is_activated('offline_payment'))
-            <div class="col-md-2 mb-3 mr-auto">
-                <div
-                    class="bg-grad-4 p-3 rounded mb-3 c-pointer text-center bg-white shadow-sm hov-shadow-lg has-transition"
-                    onclick="show_make_wallet_recharge_modal(1)">
-              <span
-                  class="size-60px rounded-circle mx-auto bg-secondary d-flex align-items-center justify-content-center mb-3">
-                  <i class="las la-plus la-3x text-white"></i>
-              </span>
-                    <div class="fs-18 text-white">{{ translate('Offline Recharge Wallet') }}</div>
-                </div>
-            </div>
 
               <div class="col-md-2 mb-3 mr-auto">
                 <div
