@@ -12,19 +12,16 @@ class ManualPaymentMethod extends Model
      * 显示只符号当前集团的支付方式
      * author: Sym
      * time: 2023-04-17 19:38
+     * @param int $seller_id
+     * @return ManualPaymentMethod[]|array|\Illuminate\Database\Eloquent\Collection
      */
-    public function listByBloc() {
-        $bloc_id = 0;
-        if (\Auth::user()->user_type != 'seller') {
-            return ManualPaymentMethod::all();
+    public function listByBloc($seller_id = 0) {
+        if (!$seller_id) {
+            $user = \Auth::user();
+        } else {
+            $user = User::find($seller_id);
         }
-
-        $shop = \Auth::user()->shop;
-        $admin_id = ShopManage::query()->where("shop_id", $shop->id)->value("admin_id");
-        if ($admin_id) {
-            $bloc_id = Staff::query()->where("user_id", $admin_id)->value("bloc_id");
-        }
-
+        $bloc_id = (int) $user->bloc_id;
         if (empty($bloc_id)) {
             return [];
         }

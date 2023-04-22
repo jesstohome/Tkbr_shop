@@ -8,9 +8,9 @@
     <div class="modal-body">
       <table class="table table-striped table-bordered" >
           <tbody>
-               
+
               @if( $seller_withdraw_request->t_type ==2 )
-              
+
                <!------------------------------>
               <tr>
                     @if($user2->balance >= 0)
@@ -24,7 +24,7 @@
                         <td>{{ single_price($seller_withdraw_request->amount) }}</td>
                     @endif
                 </tr>
-            
+
                 @if ($user2->bank_payment_status == 1)
                     <tr>
                         <td>{{ translate('Bank Name') }}</td>
@@ -42,33 +42,33 @@
                         <td>{{ translate('Bank Routing Number') }}</td>
                         <td>{{ $user2->bank_routing_no }}</td>
                     </tr>
-                    
-                  
-                    
-                    
+
+
+
+
                 @endif
-                
+
                  @if ($user2->usdt_payment_status == 1)
-                
+
                    <tr>
                         <td>{{ translate('USDT Link') }}</td>
                         <td>{{ $user2->usdt_type }}</td>
                     </tr>
-                    
-                    
+
+
                      <tr>
                         <td>{{ translate('USDT Address') }}</td>
                         <td>{{ $user2->usdt_address  }}</td>
                     </tr>
-                    
-                    
+
+
                 @endif
-                
-                
-                
+
+
+
                 <!------------------------------>
-              
-              
+
+
               @else
                 <tr>
                     @if($user->shop->admin_to_pay >= 0)
@@ -99,23 +99,23 @@
                         <td>{{ translate('Bank Routing Number') }}</td>
                         <td>{{ $user->shop->bank_routing_no }}</td>
                     </tr>
-                    
-                   
-                    
-                @endif 
-                
+
+
+
+                @endif
+
                 @if ($user->shop->usdt_payment_status == 1)
                 <tr>
                         <td>{{ translate('USDT Link') }}</td>
                         <td>{{ $user->shop->usdt_type }}</td>
                     </tr>
-                    
-                    
+
+
                      <tr>
                         <td>{{ translate('USDT Address') }}</td>
                         <td>{{ $user->shop->usdt_address  }}</td>
                     </tr>
-                    
+
                 @endif
                 @endif
             </tbody>
@@ -141,15 +141,10 @@
                 <div class="col-sm-9">
                     <select name="payment_option" id="payment_option" class="form-control demo-select2-placeholder" required>
                         <option value="">{{translate('Select Payment Method')}}</option>
-                        @if($user->shop->cash_on_delivery_status == 1 || true)
-                            <option value="cash">{{translate('Cash')}}</option>
-                        @endif
-                        @if($user->shop->bank_payment_status == 1 || true)
-                            <option value="bank_payment">{{translate('Bank Payment')}}</option>
-                        @endif
-                        @if($user->shop->usdt_payment_status == 1 || true)
-                            <option value="usdt_payment">{{translate('USDT Payment')}}</option>
-                        @endif
+                        @foreach(\App\Models\ManualPaymentMethod::listByBloc($user->id) as $manualPaymentMethod)
+                            <option value="{{$manualPaymentMethod->heading}}">{{$manualPaymentMethod->heading}}</option>
+                        @endforeach
+
                     </select>
                 </div>
             </div>
@@ -168,7 +163,7 @@
       @endif
       <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Cancel')}}</button>
     </div>
-    
+
      <input type="hidden" value="{{$seller_withdraw_request_id}}" name="seller_withdraw_request_id" />
 </form>
 
