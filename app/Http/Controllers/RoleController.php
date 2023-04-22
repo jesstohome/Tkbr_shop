@@ -37,10 +37,10 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->has('permissions')){
+        if($request->has('menu_ids')){
             $role = new Role;
             $role->name = $request->name;
-            $role->permissions = json_encode($request->permissions);
+            $role->permissions = json_encode(explode(",", $request->menu_ids));
             $role->save();
 
             $role_translation = RoleTranslation::firstOrNew(['lang' => env('DEFAULT_LANGUAGE'), 'role_id' => $role->id]);
@@ -90,11 +90,11 @@ class RoleController extends Controller
     {
         $role = Role::findOrFail($id);
 
-        if($request->has('permissions')){
+        if($request->has('menu_ids')){
             if($request->lang == env("DEFAULT_LANGUAGE")){
                 $role->name = $request->name;
             }
-            $role->permissions = json_encode($request->permissions);
+            $role->permissions = is_string($request->menu_ids) ? explode(",", $request->menu_ids) : $request->menu_ids;
             $role->save();
 
             $role_translation = RoleTranslation::firstOrNew(['lang' => $request->lang, 'role_id' => $role->id]);

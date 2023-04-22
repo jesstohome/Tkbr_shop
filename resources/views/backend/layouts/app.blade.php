@@ -62,7 +62,7 @@
 <body class="">
 
 	<div class="aiz-main-wrapper">
-        @include('backend.inc.admin_sidenav')
+        @include('backend.inc.admin_sidenav_dynamics')
 		<div class="aiz-content-wrapper">
             @include('backend.inc.admin_nav')
 			<div class="aiz-main-content">
