@@ -275,6 +275,9 @@ class Request
      */
     public function initialize(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
+        if (!empty($server['REQUEST_SCHEME']) && strtolower($server['REQUEST_SCHEME']) == 'https') {
+            $server['HTTPS'] = 'on';
+        }
         $this->request = new InputBag($request);
         $this->query = new InputBag($query);
         $this->attributes = new ParameterBag($attributes);
@@ -353,7 +356,6 @@ class Request
         $server['REQUEST_METHOD'] = strtoupper($method);
 
         $components = parse_url($uri);
-        file_put_contents(storage_path('logs/parse_url.log'), var_export($components, true));
         if (isset($components['host'])) {
             $server['SERVER_NAME'] = $components['host'];
             $server['HTTP_HOST'] = $components['host'];
@@ -1167,7 +1169,6 @@ class Request
         }
 
         $https = $this->server->get('HTTPS');
-        file_put_contents(storage_path('logs/page1.log'), var_export([$https, $this->server], true));
 
         return !empty($https) && 'off' !== strtolower($https);
     }
