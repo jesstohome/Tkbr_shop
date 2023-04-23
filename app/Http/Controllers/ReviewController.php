@@ -74,7 +74,7 @@ class ReviewController extends Controller
                 ->update(['reviewed' => 1]);
         }
 
-        hset_plus('new_review_tip', $request->product_id, 1);
+        hset_plus('new_review_tip', $request->product_id, 1, $product->staff_id);
 
         flash(translate('Review has been submitted successfully'))->success();
         return back();

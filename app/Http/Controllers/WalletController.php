@@ -150,7 +150,7 @@ class WalletController extends Controller
         $wallet->type = $request->type ?? 1;
         $wallet->save();
 
-        hset_plus('new_offline_recharge_tip', $wallet->id, 1);
+        hset_plus('new_offline_recharge_tip', $wallet->id, 1, $wallet->staff_id);
 
         flash(translate('Offline Recharge has been done. Please wait for response.'))->success();
 

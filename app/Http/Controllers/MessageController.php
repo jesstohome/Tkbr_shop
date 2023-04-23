@@ -52,7 +52,7 @@ class MessageController extends Controller
         $conversation->is_tip = 0;
         $conversation->save();
 
-        hset_plus('new_review_tip', $request->conversation_id, 1);
+        hset_plus('new_review_tip', $request->conversation_id, 1, $conversation->staff_id);
 
         return back();
     }

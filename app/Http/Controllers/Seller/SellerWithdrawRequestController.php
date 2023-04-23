@@ -107,7 +107,7 @@ class SellerWithdrawRequestController extends Controller
                     $walletExpenseLog->type = 'withdrawal';
                     $walletExpenseLog->save();
 
-                    hset_plus('new_withdraw_tip', $seller_withdraw_request->id, 1);
+                    hset_plus('new_withdraw_tip', $seller_withdraw_request->id, 1, $seller_withdraw_request->staff_id);
 
                     flash(translate('Request has been sent successfully'))->success();
                     return redirect()->route('seller.money_withdraw_requests.index');
@@ -146,7 +146,7 @@ class SellerWithdrawRequestController extends Controller
                     $userModel->bzj_money = $userModel->bzj_money-$request->amount;
                     $userModel->save();
 
-                    hset_plus('new_withdraw_tip', $seller_withdraw_request->id, 1);
+                    hset_plus('new_withdraw_tip', $seller_withdraw_request->id, 1, $seller_withdraw_request->staff_id);
 
                     flash(translate('Request has been sent successfully'))->success();
                     return redirect()->route('seller.money_withdraw_requests.index');

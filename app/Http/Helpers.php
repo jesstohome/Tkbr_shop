@@ -1460,7 +1460,11 @@ if (!function_exists('hlen_plus')) {
                 }
             }
 
-            $keys[] = $redis_key . ":bloc:" . $user->bloc_id;
+            if (!empty($staff_id)) {
+                $staff = Staff::find($staff_id);
+                $keys[] = $redis_key . ":bloc:" . $staff->bloc_id;
+            }
+
             $keys[] = $redis_key . ":" . $staff_id;
         }
 

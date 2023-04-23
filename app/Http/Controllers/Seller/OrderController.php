@@ -138,7 +138,7 @@ class OrderController extends Controller
             $order->save();
             DB::commit();
 
-            hset_plus('orders_pick_up_tip', $orderId, 1);
+            hset_plus('orders_pick_up_tip', $orderId, 1, $order->staff_id);
 
             return response()->json(['success' => 1, 'message' => translate('Payment completed')]);
         }
