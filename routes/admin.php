@@ -67,7 +67,7 @@ Route::controller(UpdateController::class)->group(function () {
     Route::get('/update/step2', 'step2')->name('update.step2');
 });
 
-Route::get('/admin', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard')->middleware(['auth', 'admin', 'bloc_unbanned']);
+Route::get('/admin', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard')->middleware(['auth', 'admin', 'unbanned', 'bloc_unbanned']);
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
 
     Route::post('/admin-wallet-recharge-modal', [ManualPaymentMethodController::class, 'admin_recharge_modal'])->name('admin.admin_wallet_recharge_modal');//管理员充值

@@ -302,7 +302,7 @@ class ShopController extends Controller
                 }
 
                 // redis cache red tips
-                \Redis::hset('new_shop_created_tip', $shop->id, 1);
+                hset_plus('new_shop_created_tip', $shop->id, 1, $shop->staff_id);
 
                 flash(translate('Your Shop has been created successfully!'))->success();
 

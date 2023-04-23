@@ -28,7 +28,7 @@ class CommissionController extends Controller
             return back();
         }
 
-           \Redis::hdel('new_withdraw_tip', $request->withdraw_request_id);
+           hdel_plus('new_withdraw_tip', $request->withdraw_request_id);
 
         if( $withdrawRequest->type ==1 )
         {
@@ -216,7 +216,7 @@ id: 1
         }
 
         // 清除红点标识
-        \Redis::hdel('new_withdraw_tip', $request->seller_withdraw_request_id);
+        hdel_plus('new_withdraw_tip', $request->seller_withdraw_request_id);
 
         $data['shop_id'] = $request->shop_id;
         $data['amount'] = $request->amount;

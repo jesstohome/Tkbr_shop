@@ -28,7 +28,7 @@
                     <a href="#" class="aiz-side-nav-link">
                         <i class="las la-shopping-cart aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
-                        @if(Redis::hlen('new_review_tip'))
+                        @if(hlen_plus('new_review_tip'))
                             <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
                         @endif
                         <span class="aiz-side-nav-arrow"></span>
@@ -58,7 +58,7 @@
                             <a href="{{ route('seller.reviews') }}"
                                 class="aiz-side-nav-link {{ areActiveRoutes(['seller.reviews']) }}">
                                 <span class="aiz-side-nav-text">{{ translate('Product Reviews') }}</span>
-                                @if(Redis::hlen('new_review_tip'))
+                                @if(hlen_plus('new_review_tip'))
                                     <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
                                 @endif
                             </a>

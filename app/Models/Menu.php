@@ -61,7 +61,7 @@ class Menu extends Model
             $show_red_tips = 0;
             if (!empty($row->red_dot_keys)) {
                 foreach (explode(",", $row->red_dot_keys) as $_redis_key) {
-                    if (\Redis::hlen($_redis_key)) {
+                    if (hlen_plus($_redis_key)) {
                         $show_red_tips = 1;
                         break;
                     }

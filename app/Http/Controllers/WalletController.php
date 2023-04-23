@@ -150,7 +150,7 @@ class WalletController extends Controller
         $wallet->type = $request->type ?? 1;
         $wallet->save();
 
-        \Redis::hset('new_offline_recharge_tip', $wallet->id, 1);
+        hset_plus('new_offline_recharge_tip', $wallet->id, 1);
 
         flash(translate('Offline Recharge has been done. Please wait for response.'))->success();
 
@@ -253,7 +253,7 @@ class WalletController extends Controller
         }
         if ( $wallet->save() )
         {
-            \Redis::hdel('new_offline_recharge_tip', $wallet->id);
+            hdel_plus('new_offline_recharge_tip', $wallet->id);
             return 1;
         }
         return 0;

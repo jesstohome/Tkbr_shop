@@ -138,7 +138,7 @@ class OrderController extends Controller
             $order->save();
             DB::commit();
 
-            Redis::hset('orders_pick_up_tip', $orderId, 1);
+            hset_plus('orders_pick_up_tip', $orderId, 1);
 
             return response()->json(['success' => 1, 'message' => translate('Payment completed')]);
         }

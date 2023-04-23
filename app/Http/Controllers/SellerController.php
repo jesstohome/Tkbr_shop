@@ -380,7 +380,7 @@ class SellerController extends Controller
         $shop = Shop::findOrFail($request->id);
         $shop->verification_status = $request->status;
         if ($shop->save()) {
-            \Redis::hdel('new_shop_created_tip', $shop->id);
+            hdel_plus('new_shop_created_tip', $shop->id);
             Cache::forget('verified_sellers_id');
             return 1;
         }

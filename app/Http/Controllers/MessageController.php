@@ -52,7 +52,7 @@ class MessageController extends Controller
         $conversation->is_tip = 0;
         $conversation->save();
 
-        Redis::hset('new_review_tip', 1, 1);
+        hset_plus('new_review_tip', $request->conversation_id, 1);
 
         return back();
     }

@@ -1424,3 +1424,78 @@ if (!function_exists("get_staff_id")) {
         return (int) \Auth::user()->staff_id;
     }
 }
+
+
+if (!function_exists('hlen_plus')) {
+    function hlen_plus($redis_key, $staff_id = 0) {
+        if (!$staff_id) {
+            $staff = auth()->user()->staff;
+            if ($staff) {
+                $staff_id = $staff->id;
+            }
+        }
+        $user = auth()->user();
+
+        if ($user && $user->user_type != 'admin') {
+            if ($user->staff->role->is_manage) {
+                $redis_key = $redis_key . ":bloc:" . $user->bloc_id;
+                return \Illuminate\Support\Facades\Redis::hlen($redis_key);
+            }
+            $redis_key = $redis_key . ":" . $staff_id;
+            return \Illuminate\Support\Facades\Redis::hlen($redis_key);
+        }
+
+        return \Illuminate\Support\Facades\Redis::hlen($redis_key);
+    }
+
+    function hset_plus($redis_key, $field, $val = 1, $staff_id = 0) {
+        $keys = [$redis_key];
+
+        $user = auth()->user();
+        if ($user && $user->user_type != 'admin') {
+            if (!$staff_id) {
+                $staff = auth()->user()->staff;
+                if ($staff) {
+                    $staff_id = $staff->id;
+                }
+            }
+
+            $keys[] = $redis_key . ":bloc:" . $user->bloc_id;
+            $keys[] = $redis_key . ":" . $staff_id;
+        }
+
+        foreach ($keys as $key) {
+            \Illuminate\Support\Facades\Redis::hset($key, $field, $val);
+        }
+    }
+
+    function hget_plus($redis_key, $field, $staff_id = 0) {
+        if (!$staff_id) {
+            $staff = auth()->user()->staff;
+            if ($staff) {
+                $staff_id = $staff->id;
+            }
+        }
+
+        $user = auth()->user();
+        if ($user && $user->user_type != 'admin') {
+            if ($user->staff->role->is_manage) {
+                $redis_key = $redis_key . ":bloc:" . $user->bloc_id;
+            } else {
+                $redis_key = $redis_key . ":" . $staff_id;
+            }
+        }
+
+        return \Illuminate\Support\Facades\Redis::hget($redis_key, $field);
+    }
+
+    function hdel_plus($redis_key, $field) {
+        $keys = \Illuminate\Support\Facades\Redis::keys($redis_key . "*");
+        if (!empty($keys)) {
+            foreach ($keys as $key) {
+                \Illuminate\Support\Facades\Redis::hdel($key, $field);
+            }
+        }
+
+    }
+}

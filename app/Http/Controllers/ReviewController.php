@@ -74,7 +74,7 @@ class ReviewController extends Controller
                 ->update(['reviewed' => 1]);
         }
 
-        Redis::hset('new_review_tip', $request->product_id, 1);
+        hset_plus('new_review_tip', $request->product_id, 1);
 
         flash(translate('Review has been submitted successfully'))->success();
         return back();

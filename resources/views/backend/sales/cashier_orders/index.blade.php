@@ -175,7 +175,7 @@
                             @if ($order->product_storehouse_total > 0)
                                 @if ($order->product_storehouse_status)
                                     <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
-                                    @if(Redis::hget('orders_pick_up_tip', $order->id))
+                                    @if(hget_plus('orders_pick_up_tip', $order->id))
                                         <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
                                     @endif
                                 @else
