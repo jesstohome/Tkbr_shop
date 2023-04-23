@@ -9,7 +9,7 @@ class IsBlocUnbanned
 {
     public function handle($request, Closure $next)
     {
-        if (auth()->check() && !auth()->user()->bloc->status) {
+        if (auth()->check() && auth()->user()->bloc && !auth()->user()->bloc->status) {
 
             $redirect_to = "";
             if(auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff'){
