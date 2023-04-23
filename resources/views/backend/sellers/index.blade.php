@@ -231,15 +231,7 @@
                                     <a href="#" onclick="show_seller_profile('{{$shop->id}}');"  class="dropdown-item">
                                         {{translate('Profile')}}
                                     </a>
-                                    <a href="{{route('sellers.login', encrypt($shop->id))}}" class="dropdown-item">
-                                        {{translate('Log in as this Seller')}}
-                                    </a>
-                                    <a href="#" onclick="show_seller_payment_modal('{{$shop->id}}');" class="dropdown-item">
-                                        {{translate('Go to Payment')}}
-                                    </a>
-                                    <a href="{{route('sellers.payment_history', encrypt($shop->user_id))}}" class="dropdown-item">
-                                        {{translate('Payment History')}}
-                                    </a>
+
                                     <a href="{{route('sellers.edit', encrypt($shop->id))}}" class="dropdown-item">
                                         {{translate('Edit')}}
                                     </a>
@@ -254,18 +246,8 @@
                                         <i class="fa fa-check text-success" aria-hidden="true"></i>
                                         </a>
                                     @endif
-                                    <a href="#" class="dropdown-item confirm-delete" data-href="{{route('sellers.destroy', $shop->id)}}" class="">
-                                        {{translate('Delete')}}
-                                    </a>
-                                    <span onclick="show_chat_modal({{$shop->user->id}})" class="dropdown-item" style="cursor:pointer;">
-                                        {{translate('Message Seller')}}
-                                    </span>
-                                    {{--<span onclick="show_bzj({{$shop->id}},{{$shop->bzj_money}})" class="dropdown-item" style="cursor:pointer;">
-                                        {{translate('Guarantee Money')}}
-                                    </span>--}}
-                                    <span onclick="show_seller_guarantee_money_modal({{$shop->id}})" class="dropdown-item" style="cursor:pointer;">
-                                        {{translate('Guarantee Money')}}
-                                    </span>
+
+
                                      <span onclick="show_view({{$shop->id}},{{$shop->view_inc_num}},{{$shop->view_base_num}})" class="dropdown-item" style="cursor:pointer;">
                                         {{translate('Views')}}
                                     </span>

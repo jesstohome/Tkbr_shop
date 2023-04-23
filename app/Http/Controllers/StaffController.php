@@ -18,7 +18,7 @@ class StaffController extends Controller
      */
     public function index()
     {
-        $staffs = Staff::query();
+        $staffs = Staff::query()->orderByDesc('id');
         $staffs = filter_by_bloc($staffs);
         $staffs = $staffs->paginate(10);
         return view('backend.staff.staffs.index', compact('staffs'));

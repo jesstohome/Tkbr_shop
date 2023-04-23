@@ -19,13 +19,13 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="name">{{translate('Name')}}</label>
                     <div class="col-sm-9">
-                        <input type="text" placeholder="{{translate('Name')}}" id="name" name="name" class="form-control" value="{{$shop->user->name}}" required>
+                        <input type="text" placeholder="{{translate('Name')}}" id="name" name="name" class="form-control" value="{{$shop->user->name}}" required readonly>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-3 col-from-label" for="email">{{translate('Email Address')}}</label>
                     <div class="col-sm-9">
-                        <input type="text" placeholder="{{translate('Email Address')}}" id="email" name="email" class="form-control" value="{{$shop->user->email}}" required>
+                        <input type="text" placeholder="{{translate('Email Address')}}" id="email" name="email" class="form-control" value="{{$shop->user->email}}" required readonly>
                     </div>
                 </div>
                 <div class="form-group row">

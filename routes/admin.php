@@ -67,7 +67,7 @@ Route::controller(UpdateController::class)->group(function () {
     Route::get('/update/step2', 'step2')->name('update.step2');
 });
 
-Route::get('/admin', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard')->middleware(['auth', 'admin']);
+Route::get('/admin', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard')->middleware(['auth', 'admin', 'bloc_unbanned']);
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
 
     Route::post('/admin-wallet-recharge-modal', [ManualPaymentMethodController::class, 'admin_recharge_modal'])->name('admin.admin_wallet_recharge_modal');//管理员充值
@@ -353,6 +353,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::resource('bloc', BlocController::class);
     Route::controller(BlocController::class)->group(function () {
         Route::get('/bloc/edit/{id}', 'edit')->name('bloc.edit');
+        Route::get('blocs_ban/{id}', 'ban')->name('bloc.ban');
         Route::get('/bloc/destroy/{id}', 'destroy')->name('bloc.destroy');
     });
 

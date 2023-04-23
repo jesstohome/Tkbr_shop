@@ -27,15 +27,6 @@
                 <h5 class="mb-0 h6">{{translate('Customers')}}</h5>
             </div>
 
-            <div class="dropdown mb-2 mb-md-0">
-                <button class="btn border dropdown-toggle" type="button" data-toggle="dropdown">
-                    {{translate('Bulk Action')}}
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#" onclick="bulk_delete()">{{translate('Delete selection')}}</a>
-                </div>
-            </div>
-
             <div class="col-md-3">
                 <div class="form-group mb-0">
                     <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type email or name & Enter') }}">
@@ -118,9 +109,6 @@
                                         <i class="las la-user-check"></i>
                                     </a>
                                     @endif
-                                    <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('customers.destroy', $user->id)}}" title="{{ translate('Delete') }}">
-                                        <i class="las la-trash"></i>
-                                    </a>
                                 </td>
                             </tr>
                         @endif

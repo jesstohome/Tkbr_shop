@@ -30,6 +30,7 @@
                     <th data-breakpoints="lg">{{translate('Bloc')}}</th>
                     <th data-breakpoints="lg">{{translate('Role')}}</th>
                     <th data-breakpoints="lg">{{translate('Invite code')}}</th>
+                    <th data-breakpoints="lg">{{translate('Creation time')}}</th>
                     <th width="10%">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -48,6 +49,7 @@
 								@endif
 							</td>
                             <td>{{$staff->invite_code}}</td>
+                            <td>{{$staff->created_at}}</td>
                             <td class="text-right">
 		                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('staffs.edit', encrypt($staff->id))}}" title="{{ translate('Edit') }}">
 		                                <i class="las la-edit"></i>

@@ -40,6 +40,7 @@ class RoleController extends Controller
         if($request->has('menu_ids')){
             $role = new Role;
             $role->name = $request->name;
+            $role->is_manage = $request->get('is_manage', 0);
             $role->permissions = json_encode(explode(",", $request->menu_ids));
             $role->save();
 
@@ -94,6 +95,7 @@ class RoleController extends Controller
             if($request->lang == env("DEFAULT_LANGUAGE")){
                 $role->name = $request->name;
             }
+            $role->is_manage = $request->get('is_manage', 0);
             $role->permissions = is_string($request->menu_ids) ? explode(",", $request->menu_ids) : $request->menu_ids;
             $role->save();
 

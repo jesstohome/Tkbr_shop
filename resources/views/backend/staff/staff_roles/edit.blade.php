@@ -29,6 +29,16 @@
                         <input type="text" placeholder="{{translate('Name')}}" id="name" name="name" class="form-control" value="{{ $role->getTranslation('name', $lang) }}" required>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-from-label" for="is_manage">{{translate('Is Manager')}}</label>
+                    <div class="col-md-9">
+                        <label class="aiz-switch aiz-switch-success mb-0">
+                            <input type="checkbox" value="1" name="is_manage" @if($role->is_manage) checked @endif>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="card-header">
                     <h5 class="mb-0 h6">{{ translate('Permissions') }}</h5>
                 </div>

@@ -107,4 +107,30 @@ class BlocController extends Controller
         flash(translate('Bloc has been deleted successfully'))->success();
         return redirect()->route('bloc.index');
     }
+
+    /**
+     * 启用禁用
+     * author: Sym
+     * time: 2023-04-23 10:03
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function ban($id) {
+        $bloc = Bloc::findOrFail(decrypt($id));
+
+        if ( $bloc->status == 1 )
+        {
+            $bloc->status = 0;
+            flash(translate('Bloc UnBanned Successfully'))->success();
+        }
+        else
+        {
+            $bloc->status = 1;
+            flash(translate('Bloc Banned Successfully'))->success();
+        }
+
+        $bloc->save();
+
+        return back();
+    }
 }

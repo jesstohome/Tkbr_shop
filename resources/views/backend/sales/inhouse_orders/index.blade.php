@@ -94,11 +94,11 @@
                             $shop = App\Models\User::where('id',$order->seller_id)->first();
                             echo $shop['email'];
                             @endphp
-                            
-                            
+
+
                         </td>
-                        
-                        
+
+
                         <td>
                             {{ count($order->orderDetails->where('seller_id', $admin_user_id)) }}
                         </td>
@@ -145,9 +145,7 @@
                             <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
                                 <i class="las la-download"></i>
                             </a>
-                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('orders.destroy', $order->id)}}" title="{{ translate('Delete') }}">
-                                <i class="las la-trash"></i>
-                            </a>
+
                         </td>
                     </tr>
                 @endforeach

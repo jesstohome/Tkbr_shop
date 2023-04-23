@@ -16,13 +16,13 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="name">{{translate('Name')}}</label>
                         <div class="col-sm-9">
-                            <input type="text" placeholder="{{translate('Name')}}" id="name" name="name" value="{{ $staff->user->name }}" class="form-control" required>
+                            <input type="text" placeholder="{{translate('Name')}}" id="name" name="name" value="{{ $staff->user->name }}" class="form-control" required readonly>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="email">{{translate('Email')}}</label>
                         <div class="col-sm-9">
-                            <input type="text" placeholder="{{translate('Email')}}" id="email" name="email" value="{{ $staff->user->email }}" class="form-control" required>
+                            <input type="text" placeholder="{{translate('Email')}}" id="email" name="email" value="{{ $staff->user->email }}" class="form-control" required readonly>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -63,7 +63,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="invite_code">{{translate('Invite code')}}</label>
                         <div class="col-sm-9">
-                            <input type="text" placeholder="{{translate('Invite code')}}" id="invite_code" name="invite_code" value="{{ $staff->invite_code }}" class="form-control" required>
+                            <input type="text" placeholder="{{translate('Invite code')}}" id="invite_code" name="invite_code" value="{{ $staff->invite_code }}" class="form-control" required readonly>
                         </div>
                     </div>
 
