@@ -282,6 +282,9 @@
                             class="aiz-side-nav-link {{ areActiveRoutes(['seller.product_query.index']) }}">
                             <i class="las la-question-circle aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Product Queries') }}</span>
+                            @if(Redis::hlen(sprintf("product_query_red_tips:%s", Auth::user()->id)))
+                                <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                            @endif
                         </a>
                     </li>
                 @endif

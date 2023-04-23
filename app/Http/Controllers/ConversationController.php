@@ -10,6 +10,7 @@ use App\Models\BusinessSetting;
 use App\Models\Message;
 use App\Models\Product;
 use Auth;
+use Illuminate\Support\Facades\Redis;
 use Mail;
 use App\Mail\ConversationMailManager;
 use App\Models\ProductQuery;
@@ -23,12 +24,18 @@ class ConversationController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-        public function check_new_msg()
+    public function check_new_msg()
     {
 
         $uid =  $pid = Auth::user()->id;
         if( $uid )
         {
+            // 检测下是否有新的产品提问
+            if (Redis::hlen(sprintf("product_query_red_tips:%s", $uid))) {
+                echo json_encode( ['code'=>1, 'msg'=> 'Yes'] );
+                exit;
+            }
+
             $have_no_read = Conversation::where( 'receiver_id',$uid )->where('is_tip',0 )->first();
 
             if( $have_no_read['id'] )
@@ -39,8 +46,6 @@ class ConversationController extends Controller
                 echo json_encode( ['code'=>1, 'msg'=> 'Yes'] );exit;
             }
         }
-
-        // 检测下是否有新的产品
 
          echo json_encode( ['code'=>0, 'msg'=> 'No'] );exit;
 

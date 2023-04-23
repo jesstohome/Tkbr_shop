@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ProductQuery;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class ProductQueryController extends Controller
 {
@@ -23,6 +24,7 @@ class ProductQueryController extends Controller
     public function show($id)
     {
         $query = ProductQuery::find(decrypt($id));
+        Redis::hdel(sprintf("product_query_red_tips:%s", Auth::user()->id), $query->id);
         return view('seller.product_query.show', compact('query'));
     }
     /**

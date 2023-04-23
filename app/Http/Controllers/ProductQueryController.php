@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\ProductQuery;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class ProductQueryController extends Controller
 {
@@ -46,6 +47,8 @@ class ProductQueryController extends Controller
         $query->product_id = $product->id;
         $query->question = $request->question;
         $query->save();
+
+        Redis::hset(sprintf("product_query_red_tips:%s", $product->user_id), $query->id, 1);
         flash(translate('Your query has been submittes successfully'))->success();
         return redirect()->back();
     }
@@ -62,6 +65,7 @@ class ProductQueryController extends Controller
         $query = ProductQuery::find($id);
         $query->reply = $request->reply;
         $query->save();
+
         flash(translate('Replied successfully!'))->success();
         return redirect()->route('product_query.index');
     }

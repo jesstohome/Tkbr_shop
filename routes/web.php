@@ -343,8 +343,8 @@ Route::group(['middleware' => ['auth']], function() {
         Route::post('conversations/refresh', 'refresh')->name('conversations.refresh');
         Route::post('/conversations/count', 'message_count')->name('conversations.message_count');
 
-          Route::get('/check_new_msg', 'check_new_msg')->name('conversations.check_new_msg');
-        Route::get('/check_new_reply', 'check_new_reply')->name('conversations.check_new_reply');
+        Route::get('/check_new_msg', 'check_new_msg')->name('conversations.check_new_msg');
+
 
 
     });

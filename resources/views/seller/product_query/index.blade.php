@@ -38,6 +38,9 @@
                                     title="{{ translate('View') }}">
                                     <i class="las la-eye"></i>
                                 </a>
+                                @if(Redis::hget(sprintf("product_query_red_tips:%s", $query->seller_id), $query->id))
+                                    <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
