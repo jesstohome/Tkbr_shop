@@ -115,14 +115,16 @@ class Menu extends Model
             // 未开启配置项的不显示
             if (!empty($menu->setting_name) && !get_setting($menu->setting_name)) continue;
 
+            $children = static::getMenuJsTree($menu->id, $role_id);
             $jsTree[] = [
                 "id" => $menu->id,
                 "text" => translate($menu->name),
                 "state" => [
                     "opened" => false,
-                    "selected" => in_array($menu->id, json_decode($role->permissions, true)),
+                    // empty($children) 父级不自动选中
+                    "selected" => empty($children) && in_array($menu->id, json_decode($role->permissions, true)),
                 ],
-                "children" => static::getMenuJsTree($menu->id, $role_id)
+                "children" => $children
             ];
         }
 
