@@ -1074,6 +1074,44 @@ if (!function_exists('purchase_payment_done')) {
     }
 }
 
+if (!function_exists('storehouseProduct_payment_done')) {
+    function storehouseProduct_payment_done($order_id)
+    {
+        $order = Order::findOrFail($order_id);
+        $shop = $order->shop;
+        // 累计冻结资金
+        $shop->admin_to_pay += $order->grand_total;
+        $shop->save();
+
+        // 保存订单冻结资金过期时间
+        $freezeDays = get_setting('frozen_funds_unfrozen_days', 15);
+        $order->freeze_expired_at = \Illuminate\Support\Carbon::now()->addDays($freezeDays)->timestamp;
+
+        $order->product_storehouse_status = 1;
+
+        // 按自动物流配置生成物流信息
+        $express['express_name'] = 'FedEx';
+        $express['express_code'] = gen_rand_no(12);
+        $express['express_info'] = [
+            'The product has been shipped and is in transit',
+            'The product has arrived at the customer\'s courier receiving point',
+            'Customer has signed for confirmation of receipt',
+        ];
+        $express['express_time'] = [];
+        $logistics_times = json_decode(get_setting('logistics_times'), true);
+        foreach (array_chunk($logistics_times, 2) as $time_value) {
+            $express['express_time'][] = date('Y:m:d H:i:s', time() + mt_rand(...$time_value));
+        }
+        $order->express_info = json_encode($express);
+
+        $order->save();
+
+        hset_plus('orders_pick_up_tip', $order_id, 1, $order->staff_id);
+
+        return 'success';
+    }
+}
+
 if (!function_exists('product_restock')) {
     function product_restock($orderDetail)
     {

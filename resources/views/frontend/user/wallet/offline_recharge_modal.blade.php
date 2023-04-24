@@ -28,6 +28,7 @@
             <div class="card mb-3 p-3">
 
                  <input type="hidden" name="type" value="{{$type}}" />
+                 <input type="hidden" name="order_id" value="{{$order_id}}" />
 
                 <div class="row mt-3">
                     <div class="col-md-3">

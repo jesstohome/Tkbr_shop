@@ -426,6 +426,8 @@
 
 @endsection
 @section('modal')
+    @include('modals.payments_modal')
+
     <!-- Payment For Storehouse Modal -->
     <div class="modal fade" id="payment_for_storehouse_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -467,7 +469,7 @@
                  location.href="/seller/transaction"
                  return
              } else {
-                 $('#payment_for_storehouse_modal').modal('show');
+                 $('#payments-modal').modal('show');
              }
         })
         // 付款

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AizUploadController;
+use App\Http\Controllers\OnlinePaymentController;
 
 //Upload
 Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user'], 'as' => 'seller.'], function () {
@@ -13,6 +14,9 @@ Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user
     });
 
 
+    Route::controller(OnlinePaymentController::class)->group(function () {
+        Route::get('/orders/payment/storehouse_online', 'paymentForStorehouseProductAmount')->name('orders.payment_for_storehouse_product_online');
+    });
 
 });
 
@@ -183,6 +187,5 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
     Route::controller(NotificationController::class)->group(function () {
         Route::get('/all-notification', 'index')->name('all-notification');
     });
-
 });
 

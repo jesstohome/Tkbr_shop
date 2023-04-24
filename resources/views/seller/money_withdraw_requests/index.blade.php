@@ -115,7 +115,7 @@
                         <td>
                             @if( $seller_withdraw_request->type == 1)
 
-                            {{translate('User Balance')}}
+                                {{translate('User Balance')}}
                             @else
 
                               {{translate('Guarantee')}}
@@ -263,6 +263,8 @@
                             @if( $list->type == 1)
 
                             {{translate('User Balance')}}
+                             @elseif($list->type == 3)
+                                 {{translate('Pick Up')}}
                             @else
 
                               {{translate('Guarantee')}}

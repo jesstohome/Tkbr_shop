@@ -8,11 +8,13 @@ use App\Http\Controllers\CustomerPackageController;
 use App\Http\Controllers\SellerPackageController;
 use App\Http\Controllers\SellerSpreadPackageController;
 use App\Http\Controllers\WalletController;
+use App\Models\Order;
 use App\Models\SellerSpreadPackage;
 use Illuminate\Http\Request;
 use App\Models\CombinedOrder;
 use App\Models\CustomerPackage;
 use App\Models\SellerPackage;
+use Illuminate\Log\Logger;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
 use PayPalCheckoutSdk\Core\ProductionEnvironment;
@@ -57,6 +59,9 @@ class PaypalController extends Controller
             elseif (Session::get('payment_type') == 'seller_spread_package_payment') {
                 $seller_package = SellerSpreadPackage::findOrFail(Session::get('payment_data')['seller_spread_package_id']);
                 $amount = $seller_package->amount;
+            } elseif (Session::get('payment_type') == 'order_pick_up_payment') {
+                $order = Order::find(Session::get('payment_data')['id']);
+                $amount = $order->product_storehouse_total;
             }
         }
 
@@ -80,10 +85,12 @@ class PaypalController extends Controller
         try {
             // Call API with your client and get a response for your call
             $response = $client->execute($request);
+
             // If call returns body in response, you can get the deserialized version from the result attribute of the response
             return Redirect::to($response->result->links[1]->href);
         }catch (\Exception $ex) {
             flash(translate('Something was wrong'))->error();
+            \Log::error(var_export(['PayFailed' => $ex->getMessage(), $ex->getTraceAsString()], true));
             return redirect()->route('home');
         }
     }

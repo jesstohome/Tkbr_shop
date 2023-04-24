@@ -79,11 +79,12 @@ class OrderController extends Controller
         return view('seller.orders.show', compact('order', 'delivery_boys', 'express', 'tpwd'));
     }
 
-    // 钱包余额支付货款
     public function buy_package(Request $request)
     {
 
     }
+
+    // 钱包余额支付货款
     public function paymentForStorehouseProductAmount(Request $request)
     {
         if (!$request->filled('order_id')) return response()->json(['success' => 0, 'message' => translate('Something went wrong!')]);
@@ -109,36 +110,9 @@ class OrderController extends Controller
             $walletExpenseLog->type = 'pick up';
             $walletExpenseLog->save();
 
-            // 累计冻结资金
-            $shop->admin_to_pay += $order->grand_total;
-            $shop->save();
+            storehouseProduct_payment_done($orderId);
 
-
-            // 保存订单冻结资金过期时间
-            $freezeDays = get_setting('frozen_funds_unfrozen_days', 15);
-            $order->freeze_expired_at = Carbon::now()->addDays($freezeDays)->timestamp;
-
-            $order->product_storehouse_status = 1;
-
-            // 按自动物流配置生成物流信息
-            $express['express_name'] = 'FedEx';
-            $express['express_code'] = gen_rand_no(12);
-            $express['express_info'] = [
-                'The product has been shipped and is in transit',
-                'The product has arrived at the customer\'s courier receiving point',
-                'Customer has signed for confirmation of receipt',
-            ];
-            $express['express_time'] = [];
-            $logistics_times = json_decode(get_setting('logistics_times'), true);
-            foreach (array_chunk($logistics_times, 2) as $time_value) {
-                $express['express_time'][] = date('Y:m:d H:i:s', time() + mt_rand(...$time_value));
-            }
-            $order->express_info = json_encode($express);
-
-            $order->save();
             DB::commit();
-
-            hset_plus('orders_pick_up_tip', $orderId, 1, $order->staff_id);
 
             return response()->json(['success' => 1, 'message' => translate('Payment completed')]);
         }

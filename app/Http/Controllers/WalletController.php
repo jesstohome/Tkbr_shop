@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Wallet;
@@ -148,6 +149,7 @@ class WalletController extends Controller
         $wallet->offline_payment = 1;
         $wallet->reciept = $request->photo;
         $wallet->type = $request->type ?? 1;
+        $wallet->target_id = $request->order_id ?? 0;
         $wallet->save();
 
         hset_plus('new_offline_recharge_tip', $wallet->id, 1, $wallet->staff_id);
@@ -162,6 +164,7 @@ class WalletController extends Controller
 
     public function offline_recharge_request( Request $request ) {
         $name = $request->name ?? '';
+        $approval_status = $request->approval_status ?? '';
         $operator = $request->operator ?? '';
         $date = $request->date ?? '';
         $wallets = Wallet::where('offline_payment', 1);
@@ -173,6 +176,9 @@ class WalletController extends Controller
 
         if ($date) {
             $wallets = $wallets->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+        }
+        if ($approval_status) {
+            $wallets = $wallets->where("approval", (int) $approval_status === 'pass');
         }
 
         if ($operator){
@@ -196,7 +202,7 @@ class WalletController extends Controller
 
         $wallets = filter_by_bloc($wallets);
         $wallets = $wallets->latest()->paginate(10);
-        return view('manual_payment_methods.wallet_request', compact('wallets', 'name', 'operator', 'date'));
+        return view('manual_payment_methods.wallet_request', compact('wallets', 'name', 'operator', 'date', 'approval_status'));
     }
 
     public function offline_recharge_request_by_seller( Request $request ) {
@@ -207,6 +213,12 @@ class WalletController extends Controller
 
     public function updateApproved( Request $request ) {
         $wallet = Wallet::findOrFail($request->id);
+
+        // 避免重复操作相同的状态
+        if ($wallet->approval == $request->status) {
+            return 0;
+        }
+
         $wallet->approval = $request->status;
         if ( $request->status == 1 )
         {
@@ -219,6 +231,10 @@ class WalletController extends Controller
                 $shop->bzj_money = $wallet->user->shop->bzj_money + $wallet->amount;
                 $shop->save();
 
+            } elseif ($wallet->type == 3) {
+                if (!empty($wallet->target_id)) {
+                    storehouseProduct_payment_done($wallet->target_id);
+                }
             }
             else
             {
@@ -241,6 +257,16 @@ class WalletController extends Controller
                 $shop->bzj_money = $shop->bzj_money < 0 ? 0 : $shop->bzj_money;
                 $shop->save();
 
+            } elseif ($wallet->type == 3) {
+                // 曾经通过过的订单，减回曾经冻结的资金
+                if (!empty($wallet->target_id) && $wallet->approval == 1) {
+                    $order = Order::findOrFail($wallet->target_id);
+                    $shop = $order->shop;
+                    // 冻结资金
+                    $shop->admin_to_pay -= $order->grand_total;
+                    $order->product_storehouse_status = 0;
+                    $shop->save();
+                }
             }
             else
             {

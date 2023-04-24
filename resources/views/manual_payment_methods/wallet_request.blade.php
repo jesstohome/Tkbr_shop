@@ -8,6 +8,13 @@
             <div class="col">
                 <h5 class="mb-0 h6">{{translate('Offline Wallet Recharge Requests')}}</h5>
             </div>
+            <div class="col-lg-2 ml-auto">
+                <select class="form-control aiz-selectpicker" name="approval_status" id="approval_status">
+                    <option value="">{{translate('Filter by Status')}}</option>
+                    <option value="pass" @if ($approval_status === 'pass') selected @endif>{{translate('Pass')}}</option>
+                    <option value="nopass" @if ($approval_status === 'nopass') selected @endif>{{translate('No Pass')}}</option>
+                </select>
+            </div>
             <div class="col-md-3">
                 <div class="form-group mb-0">
                     <input type="text" class="form-control" id="name" name="name" @isset($name) value="{{ $name }}" @endisset placeholder="{{ translate('name') }}" onkeyup="filterProducts()">
@@ -38,7 +45,8 @@
                     <th>{{translate('Method')}}</th>
                     <th>{{translate('TXN ID')}}</th>
                     <th>{{translate('Photo')}}</th>
-                    <th>{{translate('Approval')}}</th>
+                    <th>{{translate('Examine')}}</th>
+                    <th>{{translate('Status')}}</th>
                     <th>{{translate('Type')}}</th>
                     <th>{{translate('Date')}}</th>
                 </tr>
@@ -59,14 +67,22 @@
                                 @endif
                             </td>
                             <td>
-                                <label class="aiz-switch aiz-switch-success mb-0">
-                                    <input onchange="update_approved(this)" value="{{ $wallet->id }}" type="checkbox" @if($wallet->approval == 1) checked @endif >
-                                    <span class="slider round"></span>
-                                </label>
+                                <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="wallet_review('{{ $wallet->id }}')" title="{{ translate('Examine') }}">
+                                    {{translate('Examine')}}
+                                </a>
+                            </td>
+                            <td>
+                                @if($wallet->approval)
+                                    <span class="badge badge-inline badge-success">{{ translate('Pass') }}</span>
+                                @else
+                                    <span class="badge badge-inline badge-danger">{{ translate('No Pass') }}</span>
+                                @endif
                             </td>
                             <td>
                                 @if( $wallet->type == 1 )
                                 {{ translate('Balance Recharge')}}
+                                @elseif($wallet->type == 3)
+                                    {{translate('Pick Up')}}
                                 @else
                                 {{ translate('Guarantee Recharge')}}
                             @endif
@@ -84,16 +100,52 @@
 </div>
 
 @endsection
+
+
+@section('modal')
+    <!-- review Modal -->
+    <div id="review-modal" class="modal fade">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title h6">{{translate('Review Confirmation')}}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mt-1">{{translate('Are you sure to Pass this?')}}</p>
+                    <div class="form-group row">
+                        <label class="col-md-6 col-from-label">{{translate('Pass')}}</label>
+                        <div class="col-md-6">
+                            <label class="mb-0">
+                                <input type="radio" name="status" value="1">
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-6 col-from-label">{{translate('No Pass')}}</label>
+                        <div class="col-md-6">
+                            <label class="mb-0">
+                                <input type="radio" name="status" value="0">
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-link mt-2" data-dismiss="modal">{{translate('Cancel')}}</button>
+                    <a href="" id="save-link" class="btn btn-primary mt-2">{{translate('Save')}}</a>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal -->
+
+@endsection
+
 @section('script')
     <script type="text/javascript">
-        function update_approved(el){
-            if(el.checked){
-                var status = 1;
-            }
-            else{
-                var status = 0;
-            }
-            $.post('{{ route('offline_recharge_request.approved') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+        function update_approved() {
+            let status = $("input[name=status]:checked").val()
+            $.post('{{ route('offline_recharge_request.approved') }}', {_token:'{{ csrf_token() }}', id:wallet_id, status:status}, function(data){
                 if(data == 1){
                     AIZ.plugins.notify('success', '{{ translate('successfully') }}');
                 }
@@ -102,5 +154,15 @@
                 }
             });
         }
+
+        var wallet_id = 0;
+
+        function wallet_review(id) {
+            wallet_id = id;
+            $("#review-modal").modal("show")
+        }
+        $("#save-link").on("click", function () {
+            update_approved()
+        })
     </script>
 @endsection

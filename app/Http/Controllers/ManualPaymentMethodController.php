@@ -234,7 +234,8 @@ class ManualPaymentMethodController extends Controller
 
     public function offline_recharge_modal( Request $request ) {
         $type = $request->type ?? 1;
-        return view('frontend.user.wallet.offline_recharge_modal', compact('type'));
+        $order_id = $request->order_id ?? 0;
+        return view('frontend.user.wallet.offline_recharge_modal', compact('type', 'order_id'));
     }
 
     public function admin_recharge_modal( Request $request ) {

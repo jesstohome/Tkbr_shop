@@ -95,6 +95,10 @@ class HttpClient
             $curl->setOpt(CURLOPT_SSL_VERIFYPEER, true);
             $curl->setOpt(CURLOPT_SSL_VERIFYHOST, 2);
         }
+        if (env('APP_ENV') == 'local') {
+            $curl->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+            $curl->setOpt(CURLOPT_SSL_VERIFYHOST, false);
+        }
 
         if ($caCertPath = $this->getCACertFilePath()) {
             $curl->setOpt(CURLOPT_CAINFO, $caCertPath);
