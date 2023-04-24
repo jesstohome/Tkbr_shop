@@ -24,7 +24,7 @@ class Menu extends Model
         $staffAllowPermissions = [];
         if ($user->user_type == 'staff') {
             // 判断是否有权限显示对应的权限树
-            $staffAllowPermissions = json_decode($user->staff->role->permissions, true);
+            $staffAllowPermissions = json_decode($user->staffInfo->role->permissions, true);
             if (empty($staffAllowPermissions)) $staffAllowPermissions = [];
         }
 
@@ -98,7 +98,7 @@ class Menu extends Model
         $staffAllowPermissions = [];
         if ($user->user_type == 'staff') {
             // 判断是否有权限显示对应的权限树
-            $staffAllowPermissions = json_decode($user->staff->role->permissions, true);
+            $staffAllowPermissions = json_decode($user->staffInfo->role->permissions, true);
             if (empty($staffAllowPermissions)) $staffAllowPermissions = [];
         }
 
