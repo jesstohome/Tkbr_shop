@@ -30,7 +30,7 @@ class ConversationController extends Controller
         $uid =  $pid = Auth::user()->id;
         if( $uid )
         {
-            // 检测下是否有新的产品提问
+            // 检测下是否有新的产品提问 or 新的订单
             if (Redis::hlen(sprintf("product_query_red_tips:%s", $uid))) {
                 echo json_encode( ['code'=>1, 'msg'=> 'Yes'] );
                 exit;

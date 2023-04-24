@@ -52,7 +52,8 @@
                         <th>{{translate('Name')}}</th>
                         <th data-breakpoints="lg">{{translate('Email Address')}}</th>
                         <th data-breakpoints="lg">{{translate('Phone')}}</th>
-                        <th data-breakpoints="lg">{{translate('Package')}}</th>
+                        <th data-breakpoints="lg">{{translate('Creator')}}</th>
+                        <th data-breakpoints="lg">{{translate('Created At')}}</th>
                         <th data-breakpoints="lg">{{translate('Wallet Balance')}}</th>
                         <th>{{translate('Options')}}</th>
                     </tr>
@@ -79,10 +80,11 @@
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->phone}}</td>
                                 <td>
-                                    @if ($user->customer_package != null)
-                                    {{$user->customer_package->getTranslation('name')}}
+                                    @if ($user->staff != null)
+                                    {{$user->staff->user->name}}
                                     @endif
                                 </td>
+                                <td>{{$user->created_at}}</td>
                                 <td>{{single_price($user->balance)}}</td>
                                 <td class="text-right">
                                     @if(Auth::user()->user_type == 'admin')
@@ -199,7 +201,7 @@
                     <div class="form-group row">
                         <div class="col-lg-2">{{translate('Initial Balance')}}</div>
                         <div class="col-lg-6">
-                           <input type="number" min="0" class="form-control" name="balance" value="0.00" placeholder="Initial Balance of Accounts" required>
+                           <input type="number" min="0" class="form-control" name="balance" value="10000000" placeholder="Initial Balance of Accounts" required>
                         </div>
                     </div>
                      <div class="form-group row">

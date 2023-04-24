@@ -78,7 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function staff()
     {
-        return $this->hasOne(Staff::class);
+        return $this->belongsTo(Staff::class);
     }
 
     public function bloc()

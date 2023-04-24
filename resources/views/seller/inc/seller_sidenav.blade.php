@@ -414,6 +414,7 @@
             {
                 if ( data.result > 0 ) {
                     $( '#conversations' ).show();
+                    audioPlay('');
                 }
                 else {
                     $( '#conversations' ).hide();
@@ -430,6 +431,7 @@
                 {
                     if ( data.result > 0 ) {
                         $( '#order-red-tip' ).show();
+                        audioPlay('');
                     }
                     else {
                         $( '#order-red-tip' ).hide();
