@@ -9,6 +9,15 @@
         <div class="card-body">
             <div class="row gutters-3">
                 <div class="col text-md-left text-center">
+                    @if ($order->product_storehouse_status)
+                    <p>
+                        @if($order->freeze_expired_at)
+                            {{translate('Auto Unfreeze Countdown') . ":" . countDown($order->freeze_expired_at)}}
+                        @else
+                            {{translate('Not automatically released')}}
+                        @endif
+                    </p>
+                    @endif
                 </div>
                 @php
                     $delivery_status = $order->delivery_status;

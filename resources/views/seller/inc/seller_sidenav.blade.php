@@ -580,6 +580,7 @@
 
         window.onload = function ()
         {
+            @if(!get_admin_setting('msg_tip_mute'))
             setInterval( function ()
             {
                 $.get( '{{route('conversations.check_new_msg')}}', {}, function (res)
@@ -589,6 +590,8 @@
                     }
                 }, 'json' )
             }, 3000 );
+            @endif
+
         }
     </script>
 

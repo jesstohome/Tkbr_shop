@@ -356,8 +356,9 @@ class ConversationController extends Controller
      */
     public function admin_message_count(Request $request){
         $count = \App\Models\Conversation::where("add_by_admin", 1)
-            ->where("admin_viewed", 0)
-            ->count();
+            ->where("admin_viewed", 0);
+        $count = filter_by_bloc($count);
+        $count = $count->count();
 
         return response()->json([
             'result' => $count,

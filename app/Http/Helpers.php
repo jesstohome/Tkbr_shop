@@ -951,6 +951,24 @@ if (!function_exists('get_setting')) {
     }
 }
 
+if (!function_exists('get_admin_setting')) {
+    function get_admin_setting($key, $default = null, $lang = false)
+    {
+        $admin_id = Auth::user()->id;
+        $settings = Cache::remember('business_admin_settings', 86400, function () use($admin_id) {
+            return BusinessSetting::where('admin_id', $admin_id)->get();
+        });
+
+        if ($lang == false) {
+            $setting = $settings->where('admin_id', $admin_id)->where('type', $key)->first();
+        } else {
+            $setting = $settings->where('admin_id', $admin_id)->where('type', $key)->where('lang', $lang)->first();
+            $setting = !$setting ? $settings->where('admin_id', $admin_id)->where('type', $key)->first() : $setting;
+        }
+        return $setting == null ? $default : $setting->value;
+    }
+}
+
 function hex2rgba($color, $opacity = false)
 {
     return false;
@@ -1467,7 +1485,7 @@ if (!function_exists("get_staff_id")) {
 if (!function_exists('hlen_plus')) {
     function hlen_plus($redis_key, $staff_id = 0) {
         if (!$staff_id) {
-            $staff = auth()->user()->staff;
+            $staff = auth()->user()->staffInfo;
             if ($staff) {
                 $staff_id = $staff->id;
             }
@@ -1475,7 +1493,7 @@ if (!function_exists('hlen_plus')) {
         $user = auth()->user();
 
         if ($user && $user->user_type != 'admin') {
-            if ($user->staff->role->is_manage) {
+            if ($user->staffInfo->role->is_manage) {
                 $redis_key = $redis_key . ":bloc:" . $user->bloc_id;
                 return \Illuminate\Support\Facades\Redis::hlen($redis_key);
             }
@@ -1492,7 +1510,7 @@ if (!function_exists('hlen_plus')) {
         $user = auth()->user();
         if ($user && $user->user_type != 'admin') {
             if (!$staff_id) {
-                $staff = auth()->user()->staff;
+                $staff = auth()->user()->staffInfo;
                 if ($staff) {
                     $staff_id = $staff->id;
                 }
@@ -1513,7 +1531,7 @@ if (!function_exists('hlen_plus')) {
 
     function hget_plus($redis_key, $field, $staff_id = 0) {
         if (!$staff_id) {
-            $staff = auth()->user()->staff;
+            $staff = auth()->user()->staffInfo;
             if ($staff) {
                 $staff_id = $staff->id;
             }
@@ -1521,7 +1539,7 @@ if (!function_exists('hlen_plus')) {
 
         $user = auth()->user();
         if ($user && $user->user_type != 'admin') {
-            if ($user->staff->role->is_manage) {
+            if ($user->staffInfo->role->is_manage) {
                 $redis_key = $redis_key . ":bloc:" . $user->bloc_id;
             } else {
                 $redis_key = $redis_key . ":" . $staff_id;
@@ -1539,5 +1557,21 @@ if (!function_exists('hlen_plus')) {
             }
         }
 
+    }
+}
+
+// 倒计时
+if (!function_exists('countDown')) {
+    function countDown($time){
+        $timeNow = time();
+        $timeOver = !is_numeric($time) ? strtotime($time) : $time;
+        if ($timeOver <= $timeNow) return 0;
+
+        $day = intval(($timeOver-$timeNow)/86400);
+        $hour = intval((($timeOver-$timeNow)%86400)/3600);
+        $minute = intval(((($timeOver-$timeNow)%86400)%3600)/60);
+        $second = intval(((($timeOver-$timeNow)%86400)%3600)%60);
+
+        return join(' ', [$hour, translate('Hours'), $minute, translate("Minutes"), $second, translate('Seconds')]);
     }
 }

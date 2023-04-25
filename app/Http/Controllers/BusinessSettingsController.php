@@ -68,6 +68,59 @@ class BusinessSettingsController extends Controller
 
     }
 
+    /**
+     * 区分账号的配置项
+     * author: Sym
+     * time: 2023-04-25 14:21
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update4admin(Request $request)
+    {
+        $admin_id = \Auth::user()->id;
+        foreach ($request->types as $key => $type) {
+            $lang = null;
+            if(gettype($type) == 'array'){
+                $lang = array_key_first($type);
+                $type = $type[$lang];
+                $business_settings = BusinessSetting::where('type', $type)->where('admin_id', $admin_id)->where('lang',$lang)->first();
+            }else{
+                $business_settings = BusinessSetting::where('type', $type)->where('admin_id', $admin_id)->first();
+            }
+
+            if($business_settings!=null){
+                if(gettype($request[$type]) == 'array'){
+                    $business_settings->value = json_encode($request[$type]);
+                }
+                else {
+                    $business_settings->value = $request[$type];
+                }
+                $business_settings->lang = $lang;
+                $business_settings->admin_id = $admin_id;
+                $business_settings->save();
+            }
+            else{
+                $business_settings = new BusinessSetting;
+                $business_settings->type = $type;
+                if(gettype($request[$type]) == 'array'){
+                    $business_settings->value = json_encode($request[$type]);
+                }
+                else {
+                    $business_settings->value = $request[$type];
+                }
+                $business_settings->lang = $lang;
+                $business_settings->admin_id = $admin_id;
+                $business_settings->save();
+            }
+        }
+
+        Artisan::call('cache:clear');
+
+        flash(translate("Settings updated successfully"))->success();
+        return back();
+
+    }
+
     public function activation(Request $request)
     {
         CoreComponentRepository::instantiateShopRepository();

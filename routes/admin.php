@@ -248,6 +248,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::post('/business-settings/update', 'update')->name('business_settings.update');
 
           Route::post('/business-settings/update2', 'update2')->name('business_settings.update2');
+          Route::post('/business-settings/update4admin', 'update4admin')->name('business_settings.update4admin');
 
         Route::post('/business-settings/update/activation', 'updateActivationSettings')->name('business_settings.update.activation');
         Route::get('/general-setting', 'general_setting')->name('general_setting.index');

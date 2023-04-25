@@ -31,15 +31,22 @@
                 @php
                     $user = Auth::user();
                     $menus = \App\Models\Menu::getMenus();
-                    $sellers = \App\Models\Shop::where('verification_status', 0)->where('verification_info', '!=', null)->where("bloc_id", $user->bloc_id)->count();
-                    $refund_count = \App\Models\RefundRequest::where('refund_status', 0)->where("bloc_id", $user->bloc_id)
-                                                    ->select('id')
-                                                    ->count();
-                    $conversation_count = \App\Models\Conversation::where('admin_viewed', 0)->where("bloc_id", $user->bloc_id)->count();
-                    $support_ticket = DB::table('tickets')->where("bloc_id", $user->bloc_id)
-                                        ->where('viewed', 0)
-                                        ->select('id')
-                                        ->count();
+
+                    $sellers = \App\Models\Shop::where('verification_status', 0)->where('verification_info', '!=', null);
+                    $sellers = filter_by_bloc($sellers);
+                    $sellers = $sellers->count();
+
+                    $refund_count = \App\Models\RefundRequest::where('refund_status', 0)->select('id');
+                    $refund_count = filter_by_bloc($refund_count);
+                    $refund_count = $refund_count->count();
+
+                    $conversation_count = \App\Models\Conversation::where('admin_viewed', 0);
+                    $conversation_count = filter_by_bloc($conversation_count);
+                    $conversation_count = $conversation_count->count();
+
+                    $support_ticket = \App\Models\Ticket::where('viewed', 0)->select('id');
+                    $support_ticket = filter_by_bloc($support_ticket);
+                    $support_ticket = $support_ticket->count();
                 @endphp
                 @foreach($menus as $menu)
                         @if(!empty($menu->addon_name) && !addon_is_activated($menu->addon_name))
@@ -346,16 +353,20 @@
         $( 'body' ).append( audio );
     }
 
+    function check_new_msg() {
+        $.get( '{{route('admin.check_new_msg')}}', {}, function (res)
+        {
+            if ( res.code == 1 ) {
+                audioPlay( res.msg );
+            }
+        }, 'json' )
+    }
+
     window.onload = function ()
     {
-        setInterval( function ()
-        {
-            $.get( '{{route('admin.check_new_msg')}}', {}, function (res)
-            {
-                if ( res.code == 1 ) {
-                    audioPlay( res.msg );
-                }
-            }, 'json' )
-        }, 10e3 );
+        @if(!get_admin_setting('msg_tip_mute'))
+        check_new_msg();
+        setInterval(check_new_msg, 10e3 );
+        @endif
     }
 </script>
