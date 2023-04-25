@@ -104,7 +104,7 @@ class PaypalController extends Controller
                 wallet_payment_done($request->user_id, $request->amount, 'Paypal', json_encode($response));
             }  elseif ($request->payment_type == 'order_pick_up_payment') {
 
-                storehouseProduct_payment_done($request->get('order_id'));
+                storehouseProduct_payment_done($request->get('order_id'), 'Paypal');
             }
 
             return response()->json(['result' => true, 'message' => translate("Payment is successful")]);

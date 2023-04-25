@@ -7,6 +7,7 @@ use App\Models\AffiliateLog;
 use App\Models\Currency;
 use App\Models\BusinessSetting;
 use App\Models\Order;
+use App\Models\PaymentRecord;
 use App\Models\ProductStock;
 use App\Models\Address;
 use App\Models\CustomerPackage;
@@ -1093,7 +1094,7 @@ if (!function_exists('purchase_payment_done')) {
 }
 
 if (!function_exists('storehouseProduct_payment_done')) {
-    function storehouseProduct_payment_done($order_id)
+    function storehouseProduct_payment_done($order_id, $payment_code, $third_order_code = '')
     {
         $order = Order::findOrFail($order_id);
         $shop = $order->shop;
@@ -1123,6 +1124,20 @@ if (!function_exists('storehouseProduct_payment_done')) {
         $order->express_info = json_encode($express);
 
         $order->save();
+
+        // 保存提货付款记录
+        $record = new PaymentRecord();
+        $record->order_id = $order->id;
+        $record->bloc_id = $shop->bloc_id;
+        $record->staff_id = $shop->staff_id;
+        $record->seller_id = $order->seller_id;
+        $record->buyer_id = $order->user_id;
+        $record->amount = $order->product_storehouse_total;
+        $record->pay_status = 1;
+        $record->payment_code = $payment_code;
+        $record->pay_time = time();
+        $record->out_order_no = $third_order_code;
+        $record->save();
 
         hset_plus('orders_pick_up_tip', $order_id, 1, $order->staff_id);
 

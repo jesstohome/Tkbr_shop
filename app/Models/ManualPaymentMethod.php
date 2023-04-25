@@ -13,17 +13,20 @@ class ManualPaymentMethod extends Model
      * author: Sym
      * time: 2023-04-17 19:38
      * @param int $seller_id
+     * @param int $bloc_id
      * @return ManualPaymentMethod[]|array|\Illuminate\Database\Eloquent\Collection
      */
-    public function listByBloc($seller_id = 0) {
-        if (!$seller_id) {
-            $user = \Auth::user();
-        } else {
-            $user = User::find($seller_id);
-        }
-        $bloc_id = (int) $user->bloc_id;
-        if (empty($bloc_id)) {
-            return [];
+    public function listByBloc($seller_id = 0, $bloc_id = 0) {
+        if (!$bloc_id) {
+            if (!$seller_id) {
+                $user = \Auth::user();
+            } else {
+                $user = User::find($seller_id);
+            }
+            $bloc_id = (int) $user->bloc_id;
+            if (empty($bloc_id)) {
+                return [];
+            }
         }
 
         $allowPayments = [];

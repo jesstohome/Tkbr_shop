@@ -140,8 +140,19 @@ class CheckoutController extends Controller
         $tax = 0;
         $shipping = 0;
         $subtotal = 0;
+        $bloc_id = 0;
 
         if ($carts && count($carts) > 0) {
+            foreach ($carts as $key => $cartItem) {
+                $product = Product::find($cartItem['product_id']);
+                if (!empty($bloc_id) && !empty($product->user->bloc_id) && $bloc_id != $product->user->bloc_id) {
+                    flash(translate('Cannot cross bloc shopping'))->warning();
+                    return redirect()->route('home');
+                }
+
+                $bloc_id = $product->user->bloc_id;
+            }
+
             foreach ($carts as $key => $cartItem) {
                 $product = Product::find($cartItem['product_id']);
                 $tax += cart_product_tax($cartItem, $product, false) * $cartItem['quantity'];
@@ -183,7 +194,7 @@ class CheckoutController extends Controller
             }
             $total = $subtotal + $tax + $shipping;
             $tpwd = Auth::user()->tpwd;
-            return view('frontend.payment_select', compact('carts', 'shipping_info', 'total', 'tpwd'));
+            return view('frontend.payment_select', compact('carts', 'shipping_info', 'total', 'tpwd', 'bloc_id'));
 
         } else {
             flash(translate('Your Cart was empty'))->warning();

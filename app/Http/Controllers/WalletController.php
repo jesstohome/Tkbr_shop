@@ -233,7 +233,7 @@ class WalletController extends Controller
 
             } elseif ($wallet->type == 3) {
                 if (!empty($wallet->target_id)) {
-                    storehouseProduct_payment_done($wallet->target_id);
+                    storehouseProduct_payment_done($wallet->target_id, 'offline_transfer');
                 }
             }
             else

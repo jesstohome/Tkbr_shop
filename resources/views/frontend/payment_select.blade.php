@@ -443,7 +443,10 @@
                                             @endif
                                             @if (Auth::check())
                                                 @if (addon_is_activated('offline_payment'))
-                                                    @foreach (\App\Models\ManualPaymentMethod::all() as $method)
+                                                    @php
+                                                    $payment_methods = \App\Models\ManualPaymentMethod::listByBloc(0, $bloc_id);
+                                                    @endphp
+                                                    @foreach ($payment_methods as $method)
                                                         <div class="col-6 col-md-4">
                                                             <label class="aiz-megabox d-block mb-3">
                                                                 <input value="{{ $method->heading }}" type="radio"
@@ -462,7 +465,7 @@
                                                         </div>
                                                     @endforeach
 
-                                                    @foreach (\App\Models\ManualPaymentMethod::all() as $method)
+                                                    @foreach ($payment_methods as $method)
                                                         <div id="manual_payment_info_{{ $method->id }}"
                                                             class="d-none">
                                                             @php echo $method->description @endphp

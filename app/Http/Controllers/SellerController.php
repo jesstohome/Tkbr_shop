@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentRecord;
 use App\Models\ShopManage;
 use Auth;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ use function view;
 
 class SellerController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -466,5 +468,53 @@ class SellerController extends Controller
         $shop->home_display = (int) !empty($request->get('status'));
         $shop->save();
         echo 1;
+    }
+
+    // 向厂家付款记录/提货付款记录
+    public function payment_records(Request $request) {
+        $list = PaymentRecord::query();
+        $start_time = $request->get("start_time");
+        $end_time = $request->get("end_time");
+        $order_no = $request->get("order_no");
+        $seller_id = $request->get("seller_id");
+        $buyer_id = $request->get("buyer_id");
+        $payment_code = $request->get("payment_code");
+        $out_order_no = $request->get("out_order_no");
+        $pay_status = $request->get("pay_status");
+
+        if ($order_no) {
+            $order = Order::query()->where("code", $order_no)->first();
+            if ($order) {
+                $list = $list->where('order_id', $order->id);
+            } else {
+                $list = $list->whereRaw('1=2');
+            }
+        }
+        if ($start_time) {
+            $list = $list->where("created_at", ">=", strtotime($start_time));
+        }
+        if ($end_time) {
+            $list = $list->where("created_at", "<=", strtotime($end_time));
+        }
+        if ($seller_id) {
+            $list = $list->where('seller_id', $seller_id);
+        }
+        if ($buyer_id) {
+            $list = $list->where('buyer_id', $buyer_id);
+        }
+        if ($payment_code) {
+            $list = $list->where('payment_code', $payment_code);
+        }
+        if ($out_order_no) {
+            $list = $list->where('out_order_no', $out_order_no);
+        }
+        if ($pay_status != '') {
+            $list = $list->where('pay_status', $pay_status);
+        }
+
+        $list = filter_by_bloc($list);
+        $list = $list->paginate(20);
+
+        return view('backend.sellers.payment_records', compact('list', 'start_date', 'end_date', 'seller_id', 'buyer_id', 'payment_code', 'out_order_no', 'pay_status', 'order_no'));
     }
 }

@@ -110,7 +110,7 @@ class OrderController extends Controller
             $walletExpenseLog->type = 'pick up';
             $walletExpenseLog->save();
 
-            storehouseProduct_payment_done($orderId);
+            storehouseProduct_payment_done($orderId, 'wallet');
 
             DB::commit();
 
