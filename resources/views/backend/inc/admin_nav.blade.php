@@ -180,6 +180,7 @@
 <script>
     function toggle_mute(value) {
         $.post("{{route('business_settings.update4admin')}}", {types: ['msg_tip_mute'], 'msg_tip_mute': value}, function () {
+            AIZ.plugins.notify('success', '{{ translate('Status updated successfully') }}');
             location.reload()
         })
     }

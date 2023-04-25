@@ -181,11 +181,12 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
 
 
 
-
-
     // Notifications
     Route::controller(NotificationController::class)->group(function () {
         Route::get('/all-notification', 'index')->name('all-notification');
     });
 });
 
+Route::controller(\App\Http\Controllers\BusinessSettingsController::class)->group(function () {
+    Route::post('/business-settings/update4admin', 'update4admin')->name('business_settings.update4admin');
+});
