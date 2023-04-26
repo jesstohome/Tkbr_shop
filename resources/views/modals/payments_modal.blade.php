@@ -9,7 +9,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <a href="javascript:void(0);" id="wallet-link" onclick="$('#payment_for_storehouse_modal').modal('show')" class="btn btn-primary mt-2">Wallet</a>
-                        <a href="javascript:void(0);" id="Manual-link" onclick="show_make_wallet_recharge_modal(3)" class="btn btn-primary mt-2">人工转账</a>
+                        <a href="javascript:void(0);" id="Manual-link" onclick="show_make_wallet_recharge_modal(3)" class="btn btn-primary mt-2">{{translate('Manual transfer')}}</a>
                         @if(env('PAYPAL_CLIENT_ID'))
                         <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'paypal', 'order_id' => $order->id ?? 0]) }}" id="paypal-link" class="btn btn-primary mt-2">Paypal</a>
                         @endif
@@ -17,15 +17,18 @@
                 </div>
                 <div class="row text-left mt-5">
                     <div class="col-md-12">
+                        @php
+                        $jump2 = "<a href='" . route('seller.commission-history.index') . "'>" . translate('Submit Work Order') . "</a>";
+                        @endphp
                         <p>
                             {{translate('Explain')}}:<br />
                         </p>
 
                         <p>1. {{translate('The manufacturer has passed platform certification and paid a $50000 deposit')}}.</p>
 
-                        <p>2. {{translate('If you need help, click on [Submit Work Order] to provide us with feedback on your issue')}}.</p>
+                        <p>2. @php echo sprintf(translate('If you need help, click on [%s] to provide us with feedback on your issue'), $jump2) @endphp.</p>
 
-                        <p>3. {{translate("If you are also a manufacturer and want your products to be placed on the platform's product warehouse for better sales, please click [Submit Work Order] to contact the platform")}}.</p>
+                        <p>3. @php echo sprintf(translate("If you are also a manufacturer and want your products to be placed on the platform's product warehouse for better sales, please click [%s] to contact the platform"), $jump2) @endphp.</p>
                     </div>
 
                 </div>

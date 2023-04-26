@@ -83,14 +83,14 @@
                 <table class="table aiz-table mb-0">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th data-breakpoints="lg">#</th>
                             <th>{{ translate('Order Code')}}</th>
-                            <th>{{ translate('Order Type') }}</th>
+                            <th data-breakpoints="lg">{{ translate('Order Type') }}</th>
                             <th data-breakpoints="lg">{{ translate('Num. of Products')}}</th>
                             <th data-breakpoints="lg">{{ translate('Customer')}}</th>
                             <th data-breakpoints="md">{{ translate('Amount')}}</th>
                             <th data-breakpoints="md">{{ translate('Profit')}}</th>
-                            <th data-breakpoints="md">{{ translate('Pick Up Status') }}</th>
+                            <th>{{ translate('Pick Up Status') }}</th>
                             <th data-breakpoints="lg">{{ translate('Delivery Status')}}</th>
                             <th>{{ translate('Payment Status')}}</th>
                             <th class="text-right">{{ translate('Options')}}</th>
@@ -161,12 +161,14 @@
                                         @endif
                                     </td>
                                     <td class="text-right">
-                                        <a href="{{ route('seller.orders.show', encrypt($order->id)) }}" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="{{ translate('Order Details') }}">
-                                            <i class="las la-eye"></i>
-                                        </a>
-                                        <a href="{{ route('seller.invoice.download', $order->id) }}" class="btn btn-soft-warning btn-icon btn-circle btn-sm" title="{{ translate('Download Invoice') }}">
-                                            <i class="las la-download"></i>
-                                        </a>
+                                        <div style="display: flex;justify-content: flex-end;">
+                                            <a href="{{ route('seller.orders.show', encrypt($order->id)) }}" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="{{ translate('Order Details') }}">
+                                                <i class="las la-eye"></i>
+                                            </a>
+                                            <a href="{{ route('seller.invoice.download', $order->id) }}" class="btn btn-soft-warning btn-icon btn-circle btn-sm" title="{{ translate('Download Invoice') }}">
+                                                <i class="las la-download"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endif
