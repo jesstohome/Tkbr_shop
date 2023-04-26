@@ -1106,6 +1106,7 @@ if (!function_exists('storehouseProduct_payment_done')) {
         $freezeDays = get_setting('frozen_funds_unfrozen_days', 15);
         $order->freeze_expired_at = \Illuminate\Support\Carbon::now()->addDays($freezeDays)->timestamp;
 
+        $order->pickup_time = time();
         $order->product_storehouse_status = 1;
 
         // 按自动物流配置生成物流信息
@@ -1219,6 +1220,7 @@ if (!function_exists('product_storehouse_order_free_up')) {
             $shop->admin_to_pay -= $grand_total; // 减少冻结资金
             $user->balance += $grand_total; // 增加用户钱包余额
             $order->freeze_expired_at = null; // 标记订单已经释放
+            $order->unfreeze_time = time(); // 标记订单释放时间点
 
             //结算商家
             $seller_1 = User::where('id', $user->pid)->first();

@@ -67,15 +67,24 @@
                                 @endif
                             </td>
                             <td>
+                                @if(!$wallet->approval)
                                 <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="wallet_review('{{ $wallet->id }}')" title="{{ translate('Examine') }}">
                                     {{translate('Examine')}}
+                                    @if(hget_plus('new_offline_pickup_pay_tip', $wallet->id))
+                                        <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                                    @endif
                                 </a>
+                                @else
+                                    <span class="badge badge-inline badge-success">{{ translate('Audited') }}</span>
+                                @endif
                             </td>
                             <td>
-                                @if($wallet->approval)
+                                @if($wallet->approval == 1)
                                     <span class="badge badge-inline badge-success">{{ translate('Pass') }}</span>
-                                @else
+                                @elseif($wallet->approval == 2)
                                     <span class="badge badge-inline badge-danger">{{ translate('No Pass') }}</span>
+                                @else
+                                    <span class="badge badge-inline badge-warning">{{ translate('Unaudited') }}</span>
                                 @endif
                             </td>
                             <td>

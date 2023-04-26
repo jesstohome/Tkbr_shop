@@ -154,6 +154,10 @@ class WalletController extends Controller
 
         hset_plus('new_offline_recharge_tip', $wallet->id, 1, $wallet->staff_id);
 
+        if (!empty($request->order_id)) {
+            hset_plus('new_offline_pickup_pay_tip', $wallet->id, 1, $wallet->staff_id);
+        }
+
         flash(translate('Offline Recharge has been done. Please wait for response.'))->success();
 
         if (Auth::user()->user_type == 'seller') {
@@ -178,7 +182,7 @@ class WalletController extends Controller
             $wallets = $wallets->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
         if ($approval_status) {
-            $wallets = $wallets->where("approval", (int) $approval_status === 'pass');
+            $wallets = $wallets->where("approval", $approval_status === 'pass' ? 1 : 2);
         }
 
         if ($operator){
@@ -280,6 +284,7 @@ class WalletController extends Controller
         if ( $wallet->save() )
         {
             hdel_plus('new_offline_recharge_tip', $wallet->id);
+            hdel_plus('new_offline_pickup_pay_tip', $wallet->id);
             return 1;
         }
         return 0;

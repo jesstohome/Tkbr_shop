@@ -78,8 +78,10 @@
                           <td>{{ ucfirst(str_replace('_', ' ', $wallet ->payment_method)) }}</td>
                           <td class="text-right">
                               @if ($wallet->offline_payment)
-                                  @if ($wallet->approval)
-                                      <span class="badge badge-inline badge-success">{{translate('Approved')}}</span>
+                                  @if ($wallet->approval == 1)
+                                      <span class="badge badge-inline badge-success">{{translate('Pass')}}</span>
+                                  @elseif ($wallet->approval == 2)
+                                      <span class="badge badge-inline badge-success">{{translate('No Pass')}}</span>
                                   @else
                                       <span class="badge badge-inline badge-info">{{translate('Pending')}}</span>
                                   @endif

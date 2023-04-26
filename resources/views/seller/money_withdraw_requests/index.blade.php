@@ -230,6 +230,7 @@
                     <th data-breakpoints="md">{{ translate('Amount') }}</th>
                     <th data-breakpoints="md">{{ translate('Payment method') }}</th>
                     <th>{{ translate('Payment Details') }}</th>
+                    <th data-breakpoints="md">{{ translate('Order Code') }}</th>
                     <th data-breakpoints="md">{{ translate('Approval') }}</th>
                     <th data-breakpoints="md">{{ translate('Offline payment') }}</th>
                     <th data-breakpoints="md">{{ translate('Type') }}</th>
@@ -244,11 +245,14 @@
                         <td>{{ single_price($list->amount) }}</td>
                         <td>{{ $list->payment_method }}</td>
                         <td>{{ $list->payment_details }}</td>
+                        <td>{{ $list->order->code ?? ''}}</td>
                         <td>
                             @if ($list->approval == 1)
-                                <span class="badge badge-inline badge-success">{{translate('yes')}}</span>
+                                <span class="badge badge-inline badge-success">{{translate('Pass')}}</span>
+                            @elseif ($wallet->approval == 2)
+                                <span class="badge badge-inline badge-success">{{translate('No Pass')}}</span>
                             @else
-                                <span class="badge badge-inline badge-danger">{{translate('No')}}</span>
+                                <span class="badge badge-inline badge-info">{{translate('Unaudited')}}</span>
                             @endif
                         </td>
                         <td>

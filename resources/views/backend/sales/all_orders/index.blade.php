@@ -115,12 +115,15 @@
                         <th data-breakpoints="md">{{ translate('Amount') }}</th>
                         <th data-breakpoints="md">{{ translate('Profit') }}</th>
                         <th data-breakpoints="md">{{ translate('Pick Up Status') }}</th>
+                        <th>{{ translate('Pickup Time') }}</th>
                         <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
                         <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
                         @if (addon_is_activated('refund_request'))
                         <th>{{ translate('Refund') }}</th>
                         @endif
                         <th>{{ translate('Has the loan been released') }}</th>
+                        <th>{{ translate('Unfreeze Time') }}</th>
+
                         <th class="text-right" width="15%">{{translate('options')}}</th>
                     </tr>
                 </thead>
@@ -195,6 +198,7 @@
                                 @endif
                             @endif
                         </td>
+                        <td>{{$order->pickup_time ? date('Y-m-d H:i:s', $order->pickup_time) : ''}}</td>
                         <td>
                             @php
                                 $status = $order->delivery_status;
@@ -228,6 +232,7 @@
                                 {{translate('No')}}
                             @endif
                         </td>
+                        <td>{{$order->unfreeze_time ? date('Y-m-d H:i:s', $order->unfreeze_time) : ''}}</td>
                         <td class="text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
