@@ -1,9 +1,53 @@
 @extends('backend.layouts.app')
 @section('content')
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0 h6">{{translate('Seller Withdraw Request')}}</h5>
+    <script src='/My97DatePicker/WdatePicker.js'></script>
+    <div class="aiz-titlebar text-left mt-2 mb-3">
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                <h1 class="h3">{{translate('Seller Withdraw Request')}} ({{translate('Total')}}: {{$total_seller}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}})</h1>
+            </div>
+            <div class="col text-left">
+            </div>
         </div>
+    </div>
+    <div class="card">
+        <form class="" id="sort_withdraw_request" action="" method="GET">
+
+        <div class="card-header">
+                <div class="col-md-3 ml-auto">
+                    <div class="form-group mb-0">
+                        <input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" type="text" class="form-control" placeholder="{{translate('Start Time')}}" value="{{$start_time ?? ''}}" name="start_time" />
+
+                    </div>
+                </div>
+                <div class="col-md-3 ml-auto">
+                    <div class="form-group mb-0">
+
+                        <input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" type="text" class="form-control" placeholder="{{translate('End Time')}}" value="{{$end_time ?? ''}}" name="end_time" />
+                    </div>
+                </div>
+                <div class="col-md-2 ml-auto">
+                    <select class="form-control aiz-selectpicker" name="payment_code" id="payment_channel">
+                        <option value="">{{translate('All')}}</option>
+                        @if(env('PAYPAL_CLIENT_ID'))
+                        <option value="paypal">Paypal</option>
+                        @endif
+                    </select>
+                </div>
+
+                <div class="col-md-2 ml-auto">
+                    <select class="form-control aiz-selectpicker" name="status" id="status">
+                        <option value="">{{translate('All')}}</option>
+                        <option value="1"  @if($status == 1) selected @endif >{{translate('Paid')}}</option>
+                        <option value="2"  @if($status == 2) selected @endif >{{translate('Refuse')}}</option>
+                        <option value="0"  @if($status == 0) selected @endif >{{translate('Pending')}}</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
+        </div>
+        </form>
+
         <div class="card-body">
             <table class="table aiz-table mb-0">
                 <thead>
@@ -24,6 +68,7 @@
                         <th data-breakpoints="lg">{{ translate('Withdraw type') }}</th>
                         <th data-breakpoints="lg" width="20%">{{ translate('Message') }}</th>
                         <th data-breakpoints="lg">{{ translate('Status') }}</th>
+                        <th data-breakpoints="lg">{{ translate('Pass Time') }}</th>
                         <th data-breakpoints="lg" width="15%" class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -82,6 +127,9 @@
                                     @else
                                     <span class="badge badge-inline badge-info">{{translate('Pending')}}</span>
                                     @endif
+                                </td>
+                                <td>
+                                    {{ $seller_withdraw_request->updated_at }}
                                 </td>
                                 <td class="text-right">
                                     @if ($seller_withdraw_request->status == 0)

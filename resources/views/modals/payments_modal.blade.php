@@ -18,7 +18,7 @@
                 <div class="row text-left mt-5">
                     <div class="col-md-12">
                         @php
-                        $jump2 = "<a href='" . route('seller.commission-history.index') . "'>" . translate('Submit Work Order') . "</a>";
+                        $jump2 = "<a href='" . route('seller.support_ticket.index') . "'>" . translate('Submit Work Order') . "</a>";
                         @endphp
                         <p>
                             {{translate('Explain')}}:<br />

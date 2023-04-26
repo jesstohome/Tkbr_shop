@@ -23,13 +23,33 @@ class SellerWithdrawRequestController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
+    public function index( Request $request)
     {
+        $start_time = $request->get('start_time');
+        $end_time = $request->get('end_time');
+        $status = $request->get('status');
         $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',1)->latest();
+        if (!empty($start_time)) {
+            $seller_withdraw_requests = $seller_withdraw_requests->where("created_at", ">=", date('Y-m-d H:i:s', strtotime($start_time)));
+        }
+        if (!empty($end_time)) {
+            $seller_withdraw_requests = $seller_withdraw_requests->where("created_at", "<=", date('Y-m-d H:i:s', strtotime($end_time)));
+        }
+
+        if (!is_null($status) && $status !== '') {
+            $seller_withdraw_requests = $seller_withdraw_requests->where("status", $status);
+        }
+
         $seller_withdraw_requests = filter_by_bloc($seller_withdraw_requests);
+        $total = $seller_withdraw_requests->count();
+        $total_seller = $seller_withdraw_requests->count('user_id');
+        $total_amount = $seller_withdraw_requests->sum('amount');
+
+
         $seller_withdraw_requests = $seller_withdraw_requests->paginate(15);
 
-        return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests'));
+
+        return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests', 'start_time', 'end_time', 'status', 'total', 'total_seller', 'total_amount'));
     }
 
     /**
