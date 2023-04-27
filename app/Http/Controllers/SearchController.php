@@ -28,7 +28,7 @@ class SearchController extends Controller
         $colors = Color::all();
         $selected_color = null;
 
-        $conditions = ['published' => 1];
+        $conditions = ['published' => 1, ['added_by', '!=',  'admin']];
 
         if ($brand_id != null) {
             $conditions = array_merge($conditions, ['brand_id' => $brand_id]);
@@ -171,7 +171,7 @@ class SearchController extends Controller
 
         $products = filter_products(Product::query());
 
-        $products = $products->where('published', 1)
+        $products = $products->where('published', 1)->where("added_by", '!=',  'admin')
             ->where(function ($q) use ($query) {
                 foreach (explode(' ', trim($query)) as $word) {
                     $q->where('name', 'like', '%' . $word . '%')
