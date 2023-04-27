@@ -35,7 +35,7 @@
                     {{translate('Bulk Action')}}
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#" onclick="bulk_add_to_sotrehouse()"> {{translate('Move selection out of product warehouse')}}</a>
+                    <a class="dropdown-item" href="#" onclick="bulk_delete_to_storehouse()"> {{translate('Move selection out of product warehouse')}}</a>
                 </div>
             </div>
 
@@ -115,7 +115,7 @@
                         <td>
                             <div class="form-group d-inline-block">
                                 <label class="aiz-checkbox">
-                                    <input type="checkbox" class="check-one" name="id[]" value="{{$product->id}}">
+                                    <input type="checkbox" class="check-one ids" name="id[]" value="{{$product->id}}">
                                     <span class="aiz-square-check"></span>
                                 </label>
                             </div>
@@ -373,6 +373,22 @@
                         location.reload();
                     }
                 }
+            });
+        }
+
+        function bulk_delete_to_storehouse(){
+            let ids = []
+            $(".ids:checked").each(function () {
+                ids.push($(this).val())
+            })
+            $.post('{{ route('product-storehouse-update') }}', {_token:'{{ csrf_token() }}', id:ids, in_storehouse:0}, function(data){
+                if(data == 1){
+                    AIZ.plugins.notify('success', '{{ translate('Products storehouse updated successfully') }}');
+                }
+                else{
+                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+                }
+                location.reload();
             });
         }
 
