@@ -48,7 +48,7 @@
         </div>
         </form>
 
-        <div class="card-body">
+        <div class="card-body" style="overflow-x: auto">
             <table class="table aiz-table mb-0">
                 <thead>
                     <tr>
@@ -129,22 +129,26 @@
                                     @endif
                                 </td>
                                 <td>
-                                    {{ $seller_withdraw_request->updated_at }}
+                                    {{ $seller_withdraw_request->status == 1 ? $seller_withdraw_request->updated_at : ''}}
                                 </td>
-                                <td class="text-right">
-                                    @if ($seller_withdraw_request->status == 0)
-                                    <a onclick="show_seller_payment_modal('{{$seller_withdraw_request->user_id}}','{{ $seller_withdraw_request->id }}');" class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Pay Now') }}">
-                                        <i class="las la-money-bill"></i>
-                                    <a onclick="show_refuse_modal('{{$seller_withdraw_request->user_id}}','{{ $seller_withdraw_request->id }}');" class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Refuse') }}">
-                                    <i class="las la-money-bill"></i>
-                                    </a>
-                                    @endif
-                                    <a onclick="show_message_modal('{{ $seller_withdraw_request->id }}');" class="btn btn-soft-success btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Message View') }}">
-                                        <i class="las la-eye"></i>
-                                    </a>
-                                    <a onclick="show_history_modal('{{ $seller_withdraw_request->id }}');" href="javascript:void(0);" class="btn btn-soft-primary btn-icon btn-circle btn-sm"  title="{{ translate('Payment History') }}">
-                                        <i class="las la-history"></i>
-                                    </a>
+                                <td class="text-right" width="300">
+                                    <div style="display: flex;justify-content: flex-end;">
+                                        @if ($seller_withdraw_request->status == 0)
+                                            <a onclick="show_seller_payment_modal('{{$seller_withdraw_request->user_id}}','{{ $seller_withdraw_request->id }}');" class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Pay Now') }}">
+                                                <i class="las la-money-bill"></i>
+                                            </a>
+                                            <a onclick="show_refuse_modal('{{$seller_withdraw_request->user_id}}','{{ $seller_withdraw_request->id }}');" class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Refuse') }}">
+                                                <i class="las la-money-bill"></i>
+                                            </a>
+                                            @endif
+                                            <a onclick="show_message_modal('{{ $seller_withdraw_request->id }}');" class="btn btn-soft-success btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Message View') }}">
+                                                <i class="las la-eye"></i>
+                                            </a>
+                                            <a onclick="show_history_modal('{{ $seller_withdraw_request->id }}');" href="javascript:void(0);" class="btn btn-soft-primary btn-icon btn-circle btn-sm"  title="{{ translate('Payment History') }}">
+                                                <i class="las la-history"></i>
+                                            </a>
+                                    </div>
+
                                 </td>
                             </tr>
                         @endif

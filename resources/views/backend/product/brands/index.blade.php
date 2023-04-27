@@ -28,6 +28,7 @@
 		            <thead>
 		                <tr>
 		                    <th>#</th>
+                            <th>ID</th>
 		                    <th>{{translate('Name')}}</th>
 		                    <th>{{translate('Logo')}}</th>
 		                    <th class="text-right">{{translate('Options')}}</th>
@@ -37,6 +38,7 @@
 		                @foreach($brands as $key => $brand)
 		                    <tr>
 		                        <td>{{ ($key+1) + ($brands->currentPage() - 1)*$brands->perPage() }}</td>
+		                        <td>{{ $brand->id }}</td>
 		                        <td>{{ $brand->getTranslation('name') }}</td>
 								<td>
 		                            <img src="{{ uploaded_asset($brand->logo) }}" alt="{{translate('Brand')}}" class="h-50px">

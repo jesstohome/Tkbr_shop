@@ -35,6 +35,7 @@
             <thead>
                 <tr>
                     <th data-breakpoints="lg">#</th>
+                    <th>ID</th>
                     <th>{{translate('Name')}}</th>
                     <th data-breakpoints="lg">{{ translate('Parent Category') }}</th>
                     <th data-breakpoints="lg">{{ translate('Order Level') }}</th>
@@ -50,6 +51,7 @@
                 @foreach($categories as $key => $category)
                     <tr>
                         <td>{{ ($key+1) + ($categories->currentPage() - 1)*$categories->perPage() }}</td>
+                        <td>{{ $category->id }}</td>
                         <td>{{ $category->getTranslation('name') }}</td>
                         <td>
                             @php

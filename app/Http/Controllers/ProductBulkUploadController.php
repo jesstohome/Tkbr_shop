@@ -68,7 +68,7 @@ class ProductBulkUploadController extends Controller
             $import = new ProductsImport;
             Excel::import($import, request()->file('bulk_file'));
         }
-        
+
         return back();
     }
 

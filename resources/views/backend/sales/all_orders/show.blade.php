@@ -11,7 +11,7 @@
                 <div class="col text-md-left text-center">
                     @if ($order->product_storehouse_status)
                     <p>
-                        @if($order->freeze_expired_at)
+                        @if($order->freeze_expired_at && $order->delivery_status == 'delivered')
                             {{translate('Auto Unfreeze Countdown') . ":" . countDown($order->freeze_expired_at)}}
                         @else
                             {{translate('Not automatically released')}}

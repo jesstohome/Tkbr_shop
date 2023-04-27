@@ -20,7 +20,7 @@
                                                         <th class="column" style="font-size:0pt; line-height:0pt; padding:0; margin:0; font-weight:normal;">
                                                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                                 <tr>
-                                                                    <td class="img m-center" style="font-size:0pt; line-height:0pt; text-align:left;"><img src="{{ uploaded_asset($logo) }}" width="" height="24" border="0" alt="" /></td>
+                                                                    <td class="img m-center" style="font-size:0pt; line-height:0pt; text-align:left;"><img src="https://test.littleshopstudio.com/public/uploads/all/4WG0jrycWT21ivuYBHetMfBaWodBkv8hpMDPqTiy.png" width="" height="24" border="0" alt="" /></td>
                                                                 </tr>
                                                             </table>
                                                         </th>
@@ -53,7 +53,14 @@
                                                         <td class="h2 center pb10" style="color:#000000; font-family:'Ubuntu', Arial,sans-serif; font-size:50px; line-height:60px; text-align:center; padding-bottom:10px;">{{ $array['subject'] }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="h5 center blue pb30" style="font-family:'Ubuntu', Arial,sans-serif; font-size:20px; line-height:26px; text-align:center; color:#2e57ae; padding-bottom:30px;">{{ $array['content'] }} </td>
+                                                        <td class="h5 center blue pb30" style="font-family:'Ubuntu', Arial,sans-serif; font-size:20px; line-height:26px; text-align:center; color:#2e57ae; padding-bottom:30px;">
+                                                            <p style='text-align: left'>Dear {{$array['username']}}</p>
+                                                            <p style='text-align: left'>
+                                                                You are applying to reset your password, and the verification code is {{$array['verification_code']}}. For the security of your account, please do not send the verification code to others without permission.
+                                                            </p>
+                                                            <p>The verification code is valid within 30 minutes. Please verify it in a timely manner.</p>
+                                                            <p style='text-align: right'>tiktokshopping Technical Support</p>
+                                                        </td>
                                                     </tr>
                                                     @if(!empty( $array['link']))
                                                     <tr>

@@ -1589,6 +1589,6 @@ if (!function_exists('countDown')) {
         $minute = intval(((($timeOver-$timeNow)%86400)%3600)/60);
         $second = intval(((($timeOver-$timeNow)%86400)%3600)%60);
 
-        return join(' ', [$hour, translate('Hours'), $minute, translate("Minutes"), $second, translate('Seconds')]);
+        return join(' ', [$day, translate('Day'), $hour, translate('Hours'), $minute, translate("Minutes"), $second, translate('Seconds')]);
     }
 }
