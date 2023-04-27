@@ -367,7 +367,7 @@
                 data: data,
                 cache: false,
                 contentType: false,
-                processData: false,
+                processData: false,offline-wallet-recharge
                 success: function (response) {
                     if(response == 1) {
                         location.reload();

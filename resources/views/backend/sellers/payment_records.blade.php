@@ -45,7 +45,7 @@
                     <option value="">{{translate('All Customers')}}</option>
                     @foreach ($users as $key => $salesman)
                         <option value="{{ $salesman->id }}" @if($buyer_id == $salesman->id) selected @endif data-contact="{{ $salesman->email }}">
-                            {{ $salesman->name }}
+                            {{ $salesman->name }} ({{$salesman->email}})
                         </option>
                     @endforeach
                 </select>
@@ -56,7 +56,7 @@
                     <option value="">{{translate('All Sellers')}}</option>
                     @foreach ($users as $key => $salesman)
                         <option value="{{ $salesman->id }}" @if($seller_id == $salesman->id) selected @endif data-contact="{{ $salesman->email }}">
-                            {{ $salesman->name }}
+                            {{ $salesman->name }} ({{$salesman->email}})
                         </option>
                     @endforeach
                 </select>

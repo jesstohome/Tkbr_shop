@@ -35,7 +35,7 @@
                         <label>{{ translate('Amount')}} <span class="text-danger">*</span></label>
                     </div>
                     <div class="col-md-9">
-                        <input type="number" lang="en" class="form-control mb-3" min="0" step="0.01" name="amount" placeholder="{{ translate('Amount') }}" required>
+                        <input type="number" lang="en" class="form-control mb-3" min="0" step="0.01" name="amount" placeholder="{{ translate('Amount') }}" value="{{empty($order->product_storehouse_total) ? 0 : $order->product_storehouse_total}}" required>
                     </div>
                 </div>
 

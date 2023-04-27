@@ -472,7 +472,7 @@ class SellerController extends Controller
 
     // 向厂家付款记录/提货付款记录
     public function payment_records(Request $request) {
-        $list = PaymentRecord::query();
+        $list = PaymentRecord::query()->orderByDesc('id');
         $start_time = $request->get("start_time");
         $end_time = $request->get("end_time");
         $order_no = $request->get("order_no");
@@ -516,7 +516,7 @@ class SellerController extends Controller
 
         $list_clone = clone $list;
         $total = $list_clone->count();
-        $total_seller = $list_clone->groupby("seller_id")->count();
+        $total_seller = $list_clone->distinct("seller_id")->count();
         $total_amount = $list_clone->sum('amount');
 
         $list = $list->paginate(20);

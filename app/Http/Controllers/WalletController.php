@@ -218,11 +218,6 @@ class WalletController extends Controller
     public function updateApproved( Request $request ) {
         $wallet = Wallet::findOrFail($request->id);
 
-        // 避免重复操作相同的状态
-        if ($wallet->approval == $request->status) {
-            return 0;
-        }
-
         $wallet->approval = $request->status;
         if ( $request->status == 1 )
         {

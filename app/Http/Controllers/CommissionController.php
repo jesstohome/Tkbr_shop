@@ -190,6 +190,7 @@ id: 1
             $payment->bloc_id = $user->bloc_id;
             $payment->staff_id = $user->staff_id;
             $payment->amount = $payment_data['amount'];
+            $payment->payment_channel = $request->payment_option ?? '';
             $payment->payment_method = 'Seller paid to admin';
             $payment->txn_code = $payment_data['txn_code'];
             $payment->payment_details = null;
@@ -204,7 +205,7 @@ id: 1
     public function pay_to_seller2(Request $request)
     {
         $withdrawRequest = SellerWithdrawRequest::find($request->seller_withdraw_request_id);
-       $withdrawRequest->remarks = $request->remarks;
+
         if (!$withdrawRequest) {
             flash(translate('Something went wrong'))->error();
             return back();
@@ -214,6 +215,12 @@ id: 1
             flash(translate('Something went wrong'))->error();
             return back();
         }
+
+        // 更新为通过
+        $withdrawRequest->status = 1;
+        $withdrawRequest->payment_channel = $request->payment_option ?? '';
+        $withdrawRequest->remarks = $request->remarks;
+        $withdrawRequest->save();
 
         // 清除红点标识
         hdel_plus('new_withdraw_tip', $request->seller_withdraw_request_id);

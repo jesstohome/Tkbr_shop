@@ -40,7 +40,7 @@
                         <option value="">{{translate('All')}}</option>
                         <option value="1"  @if($status == 1) selected @endif >{{translate('Paid')}}</option>
                         <option value="2"  @if($status == 2) selected @endif >{{translate('Refuse')}}</option>
-                        <option value="0"  @if($status == 0) selected @endif >{{translate('Pending')}}</option>
+                        <option value="0"  @if($status != '' && $status == 0) selected @endif >{{translate('Pending')}}</option>
                     </select>
                 </div>
 
@@ -67,6 +67,7 @@
                         <th>{{translate('Type')}}</th>
                         <th data-breakpoints="lg">{{ translate('Withdraw type') }}</th>
                         <th data-breakpoints="lg" width="20%">{{ translate('Message') }}</th>
+                        <th data-breakpoints="lg">{{ translate('Payment Channel') }}</th>
                         <th data-breakpoints="lg">{{ translate('Status') }}</th>
                         <th data-breakpoints="lg">{{ translate('Pass Time') }}</th>
                         <th data-breakpoints="lg" width="15%" class="text-right">{{translate('Options')}}</th>
@@ -119,6 +120,7 @@
                                 <td>
                                     {{ $seller_withdraw_request->message }}
                                 </td>
+                                <td>{{$seller_withdraw_request->payment_channel ?? ''}}</td>
                                 <td>
                                     @if ($seller_withdraw_request->status == 1)
                                     <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>

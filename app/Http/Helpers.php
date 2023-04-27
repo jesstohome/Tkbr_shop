@@ -1405,6 +1405,11 @@ if (!function_exists('scheduled_update_delivery_status')) {
             echo $order->id, ' ', $delivery_status, ' ', $order->delivery_status . PHP_EOL;
             if (!empty($delivery_status) && $order->delivery_status != $delivery_status) {
                 $order->delivery_status = $delivery_status;
+                // 到发货状态时，重置订单的冻结时间
+                if ($delivery_status == 'delivered') {
+                    $freezeDays = get_setting('frozen_funds_unfrozen_days', 15);
+                    $order->freeze_expired_at = \Illuminate\Support\Carbon::now()->addDays($freezeDays)->timestamp;
+                }
                 $order->save();
             }
         }

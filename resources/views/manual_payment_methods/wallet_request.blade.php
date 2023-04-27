@@ -41,6 +41,8 @@
                     <th>#</th>
                     <th>{{translate('Name')}}</th>
                     <th>{{translate('Operator')}}</th>
+                    <th>{{translate('Order Code')}}</th>
+                    <th>{{translate('Order Amount')}}</th>
                     <th>{{translate('Amount')}}</th>
                     <th>{{translate('Method')}}</th>
                     <th>{{translate('TXN ID')}}</th>
@@ -58,6 +60,8 @@
                             <td>{{ ($key+1) }}</td>
                             <td>{{ $wallet->user->name }}</td>
                             <td>{{ $wallet->operator->user_type=='admin'?'admin':$wallet->operator->name }}</td>
+                            <td>{{ $wallet->order->code ?? '' }}</td>
+                            <td>{{ $wallet->order->product_storehouse_total }}</td>
                             <td>{{ $wallet->amount }}</td>
                             <td>{{ $wallet->payment_method }}</td>
                             <td>{{ $wallet->payment_details }}</td>
@@ -135,7 +139,7 @@
                         <label class="col-md-6 col-from-label">{{translate('No Pass')}}</label>
                         <div class="col-md-6">
                             <label class="mb-0">
-                                <input type="radio" name="status" value="0">
+                                <input type="radio" name="status" value="2">
                                 <span></span>
                             </label>
                         </div>
@@ -161,6 +165,7 @@
                 else{
                     AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
                 }
+                location.reload();
             });
         }
 
