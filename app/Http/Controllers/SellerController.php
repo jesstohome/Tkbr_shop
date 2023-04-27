@@ -513,8 +513,14 @@ class SellerController extends Controller
         }
 
         $list = filter_by_bloc($list);
+
+        $list_clone = clone $list;
+        $total = $list_clone->count();
+        $total_seller = $list_clone->groupby("seller_id")->count();
+        $total_amount = $list_clone->sum('amount');
+
         $list = $list->paginate(20);
 
-        return view('backend.sellers.payment_records', compact('list', 'start_date', 'end_date', 'seller_id', 'buyer_id', 'payment_code', 'out_order_no', 'pay_status', 'order_no'));
+        return view('backend.sellers.payment_records', compact('list', 'start_date', 'end_date', 'seller_id', 'buyer_id', 'payment_code', 'out_order_no', 'pay_status', 'order_no', 'total', 'total_seller', 'total_amount'));
     }
 }

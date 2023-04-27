@@ -4,8 +4,8 @@
     <script src='/My97DatePicker/WdatePicker.js'></script>
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <div class="row align-items-center">
-        <div class="col-md-6">
-            <h1 class="h3">{{translate('All Records')}}</h1>
+        <div class="col-md-12">
+            <h1 class="h3">{{translate('All Records')}} ({{translate('Total')}}: {{$total_seller}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}})</h1>
         </div>
         <div class="col text-right"></div>
     </div>
