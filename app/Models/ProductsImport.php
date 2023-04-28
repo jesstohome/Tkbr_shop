@@ -37,6 +37,12 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
         $canImport = true;
         $user = Auth::user();
         if ($canImport) {
+            // 原价比例
+            $original_price_ratio = (float) get_setting('original_price_ratio');
+            if (empty($original_price_ratio) || $original_price_ratio < 0) {
+                $original_price_ratio = 0.6;
+            }
+
             foreach ($rows as $row) {
                 $row = [
                     'name' => $row['产品名称'],
@@ -44,7 +50,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                     'category_id' => $this->getCategoryIdByName($row['分类']),
                     'brand_id' => $this->getBrandIdByName($row['品牌']),
                     'unit' => $row['单元'],
-                    'unit_price' => (float) ($row['原价'] ?? 0) * 0.6,
+                    'unit_price' => (float) ($row['原价'] ?? 0) * $original_price_ratio,
                     'video_link' => '',
                     'video_provider' => '',
                     'meta_title' => $row['产品名称'],

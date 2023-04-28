@@ -138,6 +138,14 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">{{translate('Original Price Ratio')}}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="original_price_ratio">
+                                <input type="number" class="form-control" max="10" min="0.1" step="0.01" value="{{ get_setting('original_price_ratio') }}" name="original_price_ratio" />
+                            </div>
+                        </div>
+
                         <div class="text-right">
     						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
     					</div>
