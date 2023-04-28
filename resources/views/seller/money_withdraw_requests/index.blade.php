@@ -249,8 +249,8 @@
                         <td>
                             @if ($list->approval == 1)
                                 <span class="badge badge-inline badge-success">{{translate('Pass')}}</span>
-                            @elseif ($wallet->approval == 2)
-                                <span class="badge badge-inline badge-success">{{translate('No Pass')}}</span>
+                            @elseif ($list->approval == 2)
+                                <span class="badge badge-inline badge-danger">{{translate('No Pass')}}</span>
                             @else
                                 <span class="badge badge-inline badge-info">{{translate('Unaudited')}}</span>
                             @endif

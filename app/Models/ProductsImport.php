@@ -47,8 +47,8 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                 $row = [
                     'name' => $row['产品名称'],
                     'description' => $row['产品短描述'],
-                    'category_id' => $this->getCategoryIdByName($row['分类']),
-                    'brand_id' => $this->getBrandIdByName($row['品牌']),
+                    'category_id' => is_numeric($row['分类']) ? $row['分类'] : $this->getCategoryIdByName($row['分类']),
+                    'brand_id' => is_numeric($row['品牌']) ? $row['品牌'] : $this->getBrandIdByName($row['品牌']),
                     'unit' => $row['单元'],
                     'unit_price' => (float) ($row['原价'] ?? 0) * $original_price_ratio,
                     'video_link' => '',

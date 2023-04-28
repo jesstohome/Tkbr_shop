@@ -15,8 +15,10 @@
     <form class="" id="sort_sellers" action="" method="GET">
         <div class="card-header row gutters-5">
             @php
-                $users = filter_by_bloc(\App\Models\User::query());
-                $users = $users->get();
+                $customers = filter_by_bloc(\App\Models\User::query()->where("user_type", "customer"));
+                $customers = $customers->get();
+                $sellers = filter_by_bloc(\App\Models\User::query()->where("user_type", "seller"));
+                $sellers = $sellers->get();
             @endphp
 
             <div class="col-md-2">
@@ -43,7 +45,7 @@
             <div class="col-md-2 ml-auto">
                 <select name="buyer_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true">
                     <option value="">{{translate('All Customers')}}</option>
-                    @foreach ($users as $key => $salesman)
+                    @foreach ($customers as $key => $salesman)
                         <option value="{{ $salesman->id }}" @if($buyer_id == $salesman->id) selected @endif data-contact="{{ $salesman->email }}">
                             {{ $salesman->name }} ({{$salesman->email}})
                         </option>
@@ -54,7 +56,7 @@
             <div class="col-md-2 ml-auto">
                 <select name="seller_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true" onchange="sort_sellers()">
                     <option value="">{{translate('All Sellers')}}</option>
-                    @foreach ($users as $key => $salesman)
+                    @foreach ($sellers as $key => $salesman)
                         <option value="{{ $salesman->id }}" @if($seller_id == $salesman->id) selected @endif data-contact="{{ $salesman->email }}">
                             {{ $salesman->name }} ({{$salesman->email}})
                         </option>

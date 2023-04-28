@@ -50,9 +50,6 @@
                                             <td class="p30-15" style="padding: 70px 30px 70px 30px;">
                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                     <tr>
-                                                        <td class="h2 center pb10" style="color:#000000; font-family:'Ubuntu', Arial,sans-serif; font-size:50px; line-height:60px; text-align:center; padding-bottom:10px;">{{ $array['subject'] }}</td>
-                                                    </tr>
-                                                    <tr>
                                                         <td class="h5 center blue pb30" style="font-family:'Ubuntu', Arial,sans-serif; font-size:20px; line-height:26px; text-align:left; color:#2e57ae; padding-bottom:30px;">
                                                             <p style='text-align: left'>Dear {{$array['username']}}</p>
                                                             <p style='text-align: left'>

@@ -41,10 +41,11 @@ class SellerWithdrawRequestController extends Controller
         }
 
         $seller_withdraw_requests = filter_by_bloc($seller_withdraw_requests);
+
         $seller_withdraw_requests_clone = clone $seller_withdraw_requests;
         $total = $seller_withdraw_requests_clone->count();
-        $total_seller = $seller_withdraw_requests_clone->distinct('user_id')->count();
         $total_amount = $seller_withdraw_requests_clone->sum('amount');
+        $total_seller = $seller_withdraw_requests_clone->distinct('user_id')->count();
 
 
         $seller_withdraw_requests = $seller_withdraw_requests->paginate(15);

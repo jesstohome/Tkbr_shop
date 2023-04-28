@@ -516,8 +516,8 @@ class SellerController extends Controller
 
         $list_clone = clone $list;
         $total = $list_clone->count();
-        $total_seller = $list_clone->distinct("seller_id")->count();
         $total_amount = $list_clone->sum('amount');
+        $total_seller = $list_clone->distinct("seller_id")->count();
 
         $list = $list->paginate(20);
 
