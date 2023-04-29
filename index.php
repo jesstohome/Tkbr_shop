@@ -81,7 +81,7 @@ function xhprof_log($start_time, $request) {
         $route = str_replace('/',"_",$request->path());
 
         Log::debug(var_export(['cost_time' => $cost_time], true));
-        if($cost_time > 3 ){
+        if($cost_time > 10 ){
             $xhprof_runs->save_run($xhprof_data, "admin_".$route);
         }
 
