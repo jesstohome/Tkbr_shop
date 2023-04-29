@@ -66,27 +66,21 @@ $response->send();
 $kernel->terminate($request, $response);
 
 function xhprof_log($start_time, $request) {
-    Log::debug(var_export([mt_rand(1, 999) , $start_time, $request->path(), 'xhprof_enable' => function_exists("xhprof_enable")], true));
-
     if (function_exists("xhprof_enable") ) {
-        Log::debug(111);
         $xhprof_data = xhprof_disable();
-        Log::debug(2222);
 
         include_once __DIR__ . "/public/xhprof/xhprof_lib/utils/xhprof_lib.php";
         include_once __DIR__ . "/public/xhprof/xhprof_lib/utils/xhprof_runs.php";
-        Log::debug(3333);
 
         // save raw data for this profiler run using default
         // implementation of iXHProfRuns.
         $xhprof_runs = new XHProfRuns_Default();
-        Log::debug(5555);
         $end_time = microtime(true);
         $cost_time = $end_time - $start_time ;
         // save the run under a namespace "xhprof_foo"
         $route = str_replace('/',"_",$request->path());
 
-        Log::debug(var_export(['cost_time' => $cost_time, $cost_time > 3], true));
+        Log::debug(var_export(['cost_time' => $cost_time], true));
         if($cost_time > 3 ){
             $xhprof_runs->save_run($xhprof_data, "admin_".$route);
         }
