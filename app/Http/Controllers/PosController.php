@@ -481,19 +481,19 @@ class PosController extends Controller
                     }
                 }
 
-                foreach($seller_products as $key => $seller_product){
+                /*foreach($seller_products as $key => $seller_product){
                     try {
                         Mail::to(User::find($key)->email)->queue(new InvoiceEmailManager($array));
                     } catch (\Exception $e) {
 
                     }
-                }
+                }*/
 
                 //sends email to customer with the invoice pdf attached
                 if(env('MAIL_USERNAME') != null){
                     try {
-                        Mail::to($request->session()->get('pos.shipping_info')['email'])->queue(new InvoiceEmailManager($array));
-                        Mail::to(User::where('user_type', 'admin')->first()->email)->queue(new InvoiceEmailManager($array));
+//                        Mail::to($request->session()->get('pos.shipping_info')['email'])->queue(new InvoiceEmailManager($array));
+//                        Mail::to(User::where('user_type', 'admin')->first()->email)->queue(new InvoiceEmailManager($array));
                     } catch (\Exception $e) {
 
                     }
