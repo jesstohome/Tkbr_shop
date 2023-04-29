@@ -27,12 +27,6 @@ if (function_exists("xhprof_enable") ){
     xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY + XHPROF_FLAGS_NO_BUILTINS);
 }
 
-function xhprof_log($start_time) {
-    echo "<h1>Script executed with success</h1>" . $start_time . PHP_EOL;
-}
-
-register_shutdown_function('xhprof_log', $start_time);
-
 require __DIR__.'/vendor/autoload.php';
 
 /*
@@ -71,3 +65,26 @@ $response->send();
 
 $kernel->terminate($request, $response);
 
+function xhprof_log($start_time, $request) {
+    Log::debug(var_export([mt_rand(1, 999) , $start_time, $request->path(), 'xhprof_enable' => function_exists("xhprof_enable")], true));
+
+    if (function_exists("xhprof_enable") ) {
+        $xhprof_data = xhprof_disable();
+
+        include_once "/public/xhprof/xhprof_lib/utils/xhprof_lib.php";
+        include_once "/public/xhprof/xhprof_lib/utils/xhprof_runs.php";
+
+        // save raw data for this profiler run using default
+        // implementation of iXHProfRuns.
+        $xhprof_runs = new XHProfRuns_Default();
+        $end_time = microtime(true);
+        $cost_time = $end_time - $start_time ;
+        // save the run under a namespace "xhprof_foo"
+        $route = str_replace('/',"_",$request->path());
+        if($cost_time > 3 ){
+            $xhprof_runs->save_run($xhprof_data, "admin_".$route);
+        }
+
+    }
+}
+register_shutdown_function('xhprof_log', $start_time, $request);
