@@ -73,8 +73,8 @@ function xhprof_log($start_time, $request) {
         $xhprof_data = xhprof_disable();
         Log::debug(2222);
 
-        include_once "/public/xhprof/xhprof_lib/utils/xhprof_lib.php";
-        include_once "/public/xhprof/xhprof_lib/utils/xhprof_runs.php";
+        include_once __DIR__ . "/public/xhprof/xhprof_lib/utils/xhprof_lib.php";
+        include_once __DIR__ . "/public/xhprof/xhprof_lib/utils/xhprof_runs.php";
         Log::debug(3333);
 
         // save raw data for this profiler run using default
