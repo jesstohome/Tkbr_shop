@@ -81,6 +81,8 @@ function xhprof_log($start_time, $request) {
         $cost_time = $end_time - $start_time ;
         // save the run under a namespace "xhprof_foo"
         $route = str_replace('/',"_",$request->path());
+
+        Log::debug(var_export(['cost_time' => $cost_time, $cost_time > 3], true));
         if($cost_time > 3 ){
             $xhprof_runs->save_run($xhprof_data, "admin_".$route);
         }
