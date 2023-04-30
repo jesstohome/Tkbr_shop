@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Payment;
 
 
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Controller;
 use App\Models\CombinedOrder;
 use App\Models\CustomerPackage;
@@ -11,12 +12,13 @@ use App\Models\Order;
 use App\Models\SellerPackage;
 use App\Models\SellerSpreadPackage;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Session;
 
 class HtPayController extends Controller
 {
 
-    public function pay(\Request $request) {
+    public function pay(Request $request) {
         $pay_memberid = env('HTPAY_MEMBERID');
         $sign_key = env('HTPAY_SECRET');
         $pay_bankcode = env('HTPAY_BANK_CODE', 904);
@@ -49,12 +51,12 @@ class HtPayController extends Controller
 
         $request_arr = [
             "pay_memberid" => $pay_memberid,//商户id 商户后台获取
-            "pay_orderid"  => "1356988",//商户订单号自己生成
+            "pay_orderid"  => $combined_order->id,//商户订单号自己生成
             "pay_amount"   => number_format($amount, 2, '.', ''),//支付金额
             "pay_applydate" => date("Y-m-d H:i:s"),//支付时间
             "pay_bankcode"  => $pay_bankcode,//后台获取
-            "pay_notifyurl" => "",//异步回调地址
-            "pay_callbackurl" => "",//同步回调地址（最后通知以异步回调为准）
+            "pay_notifyurl" => route('htpay.notify'),//异步回调地址
+            "pay_callbackurl" => route('htpay.callback'),//同步回调地址（最后通知以异步回调为准）
         ];
         ksort($request_arr);
         //签名字符串
@@ -71,17 +73,40 @@ class HtPayController extends Controller
         $request_arr['customer_phone'] = $user->mobile ?? ''; //下游用户手机
 
         // https://www.htpayio.com/Pay_Index.html
-        $res = http_post('https://www.htpayio.com/Pay_Index.html', $request_arr);
-        dd($res);
+        try {
+            $res = http_post('https://www.htpayio.com/Pay_Index.html', $request_arr);
+            $res = json_decode($res, true);
+            if (!empty($res['data']['pay_url'])) {
+                return \Redirect::to($res['data']['pay_url']);
+            } else {
+                \Log::warning(var_export(['HtPayResult' => $res], true));
+            }
+
+        }catch (\Exception $ex) {
+            flash(translate('Something was wrong'))->error();
+            \Log::error(var_export(['PayFailed' => $ex->getMessage(), $ex->getTraceAsString()], true));
+            return redirect()->route('home');
+        }
     }
 
     // 页面跳转通知
     public function callback() {
+        $data = $request->post();
+        \Log::info(var_export(['HtPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
 
+        echo 'ok';
     }
 
     // 服务端通知
-    public function notify() {
+    public function notify(\Request $request) {
+        $data = $request->post();
+        \Log::info(var_export(['HtPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
 
+        if ($data['returncode'] === '00' && !empty($data['orderid'])) {
+            if (!empty($data['orderid'])) {
+                $combined_order_id = $request->session()->get('combined_order_id');
+                return (new CheckoutController)->checkout_done($combined_order_id, $data);
+            }
+        }
     }
 }
