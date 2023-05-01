@@ -88,10 +88,9 @@ if (!function_exists('convert_to_kes')) {
 
 //filter products based on vendor activation system
 if (!function_exists('filter_products')) {
-    function filter_products($products)
+    function filter_products($products, $front_page = 1)
     {
-        $user = Auth::user();
-        if (empty($user) || $user->user_type == 'customer') {
+        if ($front_page) {
             $products = $products->where("added_by", '!=', 'admin');
         }
         $verified_sellers = verified_sellers_id();
