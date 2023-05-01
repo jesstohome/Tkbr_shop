@@ -91,7 +91,7 @@ class HtPayController extends Controller
         $request_arr['email'] = $user->email ?: '';
         $request_arr['customer_id'] = $user->id; //下游用户id
         $request_arr['customer_name'] = $user->name; //下游用户姓名
-        $request_arr['customer_phone'] = $user->mobile ?? '15156225306'; //下游用户手机
+        $request_arr['customer_phone'] = '91829732132'; //下游用户手机
         $request_arr['returnType'] = 'json'; //下游用户手机
 
         // https://www.htpayio.com/Pay_Index.html
