@@ -8,6 +8,7 @@ use App\Models\Brand;
 use App\Models\User;
 use App\Models\ProductsImport;
 use App\Models\ProductsExport;
+use Illuminate\Support\Facades\Log;
 use PDF;
 use Excel;
 use Auth;
@@ -65,8 +66,12 @@ class ProductBulkUploadController extends Controller
     public function bulk_upload(Request $request)
     {
         if($request->hasFile('bulk_file')){
-            $import = new ProductsImport;
-            Excel::import($import, request()->file('bulk_file'));
+            try {
+                $import = new ProductsImport;
+                Excel::import($import, request()->file('bulk_file'));
+            } catch (\Exception $exception) {
+                Log::warning(var_export(['bulk_upload Failed:' . $exception->getMessage()], true));
+            }
         }
 
         return back();

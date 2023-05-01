@@ -132,8 +132,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                 }
             },
             '产品名称' => [
-                'required',
-                'string',
+                'required'
             ],
         ];
     }

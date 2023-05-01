@@ -47,6 +47,7 @@ class RowValidator
             $validator->validate();
         } catch (IlluminateValidationException $e) {
             $failures = [];
+            \Log::warning(var_export(['IlluminateValidationException', $e->errors()], true));
             foreach ($e->errors() as $attribute => $messages) {
                 $row           = strtok($attribute, '.');
                 $attributeName = strtok('');
