@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CombinedOrder;
 use App\Models\CustomerPackage;
 use App\Models\Order;
+use App\Models\PaymentStatement;
 use App\Models\SellerPackage;
 use App\Models\SellerSpreadPackage;
 use App\Models\User;
@@ -45,14 +46,34 @@ class HtPayController extends Controller
                 $amount = $seller_package->amount;
             } elseif (Session::get('payment_type') == 'order_pick_up_payment') {
                 $order = Order::find(Session::get('payment_data')['id']);
+                $user = User::find($order->user_id);
                 $amount = $order->product_storehouse_total;
+
+                $paymentStatement = new PaymentStatement();
+                $paymentStatement->bloc_id = $order->bloc_id;
+                $paymentStatement->staff_id = $order->staff_id;
+                $paymentStatement->seller_id = $order->seller_id;
+                $paymentStatement->customer_id = $order->user_id;
+                $paymentStatement->payment_type = 'htpay';
+                $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
+                $paymentStatement->out_order_no = '';
+                $paymentStatement->amount = $amount;
+                $paymentStatement->business_type = 'pick_up';
+                $paymentStatement->target_id = $order->id;
+                $paymentStatement->status = 0;
+                $paymentStatement->save();
+
+                Session::put('payment_statement_id', $paymentStatement->id);
+
             }
         }
 
+
+
         $request_arr = [
             "pay_memberid" => $pay_memberid,//商户id 商户后台获取
-            "pay_orderid"  => $combined_order->id,//商户订单号自己生成
-            "pay_amount"   => number_format($amount, 2, '.', ''),//支付金额
+            "pay_orderid"  => $paymentStatement->order_no,//商户订单号自己生成
+            "pay_amount"   => number_format($amount, 2, '.', '') * 1000,//支付金额
             "pay_applydate" => date("Y-m-d H:i:s"),//支付时间
             "pay_bankcode"  => $pay_bankcode,//后台获取
             "pay_notifyurl" => route('htpay.notify'),//异步回调地址
@@ -70,10 +91,12 @@ class HtPayController extends Controller
         $request_arr['email'] = $user->email ?: '';
         $request_arr['customer_id'] = $user->id; //下游用户id
         $request_arr['customer_name'] = $user->name; //下游用户姓名
-        $request_arr['customer_phone'] = $user->mobile ?? ''; //下游用户手机
+        $request_arr['customer_phone'] = $user->mobile ?? '15156225306'; //下游用户手机
+        $request_arr['returnType'] = 'json'; //下游用户手机
 
         // https://www.htpayio.com/Pay_Index.html
         try {
+            \Log::debug(var_export(['pay_request_arr' => $request_arr], true));
             $res = http_post('https://www.htpayio.com/Pay_Index.html', $request_arr);
             $res = json_decode($res, true);
             if (!empty($res['data']['pay_url'])) {
@@ -92,7 +115,10 @@ class HtPayController extends Controller
     // 页面跳转通知
     public function callback() {
         $data = $request->post();
-        \Log::info(var_export(['HtPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
+        $payment_statement_id = Session::get('payment_statement_id');
+        \Log::info(var_export(['payment_statement_id' => $payment_statement_id, $payment_statement_id, 'HtPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
+
+
 
         echo 'ok';
     }
