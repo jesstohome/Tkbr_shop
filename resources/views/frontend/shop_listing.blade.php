@@ -30,11 +30,12 @@
                                 <div class="col-4">
                                     <a href="{{ route('shop.visit', $shop->slug) }}" class="d-block p-3" tabindex="0">
                                         <img
-                                            src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                                            src="{{ static_asset('assets/img/shop-logo.png') }}"
                                             data-src="{{ uploaded_asset($shop->logo) }}"
                                             alt="{{ $shop->name }}"
                                             class="img-fluid lazyload"
-                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';"
+                                            style="height: 65px !important;"
+                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/shop-logo.png') }}';"
                                         >
                                     </a>
                                 </div>

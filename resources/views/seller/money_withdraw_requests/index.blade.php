@@ -452,8 +452,6 @@
                                      <select name="w_type" class="form-control" id="p">
                                         <option value="1">{{translate('Cash')}}</option>
                                         <option value="2">{{translate('Bank')}}</option>
-                                        <option value="3">{{translate('USDT')}}</option>
-
                                      </select>
                                 </div>
 
@@ -474,7 +472,7 @@
                 @else
                     <div class="modal-body gry-bg px-3 pt-3">
                         <div class="p-5 heading-3 text-center">
-                            <h3>{{ sprintf(translate('The minimum withdrawal amount is %s yuan'), (int) get_setting('minimum_seller_amount_withdraw')) }}</h3>
+                            <h3>{{ sprintf(translate('The minimum withdrawal amount is %s dollar'), (int) get_setting('minimum_seller_amount_withdraw')) }}</h3>
                         </div>
                     </div>
                 @endif

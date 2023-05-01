@@ -106,6 +106,7 @@
                             <th data-breakpoints="lg">{{translate('Approved')}}</th>
                         @endif
                         <th data-breakpoints="lg">{{translate('Featured')}}</th>
+                        <th data-breakpoints="lg">{{translate('Shop')}}</th>
                         @if($type == 'In House')
                             <th data-breakpoints="lg">{{translate('In storehouse')}}</th>
                         @endif
@@ -187,6 +188,11 @@
                                 <span class="slider round"></span>
                             </label>
                         </td>
+                            @if(!empty($product->user->shop->name))
+                                <td>{{$product->user->name}} ({{$product->user->shop->name}})</td>
+                            @else
+                                <td>{{$product->user->name}}</td>
+                            @endif
                         @if($type == 'In House')
                             <td>
                                 <label class="aiz-switch aiz-switch-success mb-0">
