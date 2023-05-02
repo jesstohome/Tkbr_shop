@@ -16,7 +16,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Session;
 
-class HtPayController extends Controller
+class HtpayController extends Controller
 {
 
     public function pay(Request $request) {
