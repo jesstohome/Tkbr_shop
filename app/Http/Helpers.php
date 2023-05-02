@@ -1600,3 +1600,58 @@ if (!function_exists('countDown')) {
         return join(' ', [$day, translate('Day'), $hour, translate('Hours'), $minute, translate("Minutes"), $second, translate('Seconds')]);
     }
 }
+
+if (!function_exists('http_post')) {
+    function http_post($url, $param = [], $json = false, $headers = [], $timeout = 0, $user = '', $pwd = '')
+    {
+        $curl = curl_init();
+        if (stripos($url, "https://") !== false) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        }
+
+        if ($json && is_array($param)) {
+            $param = json_encode($param);
+        }
+
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+        if(!empty($headers)){
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers); //设置请求头
+        }else{
+            curl_setopt($curl, CURLOPT_HEADER, false);
+        }
+
+        curl_setopt($curl, CURLOPT_BINARYTRANSFER, true);
+
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $param);
+        if ($timeout) {
+            curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+        }
+
+        // Basic Auth
+        if (!empty($user) && !empty($pwd)) {
+            curl_setopt($curl, CURLOPT_USERPWD, $user . ':' . $pwd);
+        }
+
+        if ($json) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json; charset=utf-8',
+                    'Content-Length: ' . strlen($param))
+            );
+        }
+
+        $content = curl_exec($curl);
+        $status  = curl_getinfo($curl);
+        $error  = curl_error($curl);
+
+        curl_close($curl);
+        if (intval($status["http_code"]) == 200) {
+            return $content;
+        } else {
+            return false;
+        }
+    }
+}

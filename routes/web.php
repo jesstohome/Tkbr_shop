@@ -20,6 +20,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\Payment\HtPayController;
 use App\Http\Controllers\PurchaseHistoryController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SearchController;
@@ -372,6 +373,8 @@ Route::get('/instamojo/payment/pay-success', [InstamojoController::class, 'succe
 Route::post('rozer/payment/pay-success', [RazorpayController::class, 'payment'])->name('payment.rozer');
 
 Route::get('/paystack/payment/callback', [PaystackController::class, 'handleGatewayCallback']);
+Route::get('/htpay/payment/callback', [HtPayController::class, 'callback'])->name('htpay.callback');
+Route::get('/htpay/payment/notify', [HtPayController::class, 'notify'])->name('htpay.notify');
 
 Route::controller(VoguepayController::class)->group(function () {
     Route::get('/vogue-pay', 'showForm');
