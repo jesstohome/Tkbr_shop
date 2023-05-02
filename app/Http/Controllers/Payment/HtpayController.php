@@ -14,6 +14,7 @@ use App\Models\SellerPackage;
 use App\Models\SellerSpreadPackage;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Session;
 
 class HtpayController extends Controller
@@ -122,17 +123,45 @@ class HtpayController extends Controller
     public function callback() {
         $data = $request->post();
         $payment_statement_id = Session::get('payment_statement_id');
-        \Log::info(var_export(['payment_statement_id' => $payment_statement_id, $payment_statement_id, 'HtPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
+        \Log::info(var_export(['payment_statement_id' => $payment_statement_id, $payment_statement_id, 'HtPayCallbackData' => $data, 'time' => date('Y-m-d H:i:s')], true));
 
-
-
-        echo 'ok';
+        return redirect()->route('home');
     }
 
     // 服务端通知
     public function notify(Request $request) {
         $data = $request->post();
         \Log::info(var_export(['HtPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
+
+        try {
+            if (!empty($data) && $data['returncode'] === '00') {
+                $paymentStatement = PaymentStatement::query()->where('out_order_no', $data['orderid'])->where('payment_type', 'htpay')->first();
+                if ($paymentStatement) {
+                    $paymentStatement->status = 1;
+                    $paymentStatement->save();
+                    if ($paymentStatement->business_type == 'pick_up') {
+                        storehouseProduct_payment_done($paymentStatement->target_id, 'htpay');
+                    } elseif ($paymentStatement->business_type == 'shopping') {
+                        $combined_order_id = $paymentStatement->target_id;
+                        $combined_order = CombinedOrder::findOrFail($combined_order_id);
+
+                        foreach ($combined_order->orders as $key => $order) {
+                            $order = Order::findOrFail($order->id);
+                            $order->payment_status = 'paid';
+                            $order->payment_details = $data;
+                            $order->save();
+
+                            hset_plus("new_order_tip", $order->id, 1, $order->staff_id);
+                            calculateCommissionAffilationClubPoint($order);
+                        }
+
+                        Session::put('combined_order_id', $combined_order_id);
+                    }
+                }
+            }
+        } catch (\Exception $exception) {
+            Log::warning('htpay-notify-exception:' . $exception->getMessage());
+        }
 
         echo 'ok';
     }
