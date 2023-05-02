@@ -32,6 +32,7 @@ class OnlinePaymentController extends Controller
             return (new $decorator)->pay($request);
         }
 
+        \Log::debug(var_export(['decorator' => $decorator, 'Unknown Payment'], true));
         flash(translate('Unknown Payment'))->error();
         return back();
     }
