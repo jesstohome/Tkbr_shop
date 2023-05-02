@@ -216,9 +216,9 @@
                     <hr>
                     <ul class="list-group">
                         @foreach (\App\Models\Category::all() as $key => $category)
-                            @if (count($category->products->where('user_id', Auth::user()->id)) > 0)
-
-                            @endif
+                            <li class="d-flex justify-content-between align-items-center my-2 text-primary fs-13">
+                                {{ $category->getTranslation('name') }}
+                            </li>
                         @endforeach
                     </ul>
                 </div>
