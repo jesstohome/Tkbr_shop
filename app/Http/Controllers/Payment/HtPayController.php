@@ -68,12 +68,16 @@ class HtPayController extends Controller
             }
         }
 
-
+        // 默认1美元对换14670印尼盾
+        $exchange_rate = env('HTPAY_EXCHANGE_RATE', 14670);
+        if ($exchange_rate <= 0) {
+            $exchange_rate = 14670;
+        }
 
         $request_arr = [
             "pay_memberid" => $pay_memberid,//商户id 商户后台获取
             "pay_orderid"  => $paymentStatement->order_no,//商户订单号自己生成
-            "pay_amount"   => number_format($amount, 2, '.', '') * env('HTPAY_EXCHANGE_RATE', 14670),//支付金额
+            "pay_amount"   => number_format($amount, 2, '.', '') * $exchange_rate,//支付金额
             "pay_applydate" => date("Y-m-d H:i:s"),//支付时间
             "pay_bankcode"  => $pay_bankcode,//后台获取
             "pay_notifyurl" => route('htpay.notify'),//异步回调地址
