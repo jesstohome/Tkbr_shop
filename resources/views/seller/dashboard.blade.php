@@ -216,7 +216,9 @@
                     <hr>
                     <ul class="list-group">
                         @foreach (\App\Models\Category::all() as $key => $category)
-                            
+                            @if (count($category->products->where('user_id', Auth::user()->id)) > 0)
+
+                            @endif
                         @endforeach
                     </ul>
                 </div>
