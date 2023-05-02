@@ -130,7 +130,7 @@ class HtpayController extends Controller
     }
 
     // 服务端通知
-    public function notify(\Request $request) {
+    public function notify(Request $request) {
         $data = $request->post();
         \Log::info(var_export(['HtPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
 
