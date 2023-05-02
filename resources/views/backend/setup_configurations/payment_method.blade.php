@@ -6,6 +6,61 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
+                    <h5 class="mb-0 h6 ">{{translate('Htpay Credential')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
+                        <input type="hidden" name="payment_method" value="htpay">
+                        @csrf
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="HTPAY_MEMBERID">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Htpay Member Id')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="HTPAY_MEMBERID" value="{{  env('HTPAY_MEMBERID') }}" placeholder="{{ translate('HTPAY MEMBERID') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="HTPAY_BANK_CODE">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Htpay Channel Code')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="HTPAY_BANK_CODE" value="{{  env('HTPAY_BANK_CODE') }}" placeholder="{{ translate('Htpay Channel Code') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="HTPAY_SECRET">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Htpay Secret')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="HTPAY_SECRET" value="{{  env('HTPAY_SECRET') }}" placeholder="{{ translate('Htpay Secret') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="HTPAY_EXCHANGE_RATE">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Htpay exchange rate')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="HTPAY_EXCHANGE_RATE" value="{{  env('HTPAY_EXCHANGE_RATE') }}" placeholder="{{ translate('Htpay exchange rate') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
                     <h5 class="mb-0 h6 ">{{translate('Paypal Credential')}}</h5>
                 </div>
                 <div class="card-body">
@@ -127,7 +182,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group mb-0 text-right">
                             <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
                         </div>
