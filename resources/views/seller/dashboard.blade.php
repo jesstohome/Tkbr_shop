@@ -216,9 +216,14 @@
                     <hr>
                     <ul class="list-group">
                         @foreach (\App\Models\Category::query()->where("parent_id", 0)->get() as $key => $category)
-                            <li class="d-flex justify-content-between align-items-center my-2 text-primary fs-13">
-                                {{ $category->getTranslation('name') }}
-                            </li>
+                            @if (count($category->products->where('user_id', Auth::user()->id)) > 0)
+                                <li class="d-flex justify-content-between align-items-center my-2 text-primary fs-13">
+                                    {{ $category->getTranslation('name') }}
+                                    <span class="">
+                                        {{ count($category->products->where('user_id', Auth::user()->id)) }}
+                                    </span>
+                                </li>
+                            @endif
                         @endforeach
                     </ul>
                 </div>
