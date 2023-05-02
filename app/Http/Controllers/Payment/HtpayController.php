@@ -134,11 +134,6 @@ class HtpayController extends Controller
         $data = $request->post();
         \Log::info(var_export(['HtPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
 
-        if ($data['returncode'] === '00' && !empty($data['orderid'])) {
-            if (!empty($data['orderid'])) {
-                $combined_order_id = $request->session()->get('combined_order_id');
-                return (new CheckoutController)->checkout_done($combined_order_id, $data);
-            }
-        }
+        echo 'ok';
     }
 }

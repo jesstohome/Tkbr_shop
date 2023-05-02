@@ -374,7 +374,7 @@ Route::post('rozer/payment/pay-success', [RazorpayController::class, 'payment'])
 
 Route::get('/paystack/payment/callback', [PaystackController::class, 'handleGatewayCallback']);
 Route::get('/htpay/payment/callback', [HtPayController::class, 'callback'])->name('htpay.callback');
-Route::get('/htpay/payment/notify', [HtPayController::class, 'notify'])->name('htpay.notify');
+Route::post('/htpay/payment/notify', [HtPayController::class, 'notify'])->name('htpay.notify');
 
 Route::controller(VoguepayController::class)->group(function () {
     Route::get('/vogue-pay', 'showForm');
