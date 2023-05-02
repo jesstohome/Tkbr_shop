@@ -2,9 +2,12 @@
 
 namespace App\Console;
 
+use App\Mail\EmailManager;
+use App\Models\EmailTask;
 use App\Models\Order;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -53,7 +56,23 @@ class Kernel extends ConsoleKernel
                     }
                 });
 
-            var_dump($ok1, $ok3);
+            // 定制发送邮件
+            EmailTask::query()->where('status', 0)->chunk(100, function ($tasks) {
+                \Log::debug('定时发送邮件 ' . count($tasks));
+                foreach ($tasks as $task) {
+                    try {
+                        $array = json_decode($task['array'], true);
+                        \Mail::to($task->email)->queue(new EmailManager($array));
+
+                        $task->status = 1;
+                        $task->save();
+                    } catch (\Exception $e) {
+                        Log::debug(var_export(['email_task_id' => $task->id, $e->getMessage()], true));
+                        $task->status = 2;
+                        $task->save();
+                    }
+                }
+            });
         })->everyMinute();
     }
 

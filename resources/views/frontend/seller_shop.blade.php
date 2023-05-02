@@ -138,11 +138,13 @@
                 <div class="row">
                     <div class="col">
                         <div class="aiz-carousel gutters-10" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-autoplay='true' data-infinute="true" data-dots="true">
+                            @if($shop->user)
                             @foreach ($shop->user->products->where('published', 1)->where('approved', 1)->where('seller_featured', 1) as $key => $product)
                                 <div class="carousel-box">
                                     @include('frontend.partials.product_box_1',['product' => $product])
                                 </div>
                             @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -57,6 +57,7 @@
             <div class="px-2 py-1 text-uppercase fs-10 text-right text-muted bg-soft-secondary">{{translate('Shops')}}</div>
             <ul class="list-group list-group-raw">
                 @foreach ($shops as $key => $shop)
+                    @if(!$shop->user) @continue @endif
                     <li class="list-group-item">
                         <a class="text-reset" href="{{ route('shop.visit', $shop->slug) }}">
                             <div class="d-flex search-product align-items-center">

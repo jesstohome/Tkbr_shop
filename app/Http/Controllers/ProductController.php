@@ -619,11 +619,16 @@ class ProductController extends Controller
             $sort_type = $request->type;
         }
 
+        $category_id = $request->get('category_id');
+        if (!empty($category_id)) {
+            $products = $products->where('category_id', $category_id);
+        }
+
         $products = filter_by_bloc($products);
         $products = $products->paginate(100);
         $type = 'All';
 
-        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search'));
+        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'category_id', 'sort_search'));
     }
 
 

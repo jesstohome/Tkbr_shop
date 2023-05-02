@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EmailManager;
+use App\Models\EmailTask;
 use App\Models\PaymentRecord;
 use App\Models\ShopManage;
 use Auth;
@@ -19,6 +21,7 @@ use App\Models\SellerPackagePayment;
 use App\Models\SellerPackage;
 use App\Notifications\EmailVerificationNotification;
 use Cache;
+use Illuminate\Support\Facades\Log;
 use function compact;
 use function dd;
 use function view;
@@ -342,6 +345,7 @@ class SellerController extends Controller
         if ($shop->save()) {
             Cache::forget('verified_sellers_id');
             flash(translate('Seller has been approved successfully'))->success();
+
             return redirect()->route('sellers.index');
         }
         flash(translate('Something went wrong'))->error();
@@ -384,6 +388,20 @@ class SellerController extends Controller
         if ($shop->save()) {
             hdel_plus('new_shop_created_tip', $shop->id);
             Cache::forget('verified_sellers_id');
+
+            if ($request->status) {
+                $array['view'] = 'emails.approve_seller';
+                $array['subject'] = 'Shop Approve Notice';
+                $array['from'] = env('MAIL_FROM_ADDRESS');
+                $array['content'] = '';
+                $array['seller_name'] = $shop->user->name;
+
+                $task = new EmailTask();
+                $task->email = $shop->user->email;
+                $task->array = json_encode($array, JSON_UNESCAPED_UNICODE);
+                $task->save();
+            }
+
             return 1;
         }
         return 0;

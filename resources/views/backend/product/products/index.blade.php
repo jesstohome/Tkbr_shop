@@ -51,6 +51,18 @@
                 </select>
             </div>
             @endif
+
+            <div class="col-md-2 ml-auto">
+                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="category_id" name="category_id" onchange="sort_products()">
+                    <option value="">{{ translate('Categories') }}</option>
+                    @foreach (App\Models\Category::all() as $key => $category)
+                        <option value="{{ $category->id }}" @if ($category->id == $category_id) selected @endif>
+                            {{ $category->getTranslation('name') }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
             @if($type == 'All')
             <div class="col-md-2 ml-auto">
                 <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id" onchange="sort_products()">
@@ -95,7 +107,8 @@
                         </th>
                         <!--<th data-breakpoints="lg">#</th>-->
                         <th>{{translate('Name')}}</th>
-                        @if($type == 'Seller' || $type == 'All')
+                        <th data-breakpoints="lg">{{translate('Category')}}</th>
+                    @if($type == 'Seller' || $type == 'All')
                             <th data-breakpoints="lg">{{translate('Added By')}}</th>
                         @endif
                         <th data-breakpoints="sm">{{translate('Info')}}</th>
@@ -135,6 +148,7 @@
                                 </div>
                             </div>
                         </td>
+                            <td>{{$product->category ? $product->category->getTranslation('name') : ''}}</td>
                         @if($type == 'Seller' || $type == 'All')
                             <td>{{ $product->user->name }}</td>
                         @endif
