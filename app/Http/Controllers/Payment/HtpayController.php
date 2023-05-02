@@ -100,10 +100,12 @@ class HtpayController extends Controller
 
         // https://www.htpayio.com/Pay_Index.html
         try {
-            \Log::debug(var_export(['pay_request_arr' => $request_arr], true));
             $res = http_post('https://www.htpayio.com/Pay_Index.html', $request_arr);
+            \Log::debug(var_export(['pay_request_arr' => $request_arr, 'res' => $res], true));
             $res = json_decode($res, true);
             if (!empty($res['data']['pay_url'])) {
+                $paymentStatement->out_order_no = $res['data']['order_id'];
+                $paymentStatement->save();
                 return \Redirect::to($res['data']['pay_url']);
             } else {
                 \Log::warning(var_export(['HtPayResult' => $res], true));
