@@ -53,7 +53,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="invite_code">{{translate('My Invite code')}}</label>
                         <div class="col-sm-9">
-                            <input type="text" id="invite_code" value="{{ Auth::user()->staff->invite_code }}" class="form-control" readonly required>
+                            <input type="text" id="invite_code" value="{{ Auth::user()->staffInfo->invite_code }}" class="form-control" readonly required>
                         </div>
                     </div>
 

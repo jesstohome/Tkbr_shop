@@ -546,7 +546,7 @@ class ProductController extends Controller
         }
 
         $products = filter_by_bloc($products);
-        $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(15);
+        $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(100);
 
         return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'sort_search'));
     }
@@ -583,7 +583,7 @@ class ProductController extends Controller
         }
 
         $products = filter_by_bloc($products);
-        $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(15);
+        $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(100);
         $type = 'Seller';
 
         return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search'));
@@ -620,7 +620,7 @@ class ProductController extends Controller
         }
 
         $products = filter_by_bloc($products);
-        $products = $products->paginate(15);
+        $products = $products->paginate(100);
         $type = 'All';
 
         return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search'));

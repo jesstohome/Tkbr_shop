@@ -186,17 +186,12 @@
                         </div>
                     </div>
                 </div>
-            </section>   
+            </section>
         @endif
     </div>
 
     {{-- Featured Section --}}
     <div id="section_featured">
-    </div>
-
-    {{-- Best Selling  --}}
-    <div id="section_best_selling">
-
     </div>
 
     <!-- Auction Product -->
@@ -410,10 +405,10 @@
                 $('#section_featured').html(data);
                 AIZ.plugins.slickCarousel();
             });
-            $.post('{{ route('home.section.best_selling') }}', {_token:'{{ csrf_token() }}'}, function(data){
+            /*$.post('{{ route('home.section.best_selling') }}', {_token:'{{ csrf_token() }}'}, function(data){
                 $('#section_best_selling').html(data);
                 AIZ.plugins.slickCarousel();
-            });
+            });*/
             $.post('{{ route('home.section.auction_products') }}', {_token:'{{ csrf_token() }}'}, function(data){
                 $('#auction_products').html(data);
                 AIZ.plugins.slickCarousel();
