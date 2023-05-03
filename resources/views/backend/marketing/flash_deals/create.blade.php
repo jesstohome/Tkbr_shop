@@ -59,7 +59,7 @@
                         <label class="col-sm-3 control-label" for="products">{{translate('Products')}}</label>
                         <div class="col-sm-9">
                             <select name="products[]" id="products" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Products') }}" data-live-search="true" data-selected-text-format="count">
-                                @foreach(\App\Models\Product::orderBy('created_at', 'desc')->get() as $product)
+                                @foreach(\App\Models\Product::orderBy('created_at', 'desc')->select("id")->limit(100)->get() as $product)
                                     <option value="{{$product->id}}">{{ $product->getTranslation('name') }}</option>
                                 @endforeach
                             </select>
@@ -70,7 +70,7 @@
                         {{ translate('If any product has discount or exists in another flash deal, the discount will be replaced by this discount & time limit.') }}
                     </div>
                     <br>
-                    
+
                     <div class="form-group" id="discount_table">
 
                     </div>
