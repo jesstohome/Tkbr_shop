@@ -7,6 +7,7 @@ use App\Models\EmailTask;
 use App\Models\Order;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
@@ -73,6 +74,13 @@ class Kernel extends ConsoleKernel
                     }
                 }
             });
+
+            // 触发翻译
+            if (\Redis::get('trigger_translate')) {
+                echo '触发翻译' . PHP_EOL;
+                \Redis::del('trigger_translate');
+                Artisan::call("translate:run");
+            }
         })->everyMinute();
     }
 

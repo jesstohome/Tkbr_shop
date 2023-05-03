@@ -1,6 +1,7 @@
 <?php
 
 ini_set('serialize_precision', -1);
+ini_set('memory_limit', -1);
 
 /**
  * Laravel - A PHP Framework For Web Artisans

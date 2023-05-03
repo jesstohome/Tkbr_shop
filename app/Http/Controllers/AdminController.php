@@ -8,6 +8,8 @@ use App\Models\Product;
 use Artisan;
 use Cache;
 use CoreComponentRepository;
+use Illuminate\Support\Facades\Redis;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class AdminController extends Controller
 {
@@ -51,6 +53,9 @@ class AdminController extends Controller
 
     function clearCache(Request $request)
     {
+        // 触发一次翻译
+        Redis::set('trigger_translate', 1);
+
         Artisan::call('cache:clear');
         flash(translate('Cache cleared successfully'))->success();
         return back();
