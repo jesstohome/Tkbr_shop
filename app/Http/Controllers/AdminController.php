@@ -28,7 +28,7 @@ class AdminController extends Controller
                 $category_ids = \App\Utility\CategoryUtility::children_ids($category->id);
                 $category_ids[] = $category->id;
 
-                $products = Product::with('stocks')->whereIn('category_id', $category_ids)->select(["num_of_sale", "qty"])->get();
+                $products = Product::with('stocks')->whereIn('category_id', $category_ids)->select(["num_of_sale"])->get();
                 $qty = 0;
                 $sale = 0;
                 foreach ($products as $key => $product) {
