@@ -377,7 +377,7 @@
                 @else
                     <div class="modal-body gry-bg px-3 pt-3">
                         <div class="p-5 heading-3">
-                            {{ sprintf(translate('The minimum withdrawal amount is %s yuan'), (int) get_setting('minimum_seller_amount_withdraw')) }}
+                            {{ sprintf(translate('The minimum withdrawal amount is %s dollar'), (int) get_setting('minimum_seller_amount_withdraw')) }}
                         </div>
                     </div>
                 @endif

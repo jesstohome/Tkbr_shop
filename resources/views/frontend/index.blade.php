@@ -303,11 +303,6 @@
     </div>
     @endif
 
-    {{-- Best Seller --}}
-    <div id="section_best_sellers">
-
-    </div>
-
     {{-- Top 10 categories and Brands --}}
     @if (get_setting('top10_categories') != null && get_setting('top10_brands') != null)
     <section class="mb-4">
@@ -415,10 +410,6 @@
             });
             $.post('{{ route('home.section.home_categories') }}', {_token:'{{ csrf_token() }}'}, function(data){
                 $('#section_home_categories').html(data);
-                AIZ.plugins.slickCarousel();
-            });
-            $.post('{{ route('home.section.best_sellers') }}', {_token:'{{ csrf_token() }}'}, function(data){
-                $('#section_best_sellers').html(data);
                 AIZ.plugins.slickCarousel();
             });
         });
