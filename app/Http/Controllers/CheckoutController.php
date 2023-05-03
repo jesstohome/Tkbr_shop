@@ -110,6 +110,11 @@ class CheckoutController extends Controller
 
     public function get_shipping_info(Request $request)
     {
+        $user = Auth::user();
+        if (empty($user->bloc_id) || empty($user->staff_id)) {
+            flash(translate('You can not shopping'))->warning();
+            return back();
+        }
         $carts = Cart::where('user_id', Auth::user()->id)->get();
 //        if (Session::has('cart') && count(Session::get('cart')) > 0) {
         if ($carts && count($carts) > 0) {
