@@ -14,8 +14,9 @@ use App\Models\User;
 use App\Services\ProductStockService;
 use App\Services\ProductTaxService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
-class ShopInit extends Command
+class ProductInit extends Command
 {
     protected $productTaxService;
     protected $productStockService;
@@ -25,7 +26,7 @@ class ShopInit extends Command
      *
      * @var string
      */
-    protected $signature = 'shop:init {num?}';
+    protected $signature = 'product:init';
 
     /**
      * The console command description.
@@ -53,14 +54,7 @@ class ShopInit extends Command
      */
     public function handle()
     {
-        $this->info('start init shop......');
-
-        $num = 3;
-        if (!empty($this->argument('num')) and is_numeric($this->argument('num'))) {
-            $num = $this->argument('num');
-        }
-
-        echo "num=" . $num . PHP_EOL;
+        $this->info('start init products......');
 
         $comments = [
             "I accidentally came to your shop and found the baby I wanted, I am in a good mood!	",
@@ -240,7 +234,6 @@ class ShopInit extends Command
         ];
 
         $package = SellerPackage::where(['is_default' => 1 ])->first();
-        $package_id = $package['id'];
 
         $bloc_id = 0;
         $staff_id = 0;
@@ -253,57 +246,41 @@ class ShopInit extends Command
             ->pluck('original_id')
             ->toArray();
 
-        $productIds = Product::query()->where('in_storehouse', 1)->whereNotIn('id', $alreadyCopyIds)->pluck('id')->toArray();
-        echo "可用产品数量:" . count($productIds) . PHP_EOL;
-        $pb = $this->output->createProgressBar($num);
-        for ($i = 0; $i < $num; $i++) {
-//            echo "生成店铺-" . $i . PHP_EOL;
-            // 生成店铺
-            $faker = \Faker\Factory::create();
-            $user = new User();
-            $user->name = $faker->name;
-            $user->is_virtual_user = 1;
-            $user->bloc_id = $bloc_id;
-            $user->staff_id = $staff_id;
-            //$user->password = bcrypt('test');
-            $user->email = $faker->email;
-            $user->email_verified_at = \date('Y-m-d H:i:s');
-            $user->balance = 0;
-            $user->user_type = "seller";
-            $user->creditscore = "60";
-            $user->saveOrFail();
-//            echo 'user_id=' . $user->id . PHP_EOL;
-            if ( Shop::where('user_id', $user->id)->first() == NULL ) {
-                $shop = new Shop;
-                $shop->bloc_id = $bloc_id;
-                $shop->staff_id = $staff_id;
-                $shop->user_id = $user->id;
-                $shop->name = $user->name . " Shop";
-                $shop->address = '';
-                $shop->slug = preg_replace('/\s+/', '-', $user->name);
-                $shop->seller_package_id = $package_id;
-                $shop->verification_status = 1;
-                $shop->save();
-
-                $seller_package = new SellerPackagePayment;
-                $seller_package->user_id = $user->id;
-                $seller_package->seller_package_id =  $package_id;
-                $seller_package->payment_method = 'free';
-                $seller_package->payment_details = '';
-                $seller_package->approval = 1;
-                $seller_package->offline_payment = 0;
-                $seller_package->save();
+        $shops = Shop::query()->where('created_at', '>=', '2023-05-03 11:30:00')->get();
+        $products = Product::query()->where('in_storehouse', 1)->whereNotIn('id', $alreadyCopyIds)->select(['id', 'category_id'])->get()->toArray();
+        $categoriesProductIds = [];
+        foreach ($products as $product) {
+            if (!isset($categoriesProductIds[$product['category_id']])) {
+                $categoriesProductIds[$product['category_id']] = [];
             }
-            continue;
+            $categoriesProductIds[$product['category_id']][] = $product['id'];
+        }
 
-            $offset = empty($limit) ? 0 : $limit;
+        $pb = $this->output->createProgressBar(count($shops));
+        foreach ($shops as $shop) {
+            $randCategoryId = array_rand($categoriesProductIds, 1);
+            // 生成店铺
+            $user = $shop->user;
             $limit = mt_rand(20, 40);
-            $partProductIds = array_slice($productIds, $offset, $limit);
+            $partProductIds = [];
+            for ($i  = 0; $i < $limit; $i++) {
+                $partProductIds[] = array_pop($categoriesProductIds[$randCategoryId]);
+            }
+            echo 'LIMIT=' . $limit . ':' . count($partProductIds) . PHP_EOL;
+
+            // 不够20个产品的，直接去掉这个分类
+            if (count($categoriesProductIds[$randCategoryId]) < 20) {
+                unset($categoriesProductIds[$randCategoryId]);
+            }
 
             // 上传产品
             $maxProfit = $package->max_profit / 100;
             foreach ($partProductIds as $productId) {
                 $product = Product::find($productId);
+                if (empty($product)) {
+                    echo $productId . "不存在产品" . PHP_EOL;
+                    continue;
+                }
                 $profitPrice = $product->unit_price * $maxProfit;
 
                 $product_new = $product->replicate();

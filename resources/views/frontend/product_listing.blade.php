@@ -100,7 +100,7 @@
                                         <div class="aiz-range-slider">
                                             <div
                                                 id="input-slider-range"
-                                                data-range-value-min="@if(\App\Models\Product::count() < 1) 0 @else {{ \App\Models\Product::min('unit_price') }} @endif"
+                                                data-range-value-min="0"
                                                 data-range-value-max="@if(\App\Models\Product::count() < 1) 0 @else {{ \App\Models\Product::max('unit_price') }} @endif"
                                             ></div>
 

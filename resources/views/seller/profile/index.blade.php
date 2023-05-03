@@ -132,7 +132,7 @@
                         @enderror
                     </div>
                 </div>
-                
+
             </div>
         </div>
 
@@ -210,37 +210,39 @@
     </div>
 
     <!-- Change Email -->
-    <form action="{{ route('user.change.email') }}" method="POST">
-        @csrf
-        <div class="card">
-          <div class="card-header">
-              <h5 class="mb-0 h6">{{ translate('Change your email')}}</h5>
-          </div>
-          <div class="card-body">
-              <div class="row">
-                  <div class="col-md-2">
-                      <label>{{ translate('Your Email') }}</label>
-                  </div>
-                  <div class="col-md-10">
-                      <div class="input-group mb-3">
-                        <input type="email" class="form-control" placeholder="{{ translate('Your Email')}}" name="email" value="{{ $user->email }}" />
-                        <div class="input-group-append">
-                           <button type="button" class="btn btn-outline-secondary new-email-verification">
+    @if(false)
+        <form action="{{ route('user.change.email') }}" method="POST">
+            @csrf
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0 h6">{{ translate('Change your email')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label>{{ translate('Your Email') }}</label>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="input-group mb-3">
+                                <input type="email" class="form-control" placeholder="{{ translate('Your Email')}}" name="email" value="{{ $user->email }}" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary new-email-verification">
                                <span class="d-none loading">
                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>{{ translate('Sending Email...') }}
                                </span>
-                               <span class="default">{{ translate('Verify') }}</span>
-                           </button>
+                                        <span class="default">{{ translate('Verify') }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group mb-0 text-right">
+                                <button type="submit" class="btn btn-primary">{{translate('Update Email')}}</button>
+                            </div>
                         </div>
-                      </div>
-                      <div class="form-group mb-0 text-right">
-                          <button type="submit" class="btn btn-primary">{{translate('Update Email')}}</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-        </div>
-    </form>
+                    </div>
+                </div>
+            </div>
+        </form>
+    @endif
 
 @endsection
 

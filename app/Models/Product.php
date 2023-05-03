@@ -39,6 +39,10 @@ class Product extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function origin() {
+        return $this->belongsTo(Product::class, 'original_id');
+    }
+
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);

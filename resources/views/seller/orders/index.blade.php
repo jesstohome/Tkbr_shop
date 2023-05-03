@@ -88,6 +88,7 @@
                             <th data-breakpoints="lg">{{ translate('Order Type') }}</th>
                             <th data-breakpoints="lg">{{ translate('Num. of Products')}}</th>
                             <th data-breakpoints="lg">{{ translate('Customer')}}</th>
+                            <th data-breakpoints="md">{{ translate('Pick Up Price')}}</th>
                             <th data-breakpoints="md">{{ translate('Amount')}}</th>
                             <th data-breakpoints="md">{{ translate('Profit')}}</th>
                             <th>{{ translate('Pick Up Status') }}</th>
@@ -127,6 +128,9 @@
                                         @else
                                             {{ translate('Guest') }} ({{ $order->guest_id }})
                                         @endif
+                                    </td>
+                                    <td>
+                                        {{ single_price($order->product_storehouse_total) }}
                                     </td>
                                     <td>
                                         {{ single_price($order->grand_total) }}

@@ -438,7 +438,6 @@
                                  <div class="col-md-9">
                                      <select name="type" class="form-control">
                                          <option value="1">{{translate('User Balance')}}</option>
-                                         <option value="2">{{translate('guarantee')}}</option>
                                      </select>
                                 </div>
 
@@ -450,7 +449,6 @@
                                 </div>
                                  <div class="col-md-9">
                                      <select name="w_type" class="form-control" id="p">
-                                        <option value="1">{{translate('Cash')}}</option>
                                         <option value="2">{{translate('Bank')}}</option>
                                      </select>
                                 </div>

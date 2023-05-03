@@ -61,13 +61,14 @@
                         <th width="30%">{{ translate('Name')}}</th>
                         <th data-breakpoints="md">{{ translate('Category')}}</th>
                         <th data-breakpoints="md">{{ translate('Current Qty')}}</th>
+                        <th>{{ translate('Pick Up Price')}}</th>
                         <th>{{ translate('Base Price')}}</th>
+                        <th>{{ translate('Profit')}}</th>
                         @if(get_setting('product_approve_by_admin') == 1)
                             <th data-breakpoints="md">{{ translate('Approval')}}</th>
                         @endif
                         <th data-breakpoints="md">{{ translate('Published')}}</th>
                         <th data-breakpoints="md">{{ translate('Featured')}}</th>
-                        <th data-breakpoints="md">直通车推广</th>
                         <th data-breakpoints="md" class="text-right">{{ translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -105,7 +106,9 @@
                                     echo $qty;
                                 @endphp
                             </td>
+                            <td>{{ $product->origin->unit_price }}</td>
                             <td>{{ $product->unit_price }}</td>
+                            <td>{{ $product->unit_price - $product->origin->unit_price }}</td>
                             @if(get_setting('product_approve_by_admin') == 1)
                                 <td>
                                     @if ($product->approved == 1)
@@ -124,26 +127,6 @@
                             <td>
                                 <label class="aiz-switch aiz-switch-success mb-0">
                                     <input onchange="update_featured(this)" value="{{ $product->id }}" type="checkbox" <?php if($product->seller_featured == 1) echo "checked";?> >
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            <td>
-                                <label class="aiz-switch aiz-switch-success mb-0">
-                                    @if ( count($seller_spread_packages_payments)==0)
-                                        @if($product->seller_spread_package_payment->expire_at > time())
-                                            <input type="checkbox" checked readonly disabled >
-                                        @else
-                                            <input onchange="toJump()" type="checkbox" >
-                                        @endif
-                                    @else
-                                        @if($product->seller_spread_package_payment->expire_at > time())
-                                            <input type="checkbox" checked readonly disabled >
-                                        @else
-                                            <input onchange="select_spread_package({{ $product->id }})" type="checkbox">
-                                        @endif
-                                    @endif
-
-
                                     <span class="slider round"></span>
                                 </label>
                             </td>

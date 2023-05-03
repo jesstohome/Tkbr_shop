@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EmailTask;
 use App\Utility\PayfastUtility;
 use Illuminate\Http\Request;
 use App\Models\Category;
@@ -86,6 +87,18 @@ class CheckoutController extends Controller
             $order->payment_status = 'paid';
             $order->payment_details = $payment;
             $order->save();
+
+            // 邮件通知
+            $array['view'] = 'emails.new_order';
+            $array['subject'] = 'New Order Notice';
+            $array['from'] = env('MAIL_FROM_ADDRESS');
+            $array['content'] = '';
+            $array['seller_name'] = $shop->user->name;
+
+            $task = new EmailTask();
+            $task->email = empty($order->shop->user) ? '' : $order->shop->user->email;
+            $task->array = json_encode($array, JSON_UNESCAPED_UNICODE);
+            $task->save();
 
             hset_plus("new_order_tip", $order->id, 1, $order->staff_id);
             calculateCommissionAffilationClubPoint($order);
