@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Requests\SellerProfileRequest;
+use App\Models\Shop;
 use App\Models\User;
 use Auth;
 use Hash;
@@ -18,7 +19,9 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $addresses = $user->addresses;
-        return view('seller.profile.index', compact('user','addresses'));
+
+        $e_wallet_names = ['OVO', 'DANA', 'GOPAY', 'SHOPEEPAY', 'LINKAJA'];
+        return view('seller.profile.index', compact('user','addresses', 'e_wallet_names'));
     }
     /**
      * Update the specified resource in storage.
@@ -48,6 +51,24 @@ class ProfileController extends Controller
 
 
         if($shop){
+            // 检测是否已被其他账号绑定
+            if (!empty($request->bank_acc_no)) {
+                $hasOther = Shop::query()->where("bank_acc_no", $request->bank_acc_no)
+                    ->where("id", "!=", $shop->id)->count();
+                if ($hasOther) {
+                    flash(translate('This account has already been bound. Please bind to another account!'))->error();
+                    return back();
+                }
+            }
+            if (!empty($request->e_wallet_address)) {
+                $hasOther = Shop::query()->where("e_wallet_address", $request->e_wallet_address)
+                    ->where("id", "!=", $shop->id)->count();
+                if ($hasOther) {
+                    flash(translate('This account has already been bound. Please bind to another account!'))->error();
+                    return back();
+                }
+            }
+
             $shop->cash_on_delivery_status = $request->cash_on_delivery_status;
             $shop->bank_payment_status = $request->bank_payment_status;
             $shop->bank_name = $request->bank_name;
@@ -57,6 +78,9 @@ class ProfileController extends Controller
             $shop->usdt_address = $request->usdt_address;
             $shop->usdt_payment_status = $request->usdt_payment_status;
             $shop->usdt_type = $request->usdt_type;
+            $shop->e_wallet = $request->e_wallet;
+            $shop->e_wallet_name = $request->e_wallet_name;
+            $shop->e_wallet_address = $request->e_wallet_address;
 //            $shop->online_ervice = $request->online_ervice;
             $shop->save();
         }

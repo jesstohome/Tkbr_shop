@@ -127,12 +127,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::post('/profile/update/{id}', 'update')->name('profile.update');
     });
 
-    Route::controller(ProfileController::class)->group(function () {
-        Route::get('/profile', 'index')->name('profile.index');
-
-        Route::post('/profile/update/{id}', 'update')->name('profile.update');
-    });
-
     // Address
     Route::resource('addresses', AddressController::class);
     Route::controller(AddressController::class)->group(function () {

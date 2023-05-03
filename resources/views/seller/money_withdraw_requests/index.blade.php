@@ -448,18 +448,19 @@
                                     <label>{{ translate('Withdraw Type')}}</label>
                                 </div>
                                  <div class="col-md-9">
-                                     <select name="w_type" class="form-control" id="p">
+                                     <select name="w_type" class="form-control" id="p" onchange="changedWType()">
                                         <option value="2">{{translate('Bank')}}</option>
+                                        <option value="5">{{translate('e-Wallet')}}</option>
                                      </select>
                                 </div>
 
                                 </div>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label>{{ translate('Message')}}</label>
+                                    <label>{{ translate('Display Information')}}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <textarea name="message" rows="8" class="form-control mb-3"></textarea>
+                                    <textarea name="message" rows="8" class="form-control mb-3" readonly>{{$shop->bank_name}} {{$shop->bank_acc_name}} {{$shop->bank_acc_no}} {{$shop->bank_routing_no}}</textarea>
                                 </div>
                             </div>
                             <div class="form-group text-right">
@@ -505,22 +506,39 @@
             });
         }
         $("#p").change(function(){
+            var e_wallet_status = {{$shop->e_wallet}}
             var usdt_status = {{$shop->usdt_payment_status}}
             var bank_payment_status = {{$shop->bank_payment_status}}
             var cash_on_delivery_status = {{$shop->cash_on_delivery_status}}
             var type = $(this).val();
+            if (type == 5 && e_wallet_status == 0) {
+                window.location.href = "/seller/profile#e-wallet"
+                $(".btn").attr("disabled")
+                return;
+            }
             if (type == 3 && usdt_status == 0) {
                 window.location.href = "/seller/profile#usdt"
                 $(".btn").attr("disabled")
+                return;
             }
             if (type == 2 && bank_payment_status == 0) {
                 window.location.href = "/seller/profile#bank"
                  $(".btn").attr("disabled")
+                return;
             }
             if (type == 1 && cash_on_delivery_status == 0) {
                 window.location.href = "/seller/profile#cash"
                  $(".btn").attr("disabled")
+                return;
             }
+
+            var message = '';
+            if (type == 5) {
+                message = "{{$shop->e_wallet_name}} {{$shop->e_wallet_address}}"
+            } else if (type == 2) {
+                message = "{{$shop->bank_name}} {{$shop->bank_acc_name}} {{$shop->bank_acc_no}} {{$shop->bank_routing_no}}"
+            }
+            $("textarea[name=message]").val(message)
         })
 
         $(document).ready(function(){

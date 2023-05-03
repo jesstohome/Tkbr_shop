@@ -20,7 +20,7 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="name">{{ translate('Your Name') }}</label>
                     <div class="col-md-10">
-                        <input type="text" name="name" value="{{ $user->name }}" id="name" class="form-control" placeholder="{{ translate('Your Name') }}" required>
+                        <input type="text" name="name" value="{{ $user->name }}" id="name" class="form-control" placeholder="{{ translate('Your Name') }}" required readonly>
                         @error('name')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
@@ -28,9 +28,9 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label" for="phone">{{ translate('Your Phone') }}</label>
+                    <label class="col-md-2 col-form-label" for="phone">{{ translate('Your Email') }}</label>
                     <div class="col-md-10">
-                        <input type="text" name="phone" value="{{ $user->phone }}" id="phone" class="form-control" placeholder="{{ translate('Your Phone')}}">
+                        <input type="text" name="phone" value="{{ $user->phone }}" id="phone" class="form-control" placeholder="{{ translate('Your Phone')}}" readonly>
                         @error('phone')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
@@ -78,15 +78,6 @@
                 <h5 class="mb-0 h6">{{ translate('Payment Setting')}}</h5>
             </div>
             <div class="card-body">
-                <div class="row" id="cash">
-                    <label class="col-md-3 col-form-label">{{ translate('Cash Payment') }}</label>
-                    <div class="col-md-9">
-                        <label class="aiz-switch aiz-switch-success mb-3">
-                            <input value="1" name="cash_on_delivery_status" type="checkbox" @if ($user->shop->cash_on_delivery_status == 1) checked @endif>
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                </div>
                 <div class="row" id="bank">
                     <label class="col-md-3 col-form-label">{{ translate('Bank Payment') }}</label>
                     <div class="col-md-9">
@@ -129,6 +120,38 @@
                         <input type="number" name="bank_routing_no" value="{{ $user->shop->bank_routing_no }}" id="bank_routing_no" lang="en" class="form-control mb-3" placeholder="{{ translate('Bank Routing Number')}}">
                         @error('bank_routing_no')
                             <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="row" id="e-wallet">
+                    <label class="col-md-3 col-form-label">{{ translate('e-Wallet') }}</label>
+                    <div class="col-md-9">
+                        <label class="aiz-switch aiz-switch-success mb-3">
+                            <input value="1" name="e_wallet" type="checkbox" @if ($user->shop->e_wallet == 1) checked @endif>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="e_wallet_name">{{ translate('e-Wallet Name') }}</label>
+                    <div class="col-md-9">
+                        <select class="form-control mb-3 aiz-selectpicker" name="e_wallet_name">
+                            @foreach($e_wallet_names as $e_wallet_name)
+                            <option value="{{$e_wallet_name}}" @if ($user->shop->e_wallet_name == $e_wallet_name) selected  @endif>{{$e_wallet_name}}</option>
+                            @endforeach
+                        </select>
+                        @error('e_wallet_name')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="e_wallet_address">{{ translate('e-Wallet Address') }}</label>
+                    <div class="col-md-9">
+                        <input type="text" name="e_wallet_address" value="{{ $user->shop->e_wallet_address }}" id="e_wallet_address" class="form-control mb-3" placeholder="08xxxxxxxxx">
+                        @error('e_wallet_address')
+                        <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
                     </div>
                 </div>
