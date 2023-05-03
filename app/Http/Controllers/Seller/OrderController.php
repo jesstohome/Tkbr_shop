@@ -34,6 +34,10 @@ class OrderController extends Controller
             ->select('orders.id')
             ->distinct();
         $orders = $orders->where('created_at', '<=', date('Y-m-d H:i:s'));
+        if ($request->product_storehouse_status != null) {
+            $orders = $orders->where('product_storehouse_status', $request->product_storehouse_status);
+            $product_storehouse_status = $request->product_storehouse_status;
+        }
         if ($request->payment_status != null) {
             $orders = $orders->where('payment_status', $request->payment_status);
             $payment_status = $request->payment_status;
@@ -54,7 +58,7 @@ class OrderController extends Controller
             $order->viewed = 1;
             $order->save();
         }
-        return view('seller.orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search'));
+        return view('seller.orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'product_storehouse_status'));
     }
 
     public function show( $id ) {

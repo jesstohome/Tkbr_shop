@@ -61,7 +61,15 @@
                   </select>
               </div>
 
-              <div class="col-md-3 ml-auto">
+              <div class="col-md-2 ml-auto">
+                  <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Pickup Status')}}" name="product_storehouse_status" onchange="sort_orders()">
+                      <option value="">{{ translate('Filter by Pickup Status')}}</option>
+                      <option value="1" @isset($product_storehouse_status) @if($product_storehouse_status) selected @endif @endisset>{{ translate('Picked up')}}</option>
+                      <option value="0" @isset($product_storehouse_status) @if(!is_null($product_storehouse_status) && $product_storehouse_status == 0) selected @endif @endisset>{{ translate('Not picked up')}}</option>
+                  </select>
+              </div>
+
+              <div class="col-md-2 ml-auto">
                 <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Status')}}" name="delivery_status" onchange="sort_orders()">
                     <option value="">{{ translate('Filter by Deliver Status')}}</option>
                     <option value="pending" @isset($delivery_status) @if($delivery_status == 'pending') selected @endif @endisset>{{ translate('Pending')}}</option>

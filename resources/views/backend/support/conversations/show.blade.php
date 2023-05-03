@@ -5,8 +5,7 @@
 <div class="col-lg-12">
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">#{{ $conversation->title }} (Between @if($conversation->sender != null) {{ $conversation->sender->name }} @endif and @if($conversation->receiver != null) {{ $conversation->receiver->name }} @endif)
-            </h5>
+            <h5 class="card-title">#{{ $conversation->title }} </h5>
         </div>
 
         <div class="card-body">
