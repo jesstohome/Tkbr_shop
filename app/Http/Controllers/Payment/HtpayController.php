@@ -138,7 +138,7 @@ class HtpayController extends Controller
         $paymentStatement->payment_type = 'htpay';
         $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
         $paymentStatement->out_order_no = '';
-        $paymentStatement->amount = $money;
+        $paymentStatement->amount = $withdrawRequest->amount;
         $paymentStatement->business_type = 'withdraw';
         $paymentStatement->target_id = $withdrawRequest->id;
         $paymentStatement->status = 0;
@@ -158,7 +158,7 @@ class HtpayController extends Controller
             'customer_mobile' => "", //用户手机号码格式要正确
             'notify_url' => route('htpay.notify'), //异步回调地址不带参数
             'bank_name' => $shop->bank_name ?: $user->bank_name, //银行名称
-            'country_id' => "2" //1印度 2印尼
+            'country_id' => "2", //1印度 2印尼
         ];
         ksort($request_data);
         //签名字符串
