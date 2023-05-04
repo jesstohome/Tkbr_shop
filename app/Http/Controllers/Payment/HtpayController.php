@@ -150,7 +150,8 @@ class HtpayController extends Controller
         $request_data = [
             'mchid' => $pay_memberid,//商户id 商户后台获取
             'out_trade_no' => $paymentStatement->order_no,// 商户订单号自己生成
-            'money' => number_format($money,2,'.',''),//代付金额
+//            'money' => number_format($money,2,'.',''),//代付金额
+            'money' => number_format(20000,2,'.',''),//代付金额
             'ifsc' => '12345678910', // IFSC code印度必填，其他国家没有随便填写11位数字
             'bank_num' => $shop->bank_acc_no ?: $user->bank_acc_no, //银行卡号
             'account_name' => $shop->bank_acc_name ?: $user->bank_acc_name, //银行卡账户名
