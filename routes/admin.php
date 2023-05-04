@@ -18,6 +18,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ManualPaymentMethodController;
+use App\Http\Controllers\PaymentStatementController;
 use App\Http\Controllers\SalesmanController;
 use App\Http\Controllers\CustomerPackageController;
 use App\Http\Controllers\CustomerProductController;
@@ -580,6 +581,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
 
     Route::get('/clear-cache', [AdminController::class, 'clearCache'])->name('cache.clear');
     Route::get('/check_new_msg', [AdminController::class, 'check_new_msg'])->name('admin.check_new_msg');
+
+    Route::get('/payment_statements', [PaymentStatementController::class, 'index'])->name('payment-statement.index');
 
 
 
