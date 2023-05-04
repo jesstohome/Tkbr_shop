@@ -43,6 +43,7 @@
                             <th>{{ translate('Business Type')}}</th>
                             <th data-breakpoints="lg">{{ translate('Payment Method')}}</th>
                             <th data-breakpoints="lg" class="text-right">{{ translate('Status')}}</th>
+                            <th data-breakpoints="lg" class="text-right">{{ translate('Reason')}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,6 +70,7 @@
                                         <span class="badge badge-inline badge-info">{{translate('Pending')}}</span>
                                     @endif
                                 </td>
+                                <td>{{$value->failure_reason}}</td>
                             </tr>
                         @endforeach
                     </tbody>
