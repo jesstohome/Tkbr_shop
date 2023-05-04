@@ -64,13 +64,13 @@
                                 <td class="text-right">
                                     @if ($value->status == 1)
                                         <span class="badge badge-inline badge-success">{{translate('Success')}}</span>
-                                    @elseif ($value->approval == 2)
+                                    @elseif ($value->status == 2)
                                         <span class="badge badge-inline badge-success">{{translate('Failed')}}</span>
                                     @else
                                         <span class="badge badge-inline badge-info">{{translate('Pending')}}</span>
                                     @endif
                                 </td>
-                                <td>{{$value->failure_reason}}</td>
+                                <td class="text-right">{{$value->failure_reason}}</td>
                             </tr>
                         @endforeach
                     </tbody>
