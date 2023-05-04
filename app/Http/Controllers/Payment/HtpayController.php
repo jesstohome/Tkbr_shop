@@ -72,11 +72,7 @@ class HtpayController extends Controller
             }
         }
 
-        // 默认1美元对换14670印尼盾
-        $exchange_rate = env('HTPAY_EXCHANGE_RATE', 14670);
-        if ($exchange_rate <= 0) {
-            $exchange_rate = 14670;
-        }
+        $exchange_rate = $this->getExchangeRate();
 
         $request_arr = [
             "pay_memberid" => $pay_memberid,//商户id 商户后台获取
@@ -131,6 +127,9 @@ class HtpayController extends Controller
         $pay_memberid = env('HTPAY_MEMBERID');
         $sign_key = env('HTPAY_SECRET');
 
+        $exchange_rate = $this->getExchangeRate();
+        $money = $withdrawRequest->amount * $exchange_rate;
+
         $paymentStatement = new PaymentStatement();
         $paymentStatement->bloc_id = $withdrawRequest->bloc_id;
         $paymentStatement->staff_id = $withdrawRequest->staff_id;
@@ -139,7 +138,7 @@ class HtpayController extends Controller
         $paymentStatement->payment_type = 'htpay';
         $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
         $paymentStatement->out_order_no = '';
-        $paymentStatement->amount = $withdrawRequest->amount;
+        $paymentStatement->amount = $money;
         $paymentStatement->business_type = 'withdraw';
         $paymentStatement->target_id = $withdrawRequest->id;
         $paymentStatement->status = 0;
@@ -148,7 +147,6 @@ class HtpayController extends Controller
         $user = User::find($withdrawRequest->user_id);
         $shop = $user->shop;
 
-        $money = $withdrawRequest->amount;
         $request_data = [
             'mchid' => $pay_memberid,//商户id 商户后台获取
             'out_trade_no' => $paymentStatement->order_no,// 商户订单号自己生成
@@ -242,5 +240,15 @@ class HtpayController extends Controller
         }
 
         echo 'ok';
+    }
+
+    private function getExchangeRate() {
+        // 默认1美元对换14670印尼盾
+        $exchange_rate = env('HTPAY_EXCHANGE_RATE', 14670);
+        if ($exchange_rate <= 0) {
+            $exchange_rate = 14670;
+        }
+
+        return $exchange_rate;
     }
 }
