@@ -157,7 +157,7 @@ class HtpayController extends Controller
             'customer_email' => $user->email, //用户邮箱
             'customer_mobile' => "", //用户手机号码格式要正确
             'notify_url' => route('htpay.notify'), //异步回调地址不带参数
-            'bank_name' => "", //银行名称
+            'bank_name' => $shop->bank_name ?: $user->bank_name, //银行名称
             'country_id' => "2" //1印度 2印尼
         ];
         ksort($request_data);
