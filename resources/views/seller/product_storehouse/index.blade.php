@@ -27,7 +27,7 @@
                             </div>
                             <div class="col-md-3 col-6">
                                 <select name="brand" class="form-control form-control-lg aiz-selectpicker"
-                                        data-live-search="true" onchange="filterProducts()">
+                                        data-live-search="true" onchange="filterProducts()" disabled>
                                     <option value="">{{ translate('All Brands') }}</option>
                                     @foreach (\App\Models\Brand::all() as $key => $brand)
                                         <option value="{{ $brand->id }}">{{ $brand->getTranslation('name') }}</option>

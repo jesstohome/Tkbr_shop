@@ -26,7 +26,7 @@
                 <div class="row row-cols-xxl-6 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2 gutters-10">
                     @foreach (\App\Models\Brand::all() as $brand)
                         <div class="col text-center">
-                            <a href="{{ route('products.brand', $brand->slug) }}"
+                            <a href="javascript:void(0)"
                                 class="d-block border-light hov-shadow-md mb-3 rounded border p-3">
                                 <img src="{{ uploaded_asset($brand->logo) }}" class="lazyload h-70px mw-100 mx-auto"
                                     alt="{{ $brand->getTranslation('name') }}">

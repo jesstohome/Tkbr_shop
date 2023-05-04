@@ -10,7 +10,7 @@
     <meta name="app-url" content="{{ getBaseURL() }}">
     <meta name="file-base-url" content="{{ getFileBaseURL() }}">
 
-    <title>@yield('meta_title', get_setting('website_name').' | '.get_setting('site_motto'))</title>
+    <title>@yield('meta_title', get_setting('website_name').'  '.get_setting('site_motto'))</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -299,7 +299,7 @@
                 });
             }
         });
-        
+
         setInterval(function(){
             // $(".cc-nsge").css({"bottom":"75px!important"});
             $(".cc-nsge").attr("style","bottom:75px!important");

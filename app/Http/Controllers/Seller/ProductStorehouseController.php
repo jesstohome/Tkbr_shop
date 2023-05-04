@@ -55,7 +55,7 @@ class ProductStorehouseController extends Controller
             ->where('products.in_storehouse', 1)
             ->whereNotIn('products.id', $alreadyCopyIds)
             ->select('products.*', 'product_stocks.id as stock_id', 'product_stocks.variant', 'product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')
-            ->orderBy('products.created_at', 'desc');
+            ->orderBy('products.unit_price', 'desc');
 
 
         if ($request->category != null) {

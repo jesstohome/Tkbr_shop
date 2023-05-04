@@ -39,10 +39,10 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="name">{{translate('Bloc')}}</label>
                         <div class="col-sm-9">
-                            <select name="bloc_id" required class="form-control aiz-selectpicker">
-                                <option value=""></option>
+                            <select name="bloc_id" required class="form-control aiz-selectpicker" >
+                                <option value="" {{'admin' != Auth::user()->user_type ? 'disabled' : ''}}></option>
                                 @foreach($blocs as $bloc)
-                                    <option value="{{$bloc->id}}">{{$bloc->name}}</option>
+                                    <option value="{{$bloc->id}}" {{$bloc->id == Auth::user()->bloc_id ? 'selected' : ''}} {{'admin' != Auth::user()->user_type ? 'disabled' : ''}}>{{$bloc->name}}</option>
                                 @endforeach
                             </select>
                         </div>

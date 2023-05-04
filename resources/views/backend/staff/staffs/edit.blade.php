@@ -42,9 +42,9 @@
                         <label class="col-sm-3 col-from-label" for="name">{{translate('Bloc')}}</label>
                         <div class="col-sm-9">
                             <select name="bloc_id" required class="form-control aiz-selectpicker">
-                                <option value=""></option>
+                                <option value="" {{'admin' != Auth::user()->user_type ? 'disabled' : ''}}></option>
                                 @foreach($blocs as $bloc)
-                                    <option value="{{$bloc->id}}" @if($staff->bloc_id == $bloc->id) selected @endif>{{$bloc->name}}</option>
+                                    <option value="{{$bloc->id}}" @if($staff->bloc_id == $bloc->id) selected @endif {{'admin' != Auth::user()->user_type ? 'disabled' : ''}}>{{$bloc->name}}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -44,6 +44,12 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
             }
 
             foreach ($rows as $row) {
+                // 检测 是否已存在
+                $productInDb = Product::query()->where('name', $row['产品名称'])->count();
+                if ($productInDb) {
+                    continue;
+                }
+
                 $row = [
                     'name' => $row['产品名称'],
                     'description' => $row['产品短描述'],

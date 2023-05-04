@@ -32,7 +32,7 @@ class StaffController extends Controller
     public function create()
     {
         $roles = Role::all();
-        $blocs = Bloc::all();
+        $blocs = \Auth::user()->user_type == 'admin' ? Bloc::all() : Bloc::query()->where(['id' => \Auth::user()->bloc_id])->get();
         return view('backend.staff.staffs.create', compact('roles', 'blocs'));
     }
 
@@ -90,7 +90,7 @@ class StaffController extends Controller
     {
         $staff = Staff::findOrFail(decrypt($id));
         $roles = Role::all();
-        $blocs = Bloc::all();
+        $blocs = \Auth::user()->user_type == 'admin' ? Bloc::all() : Bloc::query()->where(['id' => \Auth::user()->bloc_id])->get();
         return view('backend.staff.staffs.edit', compact('staff', 'roles', 'blocs'));
     }
 
