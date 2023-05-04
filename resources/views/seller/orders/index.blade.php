@@ -56,7 +56,7 @@
               <div class="col-md-3 ml-auto">
                   <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Status')}}" name="payment_status" onchange="sort_orders()">
                       <option value="">{{ translate('Filter by Payment Status')}}</option>
-                      <option value="paid" @isset($payment_status) @if($payment_status == 'paid') selected @endif @endisset>{{ translate('Paid')}}</option>
+                      <option value="paid" @isset($payment_status) @if($payment_status == 'paid') selected @endif @endisset>{{ translate('Buyer has paid')}}</option>
                       <option value="unpaid" @isset($payment_status) @if($payment_status == 'unpaid') selected @endif @endisset>{{ translate('Un-Paid')}}</option>
                   </select>
               </div>
@@ -167,7 +167,7 @@
                                     </td>
                                     <td>
                                         @if ($order->payment_status == 'paid')
-                                            <span class="badge badge-inline badge-success">{{ translate('Paid')}}</span>
+                                            <span class="badge badge-inline badge-success">{{ translate('Buyer has paid')}}</span>
                                         @else
                                             <span class="badge badge-inline badge-danger">{{ translate('Unpaid')}}</span>
                                         @endif

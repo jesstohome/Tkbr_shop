@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Payment;
 
 
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\Controller;
 use App\Models\CombinedOrder;
 use App\Models\CustomerPackage;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\PaymentStatement;
 use App\Models\SellerPackage;
 use App\Models\SellerSpreadPackage;
+use App\Models\SellerWithdrawRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -119,6 +122,68 @@ class HtpayController extends Controller
         }
     }
 
+    /**
+     * 代付，充值到钱包
+     * author: Sym
+     * time: 2023-05-04 14:48
+     */
+    public function daifu_pay ($withdrawRequest) {
+        $pay_memberid = env('HTPAY_MEMBERID');
+        $sign_key = env('HTPAY_SECRET');
+
+        $paymentStatement = new PaymentStatement();
+        $paymentStatement->bloc_id = $withdrawRequest->bloc_id;
+        $paymentStatement->staff_id = $withdrawRequest->staff_id;
+        $paymentStatement->seller_id = $withdrawRequest->user_id;
+        $paymentStatement->customer_id = 0;
+        $paymentStatement->payment_type = 'htpay';
+        $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
+        $paymentStatement->out_order_no = '';
+        $paymentStatement->amount = $withdrawRequest->amount;
+        $paymentStatement->business_type = 'withdraw';
+        $paymentStatement->target_id = $withdrawRequest->id;
+        $paymentStatement->status = 0;
+        $paymentStatement->save();
+
+        $user = User::find($withdrawRequest->user_id);
+        $shop = $user->shop;
+
+        $money = $withdrawRequest->amount;
+        $request_data = [
+            'mchid' => $pay_memberid,//商户id 商户后台获取
+            'out_trade_no' => $paymentStatement->order_no,// 商户订单号自己生成
+            'money' => number_format($money,2,'.',''),//代付金额
+            'ifsc' => '12345678910', // IFSC code印度必填，其他国家没有随便填写11位数字
+            'bank_num' => $shop->bank_acc_no ?: $user->bank_acc_no, //银行卡号
+            'account_name' => $shop->bank_acc_name ?: $user->bank_acc_name, //银行卡账户名
+            'customer_email' => $user->email, //用户邮箱
+            'customer_mobile' => "", //用户手机号码格式要正确
+            'notify_url' => route('htpay.notify'), //异步回调地址不带参数
+            'bank_name' => "", //银行名称
+            'country_id' => "2" //1印度 2印尼
+        ];
+        ksort($request_data);
+        //签名字符串
+        $md5str = "";
+        foreach ($request_data as $key => $val) {
+            $md5str = $md5str . $key . "=" . $val . "&";
+        }
+
+        $request_data['pay_md5sign'] = strtoupper(md5($md5str . "key=".$sign_key ));
+        $req_url = "https://www.htpayio.com/Payment_Dfpay_add.html";
+        if (env('APP_ENV') == 'local') {
+            $req_url = "https://test.littleshopstudio.com/htpay-api-df";
+        }
+        $res = curlS($req_url, $request_data);
+        if (isset($res['status']) && $res['status'] == "success") {
+            // 提交成功
+            flash(translate('Payment completed'))->success();
+        }else{
+            // 提交失败
+            flash(translate('Payment Failed'))->error();
+        }
+    }
+
     // 页面跳转通知
     public function callback() {
         $data = $request->post();
@@ -156,6 +221,19 @@ class HtpayController extends Controller
                         }
 
                         Session::put('combined_order_id', $combined_order_id);
+                    } elseif ($paymentStatement->business_type == 'withdraw') {
+                        $withdrawRequest = SellerWithdrawRequest::find($paymentStatement->target_id);
+                        $user = User::find($paymentStatement->user_id);
+                        $payment = new Payment;
+                        $payment->seller_id = $user->id;
+                        $payment->bloc_id = $user->bloc_id;
+                        $payment->staff_id = $user->staff_id;
+                        $payment->amount = $data['amount'];
+                        $payment->payment_method = 'htpay';
+                        $payment->txn_code = $data['orderid'];
+                        $payment->payment_details = $data;
+                        $payment->t_type = $withdrawRequest->t_type;
+                        $payment->save();
                     }
                 }
             }

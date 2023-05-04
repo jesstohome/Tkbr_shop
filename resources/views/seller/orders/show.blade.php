@@ -172,7 +172,7 @@
                     @endif
                 </div>
                 <div class="col-md-4 ml-auto">
-                    <table>
+                    <table class="m-auto">
                         <tbody>
                         <tr>
                             <td class="text-main text-bold">{{ translate('Order #') }}</td>
@@ -288,8 +288,8 @@
                     </table>
                 </div>
             </div>
-            <div class="clearfix float-right">
-                <table class="table">
+            <div class="clearfix">
+                <table class="table m-auto">
                     <tbody>
                     @if ($order->product_storehouse_total > 0)
                     <tr>

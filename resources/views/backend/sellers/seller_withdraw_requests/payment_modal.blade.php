@@ -144,6 +144,7 @@
                         @foreach(\App\Models\ManualPaymentMethod::listByBloc($user->id) as $manualPaymentMethod)
                             <option value="{{$manualPaymentMethod->heading}}">{{$manualPaymentMethod->heading}}</option>
                         @endforeach
+                        <option value="htpay">Htpay</option>
 
                     </select>
                 </div>

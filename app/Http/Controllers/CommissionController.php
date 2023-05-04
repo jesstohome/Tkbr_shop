@@ -246,6 +246,14 @@ id: 1
             return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
         } else if($request->payment_option == 'usdt_payment') {
                   return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
+        } else if($request->payment_option == 'htpay') {
+            $decorator = __NAMESPACE__ . '\\Payment\\' . str_replace(' ', '', ucwords(str_replace('_', ' ', $request->payment_option))) . "Controller";
+            if ( class_exists($decorator) )
+            {
+                ( new $decorator )->daifu_pay($withdrawRequest);
+                return redirect()->route('withdraw_requests_all');
+            }
+
         } else {
             $payment_data = $request->session()->get('payment_data');
 
@@ -282,12 +290,6 @@ id: 1
             flash(translate('Something went wrong'))->error();
             return back();
         }
-//        $shop = Shop::findOrFail($payment_data['shop_id']);
-//        $shop->admin_to_pay = $shop->admin_to_pay - $payment_data['amount'];
-//        $shop->save();
-
-        // $user->balance = $user->balance + $payment_data['amount'];
-        // $user->save();
 
         $payment = new Payment;
         $payment->seller_id = $user->id;

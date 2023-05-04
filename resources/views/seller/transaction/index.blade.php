@@ -4,7 +4,7 @@
     <div class="aiz-titlebar mt-2 mb-4">
       <div class="row align-items-center">
         <div class="col-md-6">
-            <h1 class="h3">{{ translate('Transaction Password') }}</h1>
+            <h1 class="h3">{{ translate('Please Set Transaction Password') }}</h1>
             @if ($user->tpwd != "")
             {{ translate('If you forget the transaction password, please contact customer service to retrieve the transaction password')}}
             @endif
@@ -25,7 +25,7 @@
         <!-- Basic Info-->
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0 h6">{{ translate('Transaction Password')}}</h5>
+                <h5 class="mb-0 h6">{{ translate('Please Set Transaction Password')}}</h5>
             </div>
             <div class="card-body">
 @if ($user->tpwd != "")
@@ -38,9 +38,9 @@
                 </div>
   @endif
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label" for="password">{{ translate('Transaction Password') }}</label>
+                    <label class="col-md-2 col-form-label" for="password">{{ translate('Please Set Transaction Password') }}</label>
                     <div class="col-md-10">
-                        <input type="password" name="password" id="password" class="form-control"  placeholder="{{ translate('Transaction Password') }}" required>
+                        <input type="password" name="password" id="password" class="form-control"  placeholder="{{ translate('Please Set Transaction Password') }}" required>
 
                     </div>
                 </div>

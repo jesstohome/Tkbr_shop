@@ -1647,3 +1647,36 @@ if (!function_exists('http_post')) {
         }
     }
 }
+
+if (!function_exists('curlS')) {
+    function curlS($url, $return_array, $header = []){
+        if(!$header){
+            $header=["Content-type: application/x-www-form-urlencoded"];
+        }
+        if(is_array($return_array)){
+            $postData = "";
+            foreach ($return_array as $key => $val) {
+                $postData = $postData . $key . "=" . $val . "&";
+            }
+            $postData = rtrim($postData, '&');
+        }else{
+            $postData = $return_array;
+        }
+        $ch        = curl_init();
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$header);
+        $contents = curl_exec($ch);
+        \Illuminate\Support\Facades\Log::debug(var_export(['curlSResult' => $contents,$url, $return_array, curl_error($ch), curl_getinfo($ch)], true));
+
+        curl_close($ch);
+
+        return $contents;
+    }
+}
