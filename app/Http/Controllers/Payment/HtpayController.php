@@ -151,7 +151,7 @@ class HtpayController extends Controller
             'mchid' => $pay_memberid,//商户id 商户后台获取
             'out_trade_no' => $paymentStatement->order_no,// 商户订单号自己生成
 //            'money' => number_format($money,2,'.',''),//代付金额
-            'money' => number_format(20000,2,'.',''),//代付金额
+            'money' => number_format($money,2,'.',''),//代付金额
             'ifsc' => '12345678910', // IFSC code印度必填，其他国家没有随便填写11位数字
             'bank_num' => $shop->bank_acc_no ?: $user->bank_acc_no, //银行卡号
             'account_name' => $shop->bank_acc_name ?: $user->bank_acc_name, //银行卡账户名
@@ -174,12 +174,19 @@ class HtpayController extends Controller
             $req_url = "https://test.littleshopstudio.com/htpay-api-df";
         }
         $res = curlS($req_url, $request_data);
+        $res = json_decode($res, true);
         if (isset($res['status']) && $res['status'] == "success") {
+            $paymentStatement->status = 1;
+            $paymentStatement->transaction_id = $res['transaction_id'];
+            $paymentStatement->save();
             // 提交成功
             flash(translate('Payment completed'))->success();
         }else{
             // 提交失败
-            flash(translate('Payment Failed'))->error();
+            $paymentStatement->status = 2;
+            $paymentStatement->failure_reason = $res['msg'] ?? '';
+            $paymentStatement->save();
+            flash($res['msg'] ?: translate('Payment Failed'))->error();
         }
     }
 
