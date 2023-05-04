@@ -65,7 +65,7 @@
                                     @if ($value->status == 1)
                                         <span class="badge badge-inline badge-success">{{translate('Success')}}</span>
                                     @elseif ($value->status == 2)
-                                        <span class="badge badge-inline badge-success">{{translate('Failed')}}</span>
+                                        <span class="badge badge-inline badge-danger">{{translate('Failed')}}</span>
                                     @else
                                         <span class="badge badge-inline badge-info">{{translate('Pending')}}</span>
                                     @endif
