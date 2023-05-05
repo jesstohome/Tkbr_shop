@@ -1,3 +1,9 @@
+<style type="text/css">
+    #main-menu li:last-child {
+        margin-bottom: 100px;
+    }
+</style>
+
 <div class="aiz-sidebar-wrap">
     <div class="aiz-sidebar left c-scrollbar">
         <div class="aiz-side-nav-logo-wrap">
