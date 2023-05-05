@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BusinessSetting;
 use App\Models\Conversation;
+use App\Models\EmailTask;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use App\Models\OrderDetail;
@@ -481,13 +482,24 @@ class PosController extends Controller
                     }
                 }
 
-                /*foreach($seller_products as $key => $seller_product){
+                // 邮件通知
+                foreach($seller_products as $key => $seller_product){
                     try {
-                        Mail::to(User::find($key)->email)->queue(new InvoiceEmailManager($array));
+                        $seller = User::find($key);
+                        $array['view'] = 'emails.new_order';
+                        $array['subject'] = 'New Order Notice';
+                        $array['from'] = env('MAIL_FROM_ADDRESS');
+                        $array['content'] = '';
+                        $array['seller_name'] = $seller->name;
+
+                        $task = new EmailTask();
+                        $task->email = $seller->email;
+                        $task->array = json_encode($array, JSON_UNESCAPED_UNICODE);
+                        $task->save();
                     } catch (\Exception $e) {
 
                     }
-                }*/
+                }
 
                 //sends email to customer with the invoice pdf attached
                 if(env('MAIL_USERNAME') != null){
