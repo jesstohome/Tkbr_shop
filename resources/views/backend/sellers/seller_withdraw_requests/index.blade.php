@@ -27,11 +27,13 @@
                     </div>
                 </div>
                 <div class="col-md-2 ml-auto">
-                    <select class="form-control aiz-selectpicker" name="payment_code" id="payment_channel">
+                    <select class="form-control aiz-selectpicker" data-live-search="true" name="seller_id" id="seller_id">
                         <option value="">{{translate('All')}}</option>
-                        @if(env('PAYPAL_CLIENT_ID'))
-                        <option value="paypal">Paypal</option>
-                        @endif
+                        @foreach (filter_by_bloc(\App\Models\User::where('user_type', 'seller'))->get() as $key => $seller)
+                            <option value="{{ $seller->id }}" @if($seller_id == $seller->id) selected @endif data-contact="{{ $seller->email }}">
+                                {{ $seller->name }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 

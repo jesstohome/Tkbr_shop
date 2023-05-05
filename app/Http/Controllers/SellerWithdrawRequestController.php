@@ -27,6 +27,7 @@ class SellerWithdrawRequestController extends Controller
     {
         $start_time = $request->get('start_time');
         $end_time = $request->get('end_time');
+        $seller_id = $request->get('seller_id');
         $status = $request->get('status');
         $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',1)->latest();
         if (!empty($start_time)) {
@@ -38,6 +39,9 @@ class SellerWithdrawRequestController extends Controller
 
         if (!is_null($status) && $status !== '') {
             $seller_withdraw_requests = $seller_withdraw_requests->where("status", $status);
+        }
+        if (!empty($seller_id)) {
+            $seller_withdraw_requests = $seller_withdraw_requests->where("user_id", $seller_id);
         }
 
         $seller_withdraw_requests = filter_by_bloc($seller_withdraw_requests);
@@ -51,7 +55,7 @@ class SellerWithdrawRequestController extends Controller
         $seller_withdraw_requests = $seller_withdraw_requests->paginate(15);
 
 
-        return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests', 'start_time', 'end_time', 'status', 'total', 'total_seller', 'total_amount'));
+        return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests', 'start_time', 'end_time', 'status', 'total', 'total_seller', 'total_amount', 'seller_id'));
     }
 
     /**

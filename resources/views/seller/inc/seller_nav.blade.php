@@ -4,7 +4,7 @@
     }
 
     .card .card-body {
-        padding: 20px 0!important;
+        padding: 20px 5px!important;
     }
 </style>
 
