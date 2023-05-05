@@ -37,6 +37,7 @@
                             <th>#</th>
                             <th>{{ translate('Seller')}}</th>
                             <th data-breakpoints="lg">{{  translate('Date') }}</th>
+                            <th>{{ translate('Transaction ID')}}</th>
                             <th>{{ translate('Inner Order No')}}</th>
                             <th>{{ translate('Outer Order No')}}</th>
                             <th>{{ translate('Amount')}}</th>
@@ -57,6 +58,7 @@
                                     <td>{{ translate('User Not found') }}</td>
                                 @endif
                                 <td>{{ $value->created_at }}</td>
+                                <td>{{ $value->transaction_id }}</td>
                                 <td>{{ $value->order_no }}</td>
                                 <td>{{ $value->out_order_no }}</td>
                                 <td>{{ single_price($value->amount) }}</td>
@@ -73,7 +75,7 @@
                                 </td>
                                 <td class="text-right">{{$value->failure_reason}}</td>
                                 <td class="text-right">
-                                    <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="manual_callback({{ $value->out_order_no }}, {{ $value->transaction_id }}, {{ $value->amount }})" title="{{ translate('Manual callback') }}">
+                                    <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="manual_callback('{{ $value->out_order_no }}', '{{ $value->transaction_id }}', '{{ $value->amount }}')" title="{{ translate('Manual callback') }}">
                                         {{ translate('Manual callback') }}
                                     </a>
                                 </td>
@@ -106,9 +108,6 @@
                     transaction_id: transaction_id,
                     money: money,
                 },
-                cache: false,
-                contentType: false,
-                processData: false,
                 success: function (response) {
                     if(response == 'ok') {
                         location.reload();

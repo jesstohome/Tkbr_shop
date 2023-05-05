@@ -465,7 +465,7 @@
                                     <label>{{ translate('Display Information')}}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <textarea name="message" rows="8" class="form-control mb-3" readonly>@if(get_setting('withdraw_type_bank_card') == 1){{$shop->bank_name}} {{$shop->bank_acc_name}} {{$shop->bank_acc_no}} {{$shop->bank_routing_no}}@elseif(get_setting('withdraw_type_e_wallet') == 1) {{$shop->e_wallet_name}} {{$shop->e_wallet_address}} @endif</textarea>
+                                    <textarea name="message" rows="8" class="form-control mb-3" readonly>@if(get_setting('withdraw_type_bank_card') == 1){{$shop->online_bank_name}} {{$shop->online_bank_no}} {{$shop->online_bank_account_name}} @elseif(get_setting('withdraw_type_e_wallet') == 1) {{$shop->e_wallet_name}} {{$shop->e_wallet_address}} @endif</textarea>
                                 </div>
                             </div>
                             <div class="form-group text-right">
@@ -513,7 +513,7 @@
         $("#p").change(function(){
             var e_wallet_status = {{$shop->e_wallet}}
             var usdt_status = {{$shop->usdt_payment_status}}
-            var bank_payment_status = {{$shop->bank_payment_status}}
+            var online_bank = {{$shop->online_bank}}
             var cash_on_delivery_status = {{$shop->cash_on_delivery_status}}
             var type = $(this).val();
             if (type == 5 && e_wallet_status == 0) {
@@ -526,8 +526,8 @@
                 $(".btn").attr("disabled")
                 return;
             }
-            if (type == 2 && bank_payment_status == 0) {
-                window.location.href = "/seller/profile#bank"
+            if (type == 2 && online_bank == 0) {
+                window.location.href = "/seller/profile#online_bank"
                  $(".btn").attr("disabled")
                 return;
             }
@@ -541,7 +541,7 @@
             if (type == 5) {
                 message = "{{$shop->e_wallet_name}} {{$shop->e_wallet_address}}"
             } else if (type == 2) {
-                message = "{{$shop->bank_name}} {{$shop->bank_acc_name}} {{$shop->bank_acc_no}} {{$shop->bank_routing_no}}"
+                message = "{{$shop->online_bank_name}} {{$shop->online_bank_no}} {{$shop->online_bank_account_name}}"
             }
             $("textarea[name=message]").val(message)
         })

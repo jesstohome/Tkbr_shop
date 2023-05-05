@@ -153,12 +153,12 @@ class HtpayController extends Controller
 //            'money' => number_format($money,2,'.',''),//代付金额
             'money' => number_format($money,2,'.',''),//代付金额
             'ifsc' => '12345678910', // IFSC code印度必填，其他国家没有随便填写11位数字
-            'bank_num' => $shop->bank_acc_no ?: $user->bank_acc_no, //银行卡号
-            'account_name' => $shop->bank_acc_name ?: $user->bank_acc_name, //银行卡账户名
+            'bank_num' => $shop->online_bank_no, //银行卡号
+            'account_name' => $shop->online_bank_account_name ?: "", //银行卡账户名
             'customer_email' => $user->email, //用户邮箱
             'customer_mobile' => "91829732132", //用户手机号码格式要正确
             'notify_url' => route('htpay.notify'), //异步回调地址不带参数
-            'bank_name' => $shop->bank_name ?: $user->bank_name, //银行名称
+            'bank_name' => $shop->online_bank_name, //银行名称
             'country_id' => "2", //1印度 2印尼
         ];
         ksort($request_data);

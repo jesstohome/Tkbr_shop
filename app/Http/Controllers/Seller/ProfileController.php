@@ -21,7 +21,46 @@ class ProfileController extends Controller
         $addresses = $user->addresses;
 
         $e_wallet_names = ['OVO', 'DANA', 'GOPAY', 'SHOPEEPAY', 'LINKAJA'];
-        return view('seller.profile.index', compact('user','addresses', 'e_wallet_names'));
+        $online_bank_names = [
+            'Bank BCA',
+            'Bank BRI',
+            'Bank Mandiri',
+            'Bank BNI',
+            'CIMB Niaga',
+            'Bank Permata',
+            'Bank Danamon',
+            'Bank BTN',
+            'BTNBII Maybank',
+            'Bank Sinarmas',
+            'Bank Panin',
+            'Bank DKI',
+            'Bank Mega',
+            'Bank BTPN',
+            'Bank Muamalat',
+            'Bank OCBC NISP',
+            'CITIBANK',
+            'Bank HSBC',
+            'Bank DBS',
+            'Bank OF CHINA',
+            'Bank MAYAPADA',
+            'Bank Jambi',
+            'Bank Aceh',
+            'Bank Lampung',
+            'Bank BPD Bali',
+            'Bank Maluku',
+            'Bank Of India Indonesia',
+            'Bank Maspion',
+            'Bank Ganesha',
+            'Bank ICBC',
+            'Bank Bukopin',
+            'Bank Royal',
+            'Bank ARTOS',
+            'Bank Jago',
+            'Bank Mayora',
+            'Bank ARTHA GRAHA',
+            'Bank CAPITAL',
+        ];
+        return view('seller.profile.index', compact('user','addresses', 'e_wallet_names', 'online_bank_names'));
     }
     /**
      * Update the specified resource in storage.
@@ -81,6 +120,10 @@ class ProfileController extends Controller
             $shop->e_wallet = $request->e_wallet;
             $shop->e_wallet_name = $request->e_wallet_name;
             $shop->e_wallet_address = $request->e_wallet_address;
+            $shop->online_bank = $request->online_bank;
+            $shop->online_bank_name = $request->online_bank_name;
+            $shop->online_bank_account_name = $request->online_bank_account_name;
+            $shop->online_bank_no = $request->online_bank_no;
 //            $shop->online_ervice = $request->online_ervice;
             $shop->save();
         }

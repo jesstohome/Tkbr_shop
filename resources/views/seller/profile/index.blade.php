@@ -124,6 +124,7 @@
                     </div>
                 </div>
 
+                <!-- 电子钱包配置 -->
                 <div class="row" id="e-wallet">
                     <label class="col-md-3 col-form-label">{{ translate('e-Wallet') }}</label>
                     <div class="col-md-9">
@@ -151,6 +152,48 @@
                     <div class="col-md-9">
                         <input type="text" name="e_wallet_address" value="{{ $user->shop->e_wallet_address }}" id="e_wallet_address" class="form-control mb-3" placeholder="08xxxxxxxxx">
                         @error('e_wallet_address')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- 线上银行配置 -->
+                <div class="row" id="online_bank">
+                    <label class="col-md-3 col-form-label">{{ translate('Online Bank') }}</label>
+                    <div class="col-md-9">
+                        <label class="aiz-switch aiz-switch-success mb-3">
+                            <input value="1" name="online_bank" type="checkbox" @if ($user->shop->online_bank == 1) checked @endif>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="online_bank_name">{{ translate('Online Bank Name') }}</label>
+                    <div class="col-md-9">
+                        <select class="form-control mb-3 aiz-selectpicker" name="online_bank_name">
+                            @foreach($online_bank_names as $online_bank_name)
+                                <option value="{{$online_bank_name}}" @if ($user->shop->online_bank_name == $online_bank_name) selected  @endif>{{$online_bank_name}}</option>
+                            @endforeach
+                        </select>
+                        @error('online_bank_name')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="online_bank_no">{{ translate('Online Bank Card No') }}</label>
+                    <div class="col-md-9">
+                        <input type="text" name="online_bank_no" value="{{ $user->shop->online_bank_no }}" id="online_bank_no" class="form-control mb-3" >
+                        @error('online_bank_no')
+                        <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="online_bank_account_name">{{ translate('Online Bank Account Name') }}</label>
+                    <div class="col-md-9">
+                        <input type="text" name="online_bank_account_name" value="{{ $user->shop->online_bank_account_name }}" id="online_bank_account_name" class="form-control mb-3" >
+                        @error('online_bank_account_name')
                         <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
                     </div>
