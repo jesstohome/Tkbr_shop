@@ -152,7 +152,7 @@ class ConversationController extends Controller
             $message->message = $request->message;
 
             if ($message->save()) {
-                $this->send_message_to_seller($conversation, $message, $user_type);
+//                $this->send_message_to_seller($conversation, $message, $user_type); // 对话不发邮件提醒
             }
         }
 

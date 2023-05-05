@@ -41,7 +41,7 @@ class SupportTicketController extends Controller
         $ticket->files = $request->attachments;
 
         if($ticket->save()){
-            $this->send_support_mail_to_admin($ticket);
+//            $this->send_support_mail_to_admin($ticket); // 工单不用邮件
             flash(translate('Ticket has been sent successfully'))->success();
             return redirect()->route('seller.support_ticket.index');
         }

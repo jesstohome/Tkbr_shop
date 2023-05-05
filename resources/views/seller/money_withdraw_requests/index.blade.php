@@ -449,8 +449,13 @@
                                 </div>
                                  <div class="col-md-9">
                                      <select name="w_type" class="form-control" id="p" onchange="changedWType()">
-                                        <option value="2">{{translate('Bank')}}</option>
-                                        <option value="5">{{translate('e-Wallet')}}</option>
+                                         @if(get_setting('withdraw_type_bank_card') == 1)
+                                            <option value="2">{{translate('Bank')}}</option>
+                                         @endif
+                                         @if(get_setting('withdraw_type_e_wallet') == 1)
+                                             <option value="5">{{translate('e-Wallet')}}</option>
+                                         @endif
+
                                      </select>
                                 </div>
 
@@ -460,7 +465,7 @@
                                     <label>{{ translate('Display Information')}}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <textarea name="message" rows="8" class="form-control mb-3" readonly>{{$shop->bank_name}} {{$shop->bank_acc_name}} {{$shop->bank_acc_no}} {{$shop->bank_routing_no}}</textarea>
+                                    <textarea name="message" rows="8" class="form-control mb-3" readonly>@if(get_setting('withdraw_type_bank_card') == 1){{$shop->bank_name}} {{$shop->bank_acc_name}} {{$shop->bank_acc_no}} {{$shop->bank_routing_no}}@elseif(get_setting('withdraw_type_e_wallet') == 1) {{$shop->e_wallet_name}} {{$shop->e_wallet_address}} @endif</textarea>
                                 </div>
                             </div>
                             <div class="form-group text-right">

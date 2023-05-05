@@ -114,6 +114,38 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0 h6 text-center">{{translate('Withdraw Types')}}</h3>
+                </div>
+                <div class="card-body text-center">
+                    <div class="form-group row">
+                        <label class="col-md-4 col-from-label">{{translate('Bank Card')}}</label>
+                        <div class="col-md-8">
+                            <label class="aiz-switch aiz-switch-success mb-0">
+                                <input type="checkbox"
+                                       onchange="updateSettings(this, 'withdraw_type_bank_card')" <?php if (get_setting('withdraw_type_bank_card') == 1) echo "checked";?>>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-4 col-from-label">{{translate('Wallet')}}</label>
+                        <div class="col-md-8">
+                            <label class="aiz-switch aiz-switch-success mb-0">
+                                <input type="checkbox"
+                                       onchange="updateSettings(this, 'withdraw_type_e_wallet')" <?php if (get_setting('withdraw_type_e_wallet') == 1) echo "checked";?>>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <!--
         <div class="col-lg-6">
             <div class="card">

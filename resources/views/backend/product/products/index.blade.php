@@ -43,7 +43,7 @@
             <div class="col-md-2 ml-auto">
                 <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id" onchange="sort_products()">
                     <option value="">{{ translate('All Sellers') }}</option>
-                    @foreach (App\Models\User::where('user_type', '=', 'seller')->get() as $key => $seller)
+                    @foreach (filter_by_bloc(App\Models\User::where('user_type', '=', 'seller'))->get() as $key => $seller)
                         <option value="{{ $seller->id }}" @if ($seller->id == $seller_id) selected @endif>
                             {{ $seller->shop->name }} ({{ $seller->name }})
                         </option>
@@ -67,7 +67,7 @@
             <div class="col-md-2 ml-auto">
                 <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id" onchange="sort_products()">
                     <option value="">{{ translate('All Sellers') }}</option>
-                        @foreach (App\Models\User::where('user_type', '=', 'admin')->orWhere('user_type', '=', 'seller')->get() as $key => $seller)
+                        @foreach (filter_by_bloc(App\Models\User::where('user_type', '=', 'seller'))->get() as $key => $seller)
                             <option value="{{ $seller->id }}" @if ($seller->id == $seller_id) selected @endif>{{ $seller->name }}</option>
                         @endforeach
                 </select>

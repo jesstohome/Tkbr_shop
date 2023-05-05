@@ -176,7 +176,6 @@ class HtpayController extends Controller
         $res = curlS($req_url, $request_data);
         $res = json_decode($res, true);
         if (isset($res['status']) && $res['status'] == "success") {
-            $paymentStatement->status = 1;
             $paymentStatement->transaction_id = $res['transaction_id'];
             $paymentStatement->save();
             // 提交成功
@@ -205,10 +204,14 @@ class HtpayController extends Controller
         \Log::info(var_export(['HtPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
 
         try {
-            if (!empty($data) && $data['returncode'] === '00') {
-                $paymentStatement = PaymentStatement::query()->where('out_order_no', $data['orderid'])->where('payment_type', 'htpay')->first();
+            if (!empty($data)) {
+                if (!empty($data['transaction_id'])) {
+                    $paymentStatement = PaymentStatement::query()->where('transaction_id', $data['transaction_id'])->where('payment_type', 'htpay')->first();
+                } elseif (!empty($data['orderid'])) {
+                    $paymentStatement = PaymentStatement::query()->where('out_order_no', $data['orderid'])->where('payment_type', 'htpay')->first();
+                }
                 if ($paymentStatement) {
-                    $paymentStatement->status = 1;
+                    $paymentStatement->status = $data['returncode'] === '00' ? 1 : 2;
                     $paymentStatement->save();
                     if ($paymentStatement->business_type == 'pick_up') {
                         storehouseProduct_payment_done($paymentStatement->target_id, 'htpay');

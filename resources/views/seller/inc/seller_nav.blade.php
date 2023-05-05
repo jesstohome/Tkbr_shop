@@ -1,4 +1,14 @@
-<div class="aiz-topbar px-15px px-lg-25px d-flex align-items-stretch justify-content-between">
+<style type="text/css">
+    .seller-header-nav .btn-icon {
+        width: fit-content !important;
+    }
+
+    .card .card-body {
+        padding: 20px 0!important;
+    }
+</style>
+
+<div class="aiz-topbar px-15px px-lg-25px d-flex align-items-stretch justify-content-between seller-header-nav">
     <div class="d-flex">
         <div class="aiz-topbar-nav-toggler d-flex align-items-center justify-content-start mr-2 mr-md-3 ml-0" data-toggle="aiz-mobile-nav">
             <button class="aiz-mobile-toggler">

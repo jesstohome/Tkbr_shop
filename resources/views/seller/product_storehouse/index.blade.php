@@ -25,15 +25,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-3 col-6">
-                                <select name="brand" class="form-control form-control-lg aiz-selectpicker"
-                                        data-live-search="true" onchange="filterProducts()" disabled>
-                                    <option value="">{{ translate('All Brands') }}</option>
-                                    @foreach (\App\Models\Brand::all() as $key => $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->getTranslation('name') }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
                         </div>
                         <div class="aiz-pos-product-list c-scrollbar-light">
                             <div class="d-flex flex-wrap justify-content-center" id="product-list">

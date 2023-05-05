@@ -44,6 +44,7 @@
                             <th data-breakpoints="lg">{{ translate('Payment Method')}}</th>
                             <th data-breakpoints="lg" class="text-right">{{ translate('Status')}}</th>
                             <th data-breakpoints="lg" class="text-right">{{ translate('Reason')}}</th>
+                            <th data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,6 +72,11 @@
                                     @endif
                                 </td>
                                 <td class="text-right">{{$value->failure_reason}}</td>
+                                <td class="text-right">
+                                    <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="manual_callback({{ $value->out_order_no }}, {{ $value->transaction_id }}, {{ $value->amount }})" title="{{ translate('Manual callback') }}">
+                                        {{ translate('Manual callback') }}
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -83,4 +89,32 @@
     </div>
 </div>
 
+@endsection
+
+@section('script')
+    <script>
+        function manual_callback(orderid, transaction_id, money) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('htpay.notify')}}",
+                type: 'POST',
+                data: {
+                    returncode: '00',
+                    orderid: orderid,
+                    transaction_id: transaction_id,
+                    money: money,
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if(response == 'ok') {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    </script>
 @endsection

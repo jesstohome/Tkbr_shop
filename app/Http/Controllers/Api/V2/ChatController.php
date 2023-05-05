@@ -67,7 +67,7 @@ class ChatController extends Controller
             $message->message = $request->message;
 
             if ($message->save()) {
-                $this->send_message_to_seller($conversation, $message, $seller_user, $user);
+//                $this->send_message_to_seller($conversation, $message, $seller_user, $user); // 对话不发邮件
             }
         }
 

@@ -123,7 +123,7 @@ class SupportTicketController extends Controller
 
         if($ticket_reply->save()){
             flash(translate('Reply has been sent successfully'))->success();
-            $this->send_support_reply_email_to_user($ticket_reply->ticket, $ticket_reply);
+//            $this->send_support_reply_email_to_user($ticket_reply->ticket, $ticket_reply); // 工单不发邮件
             return back();
         }
         else{

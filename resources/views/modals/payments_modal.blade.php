@@ -14,7 +14,7 @@
                         <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'paypal', 'order_id' => $order->id ?? 0]) }}" id="paypal-link" class="btn btn-primary mt-2">Paypal</a>
                         @endif
                         @if(env('HTPAY_MEMBERID'))
-                            <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'htpay', 'order_id' => $order->id ?? 0]) }}" id="htpay-link" class="btn btn-primary mt-2">Htpay</a>
+                            <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'htpay', 'order_id' => $order->id ?? 0]) }}" target="_blank" id="htpay-link" class="btn btn-primary mt-2">Htpay</a>
                         @endif
                     </div>
                 </div>
