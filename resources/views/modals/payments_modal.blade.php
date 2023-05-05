@@ -13,7 +13,7 @@
                         @if(env('PAYPAL_CLIENT_ID'))
                         <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'paypal', 'order_id' => $order->id ?? 0]) }}" id="paypal-link" class="btn btn-primary mt-2">Paypal</a>
                         @endif
-                        @if(env('HTPAY_MEMBERID'))
+                        @if(get_setting('htpay_collection_behalf') == 1)
                             <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'htpay', 'order_id' => $order->id ?? 0]) }}" target="_blank" id="htpay-link" class="btn btn-primary mt-2">Htpay</a>
                         @endif
                     </div>

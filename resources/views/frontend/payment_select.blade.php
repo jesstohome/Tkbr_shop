@@ -88,7 +88,7 @@
                                                     </label>
                                                 </div>
                                             @endif
-                                                @if (!empty(env('HTPAY_MEMBERID')))
+                                                @if (get_setting('htpay_collection_behalf') == 1)
                                                     <div class="col-6 col-md-4">
                                                         <label class="aiz-megabox d-block mb-3">
                                                             <input value="htpay" class="online_payment" type="radio" name="payment_option" checked>
