@@ -14,7 +14,7 @@
                         <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'paypal', 'order_id' => $order->id ?? 0]) }}" id="paypal-link" class="btn btn-primary mt-2">Paypal</a>
                         @endif
                         @if(get_setting('htpay_collection_behalf') == 1)
-                            <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'htpay', 'order_id' => $order->id ?? 0]) }}" target="_blank" id="htpay-link" class="btn btn-primary mt-2">Htpay</a>
+                            <a href="javascript:void(0)" onclick="toPay()" id="htpay-link" class="btn btn-primary mt-2">Htpay</a>
                         @endif
                     </div>
                 </div>
@@ -53,7 +53,6 @@
     </div>
 </div>
 
-
 <script type="text/javascript">
 
     function show_make_wallet_recharge_modal(type){
@@ -63,6 +62,13 @@
         });
     }
 
+    function toPay() {
+        window.open("{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'htpay', 'order_id' => $order->id ?? 0]) }}".replace('&amp;', '&'), '_target');
+        setTimeout(function () {
+            location.href = "{{ route('seller.money_withdraw_requests.index') }}";
+        }, 2e3);
 
+        return false;
+    }
 
 </script>
