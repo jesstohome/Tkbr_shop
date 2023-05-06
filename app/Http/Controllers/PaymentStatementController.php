@@ -24,6 +24,7 @@ class PaymentStatementController extends Controller
             $payment_statements = $payment_statements->where('created_at', '<=', $date_range1[1] . " 23:59:59");
         }
 
+        $payment_statements = filter_by_bloc($payment_statements);
         $payment_statements = $payment_statements->paginate(15);
         return view('backend.reports.payment_statement', compact('payment_statements', 'date_range'));
     }
