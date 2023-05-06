@@ -246,7 +246,7 @@ class ProductInit extends Command
             ->pluck('original_id')
             ->toArray();
 
-        $shops = Shop::query()->where('created_at', '>=', '2023-05-03 10:30:00')->get();
+        $shops = Shop::query()->where('created_at', '>=', '2023-05-06 10:00:00')->get();
         $products = Product::query()->where('in_storehouse', 1)->whereNotIn('id', $alreadyCopyIds)->select(['id', 'category_id'])->get()->toArray();
         $categoriesProductIds = [];
         foreach ($products as $product) {
