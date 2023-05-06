@@ -9,7 +9,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <a href="javascript:void(0);" id="wallet-link" onclick="$('#payment_for_storehouse_modal').modal('show')" class="btn btn-primary mt-2">Wallet</a>
+                        @if(false)
                         <a href="javascript:void(0);" id="Manual-link" onclick="show_make_wallet_recharge_modal(3)" class="btn btn-primary mt-2">{{translate('Manual transfer')}}</a>
+                        @endif
                         @if(env('PAYPAL_CLIENT_ID'))
                         <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'paypal', 'order_id' => $order->id ?? 0]) }}" id="paypal-link" class="btn btn-primary mt-2">Paypal</a>
                         @endif
