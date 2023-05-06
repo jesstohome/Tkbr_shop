@@ -1,5 +1,5 @@
 <style type="text/css">
-    #main-menu li:last-child {
+    #main-menu > li:last-child {
         margin-bottom: 100px;
     }
 </style>
