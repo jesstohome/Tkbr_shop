@@ -257,6 +257,10 @@ class HtpayController extends Controller
                         $payment->payment_details = $data;
                         $payment->t_type = $withdrawRequest->t_type;
                         $payment->save();
+
+                        // 更新提现状态
+                        $withdrawRequest->status = $data['returncode'] === '00' ? 1 : 4;
+                        $withdrawRequest->save();
                     }
                 }
             }

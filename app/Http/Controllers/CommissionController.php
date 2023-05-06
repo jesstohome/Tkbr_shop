@@ -251,6 +251,8 @@ id: 1
             if ( class_exists($decorator) )
             {
                 ( new $decorator )->daifu_pay($withdrawRequest);
+                $withdrawRequest->status = 3;
+                $withdrawRequest->save();
                 return redirect()->route('withdraw_requests_all');
             }
 

@@ -128,6 +128,10 @@
                                     <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
                                     @elseif ($seller_withdraw_request->status == 2)
                                     <span class="badge badge-inline badge-error">{{translate('Refuse')}}</span>
+                                    @elseif ($seller_withdraw_request->status == 3)
+                                        <span class="badge badge-inline badge-info">{{translate('Approved')}}</span>
+                                    @elseif ($seller_withdraw_request->status == 4)
+                                        <span class="badge badge-inline badge-error">{{translate('Failed')}}</span>
                                     @else
                                     <span class="badge badge-inline badge-info">{{translate('Pending')}}</span>
                                     @endif
