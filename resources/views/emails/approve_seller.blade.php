@@ -53,20 +53,23 @@
                                                         <td class="h5 center blue pb30" style="font-family:'Ubuntu', Arial,sans-serif; font-size:20px; line-height:26px; text-align:left; color:#2e57ae; padding-bottom:30px;">
                                                             <p><b>Dear seller: {{$array['seller_name'] ?: ''}}</b></p>
                                                             <p>
-                                                                Hello, congratulations that you have successfully passed the entry audit of the tiktokshop platform, please note the following points:
+                                                                Hello, congratulations on successfully passing the entry review of the tiktokshop platform.
+                                                                Improving the information settings of the store can increase the weight of the store to obtain more traffic distribution.
+                                                            </p>
+                                                            <p>
+                                                                Notice:
                                                             </p>
                                                             <p>
                                                                 1. In order to protect your legitimate rights and interests, please carefully read the various policies of the tiktokshop platform and strictly abide by them.
                                                             </p>
                                                             <p>
-                                                                2. The tiktokshop platform has a professional service provider who will guide you to continue to improve the various settings of the store. Please contact your service provider to continue to improve the store.
+                                                                2. If you need any help, please contact us through the work order in the background of the store, and we will provide you with service as soon as possible.
                                                             </p>
                                                             <p>
-                                                                3. If you have any complaints or suggestions, please use the work order in your background to contact us, and we will deal with your appeal as soon as possible.
                                                                 Sincerely,
                                                             </p>
                                                             <p style="text-align: center">
-                                                                tiktokshop review team
+                                                                tiktokshop operation center
                                                             </p>
                                                         </td>
                                                     </tr>

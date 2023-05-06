@@ -53,20 +53,13 @@
                                                         <td class="h5 center blue pb30" style="font-family:'Ubuntu', Arial,sans-serif; font-size:20px; line-height:26px; text-align:left; color:#2e57ae; padding-bottom:30px;">
                                                             <p><b>Dear seller: {{$array['seller_name'] ?: ''}}</b></p>
                                                             <p>
-                                                                Hello, congratulations on successfully passing the entry review of the tiktokshop platform.
-                                                                Improving the information settings of the store can increase the weight of the store to obtain more traffic distribution.
+                                                                There is a new order in your store, please log in to your store background to view the details.
                                                             </p>
                                                             <p>
-                                                                Notice:
+                                                                Processing orders in a more timely manner can increase the weight of stores to obtain more traffic distribution.
                                                             </p>
                                                             <p>
-                                                                1. In order to protect your legitimate rights and interests, please carefully read the various policies of the tiktokshop platform and strictly abide by them.
-                                                            </p>
-                                                            <p>
-                                                                2. If you need any help, please contact us through the work order in the background of the store, and we will provide you with service as soon as possible.
-                                                            </p>
-                                                            <p>
-                                                                Sincerely,
+                                                                If you need any help, please contact us through the work order in the background of the store, and we will provide you with service as soon as possible.
                                                             </p>
                                                             <p>
                                                                 tiktokshop operation center
