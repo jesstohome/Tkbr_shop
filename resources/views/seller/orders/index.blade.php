@@ -154,8 +154,12 @@
                                         @if ($order->product_storehouse_status)
                                             <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
                                         @else
-                                            @if ($order->product_storehouse_total)
-                                                <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
+                                            @if($order->paymentStatement)
+                                                    <span class="badge badge-inline badge-info">{{translate('Pending')}}</span>
+                                            @else
+                                                @if ($order->product_storehouse_total)
+                                                    <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
+                                                @endif
                                             @endif
                                         @endif
                                     </td>

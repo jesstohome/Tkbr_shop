@@ -55,4 +55,8 @@ class Order extends Model
     {
         return $this->hasMany(ProxyPayment::class)->select('reference_id');
     }
+
+    public function paymentStatement() {
+        return $this->hasOne(PaymentStatement::class, 'target_id')->where('business_type', 'pick_up');
+    }
 }

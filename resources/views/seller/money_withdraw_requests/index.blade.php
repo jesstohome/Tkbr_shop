@@ -247,19 +247,29 @@
                         <td>{{ $list->payment_details }}</td>
                         <td>{{ $list->order->code ?? ''}}</td>
                         <td>
-                            @if ($list->approval == 1)
-                                <span class="badge badge-inline badge-success">{{translate('Pass')}}</span>
-                            @elseif ($list->approval == 2)
-                                <span class="badge badge-inline badge-danger">{{translate('No Pass')}}</span>
-                            @else
-                                <span class="badge badge-inline badge-info">{{translate('Unaudited')}}</span>
+                            @if ($list->offline_payment == 1)
+                                @if ($list->approval == 1)
+                                    <span class="badge badge-inline badge-success">{{translate('Pass')}}</span>
+                                @elseif ($list->approval == 2)
+                                    <span class="badge badge-inline badge-danger">{{translate('No Pass')}}</span>
+                                @else
+                                    <span class="badge badge-inline badge-info">{{translate('Unaudited')}}</span>
+                                @endif
+                            @elseif($list->paymentStatement)
+                                @if ($list->paymentStatement->status == 0)
+                                    <span class="badge badge-inline badge-info">{{translate('Unpaid')}}</span>
+                                @elseif ($list->paymentStatement->status == 1)
+                                    <span class="badge badge-inline badge-success">{{translate('Success')}}</span>
+                                @else
+                                    <span class="badge badge-inline badge-danger">{{translate('Failed')}}</span>
+                                @endif
                             @endif
                         </td>
                         <td>
                             @if ($list->offline_payment == 1)
                                 <span class="badge badge-inline badge-success">{{translate('yes')}}</span>
                             @else
-                                <span class="badge badge-inline badge-danger">{{translate('No')}}</span>
+                                {{$list->payment_method}}
                             @endif
                         </td>
 

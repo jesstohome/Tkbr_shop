@@ -16,6 +16,7 @@ use App\Models\SellerPackage;
 use App\Models\SellerSpreadPackage;
 use App\Models\SellerWithdrawRequest;
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Session;
@@ -66,8 +67,21 @@ class HtpayController extends Controller
                 $paymentStatement->target_id = $order->id;
                 $paymentStatement->status = 0;
                 $paymentStatement->save();
-
                 Session::put('payment_statement_id', $paymentStatement->id);
+
+                // 客户提出需要往钱包收支明细加上此次提货记录
+                $wallet = new Wallet();
+                $wallet->payment_statement_id = $paymentStatement->id;
+                $wallet->user_id = $order->seller_id;
+                $wallet->amount = $amount;
+                $wallet->payment_method = 'htpay';
+                $wallet->payment_details = '';
+                $wallet->approval = 0;
+                $wallet->offline_payment = 0;
+                $wallet->reciept = '';
+                $wallet->type = 3;
+                $wallet->target_id = $order->id ?? 0;
+                $wallet->save();
 
             }
         }

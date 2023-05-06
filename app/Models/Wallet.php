@@ -17,4 +17,8 @@ class Wallet extends Model
     public function order() {
         return $this->belongsTo(Order::class, 'target_id');
     }
+
+    public function paymentStatement() {
+        return $this->belongsTo(PaymentStatement::class);
+    }
 }
