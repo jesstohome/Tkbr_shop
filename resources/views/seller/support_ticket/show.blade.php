@@ -55,7 +55,9 @@
                                 </a>
                                 <div class="media-body">
                                     <div class="comment-header">
-                                        <span class="text-bold h6 text-muted">{{ $ticketreply->user->name }}</span>
+                                        <span class="text-bold h6 text-muted">
+                                            {{ in_array($ticketreply->user->user_type, ['admin', 'staff']) ? 'tiktokshopserve' : $ticketreply->user->name }}
+                                        </span>
                                         <p class="text-muted text-sm fs-11">{{$ticketreply->created_at}}</p>
                                     </div>
                                 </div>
