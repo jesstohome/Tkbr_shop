@@ -43,7 +43,6 @@ class ShopController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create( Request $request ) {
-         Upload::where('user_id', 0)->delete();
         if ( Auth::check() )
         {
             if ( Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff')
@@ -234,7 +233,7 @@ class ShopController extends Controller
                     $staff_user_id = ShopManage::query()->where('shop_id', $leadSeller->shop->id)->value("admin_id");
                 }
             }
-            Upload::where('user_id', 0)->where('id', 'NOTIN', [ $user->identity_card_front, $user->identity_card_back ])->update([ 'user_id' => $user->id ]);
+            Upload::where('user_id', 0)->whereIn('id', [ $user->identity_card_front, $user->identity_card_back ])->update([ 'user_id' => $user->id ]);
 
             $user->bloc_id = $bloc_id;
             $user->staff_id = $staff_id;
