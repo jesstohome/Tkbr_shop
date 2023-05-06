@@ -1,7 +1,10 @@
-@if(get_setting('home_categories') != null) 
+@if(get_setting('home_categories') != null)
     @php $home_categories = json_decode(get_setting('home_categories')); @endphp
     @foreach ($home_categories as $key => $value)
-        @php $category = \App\Models\Category::find($value); @endphp
+        @php
+            $category = \App\Models\Category::find($value);
+        @endphp
+        @if (empty($category)) @continue @endif
         <section class="mb-4">
             <div class="container">
                 <div class="px-2 py-4 px-md-4 py-md-3 bg-white shadow-sm rounded">
