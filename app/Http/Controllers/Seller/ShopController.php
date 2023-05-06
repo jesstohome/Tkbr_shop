@@ -26,13 +26,13 @@ class ShopController extends Controller
     {
         $shop = Shop::find($request->shop_id);
 
-        if ($request->has('name') && $request->has('address')) {
+        if ($request->has('name')) {
             if ($request->has('shipping_cost')) {
                 $shop->shipping_cost = $request->shipping_cost;
             }
 
             $shop->name             = $request->name;
-            $shop->address          = $request->address;
+            $shop->address          = $request->address ?? '';
             $shop->phone            = $request->phone;
             $shop->slug             = preg_replace('/\s+/', '-', $request->name) . '-' . $shop->id;
             $shop->meta_title       = $request->meta_title;

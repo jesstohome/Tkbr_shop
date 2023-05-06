@@ -44,19 +44,20 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
+        $bloc_id = $request->bloc_id ?? \Auth::user()->bloc_id;
         if(User::where('email', $request->email)->first() == null){
             $user = new User;
             $user->name = $request->name;
             $user->email = $request->email;
             $user->phone = $request->mobile;
-            $user->bloc_id = $request->bloc_id;
+            $user->bloc_id = $bloc_id;
             $user->user_type = "staff";
             $user->password = Hash::make($request->password);
             if($user->save()){
                 $staff = new Staff;
                 $staff->user_id = $user->id;
                 $staff->role_id = $request->role_id;
-                $staff->bloc_id = $request->bloc_id;
+                $staff->bloc_id = $bloc_id;
                 $staff->invite_code = mt_rand(10000000, 99999999);
                 if($staff->save()){
                     flash(translate('Staff has been inserted successfully'))->success();
