@@ -146,7 +146,11 @@
                         @endforeach
 
                         @if(get_setting('htpay_payment_behalf') == 1)
-                        <option value="htpay">Htpay</option>
+                        <option value="htpay">HtPay</option>
+                        @endif
+
+                        @if(get_setting('qepay_payment_behalf') == 1)
+                            <option value="qepay">QePay</option>
                         @endif
 
                     </select>

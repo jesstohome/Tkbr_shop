@@ -6,6 +6,53 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
+                    <h5 class="mb-0 h6 ">{{translate('Qepay Credential')}}</h5>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
+                        <input type="hidden" name="payment_method" value="qepay">
+                        @csrf
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="QEPAY_MCH_ID">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Qepay Merchant Id')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="QEPAY_MCH_ID" value="{{  env('QEPAY_MCH_ID') }}" placeholder="{{ translate('Qepay Merchant Id') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="QEPAY_ZHIFU_MCH_KEY">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Qepay Pay Secret')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="QEPAY_ZHIFU_MCH_KEY" value="{{  env('QEPAY_ZHIFU_MCH_KEY') }}" placeholder="{{ translate('Qepay Pay Secret') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="QEPAY_DAIFU_MCH_KEY">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Qepay Payment on behalf Secret')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="QEPAY_DAIFU_MCH_KEY" value="{{  env('QEPAY_DAIFU_MCH_KEY') }}" placeholder="{{ translate('Qepay Payment on behalf Secret') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-0 text-right">
+                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
                     <h5 class="mb-0 h6 ">{{translate('Htpay Credential')}}</h5>
                 </div>
                 <div class="card-body">

@@ -75,7 +75,7 @@
                                 </td>
                                 <td class="text-right">{{$value->failure_reason}}</td>
                                 <td class="text-right">
-                                    <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="manual_callback('{{ $value->out_order_no }}', '{{ $value->transaction_id }}', '{{ $value->amount }}')" title="{{ translate('Manual callback') }}">
+                                    <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="manual_callback('{{ $value->out_order_no }}', '{{ $value->transaction_id }}', '{{ $value->amount }}', '{{ $value->payment_type }}')" title="{{ translate('Manual callback') }}">
                                         {{ translate('Manual callback') }}
                                     </a>
                                 </td>
@@ -95,21 +95,34 @@
 
 @section('script')
     <script>
-        function manual_callback(orderid, transaction_id, money) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{route('htpay.notify')}}",
-                type: 'POST',
-                data: {
+        function manual_callback(orderid, transaction_id, money, pay_type) {
+            var url, postData;
+            if (pay_type == 'htpay') {
+                url = "{{route('htpay.notify')}}";
+                postData = {
                     returncode: '00',
                     orderid: orderid,
                     transaction_id: transaction_id,
                     money: money,
+                }
+            } else if (pay_type == 'qepay') {
+                url = "{{route('qepay.notify')}}";
+                postData = {
+                    tradeResult: 1,
+                    orderNo: orderid,
+                    amount: money,
+                    oriAmount: money,
+                }
+            }
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
+                url: url,
+                type: 'POST',
+                data: postData,
                 success: function (response) {
-                    if(response == 'ok') {
+                    if(response == 'ok' || response == 'success') {
                         location.reload();
                     }
                 }

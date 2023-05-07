@@ -1680,3 +1680,21 @@ if (!function_exists('curlS')) {
         return $contents;
     }
 }
+
+if (!function_exists("getExchangeRate")) {
+    /**
+     * 美元兑换印尼盾
+     * author: Sym
+     * time: 2023-05-07 17:23
+     * @return int|mixed
+     */
+    function getExchangeRate() {
+        // 默认1美元对换14670印尼盾
+        $exchange_rate = env('HTPAY_EXCHANGE_RATE', 14670);
+        if ($exchange_rate <= 0) {
+            $exchange_rate = 14670;
+        }
+
+        return $exchange_rate;
+    }
+}

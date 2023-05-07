@@ -86,7 +86,7 @@ class HtpayController extends Controller
             }
         }
 
-        $exchange_rate = $this->getExchangeRate();
+        $exchange_rate = getExchangeRate();
 
         $request_arr = [
             "pay_memberid" => $pay_memberid,//商户id 商户后台获取
@@ -141,7 +141,7 @@ class HtpayController extends Controller
         $pay_memberid = env('HTPAY_MEMBERID');
         $sign_key = env('HTPAY_SECRET');
 
-        $exchange_rate = $this->getExchangeRate();
+        $exchange_rate = getExchangeRate();
         $money = $withdrawRequest->amount * $exchange_rate;
 
         $paymentStatement = new PaymentStatement();
@@ -269,15 +269,5 @@ class HtpayController extends Controller
         }
 
         echo 'ok';
-    }
-
-    private function getExchangeRate() {
-        // 默认1美元对换14670印尼盾
-        $exchange_rate = env('HTPAY_EXCHANGE_RATE', 14670);
-        if ($exchange_rate <= 0) {
-            $exchange_rate = 14670;
-        }
-
-        return $exchange_rate;
     }
 }

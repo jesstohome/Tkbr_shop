@@ -9,14 +9,21 @@
                 <div class="row">
                     <div class="col-md-12">
                         <a href="javascript:void(0);" id="wallet-link" onclick="$('#payment_for_storehouse_modal').modal('show')" class="btn btn-primary mt-2">Wallet</a>
+
                         @if(false)
                         <a href="javascript:void(0);" id="Manual-link" onclick="show_make_wallet_recharge_modal(3)" class="btn btn-primary mt-2">{{translate('Manual transfer')}}</a>
                         @endif
+
                         @if(env('PAYPAL_CLIENT_ID'))
                         <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'paypal', 'order_id' => $order->id ?? 0]) }}" id="paypal-link" class="btn btn-primary mt-2">Paypal</a>
                         @endif
+
                         @if(get_setting('htpay_collection_behalf') == 1)
-                            <a href="javascript:void(0)" onclick="toPay()" id="htpay-link" class="btn btn-primary mt-2">Htpay</a>
+                            <a href="javascript:void(0)" onclick="toPay(1)" id="htpay-link" class="btn btn-primary mt-2">Htpay</a>
+                        @endif
+
+                        @if(get_setting('qepay_collection_behalf') == 1)
+                            <a href="javascript:void(0)" onclick="toPay(2)" id="qepay-link" class="btn btn-primary mt-2">Qepay</a>
                         @endif
                     </div>
                 </div>
@@ -64,8 +71,14 @@
         });
     }
 
-    function toPay() {
-        window.open("{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'htpay', 'order_id' => $order->id ?? 0]) }}".replace('&amp;', '&'), '_target');
+    function toPay(pay_type) {
+        var url = '';
+        if (1 === pay_type) {
+            url = "{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'htpay', 'order_id' => $order->id ?? 0]) }}"
+        } else if (2 === pay_type) {
+            url = "{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'qepay', 'order_id' => $order->id ?? 0]) }}"
+        }
+        window.open(url.replace('&amp;', '&'), '_target');
         setTimeout(function () {
             location.href = "{{ route('seller.money_withdraw_requests.index') }}";
         }, 2e3);

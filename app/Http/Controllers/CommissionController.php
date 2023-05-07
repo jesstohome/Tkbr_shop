@@ -246,7 +246,7 @@ id: 1
             return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
         } else if($request->payment_option == 'usdt_payment') {
                   return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
-        } else if($request->payment_option == 'htpay') {
+        } else if(in_array($request->payment_option, ['htpay', 'qepay'])) {
             $decorator = __NAMESPACE__ . '\\Payment\\' . str_replace(' ', '', ucwords(str_replace('_', ' ', $request->payment_option))) . "Controller";
             if ( class_exists($decorator) )
             {

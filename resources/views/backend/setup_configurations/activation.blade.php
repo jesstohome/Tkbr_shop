@@ -638,6 +638,33 @@
         </div>
     </div>
 
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header text-center bord-btm">
+                <h3 class="mb-0 h6 text-center">{{translate('Qepay Payment Activation')}}</h3>
+            </div>
+            <div class="card-body">
+                <div class="clearfix">
+                    <label>{{translate('Collection on behalf')}}</label>
+                    <label class="aiz-switch aiz-switch-success mb-0 float-right">
+                        <input type="checkbox" onchange="updateSettings(this, 'qepay_collection_behalf')" <?php if(get_setting('qepay_collection_behalf') == 1) echo "checked";?>>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="clearfix">
+                    <label>{{translate('Payment on behalf')}}</label>
+                    <label class="aiz-switch aiz-switch-success mb-0 float-right">
+                        <input type="checkbox" onchange="updateSettings(this, 'qepay_payment_behalf')" <?php if(get_setting('qepay_payment_behalf') == 1) echo "checked";?>>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="alert text-center" style="color: #004085;background-color: #cce5ff;border-color: #b8daff;margin-bottom:0;margin-top:10px;">
+                    {{ translate('You need to configure Qepay correctly to enable this feature') }}. <a href="{{ route('payment_method.index') }}">{{ translate('Configure Now') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <h4 class="text-center text-muted mt-4">{{translate('Social Media Login')}}</h4>
