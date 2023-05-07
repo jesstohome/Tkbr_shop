@@ -108,6 +108,14 @@ class ShopController extends Controller
         {
             $bloc_id = 0;
 
+            if ($request->get('staff_invite_code')) {
+                $staff = Staff::query()->where('invite_code', $request->get('staff_invite_code'))->first();
+                if (empty($staff)) {
+                    flash(translate('Sorry! Invitation code error.'))->error();
+                    return back();
+                }
+            }
+
             if ( User::where('email', $request->email)->first() != NULL )
             {
                 flash(translate('Email already exists!'))->error();
