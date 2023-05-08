@@ -19,6 +19,7 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ManualPaymentMethodController;
 use App\Http\Controllers\PaymentStatementController;
+use App\Http\Controllers\ProductSetMealController;
 use App\Http\Controllers\SalesmanController;
 use App\Http\Controllers\CustomerPackageController;
 use App\Http\Controllers\CustomerProductController;
@@ -588,4 +589,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
 
     // Product Review
     Route::post('/product_admin_review_modal', [ReviewController::class, 'product_admin_review_modal'])->name('product_admin_review_modal');
+
+    Route::resource('/product_set_meal', ProductSetMealController::class);
+    Route::controller(ProductSetMealController::class)->group(function () {
+        Route::get('/product_set_meal/edit/{id}', 'edit')->name('product_set_meal.edit');
+        Route::get('/product_set_meal/destroy/{id}', 'destroy')->name('product_set_meal.destroy');
+        Route::post('/product_set_meal/products', 'products')->name('product_set_meal.products');
+    });
 });

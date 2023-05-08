@@ -25,6 +25,14 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="col-md-3 col-6">
+                                <select name="pos_type" class="form-control form-control-lg aiz-selectpicker"
+                                        data-live-search="true" onchange="filterProducts()">
+                                    <option value="set_meal">{{ translate('Set Meal') }}</option>
+                                    <option value="single_item">{{ translate('Single item') }}</option>
+
+                                </select>
+                            </div>
                         </div>
                         <div class="aiz-pos-product-list c-scrollbar-light">
                             <div class="d-flex flex-wrap justify-content-center" id="product-list">
@@ -80,20 +88,56 @@
     <script type="text/javascript">
 
         var products = null;
+        var selected_set_meal_id = 0;
 
         $(document).ready(function () {
             // $('body').addClass('side-menu-closed');
-            $('#product-list').on('click', '.add-plus:not(.c-not-allowed)', function () {
+            $('#product-list').on('click', '.add-plus.product:not(.c-not-allowed)', function () {
                 var product_id = $(this).data('product-id');
                 var product_name = $(this).data('product-name');
                 var product_price = $(this).data('product-price');
                 updateSelection(product_id, product_name, product_price);
             });
+
+            $('#product-list').on('click', '.add-plus.set-meal:not(.c-not-allowed)', function () {
+                var set_meal_id = $(this).data('set-meal-id');
+                console.log("set_meal_id", set_meal_id);
+                if (set_meal_id != selected_set_meal_id && selected_set_meal_id !== 0) {
+                    AIZ.plugins.notify('danger', '{{ translate('Only one set meal can be added') }}');
+                    return;
+                }
+
+                updateSetMealSelection(set_meal_id);
+            });
+
             filterProducts();
         });
 
-        function updateSelection(product_id, product_name, product_price) {
-            let already_selected_ids = getSelectedIds()
+        function updateSetMealSelection(set_meal_id) {
+            $.ajax( {
+                url: "{{route('seller.get_products_by_set_meal')}}",
+                type: 'GET',
+                data: {
+                    id: set_meal_id
+                },
+                success: function (response) {
+                    if (response.success) {
+                        if (response.products) {
+                            response.products.forEach((product) => {
+                                updateSelection(product.id, product.name, product.unit_price, set_meal_id);
+                            })
+                        }
+                    }
+                }
+            } );
+        }
+
+        function updateSelection(product_id, product_name, product_price, set_meal_id) {
+            if (!set_meal_id) set_meal_id = 0;
+
+            selected_set_meal_id = set_meal_id;
+
+            let already_selected_ids = getSelectedIds();
             let container = $('#product-selection');
 
             if (!already_selected_ids.includes(product_id)) {
@@ -109,13 +153,14 @@
 
                                                     <div class="fs-15 fw-600">${product_price}</div>
                                                 </div>
-                                                <div class="col-auto">
+                                                ${set_meal_id ? '' : `<div class="col-auto">
                                                     <button type="button"
                                                             class="btn btn-circle btn-icon btn-sm btn-soft-danger ml-2 mr-0"
                                                             onclick="removeSelected(${product_id})">
                                                         <i class="las la-trash-alt"></i>
                                                     </button>
-                                                </div>
+                                                </div>`}
+
                                             </div>
                                         </li>`)
             } else {
@@ -140,19 +185,31 @@
         function filterProducts() {
             var keyword = $('input[name=keyword]').val();
             var category = $('select[name=poscategory]').val();
-            var brand = $('select[name=brand]').val();
-            $.get('{{ route('seller.product_storehouse.search') }}', {
+            var pos_type = $('select[name=pos_type]').val();
+            var api_url = pos_type === 'set_meal' ? '{{ route('seller.product_storehouse.search_set_meal') }}' : '{{ route('seller.product_storehouse.search') }}';
+            if (pos_type === 'set_meal') {
+                $("#add-all-btn").hide()
+            } else {
+                $("#add-all-btn").show()
+            }
+
+            $.get(api_url, {
                 keyword: keyword,
                 category: category,
-                brand: brand
+                pos_type: pos_type
             }, function (data) {
                 products = data;
                 $('#product-list').html(null);
-                setProductList(data);
+                if (pos_type === 'set_meal') {
+                    setSetMealList(data);
+                } else {
+                    setProductList(data);
+                }
             });
         }
 
         function loadMoreProduct() {
+            var pos_type = $('select[name=pos_type]').val();
             if (products != null && products.links.next != null) {
                 $('#load-more').find('.btn').html('{{ translate('Loading..') }}');
                 @if(env('APP_ENV') != 'local')
@@ -160,11 +217,16 @@
                 @endif
                 $.get(products.links.next, {}, function (data) {
                     products = data;
-                    setProductList(data);
+                    if (pos_type === 'set_meal') {
+                        setSetMealList(data);
+                    } else {
+                        setProductList(data);
+                    }
                 });
             }
         }
 
+        // 显示产品
         function setProductList(data) {
             for (var i = 0; i < data.data.length; i++) {
                 $('#product-list').append(
@@ -191,7 +253,44 @@
                     }
                                 </div>
                             </div>
-                            <div class="add-plus absolute-full rounded overflow-hidden hov-box ${data.data[i].qty <= 0 ? 'c-not-allowed' : ''}" data-product-id="${data.data[i].id}" data-product-name="${data.data[i].name}"  data-product-price="${data.data[i].price != data.data[i].base_price ? data.data[i].price : data.data[i].base_price}">
+                            <div class="add-plus product absolute-full rounded overflow-hidden hov-box ${data.data[i].qty <= 0 ? 'c-not-allowed' : ''}" data-product-id="${data.data[i].id}" data-product-name="${data.data[i].name}"  data-product-price="${data.data[i].price != data.data[i].base_price ? data.data[i].price : data.data[i].base_price}">
+                                <div class="absolute-full bg-dark opacity-50">
+                                </div>
+                                <i class="las la-plus absolute-center la-6x text-white"></i>
+                            </div>
+                        </div>
+                    </div>`
+                );
+            }
+            if (data.links.next != null) {
+                $('#load-more').find('.btn').html('{{ translate('Load More.') }}');
+            } else {
+                $('#load-more').find('.btn').html('{{ translate('Nothing more found.') }}');
+            }
+        }
+
+        // 显示套餐
+        function setSetMealList(data) {
+            for (var i = 0; i < data.data.length; i++) {
+                $('#product-list').append(
+                    `<div class="w-130px w-xl-180px w-xxl-210px mx-2">
+                        <div class="card bg-white c-pointer product-card hov-container">
+                            <div class="position-relative">
+                                <span class="absolute-top-left mt-1 ml-1 mr-0">
+                                    ${data.data[i].stock > data.data[i].added_times
+                        ? `<span class="badge badge-inline badge-success fs-13">{{ translate('In stock') }}`
+                        : `<span class="badge badge-inline badge-danger fs-13">{{ translate('Out of stock') }}`}
+                                    : ${data.data[i].stock}</span>
+                                </span>
+                                <img src="${data.data[i].thumbnail_image}" class="card-img-top img-fit h-120px h-xl-180px h-xxl-210px mw-100 mx-auto" >
+                            </div>
+                            <div class="card-body p-2 p-xl-3">
+                                <div class="text-truncate fw-600 fs-14 mb-2">${data.data[i].name}</div>
+                                <div class="">
+                                    <span>${data.data[i].min_price} ~ ${data.data[i].max_price}</span>
+                                </div>
+                            </div>
+                            <div class="add-plus set-meal absolute-full rounded overflow-hidden hov-box ${data.data[i].stock <= data.data[i].added_times ? 'c-not-allowed' : ''}" data-set-meal-id="${data.data[i].id}">
                                 <div class="absolute-full bg-dark opacity-50">
                                 </div>
                                 <i class="las la-plus absolute-center la-6x text-white"></i>
@@ -232,7 +331,9 @@
             $.post('{{ route('seller.product_storehouse.add') }}', {
                 _token: AIZ.data.csrf,
                 all: all,
-                product_ids: productIds
+                product_ids: productIds,
+                set_meal_id: selected_set_meal_id,
+                pos_type: $('select[name=pos_type]').val()
             }, function (data) {
                 if (data.success == 1) {
                     AIZ.plugins.notify('success', data.message ? data.message : '{{ translate('Product has been updated successfully') }}');

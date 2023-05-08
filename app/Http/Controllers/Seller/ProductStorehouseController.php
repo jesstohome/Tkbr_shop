@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Resources\PosProductCollection;
+use App\Http\Resources\PosSetMealCollection;
 use App\Models\Product;
+use App\Models\ProductSetMeal;
 use App\Models\ProductStock;
 use App\Models\Review;
 use App\Models\Seller;
@@ -12,6 +14,7 @@ use App\Services\ProductTaxService;
 use App\Utility\CategoryUtility;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -78,6 +81,23 @@ class ProductStorehouseController extends Controller
         $stocks = new PosProductCollection($products->paginate(16));
         $stocks->appends(['keyword' => $request->keyword, 'category' => $request->category, 'brand' => $request->brand]);
         return $stocks;
+    }
+
+    public function searchSetMeal(Request $request) {
+        $list = ProductSetMeal::whereRaw('stock > added_times')->orderBy('id', 'desc');
+
+        if ($request->category != null) {
+            $arr = explode('-', $request->category);
+            if ($arr[0] == 'category') {
+                $category_ids = CategoryUtility::children_ids($arr[1]);
+                $category_ids[] = $arr[1];
+                $list = $list->whereIn('category_id', $category_ids);
+            }
+        }
+
+        $list = new PosSetMealCollection($list->paginate(100));
+        $list->appends(['category' => $request->category]);
+        return $list;
     }
 
     public function addProduct(Request $request)
@@ -191,5 +211,34 @@ class ProductStorehouseController extends Controller
             DB::rollBack();
             return response()->json(['success' => 0]);
         }
+    }
+
+    public function get_products_by_set_meal(Request $request) {
+        $setMeal = ProductSetMeal::find($request->id);
+        if (empty($setMeal)) {
+            return response()->json(['success' => 0]);
+        }
+
+        $userId = Auth::user()->id;
+
+        $product_ids = is_string($setMeal->product_ids) ? json_decode($setMeal->product_ids, true) : $setMeal->product_ids;
+        // 排除已复制产品
+        $alreadyCopyIds = Product::query()
+            ->where('user_id', $userId)
+            ->whereNotNull('original_id')
+            ->pluck('original_id')
+            ->toArray();
+
+        // 排除已复制产品ID
+        $product_ids = array_filter($product_ids, function ($v) use ($alreadyCopyIds) {
+            return !in_array($v, $alreadyCopyIds);
+        }, ARRAY_FILTER_USE_BOTH);
+        if (empty($product_ids)) {
+            return response()->json(['success' => 1, 'products' => []]);
+        }
+
+        $products = Product::query()->whereIn('id', $product_ids)->select(["id", "name", "unit_price"])->get();
+
+        return response()->json(['success' => 1, 'products' => $products]);
     }
 }

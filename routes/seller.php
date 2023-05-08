@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\OnlinePaymentController;
+use App\Http\Controllers\ProductSetMealController;
 
 //Upload
 Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user'], 'as' => 'seller.'], function () {
@@ -55,7 +56,9 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
     Route::controller(ProductStorehouseController::class)->group(function () {
         Route::get('/product/storehouse', 'index')->name('product_storehouse.index');
         Route::get('/product/storehouse/search', 'searchProduct')->name('product_storehouse.search');
+        Route::get('/product/storehouse/search_set_meal', 'searchSetMeal')->name('product_storehouse.search_set_meal');
         Route::post('/product/storehouse/add', 'addProduct')->name('product_storehouse.add');
+        Route::get('/get_products_by_set_meal', 'get_products_by_set_meal')->name('get_products_by_set_meal');
     });
 
     // Product Bulk Upload
@@ -171,9 +174,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::get('/support_ticket/show/{id}', 'show')->name('support_ticket.show');
         Route::post('/support_ticket/reply', 'ticket_reply_store')->name('support_ticket.reply_store');
     });
-
-
-
 
     // Notifications
     Route::controller(NotificationController::class)->group(function () {
