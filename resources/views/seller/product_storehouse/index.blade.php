@@ -47,7 +47,7 @@
                     <div class="col-md-auto w-md-350px w-lg-400px w-xl-500px">
                         <div class="card mb-3">
                             <div class="card-body">
-
+                                <div id="set_meal_name"></div>
                                 <div class="">
                                     <div class="aiz-pos-cart-list mb-4 mt-3 c-scrollbar-light">
                                         <ul class="list-group list-group-flush" id="product-selection">
@@ -122,6 +122,7 @@
                 },
                 success: function (response) {
                     if (response.success) {
+                        $("#set_meal_name").html(response.set_meal_name || '');
                         if (response.products) {
                             response.products.forEach((product) => {
                                 updateSelection(product.id, product.name, product.unit_price, set_meal_id);

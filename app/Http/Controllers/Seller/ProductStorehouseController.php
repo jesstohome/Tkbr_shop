@@ -107,6 +107,13 @@ class ProductStorehouseController extends Controller
         $staff_id = get_staff_id();
         if (!$request->all && !$request->product_ids) return response()->json(['success' => 0, 'message' => translate('Please select a product')]);
 
+        if (!empty($request->set_meal_id)) {
+            $setMeal = ProductSetMeal::query()->where('id', $request->set_meal_id)->first();
+            if (empty($setMeal) || $setMeal->added_times >= $setMeal->stock) {
+                return response()->json(['success' => 0, 'msg' => translate('Insufficient number of set meal')]);
+            }
+        }
+
         // 排除已复制产品
         $alreadyCopyIds = Product::query()
             ->where('user_id', $userId)
@@ -151,6 +158,11 @@ class ProductStorehouseController extends Controller
             // 判断每件商品最多能让N个卖家同时上架在店铺上
             $hasLimitShopProduct = false;
             $limitShop = (int) get_setting('warehouse_product_merchant_limit');
+
+            // 有指定套餐，使用次数加1
+            if (!empty($request->set_meal_id)) {
+                ProductSetMeal::query()->where('id', $request->set_meal_id)->increment('added_times');
+            }
 
             // 循环复制产品
             foreach ($productIds as $productId) {
@@ -238,7 +250,10 @@ class ProductStorehouseController extends Controller
         }
 
         $products = Product::query()->whereIn('id', $product_ids)->select(["id", "name", "unit_price"])->get();
+        foreach ($products as $product) {
+            $product->unit_price = single_price($product->unit_price);
+        }
 
-        return response()->json(['success' => 1, 'products' => $products]);
+        return response()->json(['success' => 1, 'products' => $products, 'set_meal_name' => $setMeal->category->getTranslation('name') . '-' . $setMeal->name]);
     }
 }
