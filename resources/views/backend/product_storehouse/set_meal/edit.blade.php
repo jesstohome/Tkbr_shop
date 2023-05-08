@@ -27,8 +27,8 @@
                     <div class="col-sm-9 products-selector">
                         <select name="product_ids[]" id="product_ids" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Products') }}" data-live-search="true" data-selected-text-format="count">
                             @if(!empty($row->category_id))
-                                @foreach(\App\Models\Product::where('category_id', $row->category_id)->orderBy('id', 'desc')->select(["id", "name"])->get() as $product)
-                                    <option value="{{$product->id}}" {{!empty($row->product_ids) && is_array($row->product_ids) && in_array($product->id, $row->product_ids) ? 'selected' : ''}}>{{ $product->getTranslation('name') }}</option>
+                                @foreach(\App\Models\Product::where('category_id', $row->category_id)->orderBy('id', 'desc')->select(["id", "name", 'unit_price'])->get() as $product)
+                                    <option value="{{$product->id}}" {{!empty($row->product_ids) && is_array($row->product_ids) && in_array($product->id, $row->product_ids) ? 'selected' : ''}}>({{single_price($product->unit_price)}}) {{ $product->getTranslation('name') }}</option>
                                 @endforeach
                             @endif
                         </select>
