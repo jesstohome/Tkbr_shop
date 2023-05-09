@@ -50,7 +50,7 @@ class ProductSetMealController extends Controller
             $productSetMeal->bloc_id = \Auth::user()->bloc_id;
             $productSetMeal->staff_id = \Auth::user()->staff_id;
             $productSetMeal->category_id = $category_id;
-            $productSetMeal->product_ids = $product_ids;
+            $productSetMeal->product_ids = is_array($product_ids) ? json_encode($product_ids, JSON_UNESCAPED_UNICODE) : $product_ids;
             $productSetMeal->min_price = Product::query()->whereIn('id', $product_ids)->min('unit_price');
             $productSetMeal->max_price = Product::query()->whereIn('id', $product_ids)->max('unit_price');
             $productSetMeal->stock = $request->post('stock');
@@ -111,7 +111,7 @@ class ProductSetMealController extends Controller
             }
 
             $productSetMeal->category_id = $category_id;
-            $productSetMeal->product_ids = $product_ids;
+            $productSetMeal->product_ids = is_array($product_ids) ? json_encode($product_ids, JSON_UNESCAPED_UNICODE) : $product_ids;
             $productSetMeal->min_price = Product::query()->whereIn('id', $product_ids)->min('unit_price');
             $productSetMeal->max_price = Product::query()->whereIn('id', $product_ids)->max('unit_price');
             $productSetMeal->stock = $request->stock;
