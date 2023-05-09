@@ -280,12 +280,6 @@
                     `<div class="w-130px w-xl-180px w-xxl-210px mx-2">
                         <div class="card bg-white c-pointer product-card hov-container">
                             <div class="position-relative">
-                                <span class="absolute-top-left mt-1 ml-1 mr-0">
-                                    ${data.data[i].stock > data.data[i].added_times
-                        ? `<span class="badge badge-inline badge-success fs-13">{{ translate('In stock') }}`
-                        : `<span class="badge badge-inline badge-danger fs-13">{{ translate('Out of stock') }}`}
-                                    : ${data.data[i].stock}</span>
-                                </span>
                                 <img src="${data.data[i].thumbnail_image}" class="card-img-top img-fit h-120px h-xl-180px h-xxl-210px mw-100 mx-auto" >
                             </div>
                             <div class="card-body p-2 p-xl-3">
