@@ -122,6 +122,9 @@
                 },
                 success: function (response) {
                     if (response.success) {
+                        if (response.msg) {
+                            AIZ.plugins.notify('warning', response.msg);
+                        }
                         $("#set_meal_name").html(response.set_meal_name || '');
                         if (response.products) {
                             response.products.forEach((product) => {

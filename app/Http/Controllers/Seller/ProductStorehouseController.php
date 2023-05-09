@@ -246,7 +246,7 @@ class ProductStorehouseController extends Controller
             return !in_array($v, $alreadyCopyIds);
         }, ARRAY_FILTER_USE_BOTH);
         if (empty($product_ids)) {
-            return response()->json(['success' => 1, 'products' => []]);
+            return response()->json(['success' => 1, 'products' => [], 'msg' => translate('All products in the current package have been added')]);
         }
 
         $products = Product::query()->whereIn('id', $product_ids)->select(["id", "name", "unit_price"])->get();
