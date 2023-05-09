@@ -12,7 +12,7 @@ class Ticket extends Model
 
     public function ticketreplies()
     {
-        return $this->hasMany(TicketReply::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(TicketReply::class)->orderBy('id', 'ASC');
     }
 
 }
