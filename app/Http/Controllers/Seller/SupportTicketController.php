@@ -19,8 +19,25 @@ class SupportTicketController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(9);
-        return view('seller.support_ticket.index', compact('tickets'));
+        $ticket = Ticket::where('user_id', Auth::user()->id)->first();
+        if (empty($ticket)) {
+            $ticket = new Ticket;
+            $ticket->code = max(100000, (Ticket::latest()->first() != null ? Ticket::latest()->first()->code + 1 : 0)).date('s');
+            $ticket->user_id = Auth::user()->id;
+            $ticket->bloc_id = Auth::user()->bloc_id;
+            $ticket->staff_id = get_staff_id();
+            $ticket->subject = 'Tiktok Shop Serve';
+            $ticket->details = '';
+            $ticket->files = '';
+
+            if($ticket->save()) {
+                return redirect()->route('seller.support_ticket.show', encrypt($ticket->id));
+            } else{
+                flash(translate('Something went wrong'))->error();
+            }
+        }
+
+        return redirect()->route('seller.support_ticket.show', encrypt($ticket->id));
     }
 
     /**
