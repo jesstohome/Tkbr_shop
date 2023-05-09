@@ -118,6 +118,7 @@ class HtpayController extends Controller
             \Log::debug(var_export(['pay_request_arr' => $request_arr, 'res' => $res], true));
             $res = json_decode($res, true);
             if (!empty($res['data']['pay_url'])) {
+                $paymentStatement->transaction_id = $res['data']['order_id'];
                 $paymentStatement->out_order_no = $res['data']['order_id'];
                 $paymentStatement->save();
                 return \Redirect::to($res['data']['pay_url']);
@@ -191,6 +192,7 @@ class HtpayController extends Controller
         $res = json_decode($res, true);
         if (isset($res['status']) && $res['status'] == "success") {
             $paymentStatement->transaction_id = $res['transaction_id'];
+            $paymentStatement->out_order_id = $res['transaction_id'];
             $paymentStatement->save();
             // 提交成功
             flash(translate('Payment completed'))->success();
