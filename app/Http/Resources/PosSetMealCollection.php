@@ -23,7 +23,7 @@ class PosSetMealCollection extends ResourceCollection
                     'name2' => addslashes($name),
                     'thumbnail_image' => ($data->category->icon == null) ? '' : uploaded_asset($data->category->icon),
                 ];
-            })
+            })->shuffle()
         ];
     }
 
