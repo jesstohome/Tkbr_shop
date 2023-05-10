@@ -23,7 +23,7 @@
                     <th data-breakpoints="lg">{{ translate('Ticket ID') }}</th>
                     <th data-breakpoints="lg">{{ translate('Sending Date') }}</th>
                     <th>{{ translate('Subject') }}</th>
-                    <th data-breakpoints="lg">{{ translate('User') }}</th>
+                    <th data-breakpoints="lg">{{ translate('Email') }}</th>
                     <th data-breakpoints="lg">{{ translate('Status') }}</th>
                     <th data-breakpoints="lg">{{ translate('Last reply') }}</th>
                     <th class="text-right">{{ translate('Options') }}</th>
@@ -33,10 +33,10 @@
                     @foreach ($tickets as $key => $ticket)
                     @if ($ticket->user != null)
                         <tr>
-                            <td>#{{ $ticket->code }}</td>
+                            <td>{{translate('Permanent Work Order')}}</td>
                             <td>{{ $ticket->created_at }} @if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
                             <td>{{ $ticket->subject }}</td>
-                            <td>{{ $ticket->user->name }}</td>
+                            <td>{{ $ticket->user->email }}</td>
                             <td>
                                 @if ($ticket->status == 'pending')
                                     <span class="badge badge-inline badge-danger">{{ translate('Pending') }}</span>

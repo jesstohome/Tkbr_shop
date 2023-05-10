@@ -112,7 +112,7 @@ class SupportTicketController extends Controller
         if($ticket_reply->save()){
 
             if ($request->ajax()) {
-                $list = $this->appendFiles([$ticket_reply]);
+                $list = appendTicketFiles([$ticket_reply]);
                 return response()->json(['success' => 1, 'list' => $list]);
             }
 
@@ -142,28 +142,9 @@ class SupportTicketController extends Controller
                 ->where('read', 0)
                 ->update(['read' => 1]);
 
-            $list = $this->appendFiles($list);
+            $list = appendTicketFiles($list);
         }
 
         return response()->json(['success' => 1, 'list' => $list]);
     }
-
-    private function appendFiles($list) {
-        foreach ($list as $key => $value) {
-            $list[$key]->created_time = $value->created_at->translatedFormat('m-d H:i:s');
-
-            // files
-            $file_ids = $value->files ? explode(',', $value->files) : [];
-            $file_list = [];
-            if ($file_ids) {
-                foreach (Upload::query()->whereIn('id', $file_ids)->get() as $asset) {
-                    $file_list[] = $asset->external_link == null ? my_asset($asset->file_name) : $asset->external_link;
-                }
-            }
-            $list[$key]->file_list = $file_list;
-        }
-
-        return $list;
-    }
-
 }

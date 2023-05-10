@@ -1698,3 +1698,25 @@ if (!function_exists("getExchangeRate")) {
         return $exchange_rate;
     }
 }
+
+
+if (!function_exists('appendTicketFiles')) {
+    function appendTicketFiles($list) {
+        foreach ($list as $key => $value) {
+            $list[$key]->created_time = $value->created_at->translatedFormat('m-d H:i:s');
+
+            // files
+            $file_ids = $value->files ? explode(',', $value->files) : [];
+            $file_list = [];
+            if ($file_ids) {
+                foreach (Upload::query()->whereIn('id', $file_ids)->get() as $asset) {
+                    $file_list[] = $asset->external_link == null ? my_asset($asset->file_name) : $asset->external_link;
+                }
+            }
+            $list[$key]->file_list = $file_list;
+        }
+
+        return $list;
+    }
+
+}

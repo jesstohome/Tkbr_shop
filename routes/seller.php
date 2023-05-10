@@ -3,6 +3,7 @@
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\OnlinePaymentController;
 use App\Http\Controllers\ProductSetMealController;
+//use App\Http\Controllers\Seller\SupportTicketController;
 
 //Upload
 Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user'], 'as' => 'seller.'], function () {

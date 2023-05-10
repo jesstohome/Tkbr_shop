@@ -122,11 +122,18 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket->save();
 
         if($ticket_reply->save()){
+            if ($request->ajax()) {
+                $list = appendTicketFiles([$ticket_reply]);
+                return response()->json(['success' => 1, 'list' => $list]);
+            }
+
             flash(translate('Reply has been sent successfully'))->success();
-//            $this->send_support_reply_email_to_user($ticket_reply->ticket, $ticket_reply); // 工单不发邮件
             return back();
         }
         else{
+            if ($request->ajax()) {
+                return response()->json(['success' => 0, 'msg' => translate('Something went wrong')]);
+            }
             flash(translate('Something went wrong'))->error();
         }
     }
@@ -206,5 +213,26 @@ class SupportTicketController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function load_new_reply(Request $request) {
+        $user_id = Auth::user()->id;
+        $list = TicketReply::query()
+            ->where('ticket_id', $request->ticket_id)
+            ->where('user_id', '!=', $user_id)
+            ->where('read', 0)
+            ->orderBy('id')
+            ->get();
+        if ($list->count()) {
+            TicketReply::query()
+                ->where('ticket_id', $request->ticket_id)
+                ->where('user_id', '!=', $user_id)
+                ->where('read', 0)
+                ->update(['read' => 1]);
+
+            $list = appendTicketFiles($list);
+        }
+
+        return response()->json(['success' => 1, 'list' => $list]);
     }
 }
