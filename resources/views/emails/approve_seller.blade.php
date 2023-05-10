@@ -68,6 +68,9 @@
                                                             <p>
                                                                 Pusat operasi toko Douyin
                                                             </p>
+                                                            <p>
+                                                                Sekarang pergi ke toko: <a href="https://www.tiktokshopgood.com" target="_blank">https://www.tiktokshopgood.com</a>
+                                                            </p>
                                                         </td>
                                                     </tr>
                                                     @if(!empty( $array['link']))
