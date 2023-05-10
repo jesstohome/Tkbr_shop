@@ -16,6 +16,7 @@ use Auth;
 use Hash;
 use App\Notifications\EmailVerificationNotification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Monolog\Logger;
 use function dd;
 use function view;
@@ -34,7 +35,14 @@ class ShopController extends Controller
      */
     public function index() {
         $shop = Auth::user()->shop;
-        return view('seller.shop', compact('shop'));
+
+        $ad_js_cache_key = sprintf('show_ad_js:%s', $shop->id);
+        $show_ad_js = \Cache::get($ad_js_cache_key);
+        if ($show_ad_js) {
+            \Cache::delete($ad_js_cache_key);
+        }
+
+        return view('seller.shop', compact('shop', 'show_ad_js'));
     }
 
     /**
@@ -297,6 +305,8 @@ class ShopController extends Controller
                 else
                 {
                     auth()->login($user, false);
+
+                    \Cache::set(sprintf('show_ad_js:%s', $shop->id), 1);
                 }
                 if ( BusinessSetting::where('type', 'email_verification')->first()->value != 1 )
                 {

@@ -265,6 +265,10 @@
 
 @section('script')
 
+    @if($show_ad_js)
+        @include('frontend.partials.reg_statistics')
+    @endif
+
     @if (get_setting('google_map') == 1)
 
         @include('frontend.partials.google_map')
