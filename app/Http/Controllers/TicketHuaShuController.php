@@ -15,7 +15,7 @@ class TicketHuaShuController extends Controller
     public function index()
     {
         $list = TicketHuaShu::all();
-        return view('backend.support.ticket_huashu.index', compact('list'));
+        return view('backend.support.support_tickets.fast_reply_modal', compact('list'));
     }
 
     /**
@@ -25,7 +25,7 @@ class TicketHuaShuController extends Controller
      */
     public function create()
     {
-        return view('backend.support.ticket_huashu.create');
+        // return view('backend.support.ticket_huashu.create');
     }
 
     /**
@@ -71,8 +71,8 @@ class TicketHuaShuController extends Controller
      */
     public function edit($id)
     {
-        $row = TicketHuaShu::find($id);
-        return view('backend.support.ticket_huashu.edit', compact('row'));
+//        $row = TicketHuaShu::find($id);
+//        return view('backend.support.ticket_huashu.edit', compact('row'));
     }
 
     /**

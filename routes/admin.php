@@ -48,6 +48,7 @@ use App\Http\Controllers\StateController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\TaxController;
+use App\Http\Controllers\TicketHuaShuController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WebsiteController;
@@ -597,4 +598,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::get('/product_set_meal/destroy/{id}', 'destroy')->name('product_set_meal.destroy');
         Route::post('/product_set_meal/products', 'products')->name('product_set_meal.products');
     });
+
+    Route::resource('/huashu', TicketHuaShuController::class);
 });

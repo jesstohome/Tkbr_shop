@@ -45,6 +45,11 @@
 
     }
 
+    div.images.mine {
+        display: flex;
+        justify-content: flex-end;
+    }
+
     .note-editable.card-block {
         height: 80px !important;
     }
@@ -78,7 +83,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
                                 @foreach ((explode(",",$ticketreply->files)) as $key => $file)
                                     @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
                                     @if($file_detail != null)
@@ -115,6 +120,7 @@
                         <input class="form-control" type="text" name="reply" value="" required />
                     </div>
                     <div class="col-md-4">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="show_fast_reply_modal()">{{ translate('Select Fast Reply') }}</button>
                         <button type="submit" class="btn btn-sm btn-primary" onclick="submit_reply('pending')">{{ translate('Send Reply') }}</button>
                     </div>
                 </div>
@@ -123,7 +129,17 @@
         </div>
     </div>
 </div>
+@endsection
 
+@section('modal')
+    <!-- fast reply Modal -->
+    <div class="modal fade" id="fast_reply_modal">
+        <div class="modal-dialog">
+            <div class="modal-content" id="fast-reply-modal-content">
+
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')

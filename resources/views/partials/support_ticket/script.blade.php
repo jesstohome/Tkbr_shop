@@ -94,12 +94,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div>${images}</div>
+                            <div class="images ${item.user_id == user_id ? 'mine' : ''}">${images}</div>
                         </li>
                         `);
             })
         }
     }
-
     setInterval(loop_load_new_reply, 10e3);
+
+    function show_fast_reply_modal() {
+        $.get('{{ route('huashu.index') }}',{_token:'{{ @csrf_token() }}'}, function(data){
+            $('#fast-reply-modal-content').html(data);
+            $('#fast_reply_modal').modal('show', {backdrop: 'static'});
+        });
+    }
 </script>

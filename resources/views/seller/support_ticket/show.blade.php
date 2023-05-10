@@ -45,6 +45,11 @@
 
     }
 
+    div.images.mine {
+        display: flex;
+        justify-content: flex-end;
+    }
+
     .note-editable.card-block {
         height: 80px !important;
     }
@@ -75,7 +80,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
                                 @foreach ((explode(",",$ticketreply->files)) as $key => $file)
                                     @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
                                     @if($file_detail != null)
