@@ -173,6 +173,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::post('/support_ticket/store', 'store')->name('support_ticket.store');
         Route::get('/support_ticket/show/{id}', 'show')->name('support_ticket.show');
         Route::post('/support_ticket/reply', 'ticket_reply_store')->name('support_ticket.reply_store');
+        Route::get('/support_ticket/load_new_reply', 'load_new_reply')->name('support_ticket.load_new_reply');
     });
 
     // Notifications

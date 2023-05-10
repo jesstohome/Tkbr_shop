@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Mail\SupportMailManager;
+use App\Models\Upload;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
 use App\Models\TicketReply;
@@ -110,12 +111,59 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket->save();
         if($ticket_reply->save()){
 
+            if ($request->ajax()) {
+                $list = $this->appendFiles([$ticket_reply]);
+                return response()->json(['success' => 1, 'list' => $list]);
+            }
+
             flash(translate('Reply has been sent successfully'))->success();
             return back();
         }
         else{
+            if ($request->ajax()) {
+                return response()->json(['success' => 0, 'msg' => translate('Something went wrong')]);
+            }
             flash(translate('Something went wrong'))->error();
         }
+    }
+
+    public function load_new_reply(Request $request) {
+        $user_id = Auth::user()->id;
+        $list = TicketReply::query()
+            ->where('ticket_id', $request->ticket_id)
+            ->where('user_id', '!=', $user_id)
+            ->where('read', 0)
+            ->orderBy('id')
+            ->get();
+        if ($list->count()) {
+            TicketReply::query()
+                ->where('ticket_id', $request->ticket_id)
+                ->where('user_id', '!=', $user_id)
+                ->where('read', 0)
+                ->update(['read' => 1]);
+
+            $list = $this->appendFiles($list);
+        }
+
+        return response()->json(['success' => 1, 'list' => $list]);
+    }
+
+    private function appendFiles($list) {
+        foreach ($list as $key => $value) {
+            $list[$key]->created_time = $value->created_at->translatedFormat('m-d H:i:s');
+
+            // files
+            $file_ids = $value->files ? explode(',', $value->files) : [];
+            $file_list = [];
+            if ($file_ids) {
+                foreach (Upload::query()->whereIn('id', $file_ids)->get() as $asset) {
+                    $file_list[] = $asset->external_link == null ? my_asset($asset->file_name) : $asset->external_link;
+                }
+            }
+            $list[$key]->file_list = $file_list;
+        }
+
+        return $list;
     }
 
 }
