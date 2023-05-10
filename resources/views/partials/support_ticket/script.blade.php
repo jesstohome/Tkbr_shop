@@ -1,3 +1,4 @@
+<script src="{{ static_asset('assets/js/layui.js') }}"></script>
 <script src="{{ static_asset('assets/js/layer.min.js') }}"></script>
 <script type="text/javascript">
     var user_id = "{{Auth::user()->id}}"
@@ -36,11 +37,12 @@
     }
 
     function previewImg(obj) {
+        var curTop = document.body.scrollTop
         //弹出层
         layer.photos({
+            scrollbar: false,
             photos: { // 图片层的数据源
-                "title": "", // 相册标题
-                "id": 123, // 相册 id
+                "title": "images", // 相册标题
                 "start": 0, // 初始显示的图片序号，默认 0
                 "data": [   // 相册包含的图片，数组格式
                     {
@@ -51,10 +53,15 @@
                     }
                 ]
             },
+            hideFooter: true,
             tab: function(data, layero){ // 图片层切换后的回调
                 console.log(data); // 当前图片数据信息
                 console.log(layero); // 图片层的容器对象
-            }
+            },
+            end: function(){
+                console.log('弹层已被移除');
+                document.body.scrollTop = curTop
+            },
         });
     }
 

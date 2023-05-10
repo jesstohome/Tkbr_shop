@@ -599,5 +599,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::post('/product_set_meal/products', 'products')->name('product_set_meal.products');
     });
 
-    Route::resource('/huashu', TicketHuaShuController::class);
+    Route::controller(TicketHuaShuController::class)->group(function () {
+        Route::get('/huashu', 'index')->name('huashu.index');
+        Route::post('/huashu/store', 'store')->name('huashu.store');
+        Route::post('/huashu/update', 'update')->name('huashu.update');
+        Route::post('/huashu/delete', 'destroy')->name('huashu.destroy');
+    });
 });

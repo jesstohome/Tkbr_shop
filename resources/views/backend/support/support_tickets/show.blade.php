@@ -53,6 +53,15 @@
     .note-editable.card-block {
         height: 80px !important;
     }
+
+    .layui-layer-photos .layui-layer-content {
+
+        overflow:hidden;
+
+        text-align:center
+
+    }
+
 </style>
 @section('content')
 
@@ -134,7 +143,7 @@
 @section('modal')
     <!-- fast reply Modal -->
     <div class="modal fade" id="fast_reply_modal">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content" id="fast-reply-modal-content">
 
             </div>

@@ -43,9 +43,16 @@ class TicketHuaShuController extends Controller
             $huashu->abstract = $request->abstract ?? '';
             $huashu->content = $request->content ?? '';
             if($huashu->save()){
+                if ($request->ajax()) {
+                    return response()->json(['success' => 1, 'data' => $huashu]);
+                }
                 flash(translate('Ticket Fast Reply has been inserted successfully'))->success();
-                return redirect()->route('ticket_huashu.index');
+                return redirect()->route('huashu.index');
             }
+        }
+
+        if ($request->ajax()) {
+            return response()->json(['success' => 0]);
         }
 
         flash(translate('Something Error'))->error();
@@ -80,20 +87,27 @@ class TicketHuaShuController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        if ($request->has('content')) {
+        $id = $request->post('id');
+        if ($id) {
             $huashu = TicketHuaShu::find($id) ;
             $huashu->abstract = $request->abstract ?? '';
             $huashu->content = $request->content ?? '';
             if($huashu->save()){
+                if ($request->ajax()) {
+                    return response()->json(['success' => 1]);
+                }
                 flash(translate('Ticket Fast Reply has been updated successfully'))->success();
-                return redirect()->route('ticket_huashu.index');
+                return redirect()->route('huashu.index');
             }
         }
 
+        if ($request->ajax()) {
+            return response()->json(['success' => 0]);
+        }
         flash(translate('Something Error'))->error();
         return back();
     }
@@ -104,13 +118,20 @@ class TicketHuaShuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+        $id = $request->post('id');
         if(TicketHuaShu::destroy($id)){
+            if ($request->ajax()) {
+                return response()->json(['success' => 1]);
+            }
             flash(translate('Staff has been deleted successfully'))->success();
-            return redirect()->route('staffs.index');
+            return redirect()->route('huashu.index');
         }
 
+        if ($request->ajax()) {
+            return response()->json(['success' => 0]);
+        }
         flash(translate('Something went wrong'))->error();
         return back();
     }
