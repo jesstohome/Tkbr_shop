@@ -170,6 +170,10 @@ class SupportTicketController extends Controller
         $ticket->client_viewed = 1;
         $ticket->save();
         $ticket_replies = $ticket->ticketreplies;
+        foreach ($ticket_replies as $ticket_reply) {
+            $ticket_reply->read = 1;
+            $ticket_reply->save();
+        }
         return view('frontend.user.support_ticket.show', compact('ticket','ticket_replies'));
     }
 
@@ -216,23 +220,6 @@ class SupportTicketController extends Controller
     }
 
     public function load_new_reply(Request $request) {
-        $user_id = Auth::user()->id;
-        $list = TicketReply::query()
-            ->where('ticket_id', $request->ticket_id)
-            ->where('user_id', '!=', $user_id)
-            ->where('read', 0)
-            ->orderBy('id')
-            ->get();
-        if ($list->count()) {
-            TicketReply::query()
-                ->where('ticket_id', $request->ticket_id)
-                ->where('user_id', '!=', $user_id)
-                ->where('read', 0)
-                ->update(['read' => 1]);
-
-            $list = appendTicketFiles($list);
-        }
-
-        return response()->json(['success' => 1, 'list' => $list]);
+        return load_new_reply($request);
     }
 }

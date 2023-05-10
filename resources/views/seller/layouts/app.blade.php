@@ -132,5 +132,6 @@
         }
     </script>
 
+    @include('partials.support_ticket.notice')
 </body>
 </html>

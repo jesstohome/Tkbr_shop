@@ -12,7 +12,7 @@
 <script type="text/html" id="barDemo">
     <div class="layui-clear-space">
         <a class="layui-btn layui-btn-xs" lay-event="more">
-            更多
+            {{translate('More')}}
             <i class="layui-icon layui-icon-down"></i>
         </a>
     </div>
@@ -40,11 +40,11 @@
             css: [ // 重设当前表格样式
                 '.layui-table-tool-temp{padding-right: 145px;}'
             ].join(''),
-            cellMinWidth: 80,
+            cellMinWidth: 110,
             cols: [[
-                {field:'abstract', title: 'abstract', edit: 'text'},
-                {field:'content', title: 'content', edit: 'text'},
-                {fixed: 'right', title:'操作', width: 200, minWidth: 100, toolbar: '#barDemo'}
+                {field:'abstract', title: '{{translate('abstract')}}', edit: 'text'},
+                {field:'content', title: '{{translate('content')}}', edit: 'text'},
+                {title:'{{translate('Option')}}', width: 200, minWidth: 100, toolbar: '#barDemo'}
             ]],
 
             error: function(res, msg){
@@ -64,10 +64,10 @@
                     elem: this, // 触发事件的 DOM 对象
                     show: true, // 外部事件触发即显示
                     data: [{
-                        title: '发送',
+                        title: '{{translate('Send')}}',
                         id: 'send'
                     },{
-                        title: '删除',
+                        title: '{{translate('Delete')}}',
                         id: 'del'
                     }],
                     click: function(menudata){
@@ -140,7 +140,7 @@
                 {}
             } );
 
-            layer.msg('编辑成功', {icon: 1});
+            layer.msg('{{translate('Successfully edited')}}', {icon: 1});
 
             // 其他更新操作
             var update = {};

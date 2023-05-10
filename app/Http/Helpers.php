@@ -12,6 +12,8 @@ use App\Models\ProductStock;
 use App\Models\Address;
 use App\Models\CustomerPackage;
 use App\Models\Staff;
+use App\Models\Ticket;
+use App\Models\TicketReply;
 use App\Models\Upload;
 use App\Models\Translation;
 use App\Models\City;
@@ -1719,4 +1721,43 @@ if (!function_exists('appendTicketFiles')) {
         return $list;
     }
 
+}
+
+if (!function_exists('load_new_reply')) {
+    function load_new_reply(\Illuminate\Http\Request $request) {
+        $check = $request->check ?? false;
+        $user_id = Auth::user()->id;
+
+        $ticket_id = $request->ticket_id;
+        if ($check) {
+            $ticket = Ticket::query()->where('user_id', $user_id)->latest('id')->first();
+            $ticket_id = $ticket->id;
+        }
+        $list = TicketReply::query()
+            ->where('user_id', '!=', $user_id)
+            ->where('read', 0);
+
+        // 只检测有多少未读
+        if ($check) {
+            if (Auth::user()->user_type == 'seller' || Auth::user()->user_type == 'customer') {
+                $list = $list->where('ticket_id', $ticket_id);
+            }
+            return response()->json(['success' => 1, 'count' => $list->count()]);
+        }
+
+        $list = $list->where('ticket_id', $ticket_id);
+        $list = $list->orderBy('id')->get();
+
+        if ($list->count()) {
+            TicketReply::query()
+                ->where('ticket_id', $ticket_id)
+                ->where('user_id', '!=', $user_id)
+                ->where('read', 0)
+                ->update(['read' => 1]);
+
+            $list = appendTicketFiles($list);
+        }
+
+        return response()->json(['success' => 1, 'list' => $list]);
+    }
 }

@@ -32,7 +32,7 @@
                 }
             } );
         } else {
-            AIZ.plugins.notify('danger', '请先填写内容');
+            AIZ.plugins.notify('danger', '{{translate('Please fill in the content first')}}');
         }
     }
 
