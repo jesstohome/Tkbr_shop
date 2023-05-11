@@ -165,6 +165,24 @@
                         </a>
                     </li>
                 @endif
+
+                @php
+                    $support_ticket = DB::table('tickets')
+                        ->where('client_viewed', 0)
+                        ->where('user_id', Auth::user()->id)
+                        ->count();
+                @endphp
+                <li class="aiz-side-nav-item">
+                    <a href="{{ route('seller.support_ticket.index') }}"
+                       class="aiz-side-nav-link {{ areActiveRoutes(['seller.support_ticket.index']) }}">
+                        <i class="las la-atom aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Support Ticket') }}</span>
+                        @if ($support_ticket > 0)
+                            <span class="badge badge-inline badge-success">{{ $support_ticket }}</span>
+                        @endif
+                    </a>
+                </li>
+                
                  <!--店铺设置-->
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('seller.shop.index') }}"
@@ -294,25 +312,6 @@
                         </a>
                     </li>
                 @endif
-
-                @php
-                    $support_ticket = DB::table('tickets')
-                        ->where('client_viewed', 0)
-                        ->where('user_id', Auth::user()->id)
-                        ->count();
-                @endphp
-                <li class="aiz-side-nav-item">
-                    <a href="{{ route('seller.support_ticket.index') }}"
-                        class="aiz-side-nav-link {{ areActiveRoutes(['seller.support_ticket.index']) }}">
-                        <i class="las la-atom aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{ translate('Support Ticket') }}</span>
-                        @if ($support_ticket > 0)
-                            <span class="badge badge-inline badge-success">{{ $support_ticket }}</span>
-                        @endif
-                    </a>
-                </li>
-
-
 
 
                 <!--上传的文件-->
