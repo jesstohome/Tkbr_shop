@@ -28,10 +28,19 @@ class SupportTicketController extends Controller
             $ticket->bloc_id = Auth::user()->bloc_id;
             $ticket->staff_id = get_staff_id();
             $ticket->subject = 'Tiktok Shop Serve';
+            $ticket->viewed = 0;
+            $ticket->status = 'pending';
             $ticket->details = '';
             $ticket->files = '';
 
             if($ticket->save()) {
+                $ticket_reply = new TicketReply;
+                $ticket_reply->ticket_id = $ticket->id;
+                $ticket_reply->user_id = Auth::user()->id;
+                $ticket_reply->reply = translate('Hello');
+                $ticket_reply->files = '';
+                $ticket_reply->save();
+
                 return redirect()->route('seller.support_ticket.show', encrypt($ticket->id));
             } else{
                 flash(translate('Something went wrong'))->error();
