@@ -167,7 +167,7 @@
 
                 }
 
-                alert(event.touches.length > 1)
+                alert(event.touches.length)
 
             });
 
