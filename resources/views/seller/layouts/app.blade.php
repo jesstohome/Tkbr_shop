@@ -12,7 +12,7 @@
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,target-densitydpi=device-dpi,viewport-fit=cover">
 
     <!-- Favicon -->
 	<link rel="icon" href="{{ uploaded_asset(get_setting('site_icon')) }}">
