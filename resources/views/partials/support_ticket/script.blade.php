@@ -7,6 +7,10 @@
         $( '#ticket-reply-form' ).on("submit", function (){
             return false;
         })
+
+        setTimeout(function () {
+            document.body.scrollTop = 999999990
+        }, 500)
     })
 
     function submit_reply(status) {
@@ -14,7 +18,7 @@
         if($('input[name=reply]').val().length > 0) {
             var data = new FormData( $( '#ticket-reply-form' )[0] );
             $.ajax( {
-                url: "{{Auth::user()->user_type == 'admin' ? route('support_ticket.admin_store') : route('seller.support_ticket.reply_store')}}",
+                url: "{{Auth::user()->user_type != 'seller' ? route('support_ticket.admin_store') : route('seller.support_ticket.reply_store')}}",
                 type: 'POST',
                 data: data,
                 contentType: false,
@@ -67,7 +71,7 @@
 
     function loop_load_new_reply() {
         $.ajax( {
-            url: "{{route(Auth::user()->user_type == 'admin' ? 'support_ticket.load_new_reply' : 'seller.support_ticket.load_new_reply')}}",
+            url: "{{route(Auth::user()->user_type != 'seller' ? 'support_ticket.load_new_reply' : 'seller.support_ticket.load_new_reply')}}",
             type: 'GET',
             data: {
                 ticket_id: "{{$ticket->id}}",

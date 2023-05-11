@@ -1,7 +1,7 @@
 <script>
     function check_unread() {
         $.ajax( {
-            url: "{{route(Auth::user()->user_type == 'admin' ? 'support_ticket.load_new_reply' : 'seller.support_ticket.load_new_reply')}}",
+            url: "{{route(Auth::user()->user_type != 'seller' ? 'support_ticket.load_new_reply' : 'seller.support_ticket.load_new_reply')}}",
             type: 'GET',
             data: {
                 check: 1
