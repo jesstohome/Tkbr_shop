@@ -11,10 +11,10 @@
 
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
-	
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
-	<!-- Favicon -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!-- Favicon -->
 	<link rel="icon" href="{{ uploaded_asset(get_setting('site_icon')) }}">
 	<title>{{ get_setting('website_name').' | '.get_setting('site_motto') }}</title>
 
