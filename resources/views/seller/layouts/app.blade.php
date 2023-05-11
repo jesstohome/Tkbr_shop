@@ -167,6 +167,8 @@
 
                 }
 
+                alert(event.touches.length > 1)
+
             });
 
             var lastTouchEnd=0;
@@ -184,6 +186,10 @@
                 lastTouchEnd=now;
 
             },false);
+
+            document.addEventListener("gesturestart", function(event) {
+                event.preventDefault();
+            });
         })
     </script>
 
