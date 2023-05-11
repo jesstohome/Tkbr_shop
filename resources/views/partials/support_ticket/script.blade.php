@@ -107,7 +107,7 @@
             })
         }
     }
-    setInterval(loop_load_new_reply, 10e3);
+    setInterval(loop_load_new_reply, 5e3);
 
     function show_fast_reply_modal() {
         $.get('{{ route('huashu.index') }}',{_token:'{{ @csrf_token() }}'}, function(data){

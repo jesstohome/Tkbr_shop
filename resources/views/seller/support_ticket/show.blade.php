@@ -3,15 +3,19 @@
     ul.ticket, ul.ticket li {
         background-color: #ebedf2;
     }
+    ul.ticket li .comment-header {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+    }
     ul.ticket li .title {
         position: relative;
         max-width: 65vw;
         background-color: white;
         padding: 5px 10px;
-        display: flex;
+
         border-radius: 15px;
-        flex-direction: column;
-        align-items: flex-start;
+
         word-wrap: break-word;
         min-width: 8rem;
         width: fit-content;
@@ -76,7 +80,6 @@
                                             @php echo $ticketreply->reply; @endphp
                                             <p class="text-muted text-sm fs-11 time">{{date('m-d H:i', strtotime($ticketreply->created_at))}}</p>
                                         </span>
-
                                     </div>
                                 </div>
                             </div>
