@@ -62,6 +62,11 @@
     .note-editable.card-block {
         height: 80px !important;
     }
+
+    .card.chat {
+        /*position: fixed !important;*/
+    }
+
     .card .card-body {
         padding: 20px 10px;
         padding-bottom: 5px;
@@ -70,7 +75,7 @@
 @section('content')
 
 <div class="col-lg-10 mx-auto">
-    <div class="card">
+    <div class="card chat">
         <div class="card-header row gutters-5">
             <div class="text-center text-md-left">
                 <h5 class="mb-md-0 h5">{{ $ticket->user->email }}</h5>

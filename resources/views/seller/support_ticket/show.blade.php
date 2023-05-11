@@ -63,13 +63,17 @@
         height: 80px !important;
     }
 
+    .card.chat {
+        /*position: fixed !important;*/
+    }
+
     .card .card-body {
         padding: 20px 10px;
         padding-bottom: 5px;
     }
 </style>
 @section('panel_content')
-    <div class="card">
+    <div class="card chat">
         <div class="card-header row gutters-5">
             <div class="text-center text-md-left">
                 <h5 class="mb-md-0 h5">Tictok Shop Serve</h5>

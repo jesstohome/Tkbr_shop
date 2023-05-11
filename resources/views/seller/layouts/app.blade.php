@@ -156,6 +156,35 @@
         }
         setTimeout(rand_add_views, parseInt({{$min}} + Math.random() * {{$max - $min}}) * 1e3)
         @endif
+
+        // 禁用缩放
+        $(document).ready(function () {
+            document.addEventListener('touchstart',function (event) {
+
+                if(event.touches.length>1){
+
+                    event.preventDefault();
+
+                }
+
+            });
+
+            var lastTouchEnd=0;
+
+            document.addEventListener('touchend',function (event) {
+
+                var now=(new Date()).getTime();
+
+                if(now-lastTouchEnd<=300){
+
+                    event.preventDefault();
+
+                }
+
+                lastTouchEnd=now;
+
+            },false);
+        })
     </script>
 
     @include('partials.support_ticket.notice')
