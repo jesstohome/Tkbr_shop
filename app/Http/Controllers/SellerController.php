@@ -111,22 +111,16 @@ class SellerController extends Controller
     {
         $shop_id = $request->shop_id;
         $inc_num = $request->inc_num;
-
         $base_num = $request->base_num;
-        if( $views < 0 )
-        {
-            # echo json_encode(['msg'=>translate("views Must Biger Than 0 ")]);
-            # exit;
-        }
 
-
-          $shop = shop::findOrFail($shop_id);
-          $shop->view_base_num = $base_num;
-          $shop->views = $base_num;
-          $shop->view_inc_num = $inc_num;
-          $shop->views_up_time = 0;
-          $shop->save();
-          echo json_encode(['msg'=>translate("Success")]);
+        $shop = shop::findOrFail($shop_id);
+        $shop->view_base_num = $base_num;
+        $shop->views = $base_num;
+        $shop->view_inc_num = $inc_num;
+        $shop->view_rand_range = $request->view_rand_range ?: '';
+        $shop->views_up_time = 0;
+        $shop->save();
+        echo json_encode(['msg'=>translate("Success")]);
 
     }
 

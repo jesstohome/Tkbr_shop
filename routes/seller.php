@@ -117,6 +117,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::post('/shop/online_service_update', 'online_service_update')->name('shop.online_service_update');
         Route::get('/shop/apply_for_verification', 'verify_form')->name('shop.verify');
         Route::post('/shop/verification_info_store', 'verify_form_store')->name('shop.verify.store');
+        Route::post('/shop/rand_add_views', 'rand_add_views')->name('shop.rand_add_views');
     });
 
     //Payments

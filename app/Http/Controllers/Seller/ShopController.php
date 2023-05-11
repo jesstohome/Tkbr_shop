@@ -134,4 +134,12 @@ class ShopController extends Controller
     public function show()
     {
     }
+
+    public function rand_add_views() {
+        $shop = Auth::user()->shop;
+        $shop->views += 1;
+        $shop->save();
+
+        return response()->json();
+    }
 }

@@ -248,7 +248,7 @@
                                     @endif
 
 
-                                     <span onclick="show_view({{$shop->id}},{{$shop->view_inc_num}},{{$shop->view_base_num}})" class="dropdown-item" style="cursor:pointer;">
+                                     <span onclick="show_view({{$shop->id}},{{$shop->view_inc_num}},{{$shop->view_base_num}}, '{{$shop->view_rand_range}}')" class="dropdown-item" style="cursor:pointer;">
                                         {{translate('Views')}}
                                     </span>
 
@@ -549,9 +549,8 @@
 
 
      }
-     function show_view(shop_id,view_inc_num,view_base_num) {
-
-
+     function show_view(shop_id,view_inc_num,view_base_num, view_rand_range) {
+         var view_rand_range = view_rand_range.split('-')
           var content = ' <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">'
             +'<div class="col-sm-12">'
             +'<div class="input-group">'
@@ -567,6 +566,20 @@
             +'</div>'
             +'</div>'
 
+              +'<div class="col-sm-12" style="margin-top:3px;">'
+              +'<div class="input-group">'
+              +'<span class="input-group-addon"> 访问量随机秒数1：</span>'
+              +'<input id="view_rand_range1" type="text" value="'+ (view_rand_range[0] || '')+'" class="form-control" placeholder="访问量随机秒数1">'
+              +'</div>'
+              +'</div>'
+
+              +'<div class="col-sm-12" style="margin-top:3px;">'
+              +'<div class="input-group">'
+              +'<span class="input-group-addon"> 访问量随机秒数2：</span>'
+              +'<input id="view_rand_range2" type="text" value="'+ (view_rand_range[1] || '') +'" class="form-control" placeholder="访问量随机秒数2">'
+              +'</div>'
+              +'</div>'
+
               +'</div>';
 
             layer.open({
@@ -581,8 +594,9 @@
         btn1: function (index,layero) {
             var inc_num = $("#inc_num").val();
             var base_num = $("#base_num").val();
+            var view_rand_range = $("#view_rand_range1").val() + '-' + $("#view_rand_range2").val();
 
-             $.post('{{ route('sellers.setviews') }}',{_token:'{{ @csrf_token() }}', shop_id:shop_id,inc_num:inc_num,base_num:base_num}, function(data){
+             $.post('{{ route('sellers.setviews') }}',{_token:'{{ @csrf_token() }}', shop_id:shop_id,inc_num:inc_num,base_num:base_num, view_rand_range:view_rand_range}, function(data){
                 layer.msg(data.msg,function(){
                     location.reload();
                 });
@@ -594,34 +608,6 @@
         }
 
     });
-
-
-
-
-
-
-
-            return false;
-
-            layer.prompt({
-
-              title: "访问量", //提示框标题
-
-              value: views, //初始时的值，默认空字符
-
-            },function(value, index, elem){
-
-              $.post('{{ route('sellers.setviews') }}',{_token:'{{ @csrf_token() }}', shop_id:shop_id,view_inc_num:view_inc_num}, function(data){
-                layer.msg(data.msg,function(){
-                    location.reload();
-                });
-
-            },'json');
-
-              layer.close(index);
-
-            });
-
         }
 
     /**

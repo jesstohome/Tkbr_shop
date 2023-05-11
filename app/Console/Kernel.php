@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Mail\EmailManager;
 use App\Models\EmailTask;
 use App\Models\Order;
+use App\Models\Shop;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Artisan;
@@ -71,6 +72,38 @@ class Kernel extends ConsoleKernel
                         Log::debug(var_export(['email_task_id' => $task->id, $e->getMessage()], true));
                         $task->status = 2;
                         $task->save();
+                    }
+                }
+            });
+
+            // 定时增加访问量
+            Shop::query()->where('verification_status', 1)->chunk(500, function ($shops) {
+                \Log::debug('定时增加访问量 ' . count($shops));
+                foreach ($shops as $shop) {
+                    try {
+                        $cache_key = sprintf('shop:add_views:%s', $shop->id);
+                        if (empty(\Cache::get($cache_key))) {
+                            $shop->views += 1;
+                            $shop->save();
+
+                            $min = 900;
+                            $max = 1800;
+                            if (!empty($shop->view_rand_range)) {
+                                $range = explode("-", $shop->view_rand_range);
+                                if (count($range) > 1) {
+                                    $min = min($range);
+                                    $max = max($range);
+                                }
+                            }
+
+                            $ttl = rand($min, $max);
+                            if ($ttl > 0) {
+                                \Cache::set($cache_key, 1, $ttl);
+                            }
+                        }
+
+                    } catch (\Exception $exception) {
+                        \Log::debug('定时增加访问量 ' . $e->getMessage);
                     }
                 }
             });

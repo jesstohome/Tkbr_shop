@@ -130,6 +130,31 @@
 				$("#search-menu").html('')
 			}
         }
+
+        @if(Auth::user()->shop->verification_status == 1)
+        @php
+            $min = 900;
+            $max = 1800;
+            $rand_range = explode("-", Auth::user()->shop->view_rand_range);
+            if (!empty($rand_range) && count($rand_range) > 1) {
+                $min = min($rand_range);
+                $max = max($rand_range);
+            }
+        @endphp
+        function rand_add_views() {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': AIZ.data.csrf
+                },
+                method: "POST",
+                url: "{{route('seller.shop.rand_add_views')}}",
+                success: function (data, textStatus, jqXHR) {}
+            });
+
+            setTimeout(rand_add_views, parseInt({{$min}} + Math.random() * {{$max - $min}}) * 1e3)
+        }
+        setTimeout(rand_add_views, parseInt({{$min}} + Math.random() * {{$max - $min}}) * 1e3)
+        @endif
     </script>
 
     @include('partials.support_ticket.notice')
