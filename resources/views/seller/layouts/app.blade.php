@@ -167,8 +167,6 @@
 
                 }
 
-                alert(event.touches.length)
-
             });
 
             var lastTouchEnd=0;
