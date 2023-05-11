@@ -1316,9 +1316,11 @@
 
 
     function audioPlay(text) {
-        var zhText = text;
-        zhText = encodeURI( zhText );
-        var audio = "<audio autoplay=\"autoplay\">" + "<source src=\"/public/new2.mp3\" type=\"audio/mpeg\">" + "<embed height=\"0\" width=\"0\" src=\"http://tts.baidu.com/text2audio?text=" + zhText + "\">" + "</audio>";
+        if ($("#tip-audio").length) {
+            $("#tip-audio")[0].play();
+            return;
+        }
+        var audio = "<audio id='tip-audio' autoplay=\"autoplay\">" + "<source src=\"/public/new2.mp3\" type=\"audio/mpeg\"></audio>";
         $( 'body' ).append( audio );
     }
 

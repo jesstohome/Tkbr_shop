@@ -1,5 +1,9 @@
 @extends('backend.layouts.app')
 <style type="text/css">
+    ul.ticket {
+        max-height: 50vh;
+        overflow-y: scroll;
+    }
     ul.ticket, ul.ticket li {
         background-color: #ebedf2;
     }
@@ -10,7 +14,7 @@
     }
     ul.ticket li .title {
         position: relative;
-        max-width: 65vw;
+        max-width: 55vw;
         background-color: white;
         padding: 5px 10px;
 
@@ -57,6 +61,10 @@
 
     .note-editable.card-block {
         height: 80px !important;
+    }
+    .card .card-body {
+        padding: 20px 10px;
+        padding-bottom: 5px;
     }
 </style>
 @section('content')

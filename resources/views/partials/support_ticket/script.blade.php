@@ -32,7 +32,7 @@
 
 
         setTimeout(function () {
-            document.body.scrollTop = 999999990
+            $("ul.ticket").scrollTop(999990);
         }, 500)
     })
 
@@ -103,6 +103,9 @@
             {
                 var list = response.list || [];
                 render_reply(list)
+                if (list.length > 0) {
+                    audioPlay && audioPlay();
+                }
             }
         } );
     }
@@ -131,6 +134,7 @@
                             <div class="images ${item.user_id == user_id ? 'mine' : ''}">${images}</div>
                         </li>
                         `);
+                $("ul.ticket").scrollTop(999990);
             })
         }
     }

@@ -1,5 +1,9 @@
 @extends('seller.layouts.app')
 <style type="text/css">
+    ul.ticket {
+        max-height: 50vh;
+        overflow-y: scroll;
+    }
     ul.ticket, ul.ticket li {
         background-color: #ebedf2;
     }
@@ -10,7 +14,7 @@
     }
     ul.ticket li .title {
         position: relative;
-        max-width: 65vw;
+        max-width: 55vw;
         background-color: white;
         padding: 5px 10px;
 
@@ -57,6 +61,11 @@
 
     .note-editable.card-block {
         height: 80px !important;
+    }
+
+    .card .card-body {
+        padding: 20px 10px;
+        padding-bottom: 5px;
     }
 </style>
 @section('panel_content')
@@ -117,10 +126,10 @@
                 </div>
 
                 <div class="form-group row">
-                    <div class="col-md-8">
+                    <div class="col-7">
                         <input class="form-control" type="text" name="reply" value="" required />
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-5">
                         <button type="submit" class="btn btn-sm btn-primary" onclick="submit_reply('pending')">{{ translate('Send Reply') }}</button>
                     </div>
                     <!-- <textarea class="aiz-text-editor" name="reply" data-buttons='[]' required></textarea> -->

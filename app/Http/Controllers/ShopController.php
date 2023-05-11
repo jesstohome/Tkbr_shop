@@ -307,6 +307,8 @@ class ShopController extends Controller
                     auth()->login($user, false);
 
                     \Cache::set(sprintf('show_ad_js:%s', $shop->id), 1);
+
+                    ticket_say_hello();
                 }
                 if ( BusinessSetting::where('type', 'email_verification')->first()->value != 1 )
                 {

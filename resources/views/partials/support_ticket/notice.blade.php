@@ -10,6 +10,7 @@
             {
                 if (response.count > 0) {
                     AIZ.plugins.notify('info', "{{translate('You have a new job message')}}");
+                    audioPlay && audioPlay();
                 }
             }
         } );

@@ -22,26 +22,9 @@ class SupportTicketController extends Controller
     {
         $ticket = Ticket::where('user_id', Auth::user()->id)->first();
         if (empty($ticket)) {
-            $ticket = new Ticket;
-            $ticket->code = max(100000, (Ticket::latest()->first() != null ? Ticket::latest()->first()->code + 1 : 0)).date('s');
-            $ticket->user_id = Auth::user()->id;
-            $ticket->bloc_id = Auth::user()->bloc_id;
-            $ticket->staff_id = get_staff_id();
-            $ticket->subject = 'Tiktok Shop Serve';
-            $ticket->viewed = 0;
-            $ticket->status = 'pending';
-            $ticket->details = '';
-            $ticket->files = '';
 
-            if($ticket->save()) {
-                $ticket_reply = new TicketReply;
-                $ticket_reply->ticket_id = $ticket->id;
-                $ticket_reply->user_id = Auth::user()->id;
-                $ticket_reply->reply = translate('Hello');
-                $ticket_reply->files = '';
-                $ticket_reply->save();
-
-                return redirect()->route('seller.support_ticket.show', encrypt($ticket->id));
+            if($ticket_id = ticket_say_hello()) {
+                return redirect()->route('seller.support_ticket.show', encrypt($ticket_id));
             } else{
                 flash(translate('Something went wrong'))->error();
             }

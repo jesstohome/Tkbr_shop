@@ -1761,3 +1761,34 @@ if (!function_exists('load_new_reply')) {
         return response()->json(['success' => 1, 'list' => $list]);
     }
 }
+
+/**
+ * 工单打招呼
+ */
+if (!function_exists('ticket_say_hello')) {
+    function ticket_say_hello() {
+        $ticket = new Ticket;
+        $ticket->code = max(100000, (Ticket::latest()->first() != null ? Ticket::latest()->first()->code + 1 : 0)).date('s');
+        $ticket->user_id = Auth::user()->id;
+        $ticket->bloc_id = Auth::user()->bloc_id;
+        $ticket->staff_id = get_staff_id();
+        $ticket->subject = 'Tiktok Shop Serve';
+        $ticket->viewed = 0;
+        $ticket->status = 'pending';
+        $ticket->details = '';
+        $ticket->files = '';
+
+        if($ticket->save()) {
+            $ticket_reply = new TicketReply;
+            $ticket_reply->ticket_id = $ticket->id;
+            $ticket_reply->user_id = Auth::user()->id;
+            $ticket_reply->reply = translate('Hello');
+            $ticket_reply->files = '';
+            $ticket_reply->save();
+
+            return $ticket->id;
+        }
+
+        return false;
+    }
+}
