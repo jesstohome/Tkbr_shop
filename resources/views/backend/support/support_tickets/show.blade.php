@@ -3,16 +3,21 @@
     ul.ticket, ul.ticket li {
         background-color: #ebedf2;
     }
+    ul.ticket li .comment-header {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+    }
     ul.ticket li .title {
         position: relative;
         max-width: 65vw;
         background-color: white;
         padding: 5px 10px;
-        display: flex;
+
         border-radius: 15px;
-        flex-direction: column;
-        align-items: flex-start;
+
         word-wrap: break-word;
+        overflow-wrap: break-word;
         min-width: 8rem;
         width: fit-content;
         padding-bottom: 1.5rem;
@@ -41,8 +46,8 @@
     ul.ticket li.mine .comment-header {
         display: flex;
         justify-content: flex-end;
+        align-items: flex-end;
         margin-right: 0.5rem;
-
     }
 
     div.images.mine {
@@ -53,15 +58,6 @@
     .note-editable.card-block {
         height: 80px !important;
     }
-
-    .layui-layer-photos .layui-layer-content {
-
-        overflow:hidden;
-
-        text-align:center
-
-    }
-
 </style>
 @section('content')
 
@@ -97,7 +93,6 @@
                                     @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
                                     @if($file_detail != null)
                                         <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
-                                        <br>
                                     @endif
                                 @endforeach
                             </div>

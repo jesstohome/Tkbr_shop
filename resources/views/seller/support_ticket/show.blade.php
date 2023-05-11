@@ -17,6 +17,7 @@
         border-radius: 15px;
 
         word-wrap: break-word;
+        overflow-wrap: break-word;
         min-width: 8rem;
         width: fit-content;
         padding-bottom: 1.5rem;
@@ -45,8 +46,8 @@
     ul.ticket li.mine .comment-header {
         display: flex;
         justify-content: flex-end;
+        align-items: flex-end;
         margin-right: 0.5rem;
-
     }
 
     div.images.mine {
@@ -88,7 +89,6 @@
                                     @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
                                     @if($file_detail != null)
                                         <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
-                                        <br>
                                     @endif
                                 @endforeach
                             </div>
