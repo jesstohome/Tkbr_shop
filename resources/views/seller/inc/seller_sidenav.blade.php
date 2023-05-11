@@ -178,11 +178,13 @@
                         <i class="las la-atom aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Support Ticket') }}</span>
                         @if ($support_ticket > 0)
-                            <span class="badge badge-inline badge-success">{{ $support_ticket }}</span>
+                            <span class="badge badge-inline badge-success chat-num-tip">{{ $support_ticket }}</span>
+                        @else
+                            <span class="badge badge-inline badge-success chat-num-tip" style="display: none"></span>
                         @endif
                     </a>
                 </li>
-                
+
                  <!--店铺设置-->
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('seller.shop.index') }}"
