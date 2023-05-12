@@ -30,10 +30,18 @@
             imagep.width(w);
         });
 
+        const winHeight = window.innerHeight;
         $(window).resize(function(evt) {
-            console.log(evt);
+            var thisHeight = window.innerHeight
             $(window).scrollTop(0);
-            $(".footer-site-name").hide();
+
+            if (winHeight - thisHeight > 50) {
+                //当软键盘弹出，在这里面操作
+                $(".footer-site-name").hide();
+            } else {
+                //当软键盘收起，在此处操作
+                $(".footer-site-name").show();
+            }
         })
 
         setTimeout(function () {
