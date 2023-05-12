@@ -8,11 +8,11 @@
             <div class="col text-center text-md-left">
                 <h5 class="mb-md-0 h6">{{ translate('Support Desk') }}</h5>
             </div>
-            <div class="col-md-2 ml-auto">
+            <div class="col-md-4 ml-auto">
                 <select class="form-control aiz-selectpicker" name="group" id="group" onchange="sort_support()">
                     <option value="">{{translate('All')}}</option>
                     @foreach($groups as $group_val => $_group)
-                    <option value="{{$group_val}}"  @isset($group) @if($group == $group_val) selected @endif @endisset>{{$_group}}</option>
+                    <option value="{{$group_val}}"  @isset($group) @if($group == $group_val) selected @endif @endisset>{{$_group}} ({{\App\Models\Ticket::query()->where("group", $group_val)->count() . ' ' . translate('Peoples')}})</option>
                     @endforeach
                 </select>
             </div>
