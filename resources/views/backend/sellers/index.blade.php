@@ -552,19 +552,6 @@
      function show_view(shop_id,view_inc_num,view_base_num, view_rand_range) {
          var view_rand_range = view_rand_range.split('-')
           var content = ' <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">'
-            +'<div class="col-sm-12">'
-            +'<div class="input-group">'
-            +'<span class="input-group-addon"> 基础访问量：</span>'
-            +'<input id="base_num" type="text" value="'+view_base_num+'" class="form-control" placeholder="基础访问量">'
-            +'</div>'
-            +'</div>'
-
-               +'<div class="col-sm-12" style="margin-top:3px;">'
-            +'<div class="input-group">'
-            +'<span class="input-group-addon"> 每日递增量：</span>'
-            +'<input id="inc_num" type="text" value="'+view_inc_num+'" class="form-control" placeholder="每日递增">'
-            +'</div>'
-            +'</div>'
 
               +'<div class="col-sm-12" style="margin-top:3px;">'
               +'<div class="input-group">'
