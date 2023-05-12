@@ -30,6 +30,10 @@
             imagep.width(w);
         });
 
+        $(window).resize(function(){
+            document.title = $(window).width();
+            $(window).scrollTop(0);
+        })
 
         setTimeout(function () {
             $("ul.ticket").scrollTop(999990);

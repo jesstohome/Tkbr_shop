@@ -19,7 +19,7 @@ class SupportTicketController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(9);
+        $tickets = Ticket::where('user_id', Auth::user()->id)->orderBy('viewed')->orderBy('created_at', 'desc')->paginate(9);
         return view('frontend.user.support_ticket.index', compact('tickets'));
     }
 
