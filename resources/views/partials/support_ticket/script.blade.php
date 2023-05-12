@@ -31,7 +31,6 @@
         });
 
         $(window).resize(function(){
-            document.title = $(window).width();
             $(window).scrollTop(0);
         })
 
