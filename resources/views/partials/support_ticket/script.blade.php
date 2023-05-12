@@ -30,8 +30,10 @@
             imagep.width(w);
         });
 
-        $(window).resize(function(){
+        $(window).resize(function(evt) {
+            console.log(evt);
             $(window).scrollTop(0);
+            $(".footer-site-name").hide();
         })
 
         setTimeout(function () {
