@@ -102,7 +102,7 @@
                             <th>{{ translate('Pick Up Status') }}</th>
                             <th data-breakpoints="lg">{{ translate('Delivery Status')}}</th>
                             <th>{{ translate('Payment Status')}}</th>
-                            <th class="text-right">{{ translate('Options')}}</th>
+                            <th class="text-center" data-breakpoints="md">{{ translate('Options')}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -176,8 +176,8 @@
                                             <span class="badge badge-inline badge-danger">{{ translate('Unpaid')}}</span>
                                         @endif
                                     </td>
-                                    <td class="text-right">
-                                        <div style="display: flex;justify-content: flex-end;">
+                                    <td class="text-center">
+                                        <div style="display: flex;justify-content: flex-start;">
                                             <a href="{{ route('seller.orders.show', encrypt($order->id)) }}" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="{{ translate('Order Details') }}">
                                                 <i class="las la-eye"></i>
                                             </a>
