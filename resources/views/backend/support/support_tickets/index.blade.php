@@ -9,7 +9,7 @@
                 <h5 class="mb-md-0 h6">{{ translate('Support Desk') }}</h5>
             </div>
             <div class="col-md-2 ml-auto">
-                <select class="form-control aiz-selectpicker" name="group" id="group" onchange="sort_sellers()">
+                <select class="form-control aiz-selectpicker" name="group" id="group" onchange="sort_support()">
                     <option value="">{{translate('All')}}</option>
                     @foreach($groups as $group_val => $_group)
                     <option value="{{$group_val}}"  @isset($group) @if($group == $group_val) selected @endif @endisset>{{$_group}}</option>
@@ -48,7 +48,7 @@
                             <td>{{ $ticket->user->shop ? $ticket->user->shop->name : '' }}</td>
                             <td>{{ $ticket->user->email }}</td>
                             <td>
-                                <select class="form-control ticket-group" data-ticket-id="{{$ticket->id}}">
+                                <select class="form-control ticket-group" data-ticket-id="{{$ticket->id}}" onchange="change_group(this, {{$ticket->id}})">
                                     @foreach($groups as $group_val => $_group)
                                         <option value="{{$group_val}}"  @if($ticket->group == $group_val) selected @endif>{{$_group}}</option>
                                     @endforeach
@@ -116,27 +116,30 @@
                 }
             } );
         });
-
-        $(".ticket-group").on("change", function () {
-            alert(123);
-            $.ajax( {
-                headers: {
-                    'X-CSRF-TOKEN': $( 'meta[name="csrf-token"]' ).attr( 'content' )
-                },
-                url: "{{route('support_ticket.change_group')}}",
-                type: 'POST',
-                data: {
-                    id: $(this).data("ticket-id"),
-                    group: $(this).val(),
-                },
-                success: function (response)
-                {
-                    if ( response.success) {
-                        AIZ.plugins.notify('success', '{{ translate('Successfully edited') }}');
-                    }
-                }
-            } );
-        })
     });
+
+    function sort_support(el){
+        $('#sort_support').submit();
+    }
+
+    function change_group(evt, ticket_id) {
+        $.ajax( {
+            headers: {
+                'X-CSRF-TOKEN': $( 'meta[name="csrf-token"]' ).attr( 'content' )
+            },
+            url: "{{route('support_ticket.change_group')}}",
+            type: 'POST',
+            data: {
+                id: ticket_id,
+                group: $(evt).val(),
+            },
+            success: function (response)
+            {
+                if ( response.success) {
+                    AIZ.plugins.notify('success', '{{ translate('Successfully edited') }}');
+                }
+            }
+        } );
+    }
     </script>
 @endsection
