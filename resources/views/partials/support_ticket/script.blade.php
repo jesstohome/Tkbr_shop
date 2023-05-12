@@ -34,8 +34,7 @@
         $(window).resize(function(evt) {
             var thisHeight = window.innerHeight
             $(window).scrollTop(0);
-
-            document.title = winHeight - thisHeight;
+            
             if (winHeight - thisHeight > 50) {
                 //当软键盘弹出，在这里面操作
                 $(".footer-site-name").hide();

@@ -70,7 +70,7 @@
 				<div class="px-15px px-lg-25px">
                     @yield('panel_content')
 				</div>
-				<div class="bg-white text-center py-3 px-15px px-lg-25px mt-auto border-sm-top">
+				<div class="bg-white text-center py-3 px-15px px-lg-25px mt-auto border-sm-top footer-site-name">
 					<p class="mb-0">&copy; {{ get_setting('site_name') }}</p>
 				</div>
 			</div><!-- .aiz-main-content -->
