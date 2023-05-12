@@ -45,7 +45,7 @@ class ReviewController extends Controller
         $review = new Review;
         $review->product_id = $request->product_id;
         $review->order_id = (int) $request->get('order_id', 0);
-        $review->user_id = Auth::user()->user_type == 'admin'?$request->user_id:Auth::user()->id;
+        $review->user_id = Auth::user()->user_type != 'customer' ? $request->user_id : Auth::user()->id;
         $review->rating = $request->rating;
         $review->comment = $request->comment;
         $review->viewed = '0';

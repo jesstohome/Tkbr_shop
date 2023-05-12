@@ -54,6 +54,15 @@ class ProductStorehouseController extends Controller
             ->pluck('original_id')
             ->toArray();
 
+        // 排除已被其他商家上架的产品
+        $othersAlreadyCopyIds = Product::query()
+            ->where('published', 1)
+            ->whereNotNull('original_id')
+            ->pluck('original_id')
+            ->toArray();
+
+        $alreadyCopyIds = array_merge($alreadyCopyIds, $othersAlreadyCopyIds);
+
         $products = ProductStock::join('products', 'product_stocks.product_id', '=', 'products.id')
             ->where('products.in_storehouse', 1)
             ->whereNotIn('products.id', $alreadyCopyIds)

@@ -38,9 +38,9 @@
 
                         <p>1. {{translate('The manufacturer has passed platform certification and paid a $50000 deposit')}}.</p>
 
-                        <p>2. @php echo sprintf(translate('If you need help, click on [%s] to provide us with feedback on your issue'), $jump2) @endphp.</p>
+                        <p>2. @php echo sprintf(translate('If you need help, please [%s] and provide us with feedback on your issue'), $jump2) @endphp.</p>
 
-                        <p>3. @php echo sprintf(translate("If you are also a manufacturer and want your products to be placed on the platform's product warehouse for better sales, please click [%s] to contact the platform"), $jump2) @endphp.</p>
+                        <p>3. @php echo sprintf(translate("If your product wants to enter the product warehouse, please [%s] and contact the platform"), $jump2) @endphp.</p>
                     </div>
 
                 </div>

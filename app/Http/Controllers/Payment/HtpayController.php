@@ -29,6 +29,7 @@ class HtpayController extends Controller
         $sign_key = env('HTPAY_SECRET');
         $pay_bankcode = env('HTPAY_BANK_CODE', 904);
 
+        $exchange_rate = getExchangeRate();
         if(Session::has('payment_type')){
             if(Session::get('payment_type') == 'cart_payment'){
                 $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
@@ -63,6 +64,7 @@ class HtpayController extends Controller
                 $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
                 $paymentStatement->out_order_no = '';
                 $paymentStatement->amount = $amount;
+                $paymentStatement->amount_exchanged = $amount * $exchange_rate;
                 $paymentStatement->business_type = 'pick_up';
                 $paymentStatement->target_id = $order->id;
                 $paymentStatement->status = 0;
@@ -85,8 +87,6 @@ class HtpayController extends Controller
 
             }
         }
-
-        $exchange_rate = getExchangeRate();
 
         $request_arr = [
             "pay_memberid" => $pay_memberid,//商户id 商户后台获取
@@ -154,6 +154,7 @@ class HtpayController extends Controller
         $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
         $paymentStatement->out_order_no = '';
         $paymentStatement->amount = $withdrawRequest->amount;
+        $paymentStatement->amount_exchanged = $money;
         $paymentStatement->business_type = 'withdraw';
         $paymentStatement->target_id = $withdrawRequest->id;
         $paymentStatement->status = 0;

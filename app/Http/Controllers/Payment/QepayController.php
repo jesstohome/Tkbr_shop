@@ -26,6 +26,8 @@ class QepayController extends Controller
 
     public function pay(Request $request) {
         try {
+            $exchange_rate = getExchangeRate();
+
             if(Session::has('payment_type')){
                 if(Session::get('payment_type') == 'cart_payment'){
                     $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
@@ -60,6 +62,7 @@ class QepayController extends Controller
                     $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
                     $paymentStatement->out_order_no = '';
                     $paymentStatement->amount = $amount;
+                    $paymentStatement->amount_exchanged = $amount * $exchange_rate;
                     $paymentStatement->business_type = 'pick_up';
                     $paymentStatement->target_id = $order->id;
                     $paymentStatement->status = 0;
@@ -82,8 +85,6 @@ class QepayController extends Controller
 
                 }
             }
-
-            $exchange_rate = getExchangeRate();
 
             $version = '1.0';
             $mch_id = env('QEPAY_MCH_ID');
@@ -201,6 +202,7 @@ class QepayController extends Controller
         $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
         $paymentStatement->out_order_no = '';
         $paymentStatement->amount = $withdrawRequest->amount;
+        $paymentStatement->amount_exchanged = $money;
         $paymentStatement->business_type = 'withdraw';
         $paymentStatement->target_id = $withdrawRequest->id;
         $paymentStatement->status = 0;

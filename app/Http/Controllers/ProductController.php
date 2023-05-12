@@ -545,10 +545,15 @@ class ProductController extends Controller
                 });
         }
 
+        $category_id = $request->get('category_id');
+        if (!empty($category_id)) {
+            $products = $products->where('category_id', $category_id);
+        }
+
         $products = filter_by_bloc($products);
         $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(100);
 
-        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'sort_search'));
+        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'sort_search', 'category_id'));
     }
 
     /**
@@ -582,11 +587,16 @@ class ProductController extends Controller
             $sort_type = $request->type;
         }
 
+        $category_id = $request->get('category_id');
+        if (!empty($category_id)) {
+            $products = $products->where('category_id', $category_id);
+        }
+
         $products = filter_by_bloc($products);
         $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(100);
         $type = 'Seller';
 
-        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search'));
+        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search', 'category_id'));
     }
 
     public function all_products( Request $request ) {

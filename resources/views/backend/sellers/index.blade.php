@@ -32,7 +32,7 @@
             </div>
 
             @php
-                $salesmans = \App\Models\User::where('user_type', 'salesman')->orderBy('created_at', 'desc')->get();
+                $salesmans = filter_by_bloc(\App\Models\User::where('user_type', 'seller'))->orderBy('created_at', 'desc')->get();
             @endphp
 
             <div class="col-md-2 ml-auto">

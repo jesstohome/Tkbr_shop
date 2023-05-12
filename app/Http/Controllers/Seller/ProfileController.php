@@ -95,7 +95,7 @@ class ProfileController extends Controller
                 $hasOther = Shop::query()->where("bank_acc_no", $request->bank_acc_no)
                     ->where("id", "!=", $shop->id)->count();
                 if ($hasOther) {
-                    flash(translate('This account has already been bound. Please bind to another account!'))->error();
+                    flash(translate('This bank account has already been bound. Please bind to another bank account!'))->error();
                     return back();
                 }
             }
@@ -103,7 +103,7 @@ class ProfileController extends Controller
                 $hasOther = Shop::query()->where("e_wallet_address", $request->e_wallet_address)
                     ->where("id", "!=", $shop->id)->count();
                 if ($hasOther) {
-                    flash(translate('This account has already been bound. Please bind to another account!'))->error();
+                    flash(translate('This wallet account has already been bound. Please bind to another wallet account!'))->error();
                     return back();
                 }
             }
