@@ -1,4 +1,9 @@
 <link href="//cdn.staticfile.org/layui/2.8.2/css/layui.css" rel="stylesheet">
+<div class="modal-header">
+    @foreach(\App\Models\TicketHuaShuGroup::all() as $group)
+    <button type="button" class="btn btn-light" onclick="filter_by_group({{$group->id}})">{{$group->name}}</button>
+    @endforeach
+</div>
 <div class="modal-body">
     <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade show in active" id="home">
@@ -23,12 +28,14 @@
     </div>
 </script>
 <script>
+    var table;
+    var list = [], origin_list = [];
     layui.use(['table', 'dropdown'], function(){
-        var table = layui.table;
+        table = layui.table;
         var dropdown = layui.dropdown;
-        var list = [];
         @if($list)
         list = JSON.parse("{{json_encode($list, JSON_UNESCAPED_UNICODE)}}".replace(/&quot;/g, '"'));
+        origin_list = list;
         @endif
 
         // 创建渲染实例
@@ -42,10 +49,13 @@
             ].join(''),
             cellMinWidth: 110,
             cols: [[
-                {field:'abstract', title: '{{translate('abstract')}}', edit: 'text'},
-                {field:'content', title: '{{translate('content')}}', edit: 'text'},
-                {title:'{{translate('Option')}}', width: 200, minWidth: 100, toolbar: '#barDemo'}
+                {field:'abstract', Width: '40%', title: '{{translate('abstract')}}', edit: 'textarea'},
+                {field:'content',Width: '40%', title: '{{translate('content')}}', edit: 'textarea'},
+                {title:'{{translate('Option')}}', Width: '20%', toolbar: '#barDemo'}
             ]],
+            done: function () {
+                $(".layui-table").width("100%")
+            },
 
             error: function(res, msg){
                 console.log(res, msg)
@@ -148,4 +158,11 @@
             obj.update(update);
         });
     });
+
+    function filter_by_group(group_id) {
+        list = origin_list.filter(function (it) {
+            return it.group_id == group_id;
+        })
+        table.reload('test', {data: list});
+    }
 </script>

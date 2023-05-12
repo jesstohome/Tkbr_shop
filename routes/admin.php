@@ -49,6 +49,7 @@ use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\TaxController;
 use App\Http\Controllers\TicketHuaShuController;
+use App\Http\Controllers\TicketHuaShuGroupController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WebsiteController;
@@ -493,6 +494,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::get('support_ticket/{id}/show', 'admin_show')->name('support_ticket.admin_show');
         Route::post('support_ticket/reply', 'admin_store')->name('support_ticket.admin_store');
         Route::get('/support_ticket/load_new_reply', 'load_new_reply')->name('support_ticket.load_new_reply');
+        Route::post('/support_ticket/change_group', 'change_group')->name('support_ticket.change_group');
+        Route::post('/support_ticket/update_tag_name', 'update_tag_name')->name('support_ticket.update_tag_name');
     });
 
     //Pickup_Points
@@ -597,6 +600,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::get('/product_set_meal/edit/{id}', 'edit')->name('product_set_meal.edit');
         Route::get('/product_set_meal/destroy/{id}', 'destroy')->name('product_set_meal.destroy');
         Route::post('/product_set_meal/products', 'products')->name('product_set_meal.products');
+    });
+
+    Route::resource('/huashu_group', TicketHuaShuGroupController::class);
+    Route::controller(TicketHuaShuGroupController::class)->group(function () {
+        Route::get('/huashu_group/destroy/{id}', 'destroy')->name('huashu_group.destroy');
     });
 
     Route::controller(TicketHuaShuController::class)->group(function () {

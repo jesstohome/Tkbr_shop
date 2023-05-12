@@ -12,6 +12,23 @@ use Mail;
 
 class SupportTicketController extends Controller
 {
+
+    // 分组类型：0为空未分组，1已上架等订单，2无成交下单中，3有成交下单中，4追单中，5无效卖家
+    private $groups = [];
+
+    public function __construct()
+    {
+        $this->groups = [
+            translate('No Group'),
+            translate('Waiting orders'),
+            translate('No transaction in progress'),
+            translate('Has transaction in progress'),
+            translate('In pursuit of orders'),
+            translate('Invalid seller'),
+        ];
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -31,9 +48,17 @@ class SupportTicketController extends Controller
             $sort_search = $request->search;
             $tickets = $tickets->where('code', 'like', '%'.$sort_search.'%');
         }
+
+        $group = $request->group;
+        if (!is_null($group) && is_numeric($group)) {
+            $tickets = $tickets->where('group', $group);
+        }
+
         $tickets = filter_by_bloc($tickets);
         $tickets = $tickets->paginate(15);
-        return view('backend.support.support_tickets.index', compact('tickets', 'sort_search'));
+
+        $groups = $this->groups;
+        return view('backend.support.support_tickets.index', compact('tickets', 'sort_search', 'groups', 'group'));
     }
 
     /**
@@ -221,5 +246,29 @@ class SupportTicketController extends Controller
 
     public function load_new_reply(Request $request) {
         return load_new_reply($request);
+    }
+
+    public function change_group(Request $request) {
+        $ticket = Ticket::find($request->post('id'));
+        if ($ticket) {
+            $ticket->group = (int) $request->post('group');
+            $ticket->save();
+
+            return response()->json(['success' => 1]);
+        }
+
+        return response()->json(['success' => 0]);
+    }
+
+    public function update_tag_name(Request $request) {
+        $ticket = Ticket::find($request->post('id'));
+        if ($ticket) {
+            $ticket->tag_name = $request->post('tag_name');
+            $ticket->save();
+
+            return response()->json(['success' => 1]);
+        }
+
+        return response()->json(['success' => 0]);
     }
 }
