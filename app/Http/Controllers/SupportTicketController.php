@@ -19,12 +19,18 @@ class SupportTicketController extends Controller
     public function __construct()
     {
         $this->groups = [
-            translate('No Group'),
+            /*translate('No Group'),
             translate('Waiting orders'),
             translate('No transaction in progress'),
             translate('Has transaction in progress'),
             translate('In pursuit of orders'),
-            translate('Invalid seller'),
+            translate('Invalid seller'),*/
+            '未分组',
+            '已上架等订单',
+            '无成交下单中',
+            '有成交下单中',
+            '追单中',
+            '无效卖家',
         ];
 
     }
