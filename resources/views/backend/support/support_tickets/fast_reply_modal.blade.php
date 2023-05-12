@@ -1,4 +1,9 @@
 <link href="//cdn.staticfile.org/layui/2.8.2/css/layui.css" rel="stylesheet">
+<style type="text/css">
+    .layui-table-test td {
+        /*min-height: 100px;*/
+    }
+</style>
 <div class="modal-header">
     @foreach(\App\Models\TicketHuaShuGroup::all() as $group)
     <button type="button" class="btn btn-light" onclick="filter_by_group({{$group->id}})">{{$group->name}}</button>
@@ -44,6 +49,8 @@
             toolbar: '#toolbarDemo',
             data: list, // 此处为静态模拟数据，实际使用时需换成真实接口
             height: 'full-35', // 最大高度减去其他容器已占有的高度差
+            lineStyle: 'height: 151px;', // 定义表格的多行样式
+            className: 'layui-table-test',
             css: [ // 重设当前表格样式
                 '.layui-table-tool-temp{padding-right: 145px;}'
             ].join(''),
