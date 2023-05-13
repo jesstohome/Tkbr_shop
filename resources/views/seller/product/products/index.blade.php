@@ -60,14 +60,14 @@
                         </th>
                         <th width="30%">{{ translate('Name')}}</th>
                         <th data-breakpoints="md">{{ translate('Category')}}</th>
-                        <th data-breakpoints="md">{{ translate('Current Qty')}}</th>
-                        <th>{{ translate('Pick Up Price')}}</th>
-                        <th>{{ translate('Base Price')}}</th>
-                        <th>{{ translate('Profit')}}</th>
+                        <th >{{ translate('Current Qty')}}</th>
+                        <th data-breakpoints="md">{{ translate('Pick Up Price')}}</th>
+                        <th data-breakpoints="md">{{ translate('Base Price')}}</th>
+                        <th data-breakpoints="md">{{ translate('Profit')}}</th>
                         @if(get_setting('product_approve_by_admin') == 1)
                             <th data-breakpoints="md">{{ translate('Approval')}}</th>
                         @endif
-                        <th data-breakpoints="md">{{ translate('Published')}}</th>
+                        <th>{{ translate('Published')}}</th>
                         <th data-breakpoints="md">{{ translate('Featured')}}</th>
                         <th data-breakpoints="md" class="text-right">{{ translate('Options')}}</th>
                     </tr>
@@ -79,7 +79,7 @@
                             <td>{{ ($key+1) + ($products->currentPage() - 1)*$products->perPage() }}</td>
                             <td>
                                 <img
-                                    height="80px"
+                                    width="80px"
                                     class="lazyload"
                                     src="{{ static_asset('assets/img/placeholder.jpg') }}"
                                     data-src="{{ uploaded_asset($product->thumbnail_img) }}"
