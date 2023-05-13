@@ -69,16 +69,17 @@
     .card.chat {
         /*position: fixed !important;*/
         height: calc(100vh - 75px - 20px);
+        margin-bottom: 0;
     }
 
     .card .card-body {
         /*padding: 0 !important;*/
     }
     #ticket-reply-form {
-        position: fixed;
+        position: absolute;
         bottom: 0;
-        right: 0;
-        left: 0;
+        right: 15px;
+        left: 15px;
     }
 
     div.input-box {

@@ -34,14 +34,14 @@
         $(window).resize(function(evt) {
             var thisHeight = window.innerHeight
             $(window).scrollTop(0);
-            
-            if (winHeight - thisHeight > 50) {
+
+            /*if (winHeight - thisHeight > 50) {
                 //当软键盘弹出，在这里面操作
                 $(".footer-site-name").hide();
             } else {
                 //当软键盘收起，在此处操作
                 $(".footer-site-name").show();
-            }
+            }*/
         })
 
         setTimeout(function () {
