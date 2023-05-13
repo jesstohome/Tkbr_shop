@@ -49,7 +49,7 @@ class SupportTicketController extends Controller
     public function admin_index(Request $request)
     {
         $sort_search =null;
-        $tickets = Ticket::orderBy('viewed')->orderBy('created_at', 'desc');
+        $tickets = Ticket::orderBy('viewed')->orderBy('id', 'desc');
         if ($request->has('search')){
             $sort_search = $request->search;
             $tickets = $tickets->where('code', 'like', '%'.$sort_search.'%');
@@ -200,11 +200,10 @@ class SupportTicketController extends Controller
         $ticket = Ticket::findOrFail(decrypt($id));
         $ticket->client_viewed = 1;
         $ticket->save();
+
         $ticket_replies = $ticket->ticketreplies;
-        foreach ($ticket_replies as $ticket_reply) {
-            $ticket_reply->read = 1;
-            $ticket_reply->save();
-        }
+        TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
+
         return view('frontend.user.support_ticket.show', compact('ticket','ticket_replies'));
     }
 
@@ -213,6 +212,10 @@ class SupportTicketController extends Controller
         $ticket = Ticket::findOrFail(decrypt($id));
         $ticket->viewed = 1;
         $ticket->save();
+
+        $ticket_replies = $ticket->ticketreplies;
+        TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
+
         return view('backend.support.support_tickets.show', compact('ticket'));
     }
 

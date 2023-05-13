@@ -181,8 +181,11 @@
 
 
         function audioPlay(text) {
+            @if(get_admin_setting('msg_tip_mute'))
+                return false;
+            @endif
             if ($("#tip-audio").length) {
-                $("#tip-audio")[0].play();
+                // $("#tip-audio")[0].play();
                 return;
             }
             var audio = "<audio id='tip-audio' autoplay=\"autoplay\">" + "<source src=\"/public/new2.mp3\" type=\"audio/mpeg\"></audio>";

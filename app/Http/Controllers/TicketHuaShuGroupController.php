@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TicketHuaShu;
 use App\Models\TicketHuaShuGroup;
 use Illuminate\Http\Request;
 
@@ -40,7 +41,10 @@ class TicketHuaShuGroupController extends Controller
         $group->bloc_id = \Auth::user()->bloc_id;
         $group->staff_id = \Auth::user()->staff_id;
         $group->name = $request->name;
-        if($group->save()){
+        if($group->save()) {
+            if ($request->huashu_ids) {
+                TicketHuaShu::query()->whereIn('id', $request->huashu_ids)->update(['group_id' => $group->id]);
+            }
             flash(translate('Group has been inserted successfully'))->success();
             return redirect()->route('huashu_group.index');
         }
@@ -84,6 +88,12 @@ class TicketHuaShuGroupController extends Controller
         $group = TicketHuaShuGroup::find($id);
         $group->name = $request->name;
         if($group->save()){
+            TicketHuaShu::query()->where('group_id', $group->id)->update(['group_id' => 0]);
+
+            if ($request->huashu_ids) {
+                TicketHuaShu::query()->whereIn('id', $request->huashu_ids)->update(['group_id' => $group->id]);
+            }
+
             flash(translate('Group has been updated successfully'))->success();
             return redirect()->route('huashu_group.index');
         }

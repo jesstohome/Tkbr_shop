@@ -20,6 +20,17 @@
                         </div>
                     </div>
 
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label" for="name">归属话术</label>
+                        <div class="col-md-9">
+                            <select name="huashu_ids[]" id="haushu" class="form-control aiz-selectpicker" multiple required data-live-search="true" data-selected-text-format="count">
+                                @foreach(\App\Models\TicketHuaShu::query()->whereIn('group_id', [0, $group->id])->get() as $item)
+                                    <option value="{{$item->id}}" {{$item->group_id == $group->id ? 'selected' : ''}}>{{ $item->abstract }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
                     </div>

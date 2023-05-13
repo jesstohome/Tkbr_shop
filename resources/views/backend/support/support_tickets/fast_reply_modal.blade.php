@@ -5,6 +5,7 @@
     }
 </style>
 <div class="modal-header">
+    <button type="button" class="btn btn-light" onclick="filter_by_group(0)">全部</button>
     @foreach(\App\Models\TicketHuaShuGroup::all() as $group)
     <button type="button" class="btn btn-light" onclick="filter_by_group({{$group->id}})">{{$group->name}}</button>
     @endforeach
@@ -26,6 +27,14 @@
             <i class="layui-icon layui-icon-down"></i>
         </a>
     </div>
+</script>
+<script type="text/html" id="TPL-select-group">
+    <select name="group_id" class="layui-border select-demo-primary" lay-ignore>
+        <option value="">指定分组</option>
+        @foreach(\App\Models\TicketHuaShuGroup::all() as $group)
+        <option value="{{$group->id}}">{{$group->name}}{{$d}}</option>
+        @endforeach
+    </select>
 </script>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
@@ -58,6 +67,7 @@
             cols: [[
                 {field:'abstract', Width: '40%', title: '{{translate('abstract')}}', edit: 'textarea'},
                 {field:'content',Width: '40%', title: '{{translate('content')}}', edit: 'textarea'},
+                {{--{field:'group_id',Width: '10%', title: '{{translate('Group')}}', templet: '#TPL-select-group'},--}}
                 {title:'{{translate('Option')}}', Width: '20%', toolbar: '#barDemo'}
             ]],
             done: function () {
@@ -167,9 +177,23 @@
     });
 
     function filter_by_group(group_id) {
-        list = origin_list.filter(function (it) {
-            return it.group_id == group_id;
-        })
+        if (group_id > 0) {
+            list = origin_list.filter(function (it) {
+                return it.group_id == group_id;
+            })
+        } else {
+            list = origin_list;
+        }
+
         table.reload('test', {data: list});
     }
+
+    $('.select-demo-primary').on('change', function(){
+        var value = this.value; // 获取选中项 value
+        var data = table.getRowData(this); // 获取当前行数据(如 id 等字段，以作为数据修改的索引)
+        // 更新数据中对应的字段
+        data.city = value;
+        // 显示 - 仅用于演示
+        layer.msg('选中值: '+ value +'<br>当前行数据：'+ JSON.stringify(data));
+    });
 </script>

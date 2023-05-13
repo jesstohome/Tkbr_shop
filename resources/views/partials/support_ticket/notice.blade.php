@@ -9,7 +9,7 @@
             success: function (response)
             {
                 if (response.count > 0) {
-                    AIZ.plugins.notify('info', "{{translate('You have a new job message')}}");
+                    AIZ.plugins.notify('info', "{{translate('You have a new job message')}}【" + (response.tag_names || '') + '】');
                     audioPlay && audioPlay();
 
                     $(".chat-num-tip").html(response.count).show();

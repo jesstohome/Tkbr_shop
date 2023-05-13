@@ -1705,7 +1705,7 @@ if (!function_exists("getExchangeRate")) {
 if (!function_exists('appendTicketFiles')) {
     function appendTicketFiles($list) {
         foreach ($list as $key => $value) {
-            $list[$key]->created_time = $value->created_at->translatedFormat('m-d H:i:s');
+            $list[$key]->created_time = date('m-d H:i', strtotime($value->created_at));
 
             // files
             $file_ids = $value->files ? explode(',', $value->files) : [];
@@ -1742,7 +1742,17 @@ if (!function_exists('load_new_reply')) {
             if (Auth::user()->user_type == 'seller' || Auth::user()->user_type == 'customer') {
                 $list = $list->where('ticket_id', $ticket_id);
             }
-            return response()->json(['success' => 1, 'count' => $list->count()]);
+
+            $tag_names = '';
+            $count = $list->count();
+            if ($count > 0) {
+                try {
+                    $tag_names = join(",", Ticket::query()->whereIn('id', $list->pluck('ticket_id')->toArray())->pluck('tag_name')->toArray());
+                } catch (\Exception $exception) {
+
+                }
+            }
+            return response()->json(['success' => 1, 'count' => $count, 'tag_names' => $tag_names]);
         }
 
         $list = $list->where('ticket_id', $ticket_id);
