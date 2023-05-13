@@ -33,7 +33,7 @@
         const winHeight = window.innerHeight;
         $(window).resize(function(evt) {
             var thisHeight = window.innerHeight
-            $(window).scrollTop(0);
+            $(window).scrollTop(9999);
 
             /*if (winHeight - thisHeight > 50) {
                 //当软键盘弹出，在这里面操作
