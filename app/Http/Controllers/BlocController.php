@@ -39,6 +39,8 @@ class BlocController extends Controller
         if(!empty($request->name)){
             $bloc = new Bloc();
             $bloc->name = $request->name;
+            $bloc->lang = $request->lang;
+            $bloc->time_zone = $request->time_zone;
             $bloc->save();
 
             flash(translate('Bloc has been inserted successfully'))->success();
@@ -86,6 +88,8 @@ class BlocController extends Controller
 
         if(!empty($bloc) && !empty($request->name)){
             $bloc->name = $request->name;
+            $bloc->lang = $request->lang;
+            $bloc->time_zone = $request->time_zone;
             $bloc->save();
 
             flash(translate('Bloc has been updated successfully'))->success();
