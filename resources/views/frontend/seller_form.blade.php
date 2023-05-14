@@ -158,7 +158,27 @@
 
             //captcha verified
             //do the rest of your validations here
-            $("#reg-form").submit();
+            var data = new FormData($('#shop')[0]);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': AIZ.data.csrf
+                },
+                method: "POST",
+                url: "{{route('shops.store')}}",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data, textStatus, jqXHR) {
+                    if (data.success) {
+                        location.href = '{{route('shops.index')}}';
+                    } else {
+                        AIZ.plugins.notify('danger', data.msg ||  '');
+                    }
+                }
+            });
+
+            return false;
         });
     });
 </script>
