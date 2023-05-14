@@ -68,7 +68,8 @@
 
     .card.chat {
         /*position: fixed !important;*/
-        height: calc(100vh - 75px - 20px);
+        /*height: calc(100vh - 75px - 20px);*/
+        height: calc(100vh - 75px);
         margin-bottom: 0;
     }
 
