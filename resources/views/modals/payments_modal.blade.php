@@ -10,7 +10,7 @@
                     <div class="col-md-12">
                         <a href="javascript:void(0);" id="wallet-link" onclick="$('#payment_for_storehouse_modal').modal('show')" class="btn btn-primary mt-2">Wallet</a>
 
-                        @if(false)
+                        @if(\App\Models\ManualPaymentMethod::query()->where('status', 1)->count())
                         <a href="javascript:void(0);" id="Manual-link" onclick="show_make_wallet_recharge_modal(3)" class="btn btn-primary mt-2">{{translate('Manual transfer')}}</a>
                         @endif
 
@@ -18,11 +18,11 @@
                         <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'paypal', 'order_id' => $order->id ?? 0]) }}" id="paypal-link" class="btn btn-primary mt-2">Paypal</a>
                         @endif
 
-                        @if(get_setting('htpay_collection_behalf') == 1)
+                        @if(get_setting('htpay_collection_behalf') == 1 && is_open_this_payment('htpay', $order))
                             <a href="javascript:void(0)" onclick="toPay(1)" id="htpay-link" class="btn btn-primary mt-2">Htpay</a>
                         @endif
 
-                        @if(get_setting('qepay_collection_behalf') == 1)
+                        @if(get_setting('qepay_collection_behalf') == 1 && is_open_this_payment('qepay', $order))
                             <a href="javascript:void(0)" onclick="toPay(2)" id="qepay-link" class="btn btn-primary mt-2">Qepay</a>
                         @endif
                     </div>

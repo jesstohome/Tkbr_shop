@@ -92,7 +92,7 @@ class ShopController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return mixed
      */
     public function store( Request $request ) {
 
@@ -102,11 +102,13 @@ class ShopController extends Controller
         $user = NULL;
         if ( $request->identity_card_front == NULL )
         {
+            if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Identity Card Front Not Allow Empty!')]);
             flash(translate('Identity Card Front Not Allow Empty!'))->error();
             return back();
         }
         if ( $request->identity_card_back == NULL )
         {
+            if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Identity Card Back Not Allow Empty!')]);
             flash(translate('Identity Card Back Not Allow Empty!'))->error();
             return back();
         }
@@ -119,6 +121,7 @@ class ShopController extends Controller
             if ($request->get('staff_invite_code')) {
                 $staff = Staff::query()->where('invite_code', $request->get('staff_invite_code'))->first();
                 if (empty($staff)) {
+                    if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Sorry! Invitation code error.')]);
                     flash(translate('Sorry! Invitation code error.'))->error();
                     return back();
                 }
@@ -126,6 +129,7 @@ class ShopController extends Controller
 
             if ( User::where('email', $request->email)->first() != NULL )
             {
+                if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Email already exists!')]);
                 flash(translate('Email already exists!'))->error();
                 return back();
             }
@@ -141,6 +145,7 @@ class ShopController extends Controller
             }
             else
             {
+                if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Sorry! Password did not match!')]);
                 flash(translate('Sorry! Password did not match.'))->error();
                 return back();
             }
@@ -323,8 +328,8 @@ class ShopController extends Controller
                 // redis cache red tips
                 hset_plus('new_shop_created_tip', $shop->id, 1, $shop->staff_id);
 
+                if ($request->ajax()) return response()->json(['success' => 1, 'msg' => translate('Your Shop has been created successfully!')]);
                 flash(translate('Your Shop has been created successfully!'))->success();
-
                 return redirect()->route('shops.index');
             }
             else
@@ -334,6 +339,7 @@ class ShopController extends Controller
             }
         }
 
+        if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Sorry! Something went wrong.')]);
         flash(translate('Sorry! Something went wrong.'))->error();
         return back();
     }

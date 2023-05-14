@@ -41,7 +41,7 @@
 
             @if($type == 'Seller')
             <div class="col-md-2 ml-auto">
-                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id" onchange="sort_products()">
+                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" data-live-search="true" name="user_id" onchange="sort_products()">
                     <option value="">{{ translate('All Sellers') }}</option>
                     @foreach (filter_by_bloc(App\Models\User::where('user_type', '=', 'seller'))->get() as $key => $seller)
                         <option value="{{ $seller->id }}" @if ($seller->id == $seller_id) selected @endif>
@@ -53,7 +53,7 @@
             @endif
 
             <div class="col-md-2 ml-auto">
-                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="category_id" name="category_id" onchange="sort_products()">
+                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" data-live-search="true" id="category_id" name="category_id" onchange="sort_products()">
                     <option value="">{{ translate('Categories') }}</option>
                     @foreach (App\Models\Category::all() as $key => $category)
                         <option value="{{ $category->id }}" @if ($category->id == $category_id) selected @endif>
@@ -65,7 +65,7 @@
 
             @if($type == 'All')
             <div class="col-md-2 ml-auto">
-                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id" onchange="sort_products()">
+                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" data-live-search="true" id="user_id" name="user_id" onchange="sort_products()">
                     <option value="">{{ translate('All Sellers') }}</option>
                         @foreach (filter_by_bloc(App\Models\User::where('user_type', '=', 'seller'))->get() as $key => $seller)
                             <option value="{{ $seller->id }}" @if ($seller->id == $seller_id) selected @endif>{{ $seller->name }}</option>

@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\PaymentStatement;
 use Illuminate\Http\Request;
 
@@ -24,9 +25,56 @@ class PaymentStatementController extends Controller
             $payment_statements = $payment_statements->where('created_at', '<=', $date_range1[1] . " 23:59:59");
         }
 
+        if ($request->order_code) {
+            $order_code = $request->order_code;
+            $order = Order::query()->where('code', $request->order_code)->first();
+            if ($order) {
+                $payment_statements = $payment_statements->where('target_id', $order->id)->where("business_type", 'pick_up');
+            } else {
+                $payment_statements = $payment_statements->whereRaw("1=2");
+            }
+        }
+        if ($request->inner_order_code) {
+            $inner_order_code = $request->inner_order_code;
+            $payment_statements = $payment_statements->where('order_no', $request->inner_order_code);
+        }
+        if (!is_null($request->status) && is_numeric($request->status)) {
+            $status = $request->status;
+            $payment_statements = $payment_statements->where('status', $request->status);
+        }
+        if ($request->payment_type) {
+            $payment_type = $request->payment_type;
+            $payment_statements = $payment_statements->where('payment_type', $request->payment_type);
+        }
+
         $payment_statements = filter_by_bloc($payment_statements);
+
+        // 统计
+        $payment_statements_clone = clone $payment_statements;
+        $total = $payment_statements_clone->count();
+        $total_amount = $payment_statements_clone->sum('amount');
+        $total_seller = $payment_statements_clone->distinct('seller_id')->count();
+
         $payment_statements = $payment_statements->paginate(15);
-        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range'));
+        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type'));
+    }
+
+    /**
+     * 更新备注
+     * author: Sym
+     * time: 2023-05-14 12:59
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update_remark(Request $request) {
+        $payment_statement = PaymentStatement::find($request->id);
+        $payment_statement->remark = $request->remark;
+        if ($payment_statement->save()) {
+            return response()->json(['success' => 1]);
+        }
+
+        return response()->json(['success' => 0]);
+
     }
 
 }

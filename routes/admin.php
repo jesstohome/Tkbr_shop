@@ -75,6 +75,7 @@ Route::get('/admin', [AdminController::class, 'admin_dashboard'])->name('admin.d
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned', 'bloc_unbanned']], function () {
 
     Route::post('/admin-wallet-recharge-modal', [ManualPaymentMethodController::class, 'admin_recharge_modal'])->name('admin.admin_wallet_recharge_modal');//管理员充值
+    Route::post('/manual-payment/update_status', [ManualPaymentMethodController::class, 'update_status'])->name('admin.manual-payment.update_status');//管理员充值
     Route::post('/admin-offline-wallet-recharge', [WalletController::class, 'offline_recharge'])->name('admin_wallet_recharge.make_payment');
 
     // category
@@ -589,6 +590,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
     Route::get('/check_new_msg', [AdminController::class, 'check_new_msg'])->name('admin.check_new_msg');
 
     Route::get('/payment_statements', [PaymentStatementController::class, 'index'])->name('payment-statement.index');
+    Route::post('/payment_statements/update_remark', [PaymentStatementController::class, 'update_remark'])->name('payment_statement.update_remark');
 
 
 

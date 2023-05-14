@@ -202,6 +202,7 @@
                         <thead>
                             <tr class="bg-trans-dark">
                                 <th data-breakpoints="lg" class="min-col">#</th>
+                                <th width="10%">{{ translate('Name') }}</th>
                                 <th width="10%">{{ translate('Photo') }}</th>
                                 <th class="text-uppercase">{{ translate('Description') }}</th>
                                 <th data-breakpoints="lg" class="text-uppercase">{{ translate('Delivery Type') }}</th>
@@ -220,6 +221,7 @@
                             @foreach ($order->orderDetails as $key => $orderDetail)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
+                                    <td>{{$orderDetail->product ? $orderDetail->product->getTranslation('name') : ''}}</td>
                                     <td>
                                         @if ($orderDetail->product != null && $orderDetail->product->auction_product == 0)
                                             <a href="{{ route('product', $orderDetail->product->slug) }}"

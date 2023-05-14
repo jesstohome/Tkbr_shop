@@ -21,6 +21,7 @@
                     <th>#</th>
                     <th>{{translate('Heading')}}</th>
                     <th>{{translate('Logo')}}</th>
+                    <th>{{translate('Enable Status')}}</th>
                     <th width="10%">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -30,6 +31,12 @@
                         <td>{{ ($key+1) }}</td>
                         <td>{{ $manual_payment_method->heading }}</td>
                         <td><img class="w-50px" src="{{ uploaded_asset($manual_payment_method->photo) }}" alt="Logo"></td>
+                        <td>
+                            <label class="aiz-switch aiz-switch-success mb-0">
+                                <input onchange="update_status(this)" value="{{ $manual_payment_method->id }}" type="checkbox" <?php if($manual_payment_method->status == 1) echo "checked";?> >
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
                         <td class="text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('manual_payment_methods.edit', encrypt($manual_payment_method->id))}}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
@@ -49,4 +56,25 @@
 
 @section('modal')
     @include('modals.delete_modal')
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        function update_status(el) {
+            if(el.checked){
+                var status = 1;
+            }
+            else{
+                var status = 0;
+            }
+            $.post('{{ route('admin.manual-payment.update_status') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+                if(data == 1){
+                    AIZ.plugins.notify('success', '{{ translate('updated successfully') }}');
+                }
+                else{
+                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+                }
+            });
+        }
+    </script>
 @endsection

@@ -264,4 +264,8 @@ class ManualPaymentMethodController extends Controller
         $package_id = $request->package_id;
         return view('manual_payment_methods.frontend.offline_seller_spread_package_purchase_modal', compact('package_id'));
     }
+
+    public function update_status(Request $request) {
+        echo ManualPaymentMethod::query()->where('id', $request->id)->update(['status' => $request->status]) ? 1 : 0;
+    }
 }

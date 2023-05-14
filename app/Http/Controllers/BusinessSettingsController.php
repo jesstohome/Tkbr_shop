@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bloc;
 use Illuminate\Http\Request;
 use App\Models\BusinessSetting;
 use Artisan;
@@ -186,7 +187,9 @@ class BusinessSettingsController extends Controller
     {
         CoreComponentRepository::instantiateShopRepository();
         CoreComponentRepository::initializeCache();
-        return view('backend.setup_configurations.payment_method');
+
+        $blocs = Bloc::all();
+        return view('backend.setup_configurations.payment_method', compact('blocs'));
     }
 
     public function file_system(Request $request)
@@ -217,6 +220,23 @@ class BusinessSettingsController extends Controller
                 $business_settings->value = 0;
                 $business_settings->save();
             }
+        }
+
+        $bloc_ids_key = $request->payment_method.'_bloc_ids';
+        $payment_bloc_ids = $request->{$bloc_ids_key};
+        $payment_bloc_ids = is_array($payment_bloc_ids) ? join(",", $payment_bloc_ids) : $payment_bloc_ids;
+
+        $business_settings = BusinessSetting::where('type', $request->payment_method.'_bloc_ids')->first();
+        if($business_settings != null){
+            if ($request->has($request->payment_method.'_bloc_ids')) {
+                $business_settings->value = $payment_bloc_ids;
+                $business_settings->save();
+            }
+        } else {
+            $business_settings = new BusinessSetting;
+            $business_settings->type = $bloc_ids_key;
+            $business_settings->value = $payment_bloc_ids;
+            $business_settings->save();
         }
 
         Artisan::call('cache:clear');

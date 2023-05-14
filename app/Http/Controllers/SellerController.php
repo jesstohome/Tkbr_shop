@@ -168,10 +168,19 @@ class SellerController extends Controller
             $shops = $shops->where('verification_status', $approved);
         }
 
+        if ($request->date_range) {
+            $date_range = $request->date_range;
+            $date_var = explode(" - ", $request->date_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $shops = $shops->where('created_at', '>=', $start_time);
+            $shops = $shops->where('created_at', '<=', $end_time);
+        }
+
         $shops = filter_by_bloc($shops);
         $shops = $shops->select("shops.*")->paginate(15);
 
-        return view('backend.sellers.index', compact('shops', 'sort_search', 'approved'));
+        return view('backend.sellers.index', compact('shops', 'sort_search', 'approved', 'date_range', 'start_time', 'end_time'));
     }
 
     /**

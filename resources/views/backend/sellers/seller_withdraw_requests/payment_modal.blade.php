@@ -145,11 +145,11 @@
                             <option value="{{$manualPaymentMethod->heading}}">{{$manualPaymentMethod->heading}}</option>
                         @endforeach
 
-                        @if(get_setting('htpay_payment_behalf') == 1)
+                        @if(get_setting('htpay_payment_behalf') == 1 && is_open_this_payment('htpay', $user))
                         <option value="htpay">HtPay</option>
                         @endif
 
-                        @if(get_setting('qepay_payment_behalf') == 1)
+                        @if(get_setting('qepay_payment_behalf') == 1 && is_open_this_payment('qepay', $user))
                             <option value="qepay">QePay</option>
                         @endif
 

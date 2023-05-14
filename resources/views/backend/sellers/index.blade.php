@@ -18,26 +18,13 @@
 <div class="card">
     <form class="" id="sort_sellers" action="" method="GET">
         <div class="card-header row gutters-5">
-            {{--<div class="col">
-                <h5 class="mb-md-0 h6">{{ translate('Sellers') }}</h5>
-            </div>--}}
-
-            <div class="dropdown mb-2 mb-md-0">
-                <button class="btn border dropdown-toggle" type="button" data-toggle="dropdown">
-                    {{translate('Bulk Action')}}
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#" onclick="bulk_delete()">{{translate('Delete selection')}}</a>
-                </div>
-            </div>
-
             @php
                 $salesmans = filter_by_bloc(\App\Models\User::where('user_type', 'seller'))->orderBy('created_at', 'desc')->get();
             @endphp
 
-            <div class="col-md-2 ml-auto">
+            <div class="col-md-2">
                 <div class="form-group mb-0">
-                    <input type="text" class="aiz-date-range form-control" value="{{ $date }}" name="date" placeholder="{{ translate('Filter by date') }}" data-format="Y-MM-DD" data-separator=" to " data-advanced-range="true" autocomplete="on">
+                    <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}">
                 </div>
             </div>
 
@@ -103,6 +90,7 @@
                     <th data-breakpoints="lg" style="width:20%;">{{ translate('Views') }}</th>
                     <th data-breakpoints="lg">{{ translate('Comment Permission') }}</th>
                     <th data-breakpoints="lg">{{ translate('Home Display') }}</th>
+                    <th data-breakpoints="lg">{{ translate('Created Time') }}</th>
                     <th data-breakpoints="lg">{{ translate('Total recharge') }}</th>
                     <th data-breakpoints="lg">{{ translate('Total withdrawal amount') }}</th>
                     <th data-breakpoints="lg">{{ translate('Recharge difference') }}</th>
@@ -183,6 +171,7 @@
                                 <span class="slider round"></span>
                             </label>
                         </td>
+                        <td>{{$shop->created_at}}</td>
 
                         @php
                             $wallets = $shop->user->wallets;
@@ -415,6 +404,29 @@
 @section('script')
     <script src="{{ static_asset('assets/js/layer.min.js') }}"></script>
     <script type="text/javascript">
+        $(function() {
+            var params = {
+                timePicker:true,
+                timePickerSeconds:true,
+                timePicker24Hour:true,
+                locale:{format:'YYYY-MM-DD HH:mm:ss', cancelLabel: 'Clear'}
+            };
+            @if(!empty($start_time))
+                params.startDate = "{{$start_time}}";
+            @endif
+            @if(!empty($end_time))
+                params.endDate = "{{$end_time}}";
+            @endif
+
+            $('input[name="date_range"]').daterangepicker(params).on('cancel.daterangepicker', function(ev, picker) {
+                //做点什么，比如清除输入
+                $('input[name="date_range"]').val('');
+            });
+
+            @if(empty($start_time) && empty($end_time))
+            $('input[name="date_range"]').val('');
+            @endif
+        });
 
 
         function show_seller_guarantee_money_modal(id){

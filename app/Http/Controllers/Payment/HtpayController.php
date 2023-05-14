@@ -228,7 +228,12 @@ class HtpayController extends Controller
                     $paymentStatement = PaymentStatement::query()->where('out_order_no', $data['orderid'])->where('payment_type', 'htpay')->first();
                 }
                 if ($paymentStatement) {
-                    $paymentStatement->status = $data['returncode'] === '00' ? 1 : 2;
+                    // 代付的异步通知，以status作为交易是否成功的标识，付收的异步通知以returncode作为标识
+                    if (isset($data['status'])) {
+                        $paymentStatement->status = $data['status'] === 'success' ? 1 : 2;
+                    } else {
+                        $paymentStatement->status = $data['returncode'] === '00' ? 1 : 2;
+                    }
                     $paymentStatement->save();
                     if ($paymentStatement->business_type == 'pick_up') {
                         storehouseProduct_payment_done($paymentStatement->target_id, 'htpay');

@@ -35,7 +35,7 @@
                             <div class="p-3">
                                 <div class="form-group">
                                     <label>{{ translate('Your Name')}} <span class="text-primary">*</span></label>
-                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" placeholder="{{  translate('Name') }}" name="name" required>
+                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" placeholder="{{  translate('Name') }}" name="name" data-bv-notempty-message="The username is required and cannot be empty" required>
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Your Email')}} <span class="text-primary">*</span></label>
@@ -128,13 +128,25 @@
 @endsection
 
 @section('script')
+    <link src="{{ static_asset('assets/css/bootstrapValidator.min.css') }}"/>
+    <script src="{{ static_asset('assets/js/bootstrapValidator.min.js') }}" ></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script type="text/javascript">
     // making the CAPTCHA  a required field for form submission
     $(document).ready(function(){
-        console.log($("input[name=identity_card_front]").val(), $("input[name=identity_card_front]").val() == '')
+        console.log($("input[name=identity_card_front]").val(), $("input[name=identity_card_front]").val() == '');
+
+        // $("#shop").bootstrapValidator();
         $("#shop").on("submit", function(evt)
         {
+            var bootstrapValidator = $("#shop").data('bootstrapValidator');
+            //手动触发验证
+            bootstrapValidator.validate();
+            alert(bootstrapValidator.isValid())
+            if(bootstrapValidator.isValid()){
+                //表单提交的方法、比如ajax提交
+            }
+
             try {
                 var response = grecaptcha.getResponse();
                 if(response.length == 0)

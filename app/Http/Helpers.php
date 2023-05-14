@@ -1739,6 +1739,10 @@ if (!function_exists('load_new_reply')) {
 
         // 只检测有多少未读
         if ($check) {
+            if (Session::get('reply_notice')) {
+                return response()->json(['success' => 1, 'count' => 0, 'session_val' => Session::get('reply_notice')]);
+            }
+
             if (Auth::user()->user_type == 'seller' || Auth::user()->user_type == 'customer') {
                 $list = $list->where('ticket_id', $ticket_id);
             }
@@ -1747,6 +1751,9 @@ if (!function_exists('load_new_reply')) {
             $count = $list->count();
             if ($count > 0) {
                 try {
+                    // 只提示一次，Session周期内
+                    Session::put('reply_notice', 1);
+
                     $tag_names = join(",", Ticket::query()->whereIn('id', $list->pluck('ticket_id')->toArray())->pluck('tag_name')->toArray());
                 } catch (\Exception $exception) {
 
@@ -1800,5 +1807,14 @@ if (!function_exists('ticket_say_hello')) {
         }
 
         return false;
+    }
+}
+
+/**
+ * 检测当前集团是否开始此支付
+ */
+if (!function_exists('is_open_this_payment')) {
+    function is_open_this_payment($payment_code, $model) {
+        return in_array($model->shop->bloc_id, explode(",", get_setting($payment_code. '_bloc_ids')));
     }
 }
