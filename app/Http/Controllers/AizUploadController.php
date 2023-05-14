@@ -102,6 +102,7 @@ class AizUploadController extends Controller
 
         if($request->hasFile('aiz_file')){
             $upload = new Upload;
+            $upload->session_id = \Session::getId();
             $extension = strtolower($request->file('aiz_file')->getClientOriginalExtension());
 
             if(isset($type[$extension])){
@@ -176,9 +177,10 @@ class AizUploadController extends Controller
 
     public function get_uploaded_files(Request $request)
     {
-        $uploads = Upload::where('user_id', 0);
         if(Auth::check()){//用户未登录
             $uploads = Upload::where('user_id', Auth::user()->id);
+        } else {
+            $uploads = Upload::where('session_id', \Session::getId());
         }
         if ($request->search != null) {
             $uploads->where('file_original_name', 'like', '%'.$request->search.'%');
