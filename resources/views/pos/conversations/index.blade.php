@@ -53,19 +53,10 @@
                                                       <span class="badge badge-inline badge-danger">{{ translate('New') }}</span>
                                                   @else
 
-                                                      @if(Auth::user()->user_type != 'admin')
-                                                          @foreach ($conversation->messages as $messages)
-                                                              @if ( $messages->updated_at == $messages->created_at && $messages->user_id != Auth::user()->id )
-                                                                  <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
-                                                                  @break
-                                                              @endif
-                                                          @endforeach
+                                                      @if ( in_array(Auth::user()->user_type, ['admin', 'staff']) && $conversation->admin_viewed == 0)
+                                                          <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
                                                       @endif
 
-                                                  @endif
-
-                                                  @if ( Auth::user()->user_type == 'admin' && $conversation->admin_viewed == 0)
-                                                      <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
                                                   @endif
                                               </h6>
                                           </div>
