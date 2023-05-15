@@ -51,16 +51,18 @@
                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                     <tr>
                                                         <td class="h5 center blue pb30" style="font-family:'Ubuntu', Arial,sans-serif; font-size:20px; line-height:26px; text-align:left; color:#2e57ae; padding-bottom:30px;">
-                                                            <p><b>Penjual yang terhormat: {{$array['seller_name'] ?: ''}}</b></p>
+                                                            <p><b>Dear seller: {{$array['seller_name'] ?: ''}}</b></p>
                                                             <p>
-                                                                Ada pesanan baru di toko Anda, buka latar belakang toko Anda untuk melihat detailnya.
-                                                                Memproses pesanan lebih cepat meningkatkan berat toko, yang mengarah ke lebih banyak lalu lintas pengiriman.
+                                                                There is a new order in your store, please log in to your store background to view the details.
                                                             </p>
                                                             <p>
-                                                                Jika Anda memerlukan bantuan, silakan hubungi kami melalui perintah kerja di belakang panggung toko, dan kami akan memberi Anda layanan sesegera mungkin.
+                                                                Processing orders in a more timely manner can increase the weight of stores to obtain more traffic distribution.
                                                             </p>
                                                             <p>
-                                                                Pusat operasi toko Douyin
+                                                                If you need any help, please contact us through the work order in the background of the store, and we will provide you with service as soon as possible.
+                                                            </p>
+                                                            <p>
+                                                                tiktokshop operation center
                                                             </p>
                                                             <p>
                                                                 Sekarang pergi ke toko: <a href="https://www.tiktokshopgood.com" target="_blank">https://www.tiktokshopgood.com</a>

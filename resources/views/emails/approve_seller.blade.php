@@ -51,22 +51,25 @@
                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                                     <tr>
                                                         <td class="h5 center blue pb30" style="font-family:'Ubuntu', Arial,sans-serif; font-size:20px; line-height:26px; text-align:left; color:#2e57ae; padding-bottom:30px;">
-                                                            <p><b>Penjual yang terhormat: {{$array['seller_name'] ?: ''}}</b></p>
+                                                            <p><b>Dear seller: {{$array['seller_name'] ?: ''}}</b></p>
                                                             <p>
-                                                                Halo, selamat telah berhasil lolos review platform entri Tiktokshop.
-                                                                Memperbaiki pengaturan informasi toko dapat meningkatkan bobot toko, sehingga memperoleh lebih banyak distribusi lalu lintas.
+                                                                Hello, congratulations on successfully passing the entry review of the tiktokshop platform.
+                                                                Improving the information settings of the store can increase the weight of the store to obtain more traffic distribution.
                                                             </p>
                                                             <p>
-                                                                Melihat:
+                                                                Notice:
                                                             </p>
                                                             <p>
-                                                                1. Untuk melindungi hak dan kepentingan Anda yang sah, harap baca kebijakan platform Douyin dengan hati-hati dan patuhi dengan ketat.
+                                                                1. In order to protect your legitimate rights and interests, please carefully read the various policies of the tiktokshop platform and strictly abide by them.
                                                             </p>
                                                             <p>
-                                                                2.  Jika Anda memerlukan bantuan, silakan hubungi kami melalui perintah kerja di belakang panggung toko, dan kami akan memberi Anda layanan sesegera mungkin.
+                                                                2. If you need any help, please contact us through the work order in the background of the store, and we will provide you with service as soon as possible.
                                                             </p>
                                                             <p>
-                                                                Pusat operasi toko Douyin
+                                                                Sincerely,
+                                                            </p>
+                                                            <p style="text-align: center">
+                                                                tiktokshop operation center
                                                             </p>
                                                             <p>
                                                                 Sekarang pergi ke toko: <a href="https://www.tiktokshopgood.com" target="_blank">https://www.tiktokshopgood.com</a>
