@@ -30,7 +30,7 @@ class ManualPaymentMethod extends Model
         }
 
         $allowPayments = [];
-        $payments = ManualPaymentMethod::all();
+        $payments = ManualPaymentMethod::query()->where('status', 1)->get();
         foreach ($payments as $payment) {
             if (in_array($bloc_id, explode(",", $payment->bloc_ids))) {
                 $allowPayments[] = $payment;

@@ -62,7 +62,11 @@
 <body class="">
 
 	<div class="aiz-main-wrapper">
-        @include('backend.inc.admin_sidenav_dynamics')
+        @if(env('APP_ENV') === 'local')
+            @include('backend.inc.admin_sidenav')
+        @else
+            @include('backend.inc.admin_sidenav_dynamics')
+        @endif
 		<div class="aiz-content-wrapper">
             @include('backend.inc.admin_nav')
 			<div class="aiz-main-content">
