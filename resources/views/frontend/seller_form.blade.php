@@ -134,18 +134,16 @@
 <script type="text/javascript">
     // making the CAPTCHA  a required field for form submission
     $(document).ready(function(){
-        console.log($("input[name=identity_card_front]").val(), $("input[name=identity_card_front]").val() == '');
-
         // $("#shop").bootstrapValidator();
         $("#shop").on("submit", function(evt)
         {
-            var bootstrapValidator = $("#shop").data('bootstrapValidator');
+            /*var bootstrapValidator = $("#shop").data('bootstrapValidator');
             //手动触发验证
             bootstrapValidator.validate();
             alert(bootstrapValidator.isValid())
             if(bootstrapValidator.isValid()){
                 //表单提交的方法、比如ajax提交
-            }
+            }*/
 
             try {
                 var response = grecaptcha.getResponse();
