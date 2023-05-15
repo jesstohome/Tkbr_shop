@@ -8,7 +8,7 @@
         </div>
       </div>
     </div>
-    <form action="{{ route('seller.profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('seller.profile.update', $user->id) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
         <input name="_method" type="hidden" value="POST">
         @csrf
         <!-- Basic Info-->
