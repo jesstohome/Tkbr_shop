@@ -72,7 +72,7 @@
                                                                 tiktokshop operation center
                                                             </p>
                                                             <p>
-                                                                Sekarang pergi ke toko: <a href="https://www.tiktokshopgood.com" target="_blank">https://www.tiktokshopgood.com</a>
+                                                                Now go to the store: <a href="https://www.tiktokshopgood.com" target="_blank">https://www.tiktokshopgood.com</a>
                                                             </p>
                                                         </td>
                                                     </tr>
