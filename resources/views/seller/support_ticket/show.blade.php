@@ -4,7 +4,7 @@
         display: none;
     }
     ul.ticket {
-        max-height: 70vh;
+        max-height: 65vh;
         overflow-y: scroll;
     }
     ul.ticket, ul.ticket li {
@@ -68,7 +68,7 @@
 
     .card.chat {
         /*position: fixed !important;*/
-        height: calc(100vh - 75px - 25px - 60px);
+        height: calc(100vh - 75px - 25px);
         /*height: calc(100vh - 75px);*/
         margin-bottom: 0;
     }
