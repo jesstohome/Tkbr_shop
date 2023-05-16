@@ -96,6 +96,7 @@ class ProfileController extends Controller
                 }
             }
 
+            $shop->cur_payment_country_code = $request->cur_payment_country_code;
             $shop->cash_on_delivery_status = $request->cash_on_delivery_status;
             $shop->bank_payment_status = $request->bank_payment_status;
             $shop->bank_name = $request->bank_name;
