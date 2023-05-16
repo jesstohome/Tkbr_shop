@@ -30,7 +30,7 @@ class PosController extends Controller
 {
     public function index()
     {
-        $customers = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->orderBy('created_at', 'desc');
+        $customers = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->where('bloc_id', '>', 0)->orderBy('created_at', 'desc');
         $customers = filter_by_bloc($customers);
         $customers = $customers->get();
         if (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff') {
