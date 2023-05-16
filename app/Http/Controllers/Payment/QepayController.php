@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Payment;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Seller\ProfileController;
 use App\Models\CombinedOrder;
 use App\Models\CustomerPackage;
 use App\Models\Order;
@@ -100,10 +101,20 @@ class QepayController extends Controller
 
             $trade_amount = number_format($amount, 2, '.', '') * $exchange_rate;
             $order_date = date('Y-m-d H:i:s');
+
+            // 网银通道必填，其他类型一定不能填该参数
             $bank_code = '';
             if ($pay_type == 200) {
-                $bank_code = 'BCA';
+                /*$user = User::find($order->seller_id);
+                $shop = $user->shop;
+
+                // Name对应银行CODE
+                $online_bank_names = ProfileController::$online_bank_names;
+                $online_bank_names = array_flip($online_bank_names);
+                $bank_code = isset($online_bank_names[$shop->online_bank_name]) ? $online_bank_names[$shop->online_bank_name] : $shop->online_bank_name;*/
             }
+
+
             $goods_name = $paymentStatement->order_no;
             $sign_type = 'MD5';
             $mch_return_msg = '';
@@ -145,6 +156,9 @@ class QepayController extends Controller
                 'page_url'=>$page_url,*/
                 'sign_type'=>$sign_type,
                 'sign'=>$sign);
+            if (!empty($bank_code)) {
+                $postdata['bank_code'] = $bank_code;
+            }
 
             $ch = curl_init();
             curl_setopt($ch,CURLOPT_URL,"https://payment.qeapay.com/pay/web"); //支付请求地址
@@ -211,17 +225,17 @@ class QepayController extends Controller
         $user = User::find($withdrawRequest->user_id);
         $shop = $user->shop;
 
+        // Name对应银行CODE
+        $online_bank_names = ProfileController::$online_bank_names;
+        $online_bank_names = array_flip($online_bank_names);
+        $bank_code = isset($online_bank_names[$shop->online_bank_name]) ? $online_bank_names[$shop->online_bank_name] : $shop->online_bank_name;
+
         $apply_date = date('Y-m-d H:i:s');
-        $bank_code = $shop->online_bank_name;
-        if (env('APP_ENV') === 'local') {
-            $bank_code = 'BCA';
-        }
         $mch_transferId = $paymentStatement->order_no;
         $receive_account = $shop->online_bank_no;
         $receive_name = $shop->online_bank_account_name;
         $transfer_amount = $money;
         $sign_type='MD5';
-
 
         $signStr = "";
         $signStr = $signStr."apply_date=".$apply_date."&";
@@ -292,7 +306,7 @@ class QepayController extends Controller
             $paymentStatement->status = 2;
             $paymentStatement->failure_reason = $res['errorMsg'] ?? '';
             $paymentStatement->save();
-            flash($res['msg'] ?: translate('Payment Failed'))->error();
+            flash($res['errorMsg'] ?: translate('Payment Failed'))->error();
         }
     }
 

@@ -7,9 +7,35 @@ use App\Models\Shop;
 use App\Models\User;
 use Auth;
 use Hash;
+use phpDocumentor\Reflection\Types\Self_;
 
 class ProfileController extends Controller
 {
+    public static $e_wallet_names = ['OVO', 'DANA', 'GOPAY', 'SHOPEEPAY'];
+
+    public static $online_bank_names = [
+        'BCA' => 'Bank BCA',
+        'BRI' => 'Bank BRI',
+        'MANDIRI' => 'BANK MANDIRI',
+            // 'BNI' => 'BANK BNI 46',
+         'CIMB' => 'BANK CIMB NIAGA',
+        'PERMATA' => 'BANK PERMATA',
+            // 'BJB' => 'Bank BJB',
+            // 'DANAMON' => 'BANK DANAMON INDONESIA',
+        'BTN' => 'Bank BTN',
+            // 'MAYBANK' => 'BANK MAYBANK INDONESIA',
+        'SINARMAS' => 'BANK SINARMAS',
+        'PANIN' => 'BANK PANIN',
+            // 'BNI_SYR' => 'BANK BNI SYARIAH',
+            // 'MANDIRI_SYR' => 'BANK SYARIAH MANDIRI',
+            // 'DKI' => 'BPD DKI JAKARTA',
+        'MEGA' => 'BANK MEGA',
+        'BTPN' => 'Bank BTPN',
+            // 'BRI_SYR' => 'BANK BRI SYARIAH',
+            // 'MUAMALAT' => 'BANK MUAMALAT INDONESIA',
+        'OCBC' => 'BANK OCBC NISP',
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -20,46 +46,8 @@ class ProfileController extends Controller
         $user = Auth::user();
         $addresses = $user->addresses;
 
-        $e_wallet_names = ['OVO', 'DANA', 'GOPAY', 'SHOPEEPAY', 'LINKAJA'];
-        $online_bank_names = [
-            'Bank BCA',
-            'Bank BRI',
-            'Bank Mandiri',
-            'Bank BNI',
-            'CIMB Niaga',
-            'Bank Permata',
-            'Bank Danamon',
-            'Bank BTN',
-            'BTNBII Maybank',
-            'Bank Sinarmas',
-            'Bank Panin',
-            'Bank DKI',
-            'Bank Mega',
-            'Bank BTPN',
-            'Bank Muamalat',
-            'Bank OCBC NISP',
-            'CITIBANK',
-            'Bank HSBC',
-            'Bank DBS',
-            'Bank OF CHINA',
-            'Bank MAYAPADA',
-            'Bank Jambi',
-            'Bank Aceh',
-            'Bank Lampung',
-            'Bank BPD Bali',
-            'Bank Maluku',
-            'Bank Of India Indonesia',
-            'Bank Maspion',
-            'Bank Ganesha',
-            'Bank ICBC',
-            'Bank Bukopin',
-            'Bank Royal',
-            'Bank ARTOS',
-            'Bank Jago',
-            'Bank Mayora',
-            'Bank ARTHA GRAHA',
-            'Bank CAPITAL',
-        ];
+        $e_wallet_names = self::$e_wallet_names;
+        $online_bank_names = self::$online_bank_names;
         return view('seller.profile.index', compact('user','addresses', 'e_wallet_names', 'online_bank_names'));
     }
     /**
