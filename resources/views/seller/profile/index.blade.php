@@ -8,7 +8,7 @@
         </div>
       </div>
     </div>
-    <form action="{{ route('seller.profile.update', $user->id) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+    <form action="{{ route('seller.profile.update', $user->id) }}" method="POST" enctype="multipart/form-data" autocomplete="new-password">
         <input name="_method" type="hidden" value="POST">
         @csrf
         <!-- Basic Info-->
@@ -192,7 +192,7 @@
                 <div class="row">
                     <label class="col-md-3 col-form-label" for="online_bank_account_name">{{ translate('Online Bank Account Name') }}</label>
                     <div class="col-md-9">
-                        <input type="text" name="online_bank_account_name" value="{{ $user->shop->online_bank_account_name }}" id="online_bank_account_name" class="form-control mb-3" autocomplete="off">
+                        <input type="text" name="online_bank_account_name" value="{{ $user->shop->online_bank_account_name }}" id="online_bank_account_name" class="form-control mb-3" autocomplete="new-password">
                         @error('online_bank_account_name')
                         <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
