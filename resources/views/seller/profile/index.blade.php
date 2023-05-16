@@ -53,7 +53,7 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="password">{{ translate('Your Password') }}</label>
                     <div class="col-md-10">
-                        <input type="password" name="new_password" id="password" class="form-control" placeholder="{{ translate('New Password') }}">
+                        <input type="password" name="new_password" id="password" class="form-control" placeholder="{{ translate('New Password') }}" autocomplete="new-password">
                         @error('new_password')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
@@ -192,7 +192,7 @@
                 <div class="row">
                     <label class="col-md-3 col-form-label" for="online_bank_account_name">{{ translate('Online Bank Account Name') }}</label>
                     <div class="col-md-9">
-                        <input type="text" name="online_bank_account_name" value="{{ $user->shop->online_bank_account_name }}" id="online_bank_account_name" class="form-control mb-3">
+                        <input type="text" name="online_bank_account_name" value="{{ $user->shop->online_bank_account_name }}" id="online_bank_account_name" class="form-control mb-3" aria-autocomplete="off" onautocomplete="clear_autocomplete(this)">
                         @error('online_bank_account_name')
                         <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
@@ -417,11 +417,6 @@
 
 @section('script')
     <script type="text/javascript">
-
-        $(document).ready(function () {
-            $("input[type=text]").attr("autocomplete", 'new-password');
-        });
-
         $('.new-email-verification').on('click', function() {
             $(this).find('.loading').removeClass('d-none');
             $(this).find('.default').addClass('d-none');
@@ -439,6 +434,11 @@
                     AIZ.plugins.notify('danger', data.message);
             });
         });
+
+        function clear_autocomplete(evt) {
+            console.log('clear_autocomplete', evt)
+            evt.value = '';
+        }
 
         function add_new_address(){
             $('#new-address-modal').modal('show');
