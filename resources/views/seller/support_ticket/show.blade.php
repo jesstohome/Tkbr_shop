@@ -187,7 +187,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $("ul.ticket").height(document.documentElement.clientWidth - 75)
+            $("ul.ticket").height(document.documentElement.clientHeight - 75)
         });
     </script>
 @endsection
