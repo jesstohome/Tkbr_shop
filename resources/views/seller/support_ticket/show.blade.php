@@ -68,8 +68,8 @@
 
     .card.chat {
         /*position: fixed !important;*/
-        /*height: calc(100vh - 75px - 20px);*/
-        height: calc(100vh - 75px);
+        height: calc(100vh - 75px - 25px);
+        /*height: calc(100vh - 75px);*/
         margin-bottom: 0;
     }
 
@@ -187,7 +187,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $("ul.ticket").height(document.documentElement.clientHeight - 75 - 20)
+            // $("ul.ticket").height(document.documentElement.clientHeight - 75 - 20)
         });
     </script>
 @endsection
