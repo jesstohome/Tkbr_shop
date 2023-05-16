@@ -184,4 +184,10 @@
 @endsection
 @section('script')
     @include('partials.support_ticket.script')
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("ul.ticket").height(document.documentElement.clientWidth - 75)
+        });
+    </script>
 @endsection
