@@ -26,7 +26,7 @@ class ProductInit extends Command
      *
      * @var string
      */
-    protected $signature = 'product:init';
+    protected $signature = 'product:init {category_ids?}';
 
     /**
      * The console command description.
@@ -246,8 +246,24 @@ class ProductInit extends Command
             ->pluck('original_id')
             ->toArray();
 
-        $shops = Shop::query()->where('created_at', '>=', '2023-05-06 10:00:00')->get();
-        $products = Product::query()->where('in_storehouse', 1)->whereNotIn('id', $alreadyCopyIds)->select(['id', 'category_id'])->get()->toArray();
+        // 虚拟店铺，无集团分组的
+        $shops = Shop::query()->where('bloc_id', 0)
+            ->where('created_at', '>=', '2023-05-16 10:00:00')
+            ->where('created_at', '<=>', '2023-05-16 23:59:59')
+            ->limit(5)
+            ->get();
+        $products = Product::query()->where('in_storehouse', 1)->whereNotIn('id', $alreadyCopyIds);
+
+        $category_ids = $this->argument('category_ids');
+        if (is_null($category_ids)) {
+            $this->info('确定不指定分类，将category_ids参数设置为0');
+            return;
+        }
+        if (!empty($category_ids)) {
+            $category_ids = explode(",", $category_ids);
+            $products = $products->whereIn('category_id', $category_ids);
+        }
+        $products = $products->select(['id', 'category_id'])->get()->toArray();
         $categoriesProductIds = [];
         foreach ($products as $product) {
             if (!isset($categoriesProductIds[$product['category_id']])) {
@@ -255,9 +271,18 @@ class ProductInit extends Command
             }
             $categoriesProductIds[$product['category_id']][] = $product['id'];
         }
+        if (empty($categoriesProductIds)) {
+            $this->info('分类下无数据');
+            return;
+        }
 
         $pb = $this->output->createProgressBar(count($shops));
         foreach ($shops as $shop) {
+            if (empty($categoriesProductIds)) {
+                $this->info('所有分类下产品已使用完毕或者不够20个产品');
+                break;
+            }
+
             $randCategoryId = array_rand($categoriesProductIds, 1);
             // 生成店铺
             $user = $shop->user;
