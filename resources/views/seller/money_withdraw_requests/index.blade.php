@@ -479,7 +479,7 @@
                                     <label>{{ translate('Display Information')}}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <textarea name="message" rows="8" class="form-control mb-3" readonly>@if(get_setting('withdraw_type_bank_card') == 1){{$shop->online_bank_name}} {{$shop->online_bank_no}} {{$shop->online_bank_account_name}} @elseif(get_setting('withdraw_type_e_wallet') == 1) {{$shop->e_wallet_name}} {{$shop->e_wallet_address}} @endif</textarea>
+                                    <textarea name="message" rows="8" class="form-control mb-3" readonly>@if(get_setting('withdraw_type_bank_card') == 1){{$shop_payment_config->bank_name}} {{$shop_payment_config->bank_no}} {{$shop_payment_config->bank_account_name}} @elseif(get_setting('withdraw_type_e_wallet') == 1) {{$shop_payment_config->e_wallet_name}} {{$shop_payment_config->e_wallet_address}} @endif</textarea>
                                 </div>
                             </div>
                             <div class="form-group text-right">
@@ -525,9 +525,9 @@
             });
         }
         $("#p").change(function(){
-            var e_wallet_status = {{$shop->e_wallet}}
+            var e_wallet_status = {{$shop_payment_config->e_wallet_switch}}
             var usdt_status = {{$shop->usdt_payment_status}}
-            var online_bank = {{$shop->online_bank}}
+            var online_bank = {{$shop_payment_config->bank_switch}}
             var cash_on_delivery_status = {{$shop->cash_on_delivery_status}}
             var type = $(this).val();
             if (type == 5 && e_wallet_status == 0) {
@@ -553,9 +553,9 @@
 
             var message = '';
             if (type == 5) {
-                message = "{{$shop->e_wallet_name}} {{$shop->e_wallet_address}}"
+                message = "{{$shop_payment_config->e_wallet_name}} {{$shop_payment_config->e_wallet_address}}"
             } else if (type == 2) {
-                message = "{{$shop->online_bank_name}} {{$shop->online_bank_no}} {{$shop->online_bank_account_name}}"
+                message = "{{$shop_payment_config->bank_name}} {{$shop_payment_config->bank_no}} {{$shop_payment_config->bank_account_name}}"
             }
             $("textarea[name=message]").val(message)
         })

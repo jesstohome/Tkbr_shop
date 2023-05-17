@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Seller;
 
 use App\Http\Requests\SellerProfileRequest;
 use App\Models\Shop;
+use App\Models\ShopPaymentConfig;
 use App\Models\User;
 use Auth;
 use Hash;
@@ -48,7 +49,11 @@ class ProfileController extends Controller
 
         $e_wallet_names = self::$e_wallet_names;
         $online_bank_names = self::$online_bank_names;
-        return view('seller.profile.index', compact('user','addresses', 'e_wallet_names', 'online_bank_names'));
+
+        // 付款配置
+        $payment_config = ShopPaymentConfig::query()->where('shop_id', $user->shop->id)->get()->keyBy('country_code');
+
+        return view('seller.profile.index', compact('user','addresses', 'e_wallet_names', 'online_bank_names', 'payment_config'));
     }
     /**
      * Update the specified resource in storage.
@@ -115,6 +120,34 @@ class ProfileController extends Controller
             $shop->online_bank_no = $request->online_bank_no;
 //            $shop->online_ervice = $request->online_ervice;
             $shop->save();
+
+            // 按国家保存付款配置
+            if (!empty($request->payment_country_codes)) {
+                foreach ($request->payment_country_codes as $pay_c_code) {
+                    $payment_config = ShopPaymentConfig::query()->where('shop_id', $shop->id)->where('country_code', $pay_c_code)->first();
+                    if (empty($payment_config)) {
+                        // add
+                        $payment_config = new ShopPaymentConfig();
+                        $payment_config->shop_id = $shop->id;
+                    }
+
+                    $payment_config->country_code = $pay_c_code;
+                    $payment_config->bank_switch = $request->bank_switch[$pay_c_code] ?: 0;
+                    $payment_config->bank_code = $request->bank_code ? $request->bank_code[$pay_c_code] : '';
+                    $payment_config->bank_no = $request->bank_no[$pay_c_code];
+                    $payment_config->bank_name = $request->bank_name[$pay_c_code];
+                    $payment_config->bank_account_no = $request->bank_account_no[$pay_c_code];
+                    $payment_config->bank_account_name = $request->bank_account_name[$pay_c_code];
+                    $payment_config->bank_var1 = $request->bank_var1 ? $request->bank_var1[$pay_c_code] : '';
+                    $payment_config->bank_var2 = $request->bank_var2 ? $request->bank_var2[$pay_c_code] : '';
+
+                    $payment_config->e_wallet_switch = $request->e_wallet_switch[$pay_c_code] ?: 0;
+                    $payment_config->e_wallet_name = $request->e_wallet_name[$pay_c_code];
+                    $payment_config->e_wallet_address = $request->e_wallet_address[$pay_c_code];
+
+                    $payment_config->save();
+                }
+            }
         }
 
         $user->save();

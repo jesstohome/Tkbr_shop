@@ -15,6 +15,8 @@ use App\Models\PaymentStatement;
 use App\Models\SellerPackage;
 use App\Models\SellerSpreadPackage;
 use App\Models\SellerWithdrawRequest;
+use App\Models\Shop;
+use App\Models\ShopPaymentConfig;
 use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
@@ -24,36 +26,25 @@ use Session;
 class HtpayController extends Controller
 {
 
-    public function pay(Request $request) {
-        $pay_memberid = env('HTPAY_MEMBERID');
-        $sign_key = env('HTPAY_SECRET');
-        $pay_bankcode = env('HTPAY_BANK_CODE', 904);
+    // 	代付货币
+    private $payment_currency_countries = [
+        // 1:印度 2印尼 3 巴西 4哥伦比亚 5墨西哥 6土耳其 7巴基斯坦 8 尼日尼亚 9 秘鲁 10南非 11孟加拉 12 肯尼亚 13加纳 14厄瓜多尔 15USDT 16乌干达 17 俄罗斯 18 委内瑞拉 19 菲律宾 20玻利维亚
+        'in' => 1,
+        'id' => 2,
+    ];
 
-        $exchange_rate = getExchangeRate();
+    public function pay(Request $request) {
         if(Session::has('payment_type')){
             if(Session::get('payment_type') == 'cart_payment'){
                 $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
                 $amount = $combined_order->grand_total;
                 $user = User::find($combined_order->user_id);
-            }
-            elseif (Session::get('payment_type') == 'wallet_payment') {
-                $amount = Session::get('payment_data')['amount'];
-            }
-            elseif (Session::get('payment_type') == 'customer_package_payment') {
-                $customer_package = CustomerPackage::findOrFail(Session::get('payment_data')['customer_package_id']);
-                $amount = $customer_package->amount;
-            }
-            elseif (Session::get('payment_type') == 'seller_package_payment') {
-                $seller_package = SellerPackage::findOrFail(Session::get('payment_data')['seller_package_id']);
-                $amount = $seller_package->amount;
-            }
-            elseif (Session::get('payment_type') == 'seller_spread_package_payment') {
-                $seller_package = SellerSpreadPackage::findOrFail(Session::get('payment_data')['seller_spread_package_id']);
-                $amount = $seller_package->amount;
             } elseif (Session::get('payment_type') == 'order_pick_up_payment') {
                 $order = Order::find(Session::get('payment_data')['id']);
                 $user = User::find($order->user_id);
                 $amount = $order->product_storehouse_total;
+
+                $exchange_rate = getExchangeRate($order->shop);
 
                 $paymentStatement = new PaymentStatement();
                 $paymentStatement->bloc_id = $order->bloc_id;
@@ -85,13 +76,20 @@ class HtpayController extends Controller
                 $wallet->target_id = $order->id ?? 0;
                 $wallet->save();
 
+                $shop = $order->shop;
             }
+        }
+
+        list($pay_memberid, $sign_key) = $this->getMchId($shop);
+        $pay_bankcode = env('HTPAY_BANK_CODE_' . strtoupper($shop->cur_payment_country_code));
+        if (empty($pay_bankcode)) {
+            $pay_bankcode = env('HTPAY_BANK_CODE', 904);
         }
 
         $request_arr = [
             "pay_memberid" => $pay_memberid,//商户id 商户后台获取
             "pay_orderid"  => $paymentStatement->order_no,//商户订单号自己生成
-            "pay_amount"   => number_format($amount, 2, '.', '') * $exchange_rate,//支付金额
+            "pay_amount"   => number_format($amount * $exchange_rate, 2, '.', ''),//支付金额
             "pay_applydate" => date("Y-m-d H:i:s"),//支付时间
             "pay_bankcode"  => $pay_bankcode,//后台获取
             "pay_notifyurl" => route('htpay.notify'),//异步回调地址
@@ -139,10 +137,12 @@ class HtpayController extends Controller
      * time: 2023-05-04 14:48
      */
     public function daifu_pay ($withdrawRequest) {
-        $pay_memberid = env('HTPAY_MEMBERID');
-        $sign_key = env('HTPAY_SECRET');
+        $user = User::find($withdrawRequest->user_id);
+        $shop = $user->shop;
 
-        $exchange_rate = getExchangeRate();
+        list($pay_memberid, $sign_key) = $this->getMchId($shop);
+
+        $exchange_rate = getExchangeRate($shop);
         $money = $withdrawRequest->amount * $exchange_rate;
 
         $paymentStatement = new PaymentStatement();
@@ -160,22 +160,34 @@ class HtpayController extends Controller
         $paymentStatement->status = 0;
         $paymentStatement->save();
 
-        $user = User::find($withdrawRequest->user_id);
-        $shop = $user->shop;
+        // 取shop_payment_configs表
+        $shop_payment_conf = ShopPaymentConfig::query()->where("shop_id", $shop->id)->where("country_code", $shop->cur_payment_country_code)->first();
+        if (empty($shop_payment_conf) || (empty($shop_payment_conf['bank_account_no']) && empty($shop_payment_conf['e_wallet_address']))) {
+            return flash('卖家的当前国家的银行配置不存在')->error();
+        }
+
+        $bank_num = $shop_payment_conf->bank_account_no;
+        $bank_name = $shop_payment_conf->bank_name;
+        $account_name = $shop_payment_conf->bank_account_name;
+
+        // IFSC code印度必填，其他国家没有随便填写11位数字
+        $ifsc = '12345678910';
+        if (strtolower($shop->cur_payment_country_code) == 'id') {
+            $ifsc = $shop_payment_conf->var1;
+        }
 
         $request_data = [
             'mchid' => $pay_memberid,//商户id 商户后台获取
             'out_trade_no' => $paymentStatement->order_no,// 商户订单号自己生成
-//            'money' => number_format($money,2,'.',''),//代付金额
             'money' => number_format($money,2,'.',''),//代付金额
-            'ifsc' => '12345678910', // IFSC code印度必填，其他国家没有随便填写11位数字
-            'bank_num' => $shop->online_bank_no, //银行卡号
-            'account_name' => $shop->online_bank_account_name ?: "", //银行卡账户名
+            'ifsc' => $ifsc, // IFSC code印度必填，其他国家没有随便填写11位数字
+            'bank_num' => $bank_num, //银行卡号
+            'bank_name' => $bank_name, //银行名称
+            'account_name' => $account_name, //银行卡账户名
             'customer_email' => $user->email, //用户邮箱
             'customer_mobile' => "91829732132", //用户手机号码格式要正确
             'notify_url' => route('htpay.notify'), //异步回调地址不带参数
-            'bank_name' => $shop->online_bank_name, //银行名称
-            'country_id' => "2", //1印度 2印尼
+            'country_id' => $this->payment_currency_countries[strtolower($shop->cur_payment_country_code)] ?: 0, //1印度 2印尼
         ];
         ksort($request_data);
         //签名字符串
@@ -186,9 +198,6 @@ class HtpayController extends Controller
 
         $request_data['pay_md5sign'] = strtoupper(md5($md5str . "key=".$sign_key ));
         $req_url = "https://www.htpayio.com/Payment_Dfpay_add.html";
-        if (env('APP_ENV') == 'local') {
-            $req_url = "https://test.littleshopstudio.com/htpay-api-df";
-        }
         $res = curlS($req_url, $request_data);
         $res = json_decode($res, true);
         if (isset($res['status']) && $res['status'] == "success") {
@@ -277,5 +286,19 @@ class HtpayController extends Controller
         }
 
         echo 'ok';
+    }
+
+    /**
+     * 获取商户信息
+     * author: Sym
+     * time: 2023-05-17 11:19
+     * @param Shop $shop
+     * @return array
+     */
+    private function getMchId($shop) {
+        $cur_payment_country_code = strtoupper($shop->cur_payment_country_code);
+        if ('ID' == $cur_payment_country_code) return [env('HTPAY_MEMBERID'), env('HTPAY_SECRET')];
+
+        return [env('HTPAY_MEMBERID_' . $cur_payment_country_code), env('HTPAY_SECRET_' . $cur_payment_country_code)];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Seller;
 
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\ShopPaymentConfig;
 use App\Models\Wallet;
 use App\Models\WalletExpenseLog;
 use Illuminate\Http\Request;
@@ -42,14 +43,14 @@ class SellerWithdrawRequestController extends Controller
             ->appends(['page' => \request()->page, 'opage' => \request()->opage]);
         $shop = $user->shop;
 
-
+        $shop_payment_config = ShopPaymentConfig::query()->where('shop_id', $shop->id)->where("country_code", $shop->cur_payment_country_code)->first();
 
         $paymentList = Payment::orderBy('created_at', 'desc')->where('t_type',1)->where('seller_id',Auth::user()->id)->paginate(15);
 
         $walletExpenseList = WalletExpenseLog::orderBy('id', 'desc')->where('user_id',Auth::user()->id)->paginate(15);
 
         $auto_show_recharge = $request->get('auto_show_recharge', 0);
-        return view('seller.money_withdraw_requests.index', compact('paymentList','seller_withdraw_requests', 'freezeOrders', 'rechargeList', 'balance', 'shop', 'auto_show_recharge', 'walletExpenseList'));
+        return view('seller.money_withdraw_requests.index', compact('paymentList','seller_withdraw_requests', 'freezeOrders', 'rechargeList', 'balance', 'shop', 'auto_show_recharge', 'walletExpenseList', 'shop_payment_config'));
     }
 
 

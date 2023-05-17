@@ -14,6 +14,7 @@ use App\Models\PaymentStatement;
 use App\Models\SellerPackage;
 use App\Models\SellerSpreadPackage;
 use App\Models\SellerWithdrawRequest;
+use App\Models\ShopPaymentConfig;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Utility\SignApi;
@@ -27,32 +28,17 @@ class QepayController extends Controller
 
     public function pay(Request $request) {
         try {
-            $exchange_rate = getExchangeRate();
-
             if(Session::has('payment_type')){
                 if(Session::get('payment_type') == 'cart_payment'){
                     $combined_order = CombinedOrder::findOrFail(Session::get('combined_order_id'));
                     $amount = $combined_order->grand_total;
                     $user = User::find($combined_order->user_id);
-                }
-                elseif (Session::get('payment_type') == 'wallet_payment') {
-                    $amount = Session::get('payment_data')['amount'];
-                }
-                elseif (Session::get('payment_type') == 'customer_package_payment') {
-                    $customer_package = CustomerPackage::findOrFail(Session::get('payment_data')['customer_package_id']);
-                    $amount = $customer_package->amount;
-                }
-                elseif (Session::get('payment_type') == 'seller_package_payment') {
-                    $seller_package = SellerPackage::findOrFail(Session::get('payment_data')['seller_package_id']);
-                    $amount = $seller_package->amount;
-                }
-                elseif (Session::get('payment_type') == 'seller_spread_package_payment') {
-                    $seller_package = SellerSpreadPackage::findOrFail(Session::get('payment_data')['seller_spread_package_id']);
-                    $amount = $seller_package->amount;
                 } elseif (Session::get('payment_type') == 'order_pick_up_payment') {
                     $order = Order::find(Session::get('payment_data')['id']);
                     $user = User::find($order->user_id);
                     $amount = $order->product_storehouse_total;
+
+                    $exchange_rate = getExchangeRate($order->shop);
 
                     $paymentStatement = new PaymentStatement();
                     $paymentStatement->bloc_id = $order->bloc_id;
@@ -104,16 +90,6 @@ class QepayController extends Controller
 
             // 网银通道必填，其他类型一定不能填该参数
             $bank_code = '';
-            if ($pay_type == 200) {
-                /*$user = User::find($order->seller_id);
-                $shop = $user->shop;
-
-                // Name对应银行CODE
-                $online_bank_names = ProfileController::$online_bank_names;
-                $online_bank_names = array_flip($online_bank_names);
-                $bank_code = isset($online_bank_names[$shop->online_bank_name]) ? $online_bank_names[$shop->online_bank_name] : $shop->online_bank_name;*/
-            }
-
 
             $goods_name = $paymentStatement->order_no;
             $sign_type = 'MD5';
@@ -204,7 +180,10 @@ class QepayController extends Controller
         $mch_id = env('QEPAY_MCH_ID');
         $merchant_key = env('QEPAY_DAIFU_MCH_KEY');
 
-        $exchange_rate = getExchangeRate();
+        $user = User::find($withdrawRequest->user_id);
+        $shop = $user->shop;
+
+        $exchange_rate = getExchangeRate($shop);
         $money = $withdrawRequest->amount * $exchange_rate;
 
         $paymentStatement = new PaymentStatement();
@@ -222,18 +201,21 @@ class QepayController extends Controller
         $paymentStatement->status = 0;
         $paymentStatement->save();
 
-        $user = User::find($withdrawRequest->user_id);
-        $shop = $user->shop;
+        $shop_payment_conf = ShopPaymentConfig::query()->where("shop_id", $shop->id)->where("country_code", $shop->cur_payment_country_code)->first();
+        if (empty($shop_payment_conf) || (empty($shop_payment_conf['bank_account_no']) && empty($shop_payment_conf['e_wallet_address']))) {
+            return flash('卖家的当前国家的银行配置不存在')->error();
+        }
 
+        $bank_name = $shop_payment_conf->bank_name;
         // Name对应银行CODE
         $online_bank_names = ProfileController::$online_bank_names;
         $online_bank_names = array_flip($online_bank_names);
-        $bank_code = isset($online_bank_names[$shop->online_bank_name]) ? $online_bank_names[$shop->online_bank_name] : $shop->online_bank_name;
+        $bank_code = isset($online_bank_names[$bank_name]) ? $online_bank_names[$bank_name] : $bank_name;
 
         $apply_date = date('Y-m-d H:i:s');
         $mch_transferId = $paymentStatement->order_no;
-        $receive_account = $shop->online_bank_no;
-        $receive_name = $shop->online_bank_account_name;
+        $receive_account = $shop_payment_conf->bank_no;
+        $receive_name = $shop_payment_conf->bank_account_name;
         $transfer_amount = $money;
         $sign_type='MD5';
 
@@ -291,9 +273,10 @@ class QepayController extends Controller
 
         $response = curl_exec($ch);
         $curl_info = curl_getinfo($ch);
+        $curl_error = curl_error($ch);
         curl_close($ch);
 
-        \Log::debug(var_export(['daifu_pay_request_arr' => $postdata, 'res' => $response, $curl_info], true));
+        \Log::debug(var_export(['daifu_pay_request_arr' => $postdata, 'res' => $response, $curl_error, $curl_info], true));
         $res = json_decode($response, true);
         if (isset($res['respCode']) && $res['respCode'] == "SUCCESS") {
             $paymentStatement->status = $res['tradeResult'];

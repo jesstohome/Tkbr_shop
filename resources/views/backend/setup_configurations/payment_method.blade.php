@@ -72,6 +72,11 @@
                         <input type="hidden" name="payment_method" value="htpay">
                         @csrf
                         <div class="form-group row">
+                            <div class="col-md-12 text-center">
+                                <label class="col-from-label">{{translate('Indonesia')}}</label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <input type="hidden" name="types[]" value="HTPAY_MEMBERID">
                             <div class="col-md-4">
                                 <label class="col-from-label">{{translate('Htpay Member Id')}}</label>
@@ -98,7 +103,6 @@
                                 <input type="text" class="form-control" name="HTPAY_SECRET" value="{{  env('HTPAY_SECRET') }}" placeholder="{{ translate('Htpay Secret') }}" required>
                             </div>
                         </div>
-
                         <div class="form-group row">
                             <input type="hidden" name="types[]" value="HTPAY_EXCHANGE_RATE">
                             <div class="col-md-4">
@@ -108,6 +112,52 @@
                                 <input type="text" class="form-control" name="HTPAY_EXCHANGE_RATE" value="{{  env('HTPAY_EXCHANGE_RATE') }}" placeholder="{{ translate('Htpay exchange rate') }}" required>
                             </div>
                         </div>
+
+                        <hr>
+                        <div class="form-group row">
+                            <div class="col-md-12 text-center">
+                                <label class="col-from-label">{{translate('Indian')}}</label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="HTPAY_MEMBERID_IN">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Htpay Member Id')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="HTPAY_MEMBERID_IN" value="{{  env('HTPAY_MEMBERID_IN') }}" placeholder="{{ translate('HTPAY MEMBERID') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="HTPAY_BANK_CODE_IN">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Htpay Channel Code')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="HTPAY_BANK_CODE_IN" value="{{  env('HTPAY_BANK_CODE_IN') }}" placeholder="{{ translate('Htpay Channel Code') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="HTPAY_SECRET_IN">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Htpay Secret')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="HTPAY_SECRET_IN" value="{{  env('HTPAY_SECRET_IN') }}" placeholder="{{ translate('Htpay Secret') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="HTPAY_EXCHANGE_RATE_IN">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Htpay exchange rate')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="HTPAY_EXCHANGE_RATE_IN" value="{{  env('HTPAY_EXCHANGE_RATE_IN') }}" placeholder="{{ translate('Htpay exchange rate') }}" required>
+                            </div>
+                        </div>
+
+                        <hr>
 
                         <div class="form-group row">
                             <label class="col-sm-4 col-from-label" for="products">{{translate('Blocs')}}</label>
