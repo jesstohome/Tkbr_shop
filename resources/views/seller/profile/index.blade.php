@@ -98,6 +98,7 @@
                     @php $country_code = strtolower($country->code) @endphp
                     <input type="hidden" name="payment_country_codes[]" value="{{$country_code}}" />
                     <div class="bank_info lang_{{$country_code}}" style="display: none">
+                        @if($country_code != 'in')
                         <!-- 电子钱包配置 -->
                         <div class="row" id="e-wallet">
                             <label class="col-md-3 col-form-label">{{ translate('e-Wallet') }}</label>
@@ -124,6 +125,7 @@
                                 <input type="text" name="e_wallet_address[{{$country_code}}]" value="{{ $payment_config[$country_code]->e_wallet_address }}" class="form-control mb-3" placeholder="08xxxxxxxxx">
                             </div>
                         </div>
+                        @endif
 
                         <!-- 线上银行配置 -->
                         <div class="row" id="online_bank">
@@ -164,6 +166,14 @@
                                 <input type="text" name="bank_account_name[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_account_name }}" class="form-control mb-3" aria-autocomplete="off">
                             </div>
                         </div>
+                        @if($country_code == 'in')
+                                <div class="row">
+                                    <label class="col-md-3 col-form-label" for="bank_var1[{{$country_code}}]">IFSC Code</label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="bank_var1[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_var1 }}" class="form-control mb-3" aria-autocomplete="off">
+                                    </div>
+                                </div>
+                        @endif
                     </div>
                 @endforeach
 

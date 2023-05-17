@@ -173,7 +173,7 @@ class HtpayController extends Controller
         // IFSC code印度必填，其他国家没有随便填写11位数字
         $ifsc = '12345678910';
         if (strtolower($shop->cur_payment_country_code) == 'id') {
-            $ifsc = $shop_payment_conf->var1;
+            $ifsc = $shop_payment_conf->bank_var1;
         }
 
         $request_data = [
