@@ -57,15 +57,6 @@
                         </div>
                     </div>
 
-                    @if(!empty(Auth::user()->staffInfo->invite_code))
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-from-label" for="invite_code">{{translate('My Invite Url')}}</label>
-                            <div class="col-sm-9">
-                                {{route('shops.create', ['staff_invitation_code' => Auth::user()->staffInfo->invite_code])}}
-                            </div>
-                        </div>
-                    @endif
-
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                     </div>

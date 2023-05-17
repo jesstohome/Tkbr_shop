@@ -65,12 +65,17 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0 h6 ">{{translate('Htpay Credential')}} ({{translate('Indonesia')}})</h5>
+                    <h5 class="mb-0 h6 ">{{translate('Htpay Credential')}}</h5>
                 </div>
                 <div class="card-body">
                     <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
                         <input type="hidden" name="payment_method" value="htpay">
                         @csrf
+                        <div class="form-group row">
+                            <div class="col-md-12 text-center">
+                                <label class="col-from-label">{{translate('Indonesia')}}</label>
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <input type="hidden" name="types[]" value="HTPAY_MEMBERID">
                             <div class="col-md-4">
@@ -108,35 +113,12 @@
                             </div>
                         </div>
 
+                        <hr>
                         <div class="form-group row">
-                            <label class="col-sm-4 col-from-label" for="products">{{translate('Blocs')}}</label>
-                            <div class="col-sm-8">
-                                <input type="hidden" name="types[]" value="htpay_bloc_ids">
-                                <select name="htpay_bloc_ids[]" id="htpay_bloc_ids" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Blocs') }}" data-live-search="true" data-selected-text-format="count">
-                                    @foreach($blocs as $bloc)
-                                        <option value="{{$bloc->id}}" <?php if(in_array($bloc->id, explode(",", get_setting('htpay_bloc_ids')))) echo "selected";?> >{{ $bloc->name }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="col-md-12 text-center">
+                                <label class="col-from-label">{{translate('Indian')}}</label>
                             </div>
                         </div>
-
-                        <div class="form-group mb-0 text-right">
-                            <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0 h6 ">{{translate('Htpay Credential')}} ({{translate('Indian')}})</h5>
-                </div>
-                <div class="card-body">
-                    <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                        <input type="hidden" name="payment_method" value="htpay">
-                        @csrf
                         <div class="form-group row">
                             <input type="hidden" name="types[]" value="HTPAY_MEMBERID_IN">
                             <div class="col-md-4">
@@ -180,10 +162,10 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-from-label" for="products">{{translate('Blocs')}}</label>
                             <div class="col-sm-8">
-                                <input type="hidden" name="types[]" value="in_htpay_bloc_ids">
-                                <select name="in_htpay_bloc_ids[]" id="in_htpay_bloc_ids" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Blocs') }}" data-live-search="true" data-selected-text-format="count">
+                                <input type="hidden" name="types[]" value="htpay_bloc_ids">
+                                <select name="htpay_bloc_ids[]" id="htpay_bloc_ids" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Blocs') }}" data-live-search="true" data-selected-text-format="count">
                                     @foreach($blocs as $bloc)
-                                        <option value="{{$bloc->id}}" <?php if(in_array($bloc->id, explode(",", get_setting('in_htpay_bloc_ids')))) echo "selected";?> >{{ $bloc->name }}</option>
+                                        <option value="{{$bloc->id}}" <?php if(in_array($bloc->id, explode(",", get_setting('htpay_bloc_ids')))) echo "selected";?> >{{ $bloc->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
