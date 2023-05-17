@@ -22,6 +22,10 @@
                             <a href="javascript:void(0)" onclick="toPay(1)" id="htpay-link" class="btn btn-primary mt-2">Htpay</a>
                         @endif
 
+                        @if(get_setting('in_htpay_collection_behalf') == 1 && is_open_this_payment('htpay', $order))
+                            <a href="javascript:void(0)" onclick="toPay(1)" id="htpay-link" class="btn btn-primary mt-2">印度 Htpay</a>
+                        @endif
+
                         @if(get_setting('qepay_collection_behalf') == 1 && is_open_this_payment('qepay', $order))
                             <a href="javascript:void(0)" onclick="toPay(2)" id="qepay-link" class="btn btn-primary mt-2">Qepay</a>
                         @endif

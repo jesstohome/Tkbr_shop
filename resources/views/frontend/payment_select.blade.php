@@ -103,6 +103,21 @@
                                                         </label>
                                                     </div>
                                                 @endif
+                                                @if (get_setting('in_htpay_collection_behalf') == 1)
+                                                    <div class="col-6 col-md-4">
+                                                        <label class="aiz-megabox d-block mb-3">
+                                                            <input value="htpay" class="online_payment" type="radio" name="payment_option" checked>
+                                                            <span class="d-block aiz-megabox-elem p-3">
+                                                            <img src="{{ static_asset('assets/img/cards/paypal.png') }}"
+                                                                 class="img-fluid mb-2">
+                                                            <span class="d-block text-center">
+                                                                <span
+                                                                    class="d-block fw-600 fs-15">印度HTPAY</span>
+                                                            </span>
+                                                        </span>
+                                                        </label>
+                                                    </div>
+                                                @endif
                                             @if (get_setting('stripe_payment') == 1)
                                                 <div class="col-6 col-md-4">
                                                     <label class="aiz-megabox d-block mb-3">
