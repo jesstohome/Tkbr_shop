@@ -82,8 +82,15 @@ class ShopController extends Controller
                 Cookie::queue('invitation_code', $request->invitation_code, 720);
             }
 
+            $staff_invitation_code = '';
+            if ( $request->has('staff_invitation_code') )
+            {
+                $staff_invitation_code = $request->staff_invitation_code;
+                Cookie::queue('staff_invitation_code', $request->staff_invitation_code, 720);
+            }
 
-            return view('frontend.seller_form', compact('invitation_code'));
+
+            return view('frontend.seller_form', compact('invitation_code', 'staff_invitation_code'));
         }
     }
 

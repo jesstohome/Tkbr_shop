@@ -65,7 +65,7 @@
                             @if(empty($invitation_code))
                             <div class="form-group">
                                 <label>{{ translate('Invite code')}} <span class="text-primary">*</span></label>
-                                <input type="text" class="form-control mb-3" placeholder="{{ translate('Invite code')}}" name="staff_invite_code" required>
+                                <input type="text" class="form-control mb-3" placeholder="{{ translate('Invite code')}}" name="staff_invite_code" @if(!empty($staff_invitation_code)) readonly @endif value="{{$staff_invitation_code ?? ''}}" required>
                             </div>
                             @endif
 
