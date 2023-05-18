@@ -22,8 +22,8 @@
                             <a href="javascript:void(0)" onclick="toPay(1)" id="htpay-link" class="btn btn-primary mt-2">Htpay</a>
                         @endif
 
-                        @if(get_setting('in_htpay_collection_behalf') == 1 && is_open_this_payment('htpay', $order))
-                            <a href="javascript:void(0)" onclick="toPay(1)" id="htpay-link" class="btn btn-primary mt-2">印度 Htpay</a>
+                        @if(get_setting('in_htpay_collection_behalf') == 1 && is_open_this_payment('india_htpay', $order))
+                            <a href="javascript:void(0)" onclick="toPay(3)" id="india_htpay-link" class="btn btn-primary mt-2">{{translate('India')}} Htpay</a>
                         @endif
 
                         @if(get_setting('qepay_collection_behalf') == 1 && is_open_this_payment('qepay', $order))
@@ -81,6 +81,8 @@
             url = "{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'htpay', 'order_id' => $order->id ?? 0]) }}"
         } else if (2 === pay_type) {
             url = "{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'qepay', 'order_id' => $order->id ?? 0]) }}"
+        } else if (3 === pay_type) {
+            url = "{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'india_htpay', 'order_id' => $order->id ?? 0]) }}"
         }
         window.open(url.replace('&amp;', '&'), '_target');
         setTimeout(function () {

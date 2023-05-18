@@ -240,22 +240,18 @@ id: 1
         $request->session()->put('payment_type', 'seller_payment');
         $request->session()->put('payment_data', $data);
 
+        $decorator = __NAMESPACE__ . '\\Payment\\' . str_replace(' ', '', ucwords(str_replace('_', ' ', $request->payment_option))) . "Controller";
         if ($request->payment_option == 'cash') {
             return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
-        } else if ($request->payment_option == 'bank_payment') {
+        } elseif ($request->payment_option == 'bank_payment') {
             return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
-        } else if($request->payment_option == 'usdt_payment') {
-                  return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
-        } else if(in_array($request->payment_option, ['htpay', 'qepay'])) {
-            $decorator = __NAMESPACE__ . '\\Payment\\' . str_replace(' ', '', ucwords(str_replace('_', ' ', $request->payment_option))) . "Controller";
-            if ( class_exists($decorator) )
-            {
-                ( new $decorator )->daifu_pay($withdrawRequest);
-                $withdrawRequest->status = 3;
-                $withdrawRequest->save();
-                return redirect()->route('withdraw_requests_all');
-            }
-
+        } elseif($request->payment_option == 'usdt_payment') {
+            return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
+        } elseif(class_exists($decorator)) {
+            ( new $decorator )->daifu_pay($withdrawRequest);
+            $withdrawRequest->status = 3;
+            $withdrawRequest->save();
+            return redirect()->route('withdraw_requests_all');
         } else {
             $payment_data = $request->session()->get('payment_data');
 

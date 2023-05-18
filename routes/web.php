@@ -21,6 +21,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Payment\HtpayController;
+use App\Http\Controllers\Payment\IndiaHtpayController;
 use App\Http\Controllers\Payment\QepayController;
 use App\Http\Controllers\PurchaseHistoryController;
 use App\Http\Controllers\ReviewController;
@@ -376,6 +377,8 @@ Route::post('rozer/payment/pay-success', [RazorpayController::class, 'payment'])
 Route::get('/paystack/payment/callback', [PaystackController::class, 'handleGatewayCallback']);
 Route::get('/htpay/payment/callback', [HtpayController::class, 'callback'])->name('htpay.callback');
 Route::post('/htpay/payment/notify', [HtpayController::class, 'notify'])->name('htpay.notify');
+Route::get('/india_htpay/payment/callback', [IndiaHtpayController::class, 'callback'])->name('india_htpay.callback');
+Route::post('/india_htpay/payment/notify', [IndiaHtpayController::class, 'notify'])->name('india_htpay.notify');
 Route::post('/qepay/payment/notify', [QepayController::class, 'notify'])->name('qepay.notify');
 
 Route::controller(VoguepayController::class)->group(function () {

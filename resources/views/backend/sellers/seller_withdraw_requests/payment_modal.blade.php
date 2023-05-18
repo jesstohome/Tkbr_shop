@@ -149,8 +149,8 @@
                         <option value="htpay">HtPay</option>
                         @endif
 
-                        @if(get_setting('in_htpay_payment_behalf') == 1 && is_open_this_payment('htpay', $user))
-                            <option value="htpay">印度HtPay</option>
+                        @if(get_setting('in_htpay_payment_behalf') == 1 && is_open_this_payment('india_htpay', $user))
+                            <option value="india_htpay">{{translate('India')}} HtPay</option>
                         @endif
 
                         @if(get_setting('qepay_payment_behalf') == 1 && is_open_this_payment('qepay', $user))

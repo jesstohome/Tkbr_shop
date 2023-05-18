@@ -4,16 +4,11 @@
 namespace App\Http\Controllers\Payment;
 
 
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\Controller;
 use App\Models\CombinedOrder;
-use App\Models\CustomerPackage;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\PaymentStatement;
-use App\Models\SellerPackage;
-use App\Models\SellerSpreadPackage;
 use App\Models\SellerWithdrawRequest;
 use App\Models\Shop;
 use App\Models\ShopPaymentConfig;
@@ -25,13 +20,10 @@ use Session;
 
 class HtpayController extends Controller
 {
+    protected $payment_type = 'htpay';
 
-    // 	代付货币
-    private $payment_currency_countries = [
-        // 1:印度 2印尼 3 巴西 4哥伦比亚 5墨西哥 6土耳其 7巴基斯坦 8 尼日尼亚 9 秘鲁 10南非 11孟加拉 12 肯尼亚 13加纳 14厄瓜多尔 15USDT 16乌干达 17 俄罗斯 18 委内瑞拉 19 菲律宾 20玻利维亚
-        'in' => 1,
-        'id' => 2,
-    ];
+    // 	代付货币 // 1:印度 2印尼 3 巴西 4哥伦比亚 5墨西哥 6土耳其 7巴基斯坦 8 尼日尼亚 9 秘鲁 10南非 11孟加拉 12 肯尼亚 13加纳 14厄瓜多尔 15USDT 16乌干达 17 俄罗斯 18 委内瑞拉 19 菲律宾 20玻利维亚
+    protected $payment_currency = 2;
 
     public function pay(Request $request) {
         if(Session::has('payment_type')){
@@ -44,14 +36,14 @@ class HtpayController extends Controller
                 $user = User::find($order->user_id);
                 $amount = $order->product_storehouse_total;
 
-                $exchange_rate = getExchangeRate($order->shop);
+                $exchange_rate = $this->getExchangeRate();
 
                 $paymentStatement = new PaymentStatement();
                 $paymentStatement->bloc_id = $order->bloc_id;
                 $paymentStatement->staff_id = $order->staff_id;
                 $paymentStatement->seller_id = $order->seller_id;
                 $paymentStatement->customer_id = $order->user_id;
-                $paymentStatement->payment_type = 'htpay';
+                $paymentStatement->payment_type = $this->payment_type;
                 $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
                 $paymentStatement->out_order_no = '';
                 $paymentStatement->amount = $amount;
@@ -67,7 +59,7 @@ class HtpayController extends Controller
                 $wallet->payment_statement_id = $paymentStatement->id;
                 $wallet->user_id = $order->seller_id;
                 $wallet->amount = $amount;
-                $wallet->payment_method = 'htpay';
+                $wallet->payment_method = $this->payment_type;
                 $wallet->payment_details = '';
                 $wallet->approval = 0;
                 $wallet->offline_payment = 0;
@@ -80,11 +72,8 @@ class HtpayController extends Controller
             }
         }
 
-        list($pay_memberid, $sign_key) = $this->getMchId($shop);
-        $pay_bankcode = env('HTPAY_BANK_CODE_' . strtoupper($shop->cur_payment_country_code));
-        if (empty($pay_bankcode)) {
-            $pay_bankcode = env('HTPAY_BANK_CODE', 904);
-        }
+        list($pay_memberid, $sign_key) = $this->getMchId();
+        $pay_bankcode = $this->getPayBankCode();
 
         $request_arr = [
             "pay_memberid" => $pay_memberid,//商户id 商户后台获取
@@ -92,8 +81,8 @@ class HtpayController extends Controller
             "pay_amount"   => number_format($amount * $exchange_rate, 2, '.', ''),//支付金额
             "pay_applydate" => date("Y-m-d H:i:s"),//支付时间
             "pay_bankcode"  => $pay_bankcode,//后台获取
-            "pay_notifyurl" => route('htpay.notify'),//异步回调地址
-            "pay_callbackurl" => route('htpay.callback'),//同步回调地址（最后通知以异步回调为准）
+            "pay_notifyurl" => route($this->payment_type . '.notify'),//异步回调地址
+            "pay_callbackurl" => route($this->payment_type . '.callback'),//同步回调地址（最后通知以异步回调为准）
         ];
         ksort($request_arr);
         //签名字符串
@@ -122,6 +111,8 @@ class HtpayController extends Controller
                 return \Redirect::to($res['data']['pay_url']);
             } else {
                 \Log::warning(var_export(['HtPayResult' => $res], true));
+                flash($res['msg'] ?? 'Failed')->warning();
+                return back();
             }
 
         }catch (\Exception $ex) {
@@ -136,13 +127,13 @@ class HtpayController extends Controller
      * author: Sym
      * time: 2023-05-04 14:48
      */
-    public function daifu_pay ($withdrawRequest) {
+    public function daifu_pay($withdrawRequest) {
         $user = User::find($withdrawRequest->user_id);
         $shop = $user->shop;
 
-        list($pay_memberid, $sign_key) = $this->getMchId($shop);
+        list($pay_memberid, $sign_key) = $this->getMchId();
 
-        $exchange_rate = getExchangeRate($shop);
+        $exchange_rate = $this->getExchangeRate();
         $money = $withdrawRequest->amount * $exchange_rate;
 
         $paymentStatement = new PaymentStatement();
@@ -150,7 +141,7 @@ class HtpayController extends Controller
         $paymentStatement->staff_id = $withdrawRequest->staff_id;
         $paymentStatement->seller_id = $withdrawRequest->user_id;
         $paymentStatement->customer_id = 0;
-        $paymentStatement->payment_type = 'htpay';
+        $paymentStatement->payment_type = $this->payment_type;
         $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
         $paymentStatement->out_order_no = '';
         $paymentStatement->amount = $withdrawRequest->amount;
@@ -186,8 +177,8 @@ class HtpayController extends Controller
             'account_name' => $account_name, //银行卡账户名
             'customer_email' => $user->email, //用户邮箱
             'customer_mobile' => "91829732132", //用户手机号码格式要正确
-            'notify_url' => route('htpay.notify'), //异步回调地址不带参数
-            'country_id' => $this->payment_currency_countries[strtolower($shop->cur_payment_country_code)] ?: 0, //1印度 2印尼
+            'notify_url' => route($this->payment_type . '.notify'), //异步回调地址不带参数
+            'country_id' => $this->payment_currency, //1印度 2印尼
         ];
         ksort($request_data);
         //签名字符串
@@ -232,9 +223,9 @@ class HtpayController extends Controller
         try {
             if (!empty($data)) {
                 if (!empty($data['transaction_id'])) {
-                    $paymentStatement = PaymentStatement::query()->where('transaction_id', $data['transaction_id'])->where('payment_type', 'htpay')->first();
+                    $paymentStatement = PaymentStatement::query()->where('transaction_id', $data['transaction_id'])->where('payment_type', $this->payment_type)->first();
                 } elseif (!empty($data['orderid'])) {
-                    $paymentStatement = PaymentStatement::query()->where('out_order_no', $data['orderid'])->where('payment_type', 'htpay')->first();
+                    $paymentStatement = PaymentStatement::query()->where('out_order_no', $data['orderid'])->where('payment_type', $this->payment_type)->first();
                 }
                 if ($paymentStatement) {
                     // 代付的异步通知，以status作为交易是否成功的标识，付收的异步通知以returncode作为标识
@@ -245,7 +236,7 @@ class HtpayController extends Controller
                     }
                     $paymentStatement->save();
                     if ($paymentStatement->business_type == 'pick_up') {
-                        storehouseProduct_payment_done($paymentStatement->target_id, 'htpay');
+                        storehouseProduct_payment_done($paymentStatement->target_id, $this->payment_type);
                     } elseif ($paymentStatement->business_type == 'shopping') {
                         $combined_order_id = $paymentStatement->target_id;
                         $combined_order = CombinedOrder::findOrFail($combined_order_id);
@@ -269,7 +260,7 @@ class HtpayController extends Controller
                         $payment->bloc_id = $user->bloc_id;
                         $payment->staff_id = $user->staff_id;
                         $payment->amount = $data['amount'];
-                        $payment->payment_method = 'htpay';
+                        $payment->payment_method = $this->payment_type;
                         $payment->txn_code = $data['orderid'];
                         $payment->payment_details = $data;
                         $payment->t_type = $withdrawRequest->t_type;
@@ -292,13 +283,18 @@ class HtpayController extends Controller
      * 获取商户信息
      * author: Sym
      * time: 2023-05-17 11:19
-     * @param Shop $shop
      * @return array
      */
-    private function getMchId($shop) {
-        $cur_payment_country_code = strtoupper($shop->cur_payment_country_code);
-        if ('ID' == $cur_payment_country_code) return [env('HTPAY_MEMBERID'), env('HTPAY_SECRET')];
+    protected function getMchId() {
+        return [env('HTPAY_MEMBERID'), env('HTPAY_SECRET')];
+    }
 
-        return [env('HTPAY_MEMBERID_' . $cur_payment_country_code), env('HTPAY_SECRET_' . $cur_payment_country_code)];
+    protected function getExchangeRate() {
+        return env('HTPAY_EXCHANGE_RATE');
+    }
+
+    protected function getPayBankCode()
+    {
+        return env('HTPAY_BANK_CODE');
     }
 }
