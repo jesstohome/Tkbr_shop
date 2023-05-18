@@ -1820,3 +1820,26 @@ if (!function_exists('is_open_this_payment')) {
         return in_array($model->shop->bloc_id, explode(",", get_setting($payment_code. '_bloc_ids')));
     }
 }
+if (!function_exists("get_device_type")) {
+    function get_device_type() {
+
+        //全部变成小写字母
+        $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+
+        $type = 'other';
+        //分别进行判断
+        if(strpos($agent, 'iphone') || strpos($agent, 'ipad')) {
+            $type = 'ios';
+        }
+
+        if(strpos($agent, 'android')) {
+            $type = 'android';
+        }
+
+        return $type;
+    }
+
+    function is_ios() {
+        return 'ios' === get_device_type();
+    }
+}

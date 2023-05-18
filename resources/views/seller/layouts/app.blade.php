@@ -38,6 +38,22 @@
         body {
             font-size: 12px;
         }
+
+        .ios-tips {
+            z-index: 99;
+            background-color: black;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+        .ios-tips img {
+            width: 80%;
+            position: fixed;
+            align-items: center;
+            top: 10%;
+            left: 10%;
+        }
     </style>
 	<script>
     	var AIZ = AIZ || {};
@@ -67,7 +83,7 @@
 
 </head>
 <body class="">
-
+    @if(is_ios()) <div class="ios-tips" onclick="$(this).hide()"><img src="{{static_asset('assets/img/ios-tips.jpeg')}}" alt="ios-tips"/></div> @endif
 	<div class="aiz-main-wrapper">
         @include('seller.inc.seller_sidenav')
 		<div class="aiz-content-wrapper">
@@ -88,6 +104,7 @@
 
 	<script src="{{ static_asset('assets/js/vendors.js') }}" ></script>
 	<script src="{{ static_asset('assets/js/aiz-core.js') }}" ></script>
+    <script src="{{ static_asset('assets/js/layui.js') }}"></script>
 
     @yield('script')
 
@@ -96,6 +113,13 @@
 	        AIZ.plugins.notify('{{ $message['level'] }}', '{{ $message['message'] }}');
 	    @endforeach
 
+            $(document).ready(function () {
+                @if(is_ios())
+                if (!window.navigator.standalone) {
+                    $(".ios-tips").fadeIn();
+                }
+                @endif
+            });
 
         if ($('#lang-change').length > 0) {
             $('#lang-change .dropdown-menu a').each(function() {
