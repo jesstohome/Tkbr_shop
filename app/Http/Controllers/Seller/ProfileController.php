@@ -122,8 +122,10 @@ class ProfileController extends Controller
             $shop->save();
 
             // 按国家保存付款配置
-            if (!empty($request->payment_country_codes)) {
-                foreach ($request->payment_country_codes as $pay_c_code) {
+            $cur_code = strtolower($shop->cur_payment_country_code);
+            $pay_c_codes = [$cur_code];
+            if (!empty($request->bank_switch[$cur_code]) || !empty($request->e_wallet_switch[$cur_code])) {
+                foreach ($pay_c_codes as $pay_c_code) {
                     $payment_config = ShopPaymentConfig::query()->where('shop_id', $shop->id)->where('country_code', $pay_c_code)->first();
                     if (empty($payment_config)) {
                         // add
@@ -138,7 +140,16 @@ class ProfileController extends Controller
                     $payment_config->bank_name = $request->bank_name[$pay_c_code];
                     $payment_config->bank_account_no = $request->bank_account_no[$pay_c_code];
                     $payment_config->bank_account_name = $request->bank_account_name[$pay_c_code];
+
                     $payment_config->bank_var1 = $request->bank_var1 ? $request->bank_var1[$pay_c_code] : '';
+                    // 印度的 ifsc 11位 数字字母，第5位必须是0
+                    if ($pay_c_code == 'in' && !empty($payment_config->bank_var1)) {
+                        if (mb_strlen($payment_config->bank_var1) != 11 || mb_substr($payment_config->bank_var1, 4, 1) != 0) {
+                            flash(translate('IFSC is wrong!'))->error();
+                            return back();
+                        }
+                    }
+
                     $payment_config->bank_var2 = $request->bank_var2 ? $request->bank_var2[$pay_c_code] : '';
 
                     $payment_config->e_wallet_switch = $request->e_wallet_switch[$pay_c_code] ?: 0;

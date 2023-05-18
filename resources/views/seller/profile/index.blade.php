@@ -8,7 +8,7 @@
         </div>
       </div>
     </div>
-    <form action="{{ route('seller.profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+    <form id="seller-profile-form" action="{{ route('seller.profile.update', $user->id) }}" method="POST" enctype="multipart/form-data">
         <input name="_method" type="hidden" value="POST">
         @csrf
         <!-- Basic Info-->
@@ -138,30 +138,43 @@
                             </div>
                         </div>
 
+                        @if(false)
                         <div class="row">
                             <label class="col-md-3 col-form-label" for="bank_no[{{$country_code}}]">{{ translate('Online Bank Card No') }}</label>
                             <div class="col-md-9">
                                 <input type="text" name="bank_no[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_no }}" class="form-control mb-3" >
                             </div>
                         </div>
-                        <div class="row">
-                            <label class="col-md-3 col-form-label" for="bank_name[{{$country_code}}]">{{ translate('Online Bank Name') }}</label>
-                            <div class="col-md-9">
-                                <select class="form-control mb-3 aiz-selectpicker" name="bank_name[{{$country_code}}]">
-                                    @foreach($online_bank_names as $online_bank_name)
-                                        <option value="{{$online_bank_name}}" @if ($payment_config[$country_code]->bank_name == $online_bank_name) selected  @endif>{{$online_bank_name}}</option>
-                                    @endforeach
-                                </select>
+                        @endif
+
+                        @if($country_code == 'id')
+                            <div class="row">
+                                <label class="col-md-3 col-form-label" for="bank_name[{{$country_code}}]">{{ translate('Bank Name') }}</label>
+                                <div class="col-md-9">
+                                    <select class="form-control mb-3 aiz-selectpicker" name="bank_name[{{$country_code}}]">
+                                        @foreach($online_bank_names as $online_bank_name)
+                                            <option value="{{$online_bank_name}}" @if ($payment_config[$country_code]->bank_name == $online_bank_name) selected  @endif>{{$online_bank_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="row">
+                                <label class="col-md-3 col-form-label" for="bank_name[{{$country_code}}]">{{ translate('Bank Name') }}</label>
+                                <div class="col-md-9">
+                                    <input type="text" name="bank_name[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_name }}" class="form-control mb-3" >
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="row">
-                            <label class="col-md-3 col-form-label" for="bank_account_no[{{$country_code}}]">{{ translate('Online Bank Account') }}</label>
+                            <label class="col-md-3 col-form-label" for="bank_account_no[{{$country_code}}]">{{ translate('Bank Account') }}</label>
                             <div class="col-md-9">
                                 <input type="text" name="bank_account_no[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_account_no }}" class="form-control mb-3" aria-autocomplete="off">
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-md-3 col-form-label" for="bank_account_name[{{$country_code}}]">{{ translate('Online Bank Account Name') }}</label>
+                            <label class="col-md-3 col-form-label" for="bank_account_name[{{$country_code}}]">{{ translate('Bank Account Name') }}</label>
                             <div class="col-md-9">
                                 <input type="text" name="bank_account_name[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_account_name }}" class="form-control mb-3" aria-autocomplete="off">
                             </div>
@@ -170,7 +183,7 @@
                                 <div class="row">
                                     <label class="col-md-3 col-form-label" for="bank_var1[{{$country_code}}]">IFSC Code</label>
                                     <div class="col-md-9">
-                                        <input type="text" name="bank_var1[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_var1 }}" class="form-control mb-3" aria-autocomplete="off">
+                                        <input type="text" name="bank_var1[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_var1 }}" class="form-control mb-3 ifsc-code" aria-autocomplete="off">
                                     </div>
                                 </div>
                         @endif
@@ -394,12 +407,27 @@
 @endsection
 
 @section('script')
+    <link src="{{ static_asset('assets/css/bootstrapValidator.min.css') }}"/>
+    <script src="{{ static_asset('assets/js/bootstrapValidator.min.js') }}" ></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             $(".bank_info").hide();
             $(".bank_info.lang_" + "{{strtolower($user->shop->cur_payment_country_code)}}").show();
-        });
 
+
+            $('#seller-profile-form').on("submit", function(){
+                if($(".ifsc-code").length) {
+                    let val = $(".ifsc-code").val();
+                    if (val) {
+                        if (val.length !== 11 || parseInt(val.substr(4, 1)) !== 0) {
+                            AIZ.plugins.notify('danger', '{{translate('IFSC Code is wrong')}}');
+                            return false;
+                        }
+                    }
+                }
+            })
+        });
 
         $('.new-email-verification').on('click', function() {
             $(this).find('.loading').removeClass('d-none');

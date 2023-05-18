@@ -293,7 +293,11 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit( $id ) {
-        //
+        $user = User::find(decrypt($id));
+
+        $address = Address::query()->where('user_id', $user->id)->orderByDesc('set_default')->orderByDesc('id')->first();
+
+        return view('backend.customer.customers.edit', compact('user', 'address'));
     }
 
     /**
@@ -302,10 +306,35 @@ class CustomerController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param int                      $id
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update( Request $request, $id ) {
-        //
+        $user = User::findOrFail($id);
+        $user->name = $request->name;
+        $user->balance = $request->balance;
+
+        if ($user->save()) {
+            $address = $request->address;
+            if (!empty($address['country_id']) || !empty($address['address'])) {
+                $addressModel = Address::find($address['address_id']);
+                if (empty($addressModel) || empty($addressModel->id)) {
+                    $addressModel = new Address();
+                    $addressModel->user_id = $user->id;
+                }
+                $addressModel->country_id = $address['country_id'];
+                $addressModel->state_id = $address['state_id'];
+                $addressModel->city_id = $address['city_id'];
+                $addressModel->address = $address['address'];
+                $addressModel->postal_code = $address['postal_code'];
+                $addressModel->phone = $address['phone'];
+                $addressModel->save();
+            }
+            flash(translate('Customer has been updated successfully'))->success();
+            return redirect()->route('customers.index');
+        }
+
+        flash(translate('Something went wrong'))->error();
+        return back();
     }
 
     /**
