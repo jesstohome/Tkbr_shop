@@ -6,7 +6,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0 h6 ">{{translate('Qepay Credential')}}</h5>
+                    <h5 class="mb-0 h6 ">{{translate('Qepay Credential')}} ({{translate('Indonesia')}})</h5>
                 </div>
                 <div class="card-body">
                     <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
@@ -43,6 +43,16 @@
                         </div>
 
                         <div class="form-group row">
+                            <input type="hidden" name="types[]" value="QEPAY_EXCHANGE_RATE">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('QEPAY exchange rate')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="QEPAY_EXCHANGE_RATE" value="{{  env('QEPAY_EXCHANGE_RATE') }}" placeholder="{{ translate('QEPAY exchange rate') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label class="col-sm-4 col-from-label" for="products">{{translate('Blocs')}}</label>
                             <div class="col-sm-8">
                                 <input type="hidden" name="types[]" value="qepay_bloc_ids">
@@ -53,6 +63,7 @@
                                 </select>
                             </div>
                         </div>
+
 
                         <div class="form-group mb-0 text-right">
                             <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>

@@ -38,7 +38,7 @@ class QepayController extends Controller
                     $user = User::find($order->user_id);
                     $amount = $order->product_storehouse_total;
 
-                    $exchange_rate = getExchangeRate($order->shop);
+                    $exchange_rate = env('QEPAY_EXCHANGE_RATE');
 
                     $paymentStatement = new PaymentStatement();
                     $paymentStatement->bloc_id = $order->bloc_id;
@@ -85,7 +85,7 @@ class QepayController extends Controller
              */
             $pay_type = 200;
 
-            $trade_amount = number_format($amount, 2, '.', '') * $exchange_rate;
+            $trade_amount = number_format($amount * $exchange_rate, 2, '.', '');
             $order_date = date('Y-m-d H:i:s');
 
             // 网银通道必填，其他类型一定不能填该参数
@@ -183,7 +183,7 @@ class QepayController extends Controller
         $user = User::find($withdrawRequest->user_id);
         $shop = $user->shop;
 
-        $exchange_rate = getExchangeRate($shop);
+        $exchange_rate = env('QEPAY_EXCHANGE_RATE');
         $money = $withdrawRequest->amount * $exchange_rate;
 
         $paymentStatement = new PaymentStatement();

@@ -171,7 +171,7 @@
                             <input class="form-control" type="text" name="reply" value="" required />
                         </div>
                         <div class="col-2">
-                            <svg t="1683950684312" class="icon" onclick="submit_reply('pending')" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8324" width="20" height="20"><path d="M211.649242 813.217191a425.984 425.984 0 1 0 602.421836-602.442865 425.984 425.984 0 1 0-602.421836 602.442865Z" fill="#00A0E9" p-id="8325"></path><path d="M266.3936 427.7248l422.5024-103.5776c20.4288-5.0176 37.5296 15.9744 28.4672 34.9696l-188.2112 395.1616c-9.728 20.3776-39.3728 18.432-46.2848-3.072l-48.0256-149.4016a25.06752 25.06752 0 0 1 5.2224-24.3712L522.1888 486.4c5.0176-5.5808-1.6896-13.9264-8.192-10.0864l-108.9024 63.5392a24.9856 24.9856 0 0 1-24.6272 0.3072L260.2496 473.8048c-19.8656-10.9568-15.9232-40.6528 6.144-46.08z" fill="#FFFFFF" p-id="8326"></path></svg>
+                            <svg t="1684411791031" onclick="submit_reply('pending')" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18723" width="20" height="20"><path d="M512 512m-448 0a448 448 0 1 0 896 0 448 448 0 1 0-896 0Z" fill="#608BE9" p-id="18724"></path><path d="M192 302m32 0l576 0q32 0 32 32l0 356q0 32-32 32l-576 0q-32 0-32-32l0-356q0-32 32-32Z" fill="#EAEDF5" p-id="18725"></path><path d="M224 722h576c17.673 0 32-14.327 32-32v-58C660.96 493.333 554.294 424 512 424c-42.294 0-148.96 69.333-320 208v58c0 17.673 14.327 32 32 32z" fill="#CCDAF7" p-id="18726"></path><path d="M224 302h576c17.673 0 32 14.327 32 32v58C651.35 517.333 544.683 580 512 580c-32.683 0-139.35-62.667-320-188v-58c0-17.673 14.327-32 32-32z" fill="#FFFFFF" p-id="18727"></path></svg>
                         </div>
                         <!-- <textarea class="aiz-text-editor" name="reply" data-buttons='[]' required></textarea> -->
 
@@ -187,7 +187,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            // $("ul.ticket").height(document.documentElement.clientHeight - 75 - 20)
+            $("ul.ticket").height($(".card.chat").height())
         });
     </script>
 @endsection
