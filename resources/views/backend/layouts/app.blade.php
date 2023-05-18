@@ -13,6 +13,13 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- ios-Safari保存H5网页到主屏幕-WapApp -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{{static_asset('assets/img/logo.png')}}" />
+    <link rel="apple-touch-startup-image" href="{{static_asset('assets/img/logo.png')}}" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+
 	<!-- Favicon -->
 	<link rel="icon" href="{{ uploaded_asset(get_setting('site_icon')) }}">
 	<title>{{ get_setting('website_name').' | '.get_setting('site_motto') }}</title>
