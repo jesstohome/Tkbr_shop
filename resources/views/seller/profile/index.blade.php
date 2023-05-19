@@ -74,7 +74,7 @@
 
         <!-- Payment System -->
         @php
-        $payment_countries = \App\Models\Country::query()->where('status', 1)->whereIn('code', ['cn', 'ID', 'IN', 'tr'])->get();
+        $payment_countries = \App\Models\Country::query()->where('status', 1)->whereIn('code', ['cn', 'ID', 'IN', 'tr'])->orderBy('name')->get();
         @endphp
         <div class="card">
             <div class="card-header">
@@ -84,7 +84,7 @@
                 <div class="row" id="country">
                     <label class="col-md-3 col-form-label">{{ translate('Country') }}</label>
                     <div class="col-md-5">
-                        <select class="form-control mb-3 aiz-selectpicker" name="cur_payment_country_code" onchange="change_country(this)">
+                        <select class="form-control mb-3 aiz-selectpicker" name="cur_payment_country_code" data-live-search="true" onchange="change_country(this)">
                             <option value="">{{ translate('Please select a country') }}</option>
                             @foreach($payment_countries as $country)
                                 <option value="{{$country->code}}" @if ($user->shop->cur_payment_country_code == $country->code) selected  @endif>{{$country->name}}</option>

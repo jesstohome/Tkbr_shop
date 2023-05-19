@@ -13,6 +13,15 @@
                         <input type="hidden" name="payment_method" value="qepay">
                         @csrf
                         <div class="form-group row">
+                            <input type="hidden" name="types[]" value="QEPAY_NAME">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Qepay Name')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="QEPAY_NAME" value="{{  env('QEPAY_NAME') }}" placeholder="{{ translate('Qepay Name') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <input type="hidden" name="types[]" value="QEPAY_MCH_ID">
                             <div class="col-md-4">
                                 <label class="col-from-label">{{translate('Qepay Merchant Id')}}</label>
@@ -83,6 +92,15 @@
                         <input type="hidden" name="payment_method" value="htpay">
                         @csrf
                         <div class="form-group row">
+                            <input type="hidden" name="types[]" value="HTPAY_NAME">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Htpay Name')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="HTPAY_NAME" value="{{  env('HTPAY_NAME') }}" placeholder="{{ translate('Htpay Name') }}" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <input type="hidden" name="types[]" value="HTPAY_MEMBERID">
                             <div class="col-md-4">
                                 <label class="col-from-label">{{translate('Htpay Member Id')}}</label>
@@ -148,6 +166,15 @@
                     <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
                         <input type="hidden" name="payment_method" value="india_htpay">
                         @csrf
+                        <div class="form-group row">
+                            <input type="hidden" name="types[]" value="HTPAY_NAME_IN">
+                            <div class="col-md-4">
+                                <label class="col-from-label">{{translate('Htpay Name')}}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="HTPAY_NAME_IN" value="{{  env('HTPAY_NAME_IN') }}" placeholder="{{ translate('Htpay Name') }}" required>
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <input type="hidden" name="types[]" value="HTPAY_MEMBERID_IN">
                             <div class="col-md-4">
