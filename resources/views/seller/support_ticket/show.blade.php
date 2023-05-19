@@ -4,7 +4,7 @@
         display: none;
     }
     ul.ticket {
-        max-height: 60vh;
+        height: calc(100% - 43px);
         overflow-y: scroll;
     }
     ul.ticket, ul.ticket li {
@@ -68,7 +68,7 @@
 
     .card.chat {
         /*position: fixed !important;*/
-        height: calc(100vh - 75px - 25px - 50px);
+        height: calc(100vh - 75px);
         /*height: calc(100vh - 75px);*/
         margin-bottom: 0;
     }
@@ -78,6 +78,7 @@
     }
     #ticket-reply-form {
         position: absolute;
+        height: 43px;
         bottom: 0;
         right: 15px;
         left: 15px;
@@ -187,7 +188,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $("ul.ticket").height($(".card.chat").height())
+            // $("ul.ticket").height($(".card.chat").height())
         });
     </script>
 @endsection

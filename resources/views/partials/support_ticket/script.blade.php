@@ -121,7 +121,7 @@
                 var list = response.list || [];
                 render_reply(list)
                 if (list.length > 0) {
-                    audioPlay && audioPlay();
+                    audioPlay && audioPlay(true);
                 }
             }
         } );

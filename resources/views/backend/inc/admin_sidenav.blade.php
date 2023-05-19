@@ -1315,9 +1315,9 @@
 <script>
 
 
-    function audioPlay(text) {
-        if ($("#tip-audio").length) {
-            // $("#tip-audio")[0].play();
+    function audioPlay(force) {
+        if ($("#tip-audio").length && force) {
+            $("#tip-audio")[0].play();
             return;
         }
         var audio = "<audio id='tip-audio' autoplay=\"autoplay\">" + "<source src=\"/public/new2.mp3\" type=\"audio/mpeg\"></audio>";
