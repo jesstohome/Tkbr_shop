@@ -197,7 +197,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".card.chat").height(window.screen.height - 75)
+            $(".card.chat").height(window.screen.availHeight - 75)
         });
     </script>
 @endsection
