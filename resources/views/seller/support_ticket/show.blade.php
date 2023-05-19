@@ -68,7 +68,7 @@
     }
 
     .card.chat {
-        height: calc(100vh - 75px);
+        height: 100%;
         margin-bottom: 0;
     }
 
@@ -197,7 +197,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            // $("ul.ticket").height($(".card.chat").height())
+            $(".card.chat").height(window.screen.height - 75)
         });
     </script>
 @endsection
