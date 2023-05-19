@@ -68,7 +68,7 @@
     }
 
     .card.chat {
-        height: calc(100vh - 75px);
+        height: calc(100vh - 135px);
         margin-bottom: 0;
     }
 
