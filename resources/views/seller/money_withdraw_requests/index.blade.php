@@ -525,10 +525,10 @@
             });
         }
         $("#p").change(function(){
-            var e_wallet_status = {{$shop_payment_config->e_wallet_switch}}
-            var usdt_status = {{$shop->usdt_payment_status}}
-            var online_bank = {{$shop_payment_config->bank_switch}}
-            var cash_on_delivery_status = {{$shop->cash_on_delivery_status}}
+            var e_wallet_status = {{$shop_payment_config->e_wallet_switch ?: 0}}
+            var usdt_status = {{$shop->usdt_payment_status ?: 0}}
+            var online_bank = {{$shop_payment_config->bank_switch ?: 0}}
+            var cash_on_delivery_status = {{$shop->cash_on_delivery_status ?: 0}}
             var type = $(this).val();
             if (type == 5 && e_wallet_status == 0) {
                 window.location.href = "/seller/profile#e-wallet"
