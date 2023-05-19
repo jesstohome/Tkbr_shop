@@ -1,0 +1,50 @@
+@extends('backend.layouts.app')
+
+@section('content')
+<div class="aiz-titlebar text-left mt-2 mb-3">
+    <h5 class="mb-0 h6">{{translate('Pay Channel Information')}}</h5>
+</div>
+
+
+<div class="col-lg-7 mx-auto">
+    <div class="card">
+        <div class="card-body p-0">
+            <form class="p-4" action="{{ route('pay_channel.update', $pay_channel->id) }}" method="POST">
+                <input name="_method" type="hidden" value="PATCH">
+            	   @csrf
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label" for="name">{{translate('Pay Channel Name')}} </label>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="{{translate('Pay Channel Name')}}" id="name" name="name" class="form-control" value="{{ $pay_channel->name }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label" for="lang">{{translate('Language')}} </label>
+                        <div class="col-md-9">
+                            <select class="form-control aiz-selectpicker" name="lang" id="lang">
+                                <option value="">{{translate('All')}}</option>
+                                @foreach (\App\Models\Language::all() as $key => $language)
+                                <option value="{{$language->code}}" {{$language->code == $pay_channel->lang ? 'selected' : ''}}>{{$language->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label" for="name">{{translate('Time Zone')}} </label>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="{{translate('Time Zone')}}" id="time_zone" name="time_zone" class="form-control" value="{{ $pay_channel->time_zone }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
+                    </div>
+                </div>
+        </form>
+    </div>
+</div>
+
+@endsection
