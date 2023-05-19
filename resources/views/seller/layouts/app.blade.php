@@ -20,6 +20,12 @@
     <link rel="apple-touch-startup-image" href="{{static_asset('assets/img/logo.png')}}" />
     <meta name="format-detection" content="telephone=no, email=no" />
 
+    @if($fullscreen)
+        <meta name="full-screen" content="yes" />
+        <meta name="x5-fullscreen" content="true" />
+        <meta name="apple-touch-fullscreen" content="yes">
+    @endif
+
     <!-- Favicon -->
 	<link rel="icon" href="{{ uploaded_asset(get_setting('site_icon')) }}">
 	<title>{{ get_setting('website_name').' | '.get_setting('site_motto') }}</title>

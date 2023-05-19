@@ -76,7 +76,7 @@
         position: absolute !important;
         min-height:auto;
         top: 0;
-        z-index: 99;
+        z-index: 98;
         left: 0;
         right: 0;
         background-color: white;

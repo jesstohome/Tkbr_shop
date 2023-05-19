@@ -92,7 +92,9 @@ class SupportTicketController extends Controller
             $ticket_reply->read = 1;
             $ticket_reply->save();
         }
-        return view('seller.support_ticket.show', compact('ticket','ticket_replies'));
+
+        $fullscreen = true;
+        return view('seller.support_ticket.show', compact('ticket','ticket_replies', 'fullscreen'));
     }
 
     public function ticket_reply_store(Request $request)
