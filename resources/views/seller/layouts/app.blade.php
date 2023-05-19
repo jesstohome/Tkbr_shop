@@ -83,7 +83,6 @@
 
 </head>
 <body class="">
-    @if(is_ios()) <div class="ios-tips" onclick="$(this).hide()"><img src="{{static_asset('assets/img/ios-tips.jpeg')}}" alt="ios-tips"/></div> @endif
 	<div class="aiz-main-wrapper">
         @include('seller.inc.seller_sidenav')
 		<div class="aiz-content-wrapper">
@@ -114,11 +113,7 @@
 	    @endforeach
 
             $(document).ready(function () {
-                @if(is_ios())
-                if (!window.navigator.standalone) {
-                    $(".ios-tips").fadeIn();
-                }
-                @endif
+
             });
 
         if ($('#lang-change').length > 0) {
