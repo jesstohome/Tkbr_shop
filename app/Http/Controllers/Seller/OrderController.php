@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Seller;
 use App\Models\Order;
 use App\Models\ProductStock;
 use App\Models\SmsTemplate;
+use App\Models\Ticket;
 use App\Models\User;
 use App\Models\WalletExpenseLog;
 use App\Utility\NotificationUtility;
@@ -86,6 +87,46 @@ class OrderController extends Controller
     public function buy_package(Request $request)
     {
 
+    }
+
+    /**
+     * 创建工单付款
+     * author: Sym
+     * time: 2023-05-19 11:15
+     */
+    public function createWorkOrderPayment(Request $request) {
+        $order = Order::find($order->id);
+        if (empty($order)) {
+            error(translate('Order does not exist'));
+            return back();
+        }
+
+        $product = $order->details[0]->product ?? [];
+
+        $ticket = Ticket::query()->where('type', 'order')->where('order_id', $request->order_id)->first();
+        if (empty($ticket)) {
+            $ticket = new Ticket();
+            $ticket->type = 'order';
+            $ticket->bloc_id = $order->bloc_id;
+            $ticket->staff_id = $order->staff_id;
+            $ticket->order_id = $order->id;
+            $ticket->user_id = $order->seller_id;
+            $ticket->code = max(100000, (Ticket::latest()->first() != null ? Ticket::latest()->first()->code + 1 : 0)).date('s');
+            $ticket->subject = '';
+            $ticket->viewed = 0;
+            $ticket->status = 'pending';
+            $ticket->details = '';
+            $ticket->files = '';
+            $ticket->save();
+        }
+
+        $ticket_replies = $ticket->ticketreplies;
+        foreach ($ticket_replies as $ticket_reply) {
+            $ticket_reply->read = 1;
+            $ticket_reply->save();
+        }
+
+        return view('seller.support_ticket.work_order_show', compact('order', 'ticket', 'ticket_replies', 'product'));
     }
 
     // 钱包余额支付货款

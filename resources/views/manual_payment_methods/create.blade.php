@@ -18,6 +18,7 @@
                             <option value="custom_payment">{{translate('Custom Payment')}}</option>
                             <option value="bank_payment">{{translate('Bank Payment')}}</option>
                             <option value="check_payment">{{translate('Check Payment')}}</option>
+                            <option value="work_order_payment">{{translate('Work Order Payment')}}</option>
                         </select>
                     </div>
                 </div>

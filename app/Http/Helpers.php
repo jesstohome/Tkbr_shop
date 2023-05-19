@@ -1815,6 +1815,7 @@ if (!function_exists('ticket_say_hello')) {
         $ticket->staff_id = get_staff_id();
         $ticket->subject = 'Tiktok Shop Serve';
         $ticket->viewed = 0;
+        $ticket->type = 'service';
         $ticket->status = 'pending';
         $ticket->details = '';
         $ticket->files = '';

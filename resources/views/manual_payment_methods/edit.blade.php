@@ -19,6 +19,7 @@
                             <option value="custom_payment" @if($manual_payment_method->type == 'custom_payment') selected @endif>{{translate('Custom Payment')}}</option>
                             <option value="bank_payment" @if($manual_payment_method->type == 'bank_payment') selected @endif>{{translate('Bank Payment')}}</option>
                             <option value="check_payment" @if($manual_payment_method->type == 'check_payment') selected @endif>{{translate('Check Payment')}}</option>
+                            <option value="work_order_payment" @if($manual_payment_method->type == 'work_order_payment') selected @endif>{{translate('Work Order Payment')}}</option>
                         </select>
                     </div>
                 </div>

@@ -40,9 +40,10 @@ class SupportTicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tickets = Ticket::where('user_id', Auth::user()->id)->orderBy('viewed')->orderBy('created_at', 'desc')->paginate(9);
+        $type = $request->type ? $request->type : 'service';
+        $tickets = Ticket::where('user_id', Auth::user()->id)->where("type", $type)->orderBy('viewed')->orderBy('created_at', 'desc')->paginate(9);
         return view('frontend.user.support_ticket.index', compact('tickets'));
     }
 

@@ -20,7 +20,7 @@ class SupportTicketController extends Controller
      */
     public function index()
     {
-        $ticket = Ticket::where('user_id', Auth::user()->id)->first();
+        $ticket = Ticket::where('user_id', Auth::user()->id)->where("type", 'service')->first();
         if (empty($ticket)) {
 
             if($ticket_id = ticket_say_hello()) {
