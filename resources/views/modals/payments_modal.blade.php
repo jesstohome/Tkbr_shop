@@ -16,7 +16,7 @@
                             @endif
 
                         @if(count(\App\Models\ManualPaymentMethod::listByBloc(0, $order->shop->bloc_id, ['custom_payment', 'bank_payment'])))
-                            <a href="{{route('', ['order_id' => $order->id])}}" id="word-order-link" class="btn btn-primary mt-2">{{translate('Work Order Payment')}}</a>
+                            <a href="{{route('seller.orders.create_work_order', ['order_id' => $order->id])}}" target="_blank" id="word-order-link" class="btn btn-primary mt-2">{{translate('Work Order Payment')}}</a>
                         @endif
 
                             @if(env('PAYPAL_CLIENT_ID'))

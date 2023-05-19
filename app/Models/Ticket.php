@@ -15,4 +15,8 @@ class Ticket extends Model
         return $this->hasMany(TicketReply::class)->orderBy('id', 'ASC');
     }
 
+    public function order() {
+        return $this->hasOne(Order::class);
+    }
+
 }

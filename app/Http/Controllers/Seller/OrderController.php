@@ -95,7 +95,7 @@ class OrderController extends Controller
      * time: 2023-05-19 11:15
      */
     public function createWorkOrderPayment(Request $request) {
-        $order = Order::find($order->id);
+        $order = Order::find($request->order_id);
         if (empty($order)) {
             error(translate('Order does not exist'));
             return back();

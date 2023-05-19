@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
 use App\Models\User;
@@ -40,16 +41,22 @@ class SupportTicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $type = $request->type ? $request->type : 'service';
-        $tickets = Ticket::where('user_id', Auth::user()->id)->where("type", $type)->orderBy('viewed')->orderBy('created_at', 'desc')->paginate(9);
+        $tickets = Ticket::where('user_id', Auth::user()->id)->orderBy('viewed')->orderBy('created_at', 'desc')->paginate(9);
         return view('frontend.user.support_ticket.index', compact('tickets'));
     }
 
+    /**
+     * 后台的工单列表
+     * author: Sym
+     * time: 2023-05-19 13:43
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|mixed
+     */
     public function admin_index(Request $request)
     {
-        $sort_search =null;
+        $sort_search = null;
         $tickets = Ticket::orderBy('viewed')->orderBy('id', 'desc');
         if ($request->has('search')){
             $sort_search = $request->search;
@@ -61,11 +68,44 @@ class SupportTicketController extends Controller
             $tickets = $tickets->where('group', $group);
         }
 
+        $seller_id = $request->seller_id;
+        $order_no = $request->order_no;
+        $pay_status = $request->pay_status;
+        $created_at = $request->created_at;
+        $updated_at = $request->updated_at;
+        if (!empty($seller_id)) {
+            $tickets = $tickets->where('user_id', $seller_id);
+        }
+        if (!empty($order_no)) {
+            $tickets = $tickets->where('order_id', Order::query()->where('code', $order_no)->value('id'));
+        }
+        if (!empty($pay_status)) {
+            $tickets = $tickets->whereIn('order_id', Order::query()->where('payment_status', $pay_status)->pluck('id')->toArray());
+        }
+        if (!empty($created_at)) {
+            $times = explode(" to ", $created_at);
+            $tickets = $tickets->where('created_at', '>=', $times[0]);
+            $tickets = $tickets->where('created_at', '<=', $times[1]);
+        }
+        if (!empty($updated_at)) {
+            $times = explode(" to ", $updated_at);
+            $tickets = $tickets->where('updated_at', '>=', $times[0]);
+            $tickets = $tickets->where('updated_at', '<=', $times[1]);
+        }
+
+        $type = $request->type ? $request->type : 'service';
+        $tickets = $tickets->where('type', $type);
+
         $tickets = filter_by_bloc($tickets);
         $tickets = $tickets->paginate(15);
 
         $groups = $this->groups;
-        return view('backend.support.support_tickets.index', compact('tickets', 'sort_search', 'groups', 'group'));
+
+        $view = 'backend.support.support_tickets.index';
+        if ($type == 'order') {
+            $view = 'backend.support.support_tickets.index_4_order';
+        }
+        return view($view, compact('tickets', 'sort_search', 'groups', 'group'));
     }
 
     /**
@@ -207,7 +247,11 @@ class SupportTicketController extends Controller
         $ticket_replies = $ticket->ticketreplies;
         TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
 
-        return view('frontend.user.support_ticket.show', compact('ticket','ticket_replies'));
+        $view = 'backend.support.support_tickets.show';
+        if ($ticket->order_id) {
+            $view = 'backend.support.support_tickets.show_4_order';
+        }
+        return view($view, compact('ticket','ticket_replies'));
     }
 
     public function admin_show($id)

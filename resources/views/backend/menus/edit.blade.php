@@ -16,7 +16,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="pid">{{translate('Parent Menu')}}</label>
                         <div class="col-sm-9">
-                            <select name="pid" required class="form-control aiz-selectpicker">
+                            <select name="pid" required class="form-control aiz-selectpicker" data-live-search="true">
                                 <option value="0"></option>
                                 @foreach($menus as $_menu)
                                     <option value="{{$_menu->id}}" @if($_menu->id == $menu->pid) selected @endif>{{translate($_menu->name)}}</option>
