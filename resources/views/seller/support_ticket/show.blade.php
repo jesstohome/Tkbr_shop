@@ -4,8 +4,9 @@
         display: none;
     }
     ul.ticket {
-        height: calc(100% - 43px);
+        height: calc(100% - 118px);
         overflow-y: scroll;
+        margin-top: 75px;
     }
     ul.ticket, ul.ticket li {
         background-color: #ebedf2;
@@ -73,6 +74,16 @@
         margin-bottom: 0;
     }
 
+    .card .card-header {
+        position: absolute !important;
+        min-height:auto;
+        top: 0;
+        z-index: 99;
+        left: 0;
+        right: 0;
+        background-color: white;
+        height: 75px;
+    }
     .card .card-body {
         /*padding: 0 !important;*/
     }
