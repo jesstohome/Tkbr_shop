@@ -146,6 +146,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
     Route::controller(SellerWithdrawRequestController::class)->group(function () {
         Route::get('/money-withdraw-requests', 'index')->name('money_withdraw_requests.index');
         Route::post('/money-withdraw-request/store', 'store')->name('money_withdraw_request.store');
+        Route::post('/money-withdraw-request/change_country', 'change_country')->name('withdraw_request.change_country');
     });
 
     // Commission History

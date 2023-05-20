@@ -229,4 +229,27 @@ class SellerWithdrawRequestController extends Controller
 
         }
     }
+
+    /**
+     * 变更国家
+     * author: Sym
+     * time: 2023-05-20 09:40
+     * @param Request $request
+     * @return string
+     */
+    public function change_country(Request $request) {
+        $html = '';
+        $shop_payment_config = ShopPaymentConfig::query()->where("country_code", $request->code)->where('shop_id', Auth::user()->shop->id)->first();
+        if (!empty($shop_payment_config)) {
+            // wallet
+            if ($request->type == 5) {
+                $html = join(" ", [$shop_payment_config->e_wallet_name, $shop_payment_config->e_wallet_address]);
+            } elseif($request->type == 2) {
+                // bank
+                $html = join(" ", [$shop_payment_config->bank_name, $shop_payment_config->bank_no, $shop_payment_config->bank_account_name]);
+            }
+        }
+
+        return $html;
+    }
 }

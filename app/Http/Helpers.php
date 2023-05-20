@@ -1843,3 +1843,15 @@ if (!function_exists("get_device_type")) {
         return 'ios' === get_device_type();
     }
 }
+
+if (!function_exists('getPaymentCountries')) {
+    function getPaymentCountries() {
+        $payment_countries = \App\Models\Country::query()
+            ->where('status', 1)
+            ->whereIn('code', ['cn', 'ID', 'IN', 'tr'])
+            ->orderBy('name')
+            ->get();
+
+        return $payment_countries;
+    }
+}

@@ -455,7 +455,22 @@
                                      </select>
                                 </div>
 
+                            </div>
+                            <div class="row" style="margin-bottom:5px;">
+
+                                <div class="col-md-3">
+                                    <label>{{ translate('Country')}}</label>
                                 </div>
+                                <div class="col-md-9">
+                                    <select id="country_code" name="country_code" class="form-control" required onchange="changeCountry(this)">
+                                        <option value="0">{{translate('All')}}</option>
+                                        @foreach(getPaymentCountries() as $country)
+                                        <option value="{{$country->code}}" {{$shop->cur_payment_country_code == $country->code ? 'selected' : ''}}>{{translate($country->name)}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                            </div>
                             <div class="row" style="margin-bottom:5px;">
 
                                  <div class="col-md-3">
@@ -524,41 +539,20 @@
                 $('#offline_wallet_recharge_modal').modal('show');
             });
         }
-        $("#p").change(function(){
-            var e_wallet_status = {{$shop_payment_config->e_wallet_switch ?: 0}}
-            var usdt_status = {{$shop->usdt_payment_status ?: 0}}
-            var online_bank = {{$shop_payment_config->bank_switch ?: 0}}
-            var cash_on_delivery_status = {{$shop->cash_on_delivery_status ?: 0}}
-            var type = $(this).val();
-            if (type == 5 && e_wallet_status == 0) {
-                window.location.href = "/seller/profile#e-wallet"
-                $(".btn").attr("disabled")
-                return;
-            }
-            if (type == 3 && usdt_status == 0) {
-                window.location.href = "/seller/profile#usdt"
-                $(".btn").attr("disabled")
-                return;
-            }
-            if (type == 2 && online_bank == 0) {
-                window.location.href = "/seller/profile#online_bank"
-                 $(".btn").attr("disabled")
-                return;
-            }
-            if (type == 1 && cash_on_delivery_status == 0) {
-                window.location.href = "/seller/profile#cash"
-                 $(".btn").attr("disabled")
-                return;
-            }
 
-            var message = '';
-            if (type == 5) {
-                message = "{{$shop_payment_config->e_wallet_name}} {{$shop_payment_config->e_wallet_address}}"
-            } else if (type == 2) {
-                message = "{{$shop_payment_config->bank_name}} {{$shop_payment_config->bank_no}} {{$shop_payment_config->bank_account_name}}"
-            }
-            $("textarea[name=message]").val(message)
-        })
+        function changeCountry(evt) {
+            $.post('{{ route('seller.withdraw_request.change_country') }}', {
+                _token: '{{ @csrf_token() }}',
+                code: $("#country_code").val(),
+                type: $("#p").val()
+            }, function (data) {
+                $("textarea[name=message]").val(data)
+            });
+        }
+
+        $("#p").change(function(){
+            changeCountry()
+        });
 
         $(document).ready(function(){
             // 自动打开充值弹窗

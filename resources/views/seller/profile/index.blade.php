@@ -74,7 +74,7 @@
 
         <!-- Payment System -->
         @php
-        $payment_countries = \App\Models\Country::query()->where('status', 1)->whereIn('code', ['cn', 'ID', 'IN', 'tr'])->orderBy('name')->get();
+        $payment_countries = getPaymentCountries();
         @endphp
         <div class="card">
             <div class="card-header">
@@ -417,7 +417,7 @@
 
 
             $('#seller-profile-form').on("submit", function(){
-                if($(".ifsc-code").length) {
+                if($(".ifsc-code").length && $(".ifsc-code").is(":visible")) {
                     let val = $(".ifsc-code").val();
                     if (val) {
                         if (val.length !== 11 || parseInt(val.substr(4, 1)) !== 0) {
