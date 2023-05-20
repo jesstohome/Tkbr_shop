@@ -86,7 +86,7 @@
                                 <td>{{ $value->created_at }}</td>
                                 <td>{{ $value->order ? $value->order->code : '' }}</td>
                                 <td>{{ $value->order_no }}</td>
-                                <td>{{ $value->out_order_no }}</td>
+                                <td>{{ $value->out_order_no ?: $value->transaction_id}}</td>
                                 <td>{{ single_price($value->amount) }}</td>
                                 <td>{{ number_format($value->amount_exchanged ?: $value->amount * getExchangeRate($value->payment_type), 2) }}</td>
                                 <td>{{ translate($value->business_type) }}</td>
