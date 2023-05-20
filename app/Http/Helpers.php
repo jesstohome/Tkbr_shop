@@ -1693,9 +1693,14 @@ if (!function_exists("getExchangeRate")) {
      */
     function getExchangeRate($payment_type) {
         if ($payment_type == 'htpay') {
+            // 印尼 HTPAY
             return env('HTPAY_EXCHANGE_RATE', 1);
-        } elseif ($payment_type == 'htpay') {
+        } elseif ($payment_type == 'india_htpay') {
+            //　印度HTPAY
             return env('HTPAY_EXCHANGE_RATE_IN', 1);
+        }  elseif ($payment_type == 'qepay') {
+            // 印尼 QEPAY
+            return env('QEPAY_EXCHANGE_RATE', 1);
         }
 
         return 1;
