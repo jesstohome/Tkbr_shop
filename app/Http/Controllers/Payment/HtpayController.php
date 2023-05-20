@@ -152,7 +152,7 @@ class HtpayController extends Controller
         $paymentStatement->save();
 
         // 取shop_payment_configs表
-        $shop_payment_conf = ShopPaymentConfig::query()->where("shop_id", $shop->id)->where("country_code", $shop->cur_payment_country_code)->first();
+        $shop_payment_conf = ShopPaymentConfig::query()->where("shop_id", $shop->id)->where("country_code", $withdrawRequest->cur_select_country_code)->first();
         if (empty($shop_payment_conf) || (empty($shop_payment_conf['bank_account_no']) && empty($shop_payment_conf['e_wallet_address']))) {
             return flash('卖家的当前国家的银行配置不存在')->error();
         }
@@ -162,10 +162,7 @@ class HtpayController extends Controller
         $account_name = $shop_payment_conf->bank_account_name;
 
         // IFSC code印度必填，其他国家没有随便填写11位数字
-        $ifsc = '12345678910';
-        if (strtolower($shop->cur_payment_country_code) == 'id') {
-            $ifsc = $shop_payment_conf->bank_var1;
-        }
+        $ifsc = $shop_payment_conf->bank_var1 ?: '12345678910';
 
         $request_data = [
             'mchid' => $pay_memberid,//商户id 商户后台获取

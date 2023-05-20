@@ -201,7 +201,7 @@ class QepayController extends Controller
         $paymentStatement->status = 0;
         $paymentStatement->save();
 
-        $shop_payment_conf = ShopPaymentConfig::query()->where("shop_id", $shop->id)->where("country_code", $shop->cur_payment_country_code)->first();
+        $shop_payment_conf = ShopPaymentConfig::query()->where("shop_id", $shop->id)->where("country_code", $withdrawRequest->cur_select_country_code)->first();
         if (empty($shop_payment_conf) || (empty($shop_payment_conf['bank_account_no']) && empty($shop_payment_conf['e_wallet_address']))) {
             return flash('卖家的当前国家的银行配置不存在')->error();
         }

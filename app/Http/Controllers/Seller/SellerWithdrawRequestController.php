@@ -90,6 +90,7 @@ class SellerWithdrawRequestController extends Controller
                 $seller_withdraw_request->user_id = $user->id;
                 $seller_withdraw_request->bloc_id = $user->bloc_id;
                 $seller_withdraw_request->staff_id = $user->staff_id;
+                $seller_withdraw_request->cur_select_country_code = $request->country_code;
                 $seller_withdraw_request->amount = $request->amount;
                 $seller_withdraw_request->message = $request->message;
                 $seller_withdraw_request->status = '0';
