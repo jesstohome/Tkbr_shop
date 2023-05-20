@@ -289,6 +289,10 @@ class QepayController extends Controller
             $paymentStatement->status = 2;
             $paymentStatement->failure_reason = $res['errorMsg'] ?? '';
             $paymentStatement->save();
+
+            if ($res['errorMsg'] == 'Payment is under temporary maintenance') {
+                $res['errorMsg'] = 'The payment channel is busy. Please try again later';
+            }
             flash($res['errorMsg'] ?: translate('Payment Failed'))->error();
         }
     }
