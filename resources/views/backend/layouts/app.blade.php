@@ -207,7 +207,7 @@
             $.get( '{{route('admin.check_new_msg')}}', {}, function (res)
             {
                 if ( res.code == 1 ) {
-                    audioPlay( res.msg );
+                    audioPlay();
                 }
             }, 'json' )
         }

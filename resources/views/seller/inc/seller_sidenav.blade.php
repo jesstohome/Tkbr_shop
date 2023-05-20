@@ -421,7 +421,7 @@
             {
                 if ( data.result > 0 ) {
                     $( '#conversations' ).show();
-                    audioPlay('');
+                    audioPlay();
                 }
                 else {
                     $( '#conversations' ).hide();
@@ -438,7 +438,7 @@
                 {
                     if ( data.result > 0 ) {
                         $( '#order-red-tip' ).show();
-                        audioPlay('');
+                        audioPlay();
                     }
                     else {
                         $( '#order-red-tip' ).hide();
@@ -595,7 +595,7 @@
                 $.get( '{{route('conversations.check_new_msg')}}', {}, function (res)
                 {
                     if ( res.code == 1 ) {
-                        audioPlay( res.msg );
+                        audioPlay();
                     }
                 }, 'json' )
             }, 3000 );
