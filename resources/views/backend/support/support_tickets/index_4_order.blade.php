@@ -8,8 +8,8 @@
             <div class="col text-center text-md-left">
                 <h5 class="mb-md-0 h6">{{ translate('Support Desk') }}</h5>
             </div>
-            <div class="col-md-3 ml-auto">
-                <select class="form-control aiz-selectpicker" name="seller_id" id="seller_id" onchange="sort_support()">
+            <div class="col-md-2 ml-auto">
+                <select class="form-control aiz-selectpicker" name="seller_id" id="seller_id" data-live-search="true" onchange="sort_support()">
                     <option value="">{{translate('All')}}</option>
                     @foreach(filter_by_bloc(\App\Models\User::query()->where('user_type', 'seller'))->get() as $seller)
                     <option value="{{$seller->id}}"  @if($seller_id == $seller->id) selected @endif>{{$seller->email}} ({{$seller->shop->name}})</option>
@@ -25,17 +25,22 @@
             </div>
             <div class="col-md-2 ml-auto">
                 <div class="col-sm-12">
-                    <input type="text" class="form-control aiz-date-range" name="created_at" placeholder="创建时间" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
+                    <input type="text" class="form-control aiz-date-range" name="created_at" placeholder="创建时间" data-time-picker="true" data-format="Y-MM-DD HH:mm:ss" data-separator=" to " autocomplete="off">
                 </div>
             </div>
             <div class="col-md-2 ml-auto">
                 <div class="col-sm-12">
-                    <input type="text" class="form-control aiz-date-range" name="updated_at" placeholder="回复时间" data-time-picker="true" data-format="DD-MM-Y HH:mm:ss" data-separator=" to " autocomplete="off">
+                    <input type="text" class="form-control aiz-date-range" name="updated_at" placeholder="回复时间" data-time-picker="true" data-format="Y-MM-DD HH:mm:ss" data-separator=" to " autocomplete="off">
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" id="order_no" name="order_no" @isset($order_no) value="{{ $order_no }}" @endisset placeholder="{{ translate('Type Order code & Enter') }}">
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-group mb-0">
+                    <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
                 </div>
             </div>
         </div>

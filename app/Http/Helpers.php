@@ -1151,7 +1151,7 @@ if (!function_exists('storehouseProduct_payment_done')) {
 
         hset_plus('orders_pick_up_tip', $order_id, 1, $order->staff_id);
 
-        return 'success';
+        return true;
     }
 }
 

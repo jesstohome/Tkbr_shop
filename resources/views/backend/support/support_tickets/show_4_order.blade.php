@@ -1,6 +1,7 @@
 @extends('backend.layouts.app')
 <style type="text/css">
     ul.ticket {
+        min-height: 50vh;
         max-height: 50vh;
         overflow-y: scroll;
     }
@@ -84,9 +85,34 @@
                    <span class="ml-2"> {{ $ticket->user->created_at }} </span>
                </div>
             </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-sm btn-primary" onclick="confirmPayment()">确定订单已付款</button>
+            </div>
         </div>
         <div class="card-body">
             <div class="pad-top">
+                <div class="top-info" style="margin-bottom: 15px">
+                    <div class="order-info row">
+                        <div class="col-md-3">
+                            <p>订单号: {{$ticket->order->code}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>提货金额: {{single_price($ticket->order->product_storehouse_total)}}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p>提货状态: {{$ticket->order->product_storehouse_status ? '已提货' : '未提货'}}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p>产品： <a href="{{route('product', $ticket->order->details[0]->product->slug)}}" target="_blank">{{$ticket->order->details[0]->product->name}}</a> </p>
+                        </div>
+                    </div>
+                    <div class="order-opt row">
+                        <div class="col-md-8">
+                            备注：<input name="order_remark" value="" />
+
+                        </div>
+                    </div>
+                </div>
                 <ul class="list-group list-group-flush ticket">
                     @foreach($ticket->ticketreplies as $ticketreply)
                         <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
@@ -161,4 +187,16 @@
 
 @section('script')
     @include('partials.support_ticket.script')
+
+    <script type="text/javascript">
+        function confirmPayment() {
+            $.post('{{ route('support_ticket.confirm_payment') }}', {
+                _token: '{{ @csrf_token() }}',
+                id: "{{$ticket->order->id}}"
+            }, function (res) {
+                AIZ.plugins.notify(res.success ? 'success' : 'danger', res.msg || '');
+                res.success && location.reload()
+            });
+        }
+    </script>
 @endsection

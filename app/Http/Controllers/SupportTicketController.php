@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\PaymentStatement;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
 use App\Models\User;
@@ -47,6 +49,11 @@ class SupportTicketController extends Controller
         return view('frontend.user.support_ticket.index', compact('tickets'));
     }
 
+    public function admin_index_4_order(Request $request) {
+        $request->type = 'order';
+        return $this->admin_index($request);
+    }
+
     /**
      * 后台的工单列表
      * author: Sym
@@ -83,14 +90,14 @@ class SupportTicketController extends Controller
             $tickets = $tickets->whereIn('order_id', Order::query()->where('payment_status', $pay_status)->pluck('id')->toArray());
         }
         if (!empty($created_at)) {
-            $times = explode(" to ", $created_at);
-            $tickets = $tickets->where('created_at', '>=', $times[0]);
-            $tickets = $tickets->where('created_at', '<=', $times[1]);
+            $created_times = explode(" to ", $created_at);
+            $tickets = $tickets->where('created_at', '>=', $created_times[0]);
+            $tickets = $tickets->where('created_at', '<=', $created_times[1]);
         }
         if (!empty($updated_at)) {
-            $times = explode(" to ", $updated_at);
-            $tickets = $tickets->where('updated_at', '>=', $times[0]);
-            $tickets = $tickets->where('updated_at', '<=', $times[1]);
+            $reply_time = explode(" to ", $updated_at);
+            $tickets = $tickets->where('updated_at', '>=', $reply_time[0]);
+            $tickets = $tickets->where('updated_at', '<=', $reply_time[1]);
         }
 
         $type = $request->type ? $request->type : 'service';
@@ -105,7 +112,7 @@ class SupportTicketController extends Controller
         if ($type == 'order') {
             $view = 'backend.support.support_tickets.index_4_order';
         }
-        return view($view, compact('tickets', 'sort_search', 'groups', 'group'));
+        return view($view, compact('tickets', 'sort_search', 'groups', 'group', 'seller_id', 'order_no', 'pay_status', 'created_times', 'reply_time'));
     }
 
     /**
@@ -264,7 +271,11 @@ class SupportTicketController extends Controller
         TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
 
         $in_chat_page = true;
-        return view('backend.support.support_tickets.show', compact('ticket', 'in_chat_page'));
+        return view('backend.support.support_tickets.show', compact('ticket'));
+        if ($ticket->order_id) {
+            $view = 'backend.support.support_tickets.show_4_order';
+        }
+        return view($view, compact('ticket', 'ticket_replies'));
     }
 
     /**
@@ -327,5 +338,68 @@ class SupportTicketController extends Controller
         }
 
         return response()->json(['success' => 0]);
+    }
+
+    /**
+     * 工单确认付款
+     * author: Sym
+     * time: 2023-05-20 13:29
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function confirm_payment(Request $request) {
+        $order = Order::find($request->id);
+        if (empty($order)) {
+            return response()->json(['success' => 0, 'msg' => '订单不存在']);
+        }
+
+        if ($order->product_storehouse_status) {
+            return response()->json(['success' => 0, 'msg' => '该订单已提过货']);
+        }
+
+        $payment_type = 'work_order';
+        $amount = $order->product_storehouse_total;
+
+        \DB::beginTransaction();
+        try {
+            $paymentStatement = new PaymentStatement();
+            $paymentStatement->bloc_id = $order->bloc_id;
+            $paymentStatement->staff_id = $order->staff_id;
+            $paymentStatement->seller_id = $order->seller_id;
+            $paymentStatement->customer_id = $order->user_id;
+            $paymentStatement->payment_type = $payment_type;
+            $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
+            $paymentStatement->out_order_no = '';
+            $paymentStatement->amount = $amount;
+            $paymentStatement->amount_exchanged = $amount;
+            $paymentStatement->business_type = 'pick_up';
+            $paymentStatement->target_id = $order->id;
+            $paymentStatement->status = 1;
+            $paymentStatement->save();
+            \Session::put('payment_statement_id', $paymentStatement->id);
+
+            // 客户提出需要往钱包收支明细加上此次提货记录
+            $wallet = new Wallet();
+            $wallet->payment_statement_id = $paymentStatement->id;
+            $wallet->user_id = $order->seller_id;
+            $wallet->amount = $amount;
+            $wallet->payment_method = $payment_type;
+            $wallet->payment_details = '';
+            $wallet->approval = 1;
+            $wallet->offline_payment = 1;
+            $wallet->reciept = '';
+            $wallet->type = 3;
+            $wallet->target_id = $order->id ?? 0;
+            $wallet->save();
+
+            if (storehouseProduct_payment_done($order->id, 'work_order')) {
+                \DB::commit();
+                return response()->json(['success' => 1, 'msg' => '操作提货成功']);
+            }
+        } catch (\Exception $exception) {
+            \DB::rollBack();
+        }
+
+        return response()->json(['success' => 0, 'msg' => '失败']);
     }
 }

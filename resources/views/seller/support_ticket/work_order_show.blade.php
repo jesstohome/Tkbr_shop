@@ -4,8 +4,9 @@
         display: none;
     }
     ul.ticket {
-        max-height: 60vh;
+        height: calc(100% - 118px);
         overflow-y: scroll;
+        margin-top: 100px;
     }
     ul.ticket, ul.ticket li {
         background-color: #ebedf2;
@@ -67,17 +68,26 @@
     }
 
     .card.chat {
-        /*position: fixed !important;*/
-        height: calc(100vh - 75px - 25px - 50px);
-        /*height: calc(100vh - 75px);*/
+        height: 100%;
         margin-bottom: 0;
     }
 
+    .card .card-header {
+        position: absolute !important;
+        min-height:auto;
+        top: 0;
+        z-index: 10;
+        left: 0;
+        right: 0;
+        background-color: white;
+        height: 100px;
+    }
     .card .card-body {
         /*padding: 0 !important;*/
     }
     #ticket-reply-form {
         position: absolute;
+        height: 43px;
         bottom: 0;
         right: 15px;
         left: 15px;
@@ -111,10 +121,13 @@
     <div class="card chat">
         <div class="card-header row gutters-5">
             <div class="text-center text-md-left">
-                <h5 class="mb-md-0 h5">Tictok Shop Serve</h5>
+                <h5 class="mb-md-0 h5">{{$ticket->order->details[0]->product->name}}</h5>
                <div class="mt-2">
-                   <span> {{ $ticket->user->name }} </span>
+                   <span> {{ translate('Factory') }} </span>
                </div>
+                <div class="mt-2">
+                    <span> {{ translate('Order No') }}: {{$ticket->order->code}} </span>
+                </div>
             </div>
         </div>
         <div class="card-body msg-box" style="padding: 0!important;">
@@ -187,7 +200,8 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $("ul.ticket").height($(".card.chat").height())
+            $(".card.chat").height(document.body.clientHeight - 100);
+            $(".aiz-main-content").height(document.body.clientHeight - 100);
         });
     </script>
 @endsection

@@ -221,7 +221,7 @@
         </div>
     </div>
 
-    <!-- 充值记录 -->
+    <!-- 钱包收支明细 -->
     <div class="card">
         <div class="card-header">
             <h5 class="mb-0 h6">{{ translate('Wallet Recharge History')}}</h5>
