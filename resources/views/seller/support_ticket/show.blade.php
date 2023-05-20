@@ -68,8 +68,7 @@
     }
 
     .card.chat {
-        /*height: 100%;*/
-        height: 46rem;
+        height: 100%;
         margin-bottom: 0;
     }
 
@@ -198,7 +197,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            // $(".card.chat").height(window.screen.availHeight - 75)
+            $(".card.chat").height(window.screen.availHeight - 75)
         });
     </script>
 @endsection
