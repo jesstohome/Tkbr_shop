@@ -158,11 +158,11 @@
 
             // 校验两张图片
             if ($("input[name=identity_card_front]").val() == '') {
-                alert('{{translate('Identity Card Front Not Allow Empty!')}}');
+                AIZ.plugins.notify('danger', '{{ translate('Identity Card Front Not Allow Empty!') }}');
                 return false;
             }
             if ($("input[name=identity_card_back]").val() == '') {
-                alert('{{translate('Identity Card Back Not Allow Empty!')}}');
+                AIZ.plugins.notify('danger', '{{ translate('Identity Card Back Not Allow Empty!') }}');
                 return false;
             }
 

@@ -90,6 +90,7 @@
                 <ul class="list-group list-group-flush ticket">
                     @foreach($ticket->ticketreplies as $ticketreply)
                         <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
+                            @if(!empty($ticketreply->reply))
                             <div class="media">
                                 <div class="media-body">
                                     <div class="comment-header">
@@ -101,6 +102,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                             <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
                                 @foreach ((explode(",",$ticketreply->files)) as $key => $file)
                                     @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
@@ -134,7 +136,7 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-md-8">
-                        <input class="form-control" type="text" name="reply" value="" required />
+                        <input class="form-control" type="text" name="reply" value="" />
                     </div>
                     <div class="col-md-4">
                         <button type="button" class="btn btn-sm btn-primary" onclick="show_fast_reply_modal()">{{ translate('Select Fast Reply') }}</button>

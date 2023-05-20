@@ -3,6 +3,9 @@
     .layui-table-test td {
         /*min-height: 100px;*/
     }
+    .laytable-cell-1-0-2 {
+        width: 200px!important;
+    }
 </style>
 <div class="modal-header">
     <button type="button" class="btn btn-light" onclick="filter_by_group(0)">全部</button>
@@ -20,13 +23,9 @@
 <div class="modal-footer">
     <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Cancel')}}</button>
 </div>
-<script type="text/html" id="barDemo">
-    <div class="layui-clear-space">
-        <a class="layui-btn layui-btn-xs" lay-event="more">
-            {{translate('More')}}
-            <i class="layui-icon layui-icon-down"></i>
-        </a>
-    </div>
+<script type="text/html" id="barDemo" style="width: 300px">
+    <a class="layui-btn layui-btn-xs" lay-event="send">发送</a>
+    <a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script type="text/html" id="TPL-select-group">
     <select name="group_id" class="layui-border select-demo-primary" lay-ignore>
@@ -58,17 +57,17 @@
             toolbar: '#toolbarDemo',
             data: list, // 此处为静态模拟数据，实际使用时需换成真实接口
             height: 'full-35', // 最大高度减去其他容器已占有的高度差
-            lineStyle: 'height: 151px;', // 定义表格的多行样式
+            // lineStyle: 'height: 151px;', // 定义表格的多行样式
             className: 'layui-table-test',
             css: [ // 重设当前表格样式
-                '.layui-table-tool-temp{padding-right: 145px;}'
+                // '.layui-table-tool-temp{padding-right: 145px;}'
             ].join(''),
-            cellMinWidth: 110,
+            cellMinWidth: 300,
             cols: [[
-                {field:'abstract', Width: '40%', title: '{{translate('abstract')}}', edit: 'textarea'},
-                {field:'content',Width: '40%', title: '{{translate('content')}}', edit: 'textarea'},
+                {field:'abstract', width: '40%', title: '{{translate('abstract')}}', edit: 'textarea'},
+                {field:'content',width: '40%', title: '{{translate('content')}}', edit: 'textarea'},
                 {{--{field:'group_id',Width: '10%', title: '{{translate('Group')}}', templet: '#TPL-select-group'},--}}
-                {title:'{{translate('Option')}}', Width: '20%', toolbar: '#barDemo'}
+                {title:'{{translate('Option')}}', Width: '200px', toolbar: '#barDemo'}
             ]],
             done: function () {
                 $(".layui-table").width("100%")
@@ -84,45 +83,24 @@
             var data = obj.data; // 获得当前行数据
             // console.log(obj)
             if(obj.event === 'send'){
-
-            } else if(obj.event === 'more'){
-                // 更多 - 下拉菜单
-                dropdown.render({
-                    elem: this, // 触发事件的 DOM 对象
-                    show: true, // 外部事件触发即显示
-                    data: [{
-                        title: '{{translate('Send')}}',
-                        id: 'send'
-                    },{
-                        title: '{{translate('Delete')}}',
-                        id: 'del'
-                    }],
-                    click: function(menudata){
-                        if(menudata.id === 'send'){
-                            console.log(data)
-                            $("input[name=reply]").val(data.content)
-                            submit_reply();
-                            $('#fast_reply_modal').modal('hide');
-                        } else if(menudata.id === 'del'){
-                            layer.confirm("{{translate('Are you sure to delete this?')}}", function(index){
-                                obj.del(); // 删除对应行（tr）的DOM结构
-                                layer.close(index);
-                                // 向服务端发送删除指令
-                                $.ajax( {
-                                    url: "{{route('huashu.destroy')}}",
-                                    data: {
-                                        id: data.id,
-                                    },
-                                    type: 'POST',
-                                    success: function (response)
-                                    {}
-                                } );
-                            });
-                        }
-                    },
-                    align: 'right', // 右对齐弹出
-                    style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' // 设置额外样式
-                })
+                $("input[name=reply]").val(data.content)
+                submit_reply();
+                $('#fast_reply_modal').modal('hide');
+            } else if(obj.event === 'del'){
+                layer.confirm("{{translate('Are you sure to delete this?')}}", function(index){
+                    obj.del(); // 删除对应行（tr）的DOM结构
+                    layer.close(index);
+                    // 向服务端发送删除指令
+                    $.ajax( {
+                        url: "{{route('huashu.destroy')}}",
+                        data: {
+                            id: data.id,
+                        },
+                        type: 'POST',
+                        success: function (response)
+                        {}
+                    } );
+                });
             }
         });
 

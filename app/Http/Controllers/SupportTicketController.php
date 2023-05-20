@@ -146,7 +146,7 @@ class SupportTicketController extends Controller
         $ticket_reply = new TicketReply;
         $ticket_reply->ticket_id = $request->ticket_id;
         $ticket_reply->user_id = Auth::user()->id;
-        $ticket_reply->reply = $request->reply;
+        $ticket_reply->reply = $request->reply ?: '';
         $ticket_reply->files = $request->attachments;
         $ticket_reply->ticket->client_viewed = 0;
         $ticket_reply->ticket->status = $request->status;
