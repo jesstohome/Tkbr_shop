@@ -198,6 +198,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $(".card.chat").height(document.body.clientHeight - 75)
+            $(".aiz-main-content").height(document.body.clientHeight - 75)
         });
     </script>
 @endsection
