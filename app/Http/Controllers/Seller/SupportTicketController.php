@@ -95,7 +95,13 @@ class SupportTicketController extends Controller
 
         $fullscreen = true;
         $in_chat_page = true;
-        return view('seller.support_ticket.show', compact('ticket','ticket_replies', 'fullscreen', 'in_chat_page'));
+
+        $view = 'seller.support_ticket.show_mobile';
+        if (is_pc()) {
+            $view = 'seller.support_ticket.show';
+        }
+
+        return view($view, compact('ticket','ticket_replies', 'fullscreen', 'in_chat_page'));
     }
 
     public function ticket_reply_store(Request $request)

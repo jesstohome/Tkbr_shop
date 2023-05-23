@@ -1853,8 +1853,16 @@ if (!function_exists("get_device_type")) {
         return $type;
     }
 
+    function is_android() {
+        return 'android' === get_device_type();
+    }
+
     function is_ios() {
         return 'ios' === get_device_type();
+    }
+
+    function is_pc() {
+        return 'other' === get_device_type();
     }
 }
 

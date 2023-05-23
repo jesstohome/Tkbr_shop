@@ -97,18 +97,11 @@
                 @foreach($payment_countries as $country)
                     @php $country_code = strtolower($country->code) @endphp
                     <input type="hidden" name="payment_country_codes[]" value="{{$country_code}}" />
+                    <input type="hidden" name="bank_switch[{{$country_code}}]" value="1">
+                    <input type="hidden" name="e_wallet_switch[{{$country_code}}]" value="1">
                     <div class="bank_info lang_{{$country_code}}" style="display: none">
-                        @if($country_code != 'in')
+                    @if($country_code != 'in')
                         <!-- 电子钱包配置 -->
-                        <div class="row" id="e-wallet">
-                            <label class="col-md-3 col-form-label">{{ translate('e-Wallet') }}</label>
-                            <div class="col-md-9">
-                                <label class="aiz-switch aiz-switch-success mb-3">
-                                    <input value="1" name="e_wallet_switch[{{$country_code}}]" type="checkbox" @if ($payment_config[$country_code]->e_wallet_switch == 1) checked @endif>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                        </div>
                         <div class="row">
                             <label class="col-md-3 col-form-label" for="e_wallet_name[{{$country_code}}]">{{ translate('e-Wallet Name') }}</label>
                             <div class="col-md-9">
@@ -128,16 +121,6 @@
                         @endif
 
                         <!-- 线上银行配置 -->
-                        <div class="row" id="online_bank">
-                            <label class="col-md-3 col-form-label">{{ translate('Online Bank') }}</label>
-                            <div class="col-md-9">
-                                <label class="aiz-switch aiz-switch-success mb-3">
-                                    <input value="1" name="bank_switch[{{$country_code}}]" type="checkbox" @if ($payment_config[$country_code]->bank_switch == 1) checked @endif>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                        </div>
-
                         @if(false)
                         <div class="row">
                             <label class="col-md-3 col-form-label" for="bank_no[{{$country_code}}]">{{ translate('Online Bank Card No') }}</label>

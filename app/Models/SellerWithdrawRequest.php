@@ -18,4 +18,8 @@ class SellerWithdrawRequest extends Model
     {
         return $this->belongsTo(User::class, 'operator_id');
     }
+
+    public function country() {
+        return $this->belongsTo(Country::class, 'cur_select_country_code', 'code');
+    }
 }

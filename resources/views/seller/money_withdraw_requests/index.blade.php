@@ -477,7 +477,7 @@
                                     <label>{{ translate('Withdraw Type')}}</label>
                                 </div>
                                  <div class="col-md-9">
-                                     <select name="w_type" class="form-control" id="p" onchange="changedWType()">
+                                     <select name="w_type" class="form-control" id="p">
                                          @if(get_setting('withdraw_type_bank_card') == 1)
                                             <option value="2">{{translate('Bank')}}</option>
                                          @endif
@@ -511,7 +511,7 @@
                 @endif
             </div>
         </div>
-    </div>
+    </div>1
 @endsection
 
 @section('script')
@@ -546,6 +546,10 @@
                 code: $("#country_code").val(),
                 type: $("#p").val()
             }, function (data) {
+                if (data === '') {
+                    window.location.href = "/seller/profile";
+                    return;
+                }
                 $("textarea[name=message]").val(data)
             });
         }

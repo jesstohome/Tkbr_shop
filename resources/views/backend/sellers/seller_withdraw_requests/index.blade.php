@@ -69,6 +69,7 @@
                         <th>{{translate('Type')}}</th>
                         <th data-breakpoints="lg">{{ translate('Withdraw type') }}</th>
                         <th data-breakpoints="lg" width="20%">{{ translate('Message') }}</th>
+                        <th data-breakpoints="lg">{{ translate('Country') }}</th>
                         <th data-breakpoints="lg">{{ translate('Payment Channel') }}</th>
                         <th data-breakpoints="lg">{{ translate('Status') }}</th>
                         <th data-breakpoints="lg">{{ translate('Pass Time') }}</th>
@@ -122,6 +123,7 @@
                                 <td>
                                     {{ $seller_withdraw_request->message }}
                                 </td>
+                                <td>{{$seller_withdraw_request->country->name ?? ''}}</td>
                                 <td>{{$seller_withdraw_request->payment_channel ?? ''}}</td>
                                 <td>
                                     @if ($seller_withdraw_request->status == 1)
