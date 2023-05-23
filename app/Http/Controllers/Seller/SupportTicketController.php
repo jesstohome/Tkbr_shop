@@ -97,7 +97,7 @@ class SupportTicketController extends Controller
         $in_chat_page = true;
 
         $view = 'seller.support_ticket.show_mobile';
-        if (is_pc()) {
+        if (is_pc() && 0) {
             $view = 'seller.support_ticket.show';
         }
 
