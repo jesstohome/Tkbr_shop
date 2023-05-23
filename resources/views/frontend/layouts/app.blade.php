@@ -82,6 +82,7 @@
             complete: '{{ translate('Complete') }}',
             file: '{{ translate('File') }}',
             files: '{{ translate('Files') }}',
+            no_files_found: '{{ translate('No files found') }}',
         }
     </script>
 
