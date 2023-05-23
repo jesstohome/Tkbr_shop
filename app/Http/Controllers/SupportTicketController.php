@@ -153,6 +153,8 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket->save();
 
         if($ticket_reply->save()){
+            \Cache::set('loop_load_new_reply_audio_frontend', 1);
+
             if ($request->ajax()) {
                 $list = appendTicketFiles([$ticket_reply]);
                 return response()->json(['success' => 1, 'list' => $list]);
@@ -216,7 +218,8 @@ class SupportTicketController extends Controller
         $ticket_replies = $ticket->ticketreplies;
         TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
 
-        return view('backend.support.support_tickets.show', compact('ticket'));
+        $in_chat_page = true;
+        return view('backend.support.support_tickets.show', compact('ticket', 'in_chat_page'));
     }
 
     /**

@@ -94,7 +94,8 @@ class SupportTicketController extends Controller
         }
 
         $fullscreen = true;
-        return view('seller.support_ticket.show', compact('ticket','ticket_replies', 'fullscreen'));
+        $in_chat_page = true;
+        return view('seller.support_ticket.show', compact('ticket','ticket_replies', 'fullscreen', 'in_chat_page'));
     }
 
     public function ticket_reply_store(Request $request)
@@ -108,6 +109,8 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket->status = 'pending';
         $ticket_reply->ticket->save();
         if($ticket_reply->save()){
+
+            \Cache::set('loop_load_new_reply_audio_backend', 1);
 
             if ($request->ajax()) {
                 $list = appendTicketFiles([$ticket_reply]);

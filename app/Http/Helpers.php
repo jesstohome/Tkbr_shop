@@ -1745,12 +1745,17 @@ if (!function_exists('load_new_reply')) {
 
         // 只检测有多少未读
         if ($check) {
-            if (Session::get('reply_notice')) {
+            if (Session::get('reply_notice') && $check != 2) {
                 return response()->json(['success' => 1, 'count' => 0, 'session_val' => Session::get('reply_notice')]);
             }
 
             if (Auth::user()->user_type == 'seller' || Auth::user()->user_type == 'customer') {
                 $list = $list->where('ticket_id', $ticket_id);
+            }
+
+            $tips_key = Auth::user()->user_type == 'seller' || Auth::user()->user_type == 'customer' ? 'loop_load_new_reply_audio_frontend' : 'loop_load_new_reply_audio_backend';
+            if (empty(Cache::get($tips_key)) && $check == 2){
+                return response()->json(['success' => 2, 'count' => 0, 'k' => $tips_key]);
             }
 
             $tag_names = '';
@@ -1765,6 +1770,11 @@ if (!function_exists('load_new_reply')) {
 
                 }
             }
+
+            if ($check == 2) {
+                Cache::delete($tips_key);
+            }
+
             return response()->json(['success' => 1, 'count' => $count, 'tag_names' => $tag_names]);
         }
 
