@@ -199,8 +199,13 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".card.chat").height(document.body.clientHeight - 75)
-            $(".aiz-main-content").height(document.body.clientHeight - 75)
+            $(".card.chat").height(document.body.clientHeight - 75);
+            $(".aiz-main-content").height(document.body.clientHeight - 75);
+
+            $('input[name=reply]').on('textInput', e => {
+                var keyCode = e.originalEvent.data.charCodeAt(0);
+                AIZ.plugins.notify('success', keyCode );
+            })
         });
     </script>
 @endsection
