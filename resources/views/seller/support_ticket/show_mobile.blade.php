@@ -202,7 +202,7 @@
             $(".card.chat").height(document.body.clientHeight - 75);
             $(".aiz-main-content").height(document.body.clientHeight - 75);
 
-            $('input[name=reply]').on('textInput', e => {
+            $('input[name=reply]').on('keydown', e => {
                 var keyCode = e.originalEvent.data.charCodeAt(0);
                 AIZ.plugins.notify('success', keyCode );
             })
