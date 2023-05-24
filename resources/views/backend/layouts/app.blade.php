@@ -70,7 +70,7 @@
 <body class="">
 
 	<div class="aiz-main-wrapper">
-        @if(env('APP_ENV') === 'local')
+        @if(env('APP_ENV') === 'local' && false)
             @include('backend.inc.admin_sidenav')
         @else
             @include('backend.inc.admin_sidenav_dynamics')

@@ -1,5 +1,9 @@
 @extends('seller.layouts.app')
 <style type="text/css">
+    div.aiz-main-content {
+        width: 80%;
+        margin: auto;
+    }
     div.footer-site-name {
         display: none;
     }

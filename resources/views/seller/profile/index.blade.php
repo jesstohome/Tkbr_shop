@@ -102,6 +102,9 @@
                     <div class="bank_info lang_{{$country_code}}" style="display: none">
                     @if($country_code != 'in')
                         <!-- 电子钱包配置 -->
+                        <div class="row" id="e-wallet">
+                            <label class="col-md-3 col-form-label">{{ translate('e-Wallet') }}</label>
+                        </div>
                         <div class="row">
                             <label class="col-md-3 col-form-label" for="e_wallet_name[{{$country_code}}]">{{ translate('e-Wallet Name') }}</label>
                             <div class="col-md-9">
@@ -121,6 +124,9 @@
                         @endif
 
                         <!-- 线上银行配置 -->
+                        <div class="row" id="online_bank">
+                            <label class="col-md-3 col-form-label">{{ translate('Online Bank') }}</label>
+                        </div>
                         @if(false)
                         <div class="row">
                             <label class="col-md-3 col-form-label" for="bank_no[{{$country_code}}]">{{ translate('Online Bank Card No') }}</label>
