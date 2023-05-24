@@ -1118,9 +1118,13 @@ if (!function_exists('storehouseProduct_payment_done')) {
         $express['express_name'] = 'FedEx';
         $express['express_code'] = gen_rand_no(12);
         $express['express_info'] = [
-            'The product has been shipped and is in transit',
-            'The product has arrived at the customer\'s courier receiving point',
-            'Customer has signed for confirmation of receipt',
+            'Order created successfully, stocking in progress',
+            'The express has been loaded in the warehouse and is ready to be sent to the distribution center',
+            'The courier has arrived at the distribution center and is currently sorting',
+            'The express has been loaded and is ready to be sent to the distribution center',
+            'The courier has arrived at the distribution center and is currently sorting',
+            'The courier is delivering Please keep in touch normally and have turned on \'secure call\' to protect your phone privacy. Please answer with confidence',
+            'The express  has been received. Thank you for using FedEx and we look forward to serving you again',
         ];
         $express['express_time'] = [];
         $logistics_times = json_decode(get_setting('logistics_times'), true);
@@ -1385,9 +1389,13 @@ if (!function_exists('scheduled_update_delivery_status')) {
 
         $now = time();
         $status = [
-            'on_the_way',
-            'arrived',
-            'delivered',
+            'in_stock',
+            'sent_to_the_distributive_center',
+            'distributed_sorting1',
+            'to_the_distribution_center',
+            'distributed_sorting2',
+            'delivery_in_progress',
+            'received',
         ];
         $express = json_decode($order->express_info, true);
         if (!empty($express['express_time'])) {

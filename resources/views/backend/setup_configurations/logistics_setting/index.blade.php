@@ -15,7 +15,7 @@
                         @php
                             $setting_value = json_decode(get_setting('logistics_times'), true);
                         @endphp
-                        @foreach([1, 2, 3] as $key => $index)
+                        @foreach(range(1, 7) as $key => $index)
                         <div class="form-group row">
                             <label class="col-md-3 col-from-label">{{translate('Automatic logistics timeline')}} {{$index}}</label>
                             <div class="col-md-3">
