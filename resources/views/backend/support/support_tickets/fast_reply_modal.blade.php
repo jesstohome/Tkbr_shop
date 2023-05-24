@@ -48,7 +48,7 @@
         var dropdown = layui.dropdown;
         @if($list)
         list = JSON.parse("{{json_encode($list, JSON_UNESCAPED_UNICODE)}}".replace(/&quot;/g, '"'));
-        origin_list = list;
+        origin_list = list || [];
         @endif
 
         // 创建渲染实例

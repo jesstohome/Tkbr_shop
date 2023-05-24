@@ -20,7 +20,7 @@
                     <label class="col-md-3 col-from-label" for="name">归属话术</label>
                     <div class="col-md-9">
                         <select name="huashu_ids[]" id="haushu" class="form-control aiz-selectpicker" multiple required data-live-search="true" data-selected-text-format="count">
-                            @foreach(\App\Models\TicketHuaShu::query()->where('group_id', 0)->get() as $item)
+                            @foreach(filter_by_bloc(\App\Models\TicketHuaShu::query()->where('group_id', 0))->get() as $item)
                                 <option value="{{$item->id}}">{{ $item->abstract }}</option>
                             @endforeach
                         </select>

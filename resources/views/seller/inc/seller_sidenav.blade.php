@@ -17,7 +17,7 @@
                 @endif
                 <h3 class="fs-16  m-0 text-primary">{{ Auth::user()->shop->name }}</h3>
                 <p class="text-primary">{{ Auth::user()->email }}</p>
-                <p class="text-primary" style="margin-bottom: 0;"><a style="padding: 0" href="{{ route('shop.visit', Auth::user()->shop->slug) }}" class="btn btn-link btn-sm" target="_blank">({{ translate('Visit Shop')}})<i class="la la-external-link"></i>)</a></p>
+                <p class="text-primary" style="margin-bottom: 0;"><a style="padding: 0" href="{{ route('shop.visit', Auth::user()->shop->slug) }}" class="btn btn-link btn-sm">({{ translate('Visit Shop')}})<i class="la la-external-link"></i>)</a></p>
             </div>
         </div>
         <div class="aiz-side-nav-wrap">
