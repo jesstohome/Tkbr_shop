@@ -20,7 +20,7 @@ class InvoiceController extends Controller
         else{
             $currency_code = Currency::findOrFail(get_setting('system_default_currency'))->code;
         }
-        $language_code = Session::get('locale', Config::get('app.locale'));
+        $language_code = \Cookie::get('locale', Config::get('app.locale'));
 
         if(Language::where('code', $language_code)->first()->rtl == 1){
             $direction = 'rtl';
@@ -29,7 +29,7 @@ class InvoiceController extends Controller
         }else{
             $direction = 'ltr';
             $text_align = 'left';
-            $not_text_align = 'right';            
+            $not_text_align = 'right';
         }
 
         if($currency_code == 'BDT' || $language_code == 'bd'){
@@ -54,7 +54,7 @@ class InvoiceController extends Controller
             // general for all
             $font_family = "'Roboto','sans-serif'";
         }
-        
+
         // $config = ['instanceConfigurator' => function($mpdf) {
         //     $mpdf->showImageErrors = true;
         // }];

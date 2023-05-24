@@ -86,8 +86,8 @@
 
             {{-- language --}}
             @php
-                if(Session::has('locale')){
-                    $locale = Session::get('locale', Config::get('app.locale'));
+                if(\Cookie::has('locale')){
+                    $locale = \Cookie::get('locale', Config::get('app.locale'));
                 }
                 else{
                     $locale = env('DEFAULT_LANGUAGE');

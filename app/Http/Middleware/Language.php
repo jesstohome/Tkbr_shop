@@ -18,15 +18,15 @@ class Language
      */
     public function handle($request, Closure $next)
     {
-        if(Session::has('locale')){
-            $locale = Session::get('locale');
+        if(\Cookie::has('locale')){
+            $locale = \Cookie::get('locale');
         }
         else{
             $locale = env('DEFAULT_LANGUAGE','en');
         }
 
         App::setLocale($locale);
-        $request->session()->put('locale', $locale);
+        \Cookie::queue('locale', $locale, 86400*30);
 
         return $next($request);
     }

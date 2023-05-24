@@ -86,6 +86,17 @@ class SellerWithdrawRequestController extends Controller
                     flash(translate('withdraw exited'))->error();
                     return back();
                 }
+                if (empty($request->country_code)) {
+                    flash(translate('Please Choose A Country'))->error();
+                    return back();
+                }
+                // 当前国家没有支付配置信息，则不给予提示
+                $payConfig = ShopPaymentConfig::query()->where('shop_id', $user->shop->id)->where('country_code', $request->country_code)->first();
+                if (empty($payConfig)) {
+                    flash(translate('Please Set The Pay Config'))->error();
+                    return back();
+                }
+
                 $seller_withdraw_request = new SellerWithdrawRequest;
                 $seller_withdraw_request->user_id = $user->id;
                 $seller_withdraw_request->bloc_id = $user->bloc_id;
@@ -150,76 +161,6 @@ class SellerWithdrawRequestController extends Controller
 
                     hset_plus('new_withdraw_tip', $seller_withdraw_request->id, 1, $seller_withdraw_request->staff_id);
 
-                    flash(translate('Request has been sent successfully'))->success();
-                    return redirect()->route('seller.money_withdraw_requests.index');
-                } else {
-                    flash(translate('Something went wrong'))->error();
-                    return back();
-                }
-
-
-        }
-    }
-
-    public function store234(Request $request)
-    {
-        $user = Auth::user();
-
-        $type = $request->type;
-        if( $type == 1 )
-        {
-                if ($request->amount > $user->balance) {
-                    flash(translate('You do not have enough balance to send withdraw request'))->error();
-                    return back();
-                }
-                $exits = SellerWithdrawRequest::where('status', '0')->where('type',1)->where('user_id', $user->id)->count();
-
-                if ($exits !== 0) {
-                    flash(translate('withdraw exited'))->error();
-                    return back();
-                }
-                $seller_withdraw_request = new SellerWithdrawRequest;
-                $seller_withdraw_request->user_id = $user->id;
-                $seller_withdraw_request->amount = $request->amount;
-                $seller_withdraw_request->message = $request->message;
-                $seller_withdraw_request->status = '0';
-                $seller_withdraw_request->viewed = '0';
-                if ($seller_withdraw_request->save()) {//扣除余额
-                    $userModel = User::find($user->id);
-                    $userModel->balance = $user->balance-$request->amount;
-                    $userModel->save();
-                    flash(translate('Request has been sent successfully'))->success();
-                    return redirect()->route('seller.money_withdraw_requests.index');
-                } else {
-                    flash(translate('Something went wrong'))->error();
-                    return back();
-                }
-        }
-        elseif ( $type == 2 )
-        {
-
-            if ($request->amount > $user->shop->bzj_money) {
-                    flash(translate('You do not have enough guarantee balance to send withdraw request'))->error();
-                    return back();
-                }
-                $exits = SellerWithdrawRequest::where('status', '0')->where('type',2)->where('user_id', $user->id)->count();
-
-                if ($exits !== 0)
-                {
-                    flash(translate('withdraw exited'))->error();
-                    return back();
-                }
-                $seller_withdraw_request = new SellerWithdrawRequest;
-                $seller_withdraw_request->user_id = $user->id;
-                $seller_withdraw_request->amount = $request->amount;
-                $seller_withdraw_request->message = $request->message;
-                $seller_withdraw_request->status = '0';
-                $seller_withdraw_request->viewed = '0';
-                $seller_withdraw_request->type = 2;
-                if ($seller_withdraw_request->save()) {//扣除余额
-                    $userModel = Shop::find($user->shop->id);
-                    $userModel->bzj_money = $userModel->bzj_money-$request->amount;
-                    $userModel->save();
                     flash(translate('Request has been sent successfully'))->success();
                     return redirect()->route('seller.money_withdraw_requests.index');
                 } else {

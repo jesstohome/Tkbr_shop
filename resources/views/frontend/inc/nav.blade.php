@@ -17,8 +17,8 @@
                     @if(get_setting('show_language_switcher') == 'on')
                     <li class="list-inline-item dropdown mr-3" id="lang-change">
                         @php
-                            if(Session::has('locale')){
-                                $locale = Session::get('locale', Config::get('app.locale'));
+                            if(\Cookie::has('locale')){
+                                $locale = \Cookie::get('locale', Config::get('app.locale'));
                             }
                             else{
                                 $locale = 'en';
@@ -72,8 +72,8 @@
                         <li class="list-inline-item mr-3 border-right border-left-0 pr-3 pl-0">
                             <a href="tel:{{ get_setting('helpline_number') }}" class="text-reset d-inline-block opacity-60 py-2">
                                 <i class="la la-phone"></i>
-                                <span>{{ translate('Help line')}}</span>  
-                                <span>{{ get_setting('helpline_number') }}</span>    
+                                <span>{{ translate('Help line')}}</span>
+                                <span>{{ get_setting('helpline_number') }}</span>
                             </a>
                         </li>
                     @endif
@@ -296,7 +296,7 @@
 
 @section('script')
     <script type="text/javascript">
-        
+
         function show_order_details(order_id)
         {
             $('#order-details-modal-body').html(null);

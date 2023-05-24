@@ -31,6 +31,7 @@
                 var count = response.count || 0;
                 console.log('只播放有新消息的声音', count);
                 if (count > 0) {
+                    $(".chat-num-tip").html(count).show();
                     audioPlay && audioPlay(true);
                 }
             }

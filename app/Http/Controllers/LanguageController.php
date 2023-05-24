@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AppTranslation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Session;
 use App\Models\Language;
 use App\Models\Translation;
@@ -14,7 +15,7 @@ class LanguageController extends Controller
 {
     public function changeLanguage(Request $request)
     {
-    	$request->session()->put('locale', $request->locale);
+        \Cookie::queue('locale', $request->locale, 86400*30);
         $language = Language::where('code', $request->locale)->first();
     	flash(translate('Language changed to ').$language->name)->success();
     }
@@ -156,8 +157,8 @@ class LanguageController extends Controller
             flash(translate('English language can not be deleted'))->error();
         }
         else {
-            if($language->code == Session::get('locale')){
-                Session::put('locale', env('DEFAULT_LANGUAGE'));
+            if($language->code == \Cookie::get('locale')){
+                \Cookie::queue('locale', env('DEFAULT_LANGUAGE'), 86400 * 30);
             }
             Language::destroy($id);
             flash(translate('Language has been deleted successfully'))->success();

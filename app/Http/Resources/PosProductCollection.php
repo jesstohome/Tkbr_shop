@@ -12,7 +12,7 @@ class PosProductCollection extends ResourceCollection
     {
         return [
             'data' => $this->collection->map(function ($data) {
-                $lang = session('locale');
+                $lang = \Cookie::get('locale');
                 $name = $data->name;
                 if ($lang != 'en') {
                     $name = ProductTranslation::query()->where('product_id', $data->id)->where('lang', $lang)->pluck('name');
