@@ -82,6 +82,9 @@
         background-color: white;
         height: 75px;
     }
+    .card-header > div {
+        margin: auto;
+    }
     .card .card-body {
         /*padding: 0 !important;*/
     }
@@ -138,24 +141,27 @@
                                     <div class="comment-header">
                                         <span class="text-bold h6 text-muted title">
                                             @php echo $ticketreply->reply; @endphp
+                                            @if($ticketreply->files)
+                                            <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
+                                                @foreach ((explode(",",$ticketreply->files)) as $key => $file)
+                                                    @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
+                                                    @if($file_detail != null)
+                                                        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                            @endif
                                             <p class="text-muted text-sm fs-11 time">{{date('m-d H:i', strtotime($ticketreply->created_at))}}</p>
                                         </span>
                                     </div>
                                 </div>
                             </div>
                             @endif
-                            <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
-                                @foreach ((explode(",",$ticketreply->files)) as $key => $file)
-                                    @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
-                                    @if($file_detail != null)
-                                        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
-                                    @endif
-                                @endforeach
-                            </div>
+
                         </li>
                     @endforeach
                 </ul>
-                <form id="ticket-reply-form" action="{{route('seller.support_ticket.reply_store')}}" method="POST" enctype="multipart/form-data" onsubmit="submitForm()">
+                <form id="ticket-reply-form" action="{{route('seller.support_ticket.reply_store')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="ticket_id" value="{{$ticket->id}}" required>
                     <input type="hidden" name="user_id" value="{{$ticket->user_id}}">
@@ -185,7 +191,6 @@
                         <div class="col-2">
                             <svg t="1684411791031" onclick="submit_reply('pending')" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18723" width="20" height="20"><path d="M512 512m-448 0a448 448 0 1 0 896 0 448 448 0 1 0-896 0Z" fill="#608BE9" p-id="18724"></path><path d="M192 302m32 0l576 0q32 0 32 32l0 356q0 32-32 32l-576 0q-32 0-32-32l0-356q0-32 32-32Z" fill="#EAEDF5" p-id="18725"></path><path d="M224 722h576c17.673 0 32-14.327 32-32v-58C660.96 493.333 554.294 424 512 424c-42.294 0-148.96 69.333-320 208v58c0 17.673 14.327 32 32 32z" fill="#CCDAF7" p-id="18726"></path><path d="M224 302h576c17.673 0 32 14.327 32 32v58C651.35 517.333 544.683 580 512 580c-32.683 0-139.35-62.667-320-188v-58c0-17.673 14.327-32 32-32z" fill="#FFFFFF" p-id="18727"></path></svg>
                         </div>
-                        <button type="submit">登录</button>
                         <!-- <textarea class="aiz-text-editor" name="reply" data-buttons='[]' required></textarea> -->
 
                     </div>
@@ -203,9 +208,5 @@
             $(".card.chat").height(document.body.clientHeight - 75);
             $(".aiz-main-content").height(document.body.clientHeight - 75);
         });
-
-        function submitForm() {
-            $("#ticket-reply-form").submit();
-        }
     </script>
 @endsection
