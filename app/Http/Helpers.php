@@ -1390,10 +1390,10 @@ if (!function_exists('scheduled_update_delivery_status')) {
         $now = time();
         $status = [
             'in_stock',
-            'sent_to_the_distributive_center',
-            'distributed_sorting1',
-            'to_the_distribution_center',
-            'distributed_sorting2',
+            'sent_to_the_distribution_center',
+            'distribution_sorting',
+            'sent_to_the_delivery_center',
+            'delivery_sorting',
             'delivery_in_progress',
             'received',
         ];
