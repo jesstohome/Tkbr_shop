@@ -9,7 +9,7 @@
 </style>
 <div class="modal-header">
     <button type="button" class="btn btn-light" onclick="filter_by_group(0)">全部</button>
-    @foreach(\App\Models\TicketHuaShuGroup::all() as $group)
+    @foreach(filter_by_bloc(\App\Models\TicketHuaShuGroup::all()) as $group)
     <button type="button" class="btn btn-light" onclick="filter_by_group({{$group->id}})">{{$group->name}}</button>
     @endforeach
 </div>
@@ -27,14 +27,7 @@
     <a class="layui-btn layui-btn-xs" lay-event="send">发送</a>
     <a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
 </script>
-<script type="text/html" id="TPL-select-group">
-    <select name="group_id" class="layui-border select-demo-primary" lay-ignore>
-        <option value="">指定分组</option>
-        @foreach(\App\Models\TicketHuaShuGroup::all() as $group)
-        <option value="{{$group->id}}">{{$group->name}}{{$d}}</option>
-        @endforeach
-    </select>
-</script>
+
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="add">{{translate('Add')}}</button>
@@ -49,6 +42,7 @@
         @if($list)
         list = JSON.parse("{{json_encode($list, JSON_UNESCAPED_UNICODE)}}".replace(/&quot;/g, '"'));
         origin_list = list || [];
+        console.log(list, origin_list);
         @endif
 
         // 创建渲染实例

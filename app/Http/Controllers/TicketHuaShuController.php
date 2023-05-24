@@ -14,7 +14,7 @@ class TicketHuaShuController extends Controller
      */
     public function index()
     {
-        $list = filter_by_bloc(TicketHuaShu::all());
+        $list = filter_by_bloc(TicketHuaShu::query())->get();
         return view('backend.support.support_tickets.fast_reply_modal', compact('list'));
     }
 
