@@ -211,7 +211,7 @@
         function submitReply() {
             console.log(event);
             window.document.title = event.keyCode;
-            $("#ticket-reply-form").submit();
+            submit_reply('pending');
         }
     </script>
 @endsection
