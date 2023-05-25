@@ -90,6 +90,7 @@
 
 </head>
 <body class="">
+    <audio id='tip-audio'><source src="/public/new2.mp3" type="audio/mpeg"></audio>
 	<div class="aiz-main-wrapper">
         @include('seller.inc.seller_sidenav')
 		<div class="aiz-content-wrapper">

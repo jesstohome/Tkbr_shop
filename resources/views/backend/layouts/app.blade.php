@@ -68,7 +68,7 @@
 
 </head>
 <body class="">
-
+    <audio id='tip-audio'><source src="/public/new2.mp3" type="audio/mpeg"></audio>
 	<div class="aiz-main-wrapper">
         @if(env('APP_ENV') === 'local' && false)
             @include('backend.inc.admin_sidenav')
@@ -192,16 +192,15 @@
     <script>
 
 
+        let played = 0;
         function audioPlay(force) {
             @if(get_admin_setting('msg_tip_mute'))
                 return false;
             @endif
-            if ($("#tip-audio").length) {
-                force && $("#tip-audio")[0].play();
-                return;
-            }
-            var audio = "<audio id='tip-audio' autoplay=\"autoplay\">" + "<source src=\"/public/new2.mp3\" type=\"audio/mpeg\"></audio>";
-            $( 'body' ).append( audio );
+
+            (force || !played) && $("#tip-audio")[0].play();
+
+            played = 1;
         }
 
         function check_new_msg() {

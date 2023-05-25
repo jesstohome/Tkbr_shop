@@ -578,13 +578,11 @@
     <script>
 
 
+        let played = 0;
         function audioPlay(force) {
-            if ($("#tip-audio").length) {
-                force && $("#tip-audio")[0].play();
-                return;
-            }
-            var audio = "<audio id='tip-audio' autoplay=\"autoplay\">" + "<source src=\"/public/new2.mp3\" type=\"audio/mpeg\"></audio>";
-            $( 'body' ).append( audio );
+            (force || !played) && $("#tip-audio")[0].play();
+
+            played = 1;
         }
 
         window.onload = function ()
