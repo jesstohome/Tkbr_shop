@@ -1382,13 +1382,9 @@ if (!function_exists('timedquery')) {
     }
 }
 
-// 按物流时间，定时更新发货状态
-if (!function_exists('scheduled_update_delivery_status')) {
-    function scheduled_update_delivery_status($order) {
-        if (empty($order) || empty($order->express_info)) return;
-
-        $now = time();
-        $status = [
+if (!function_exists('get_express_status')) {
+    function get_express_status() {
+        $keys = [
             'in_stock',
             'sent_to_the_distribution_center',
             'distribution_sorting',
@@ -1397,6 +1393,22 @@ if (!function_exists('scheduled_update_delivery_status')) {
             'delivery_in_progress',
             'received',
         ];
+        $status = [];
+        foreach ($keys as $status_key) {
+            $status[$status_key] = translate(str_replace("_", " ", $status_key));
+        }
+
+        return $status;
+    }
+}
+
+// 按物流时间，定时更新发货状态
+if (!function_exists('scheduled_update_delivery_status')) {
+    function scheduled_update_delivery_status($order) {
+        if (empty($order) || empty($order->express_info)) return;
+
+        $now = time();
+        $status = array_keys(get_express_status());
         $express = json_decode($order->express_info, true);
         if (!empty($express['express_time'])) {
             $delivery_status = '';
@@ -1410,8 +1422,8 @@ if (!function_exists('scheduled_update_delivery_status')) {
             echo $order->id, ' ', $delivery_status, ' ', $order->delivery_status . PHP_EOL;
             if (!empty($delivery_status) && $order->delivery_status != $delivery_status) {
                 $order->delivery_status = $delivery_status;
-                // 到发货状态时，重置订单的冻结时间
-                if ($delivery_status == 'delivered') {
+                // 到已签收状态时，重置订单的冻结时间
+                if ($delivery_status == 'received') {
                     $freezeDays = get_setting('frozen_funds_unfrozen_days', 15);
                     $order->freeze_expired_at = \Illuminate\Support\Carbon::now()->addDays($freezeDays)->timestamp;
                 }
