@@ -1744,7 +1744,7 @@ if (!function_exists('load_new_reply')) {
 
         $ticket_id = $request->ticket_id;
         if ($check) {
-            $ticket = Ticket::query()->where('user_id', $user_id)->latest('id')->first();
+            $ticket = Ticket::query()->where('user_id', $user_id)->where("type", 'service')->latest('id')->first();
             $ticket_id = $ticket->id;
         }
         $list = TicketReply::query()
