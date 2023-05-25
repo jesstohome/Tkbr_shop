@@ -127,6 +127,8 @@
                </div>
                 <div class="mt-2">
                     <span> {{ translate('Order No') }}: {{$ticket->order->code}} </span>
+                    <span> {{ translate('Order Amount') }}: {{single_price($ticket->order->grand_total)}} </span>
+                    <span> {{ translate('Pickup amount') }}: {{single_price($ticket->order->product_storehouse_total)}} </span>
                 </div>
             </div>
         </div>

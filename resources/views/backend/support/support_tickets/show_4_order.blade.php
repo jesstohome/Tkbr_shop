@@ -92,18 +92,26 @@
         <div class="card-body">
             <div class="pad-top">
                 <div class="top-info" style="margin-bottom: 15px">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p>产品： <a href="{{route('product', $ticket->order->details[0]->product->slug)}}" target="_blank">{{$ticket->order->details[0]->product->name}}</a> </p>
+                        </div>
+                    </div>
                     <div class="order-info row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <p>订单号: {{$ticket->order->code}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>买家付款金额: {{single_price($ticket->order->grand_total)}}</p>
                         </div>
                         <div class="col-md-3">
                             <p>提货金额: {{single_price($ticket->order->product_storehouse_total)}}</p>
                         </div>
                         <div class="col-md-2">
-                            <p>提货状态: {{$ticket->order->product_storehouse_status ? '已提货' : '未提货'}}</p>
+                            <p>利润: {{single_price($ticket->order->grand_total - $ticket->order->product_storehouse_total)}}</p>
                         </div>
-                        <div class="col-md-4">
-                            <p>产品： <a href="{{route('product', $ticket->order->details[0]->product->slug)}}" target="_blank">{{$ticket->order->details[0]->product->name}}</a> </p>
+                        <div class="col-md-2">
+                            <p>提货状态: {{$ticket->order->product_storehouse_status ? '已提货' : '未提货'}}</p>
                         </div>
                     </div>
                     <div class="order-opt row">
