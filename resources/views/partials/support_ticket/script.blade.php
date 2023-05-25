@@ -75,8 +75,6 @@
                     render_reply(response.list || [])
                 }
             } );
-        } else {
-            AIZ.plugins.notify('danger', '{{translate('Please fill in the content first')}}');
         }
     }
 
