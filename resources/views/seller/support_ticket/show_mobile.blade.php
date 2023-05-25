@@ -209,9 +209,9 @@
         });
 
         function submitReply() {
-            console.log(event);
-            window.document.title = event.keyCode;
-            submit_reply('pending');
+            if (event.keyCode == 13) {
+                submit_reply('pending');
+            }
         }
     </script>
 @endsection
