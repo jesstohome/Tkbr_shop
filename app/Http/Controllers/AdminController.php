@@ -76,6 +76,16 @@ class AdminController extends Controller
             hlen_plus("new_withdraw_tip") > 0 ||
             hlen_plus("new_offline_recharge_tip") > 0
         );
-        echo json_encode( ['code'=> $hasNew , 'msg'=> 'Yes'] );exit;
+        echo json_encode( [
+            'code'=> $hasNew ,
+            'msg'=> 'Yes',
+            'new_shop_created_tip' => hlen_plus("new_shop_created_tip") > 0,
+            'new_review_tip' => hlen_plus("new_review_tip") > 0,
+            'new_order_tip' => hlen_plus("new_order_tip") > 0,
+            'orders_pick_up_tip' => hlen_plus("orders_pick_up_tip") > 0,
+            'new_withdraw_tip' => hlen_plus("new_withdraw_tip") > 0,
+            'new_offline_recharge_tip' => hlen_plus("new_offline_recharge_tip") > 0,
+        ] );
+        exit;
     }
 }

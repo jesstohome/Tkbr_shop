@@ -9,7 +9,7 @@
 </style>
 <div class="modal-header">
     <button type="button" class="btn btn-light" onclick="filter_by_group(0)">全部</button>
-    @foreach(filter_by_bloc(\App\Models\TicketHuaShuGroup::all()) as $group)
+    @foreach(filter_by_bloc(\App\Models\TicketHuaShuGroup::query())->get() as $group)
     <button type="button" class="btn btn-light" onclick="filter_by_group({{$group->id}})">{{$group->name}}</button>
     @endforeach
 </div>

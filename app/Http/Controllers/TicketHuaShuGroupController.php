@@ -15,7 +15,7 @@ class TicketHuaShuGroupController extends Controller
      */
     public function index()
     {
-        $groups = filter_by_bloc(TicketHuaShuGroup::all());
+        $groups = filter_by_bloc(TicketHuaShuGroup::query())->get();
         return view('backend.support.ticket_huashu_group.index', compact('groups'));
     }
 
