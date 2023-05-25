@@ -55,7 +55,7 @@
 
     function submit_reply(status) {
         $('input[name=status]').val(status);
-        if($('input[name=reply]').val().length > 0 || $(".file-preview").html() != '') {
+        if($('input[name=reply]').val().length > 0 || $(".file-preview").html().trim() != '') {
             var data = new FormData( $( '#ticket-reply-form' )[0] );
             $.ajax( {
                 url: "{{Auth::user()->user_type != 'seller' ? route('support_ticket.admin_store') : route('seller.support_ticket.reply_store')}}",
@@ -135,19 +135,18 @@
                     images += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">`
                 })
                 $("ul.ticket").append(`<li class="list-group-item px-0 ${item.user_id == user_id ? 'mine' : ''}">
-                            ${item.reply ? `<div class="media">
+                            ${item.reply || images ? `<div class="media">
                                 <div class="media-body">
                                     <div class="comment-header">
                                         <span class="text-bold h6 text-muted title">
                                             ${item.reply}
+                                            <div class="images ${item.user_id == user_id ? 'mine' : ''}">${images}</div>
                                             <p class="text-muted text-sm fs-11 time">${item.created_time}</p>
                                         </span>
 
                                     </div>
                                 </div>
                             </div>` : ''}
-
-                            <div class="images ${item.user_id == user_id ? 'mine' : ''}">${images}</div>
                         </li>
                         `);
                 $("ul.ticket").scrollTop(999990);
