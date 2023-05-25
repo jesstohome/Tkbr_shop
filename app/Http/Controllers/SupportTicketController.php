@@ -270,8 +270,7 @@ class SupportTicketController extends Controller
         $ticket_replies = $ticket->ticketreplies;
         TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
 
-        $in_chat_page = true;
-        return view('backend.support.support_tickets.show', compact('ticket'));
+        $view = 'backend.support.support_tickets.show';
         if ($ticket->order_id) {
             $view = 'backend.support.support_tickets.show_4_order';
         }
