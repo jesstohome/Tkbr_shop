@@ -200,6 +200,13 @@ class HomeController extends Controller
     public function login()
     {
         if (Auth::check()) {
+            if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff') {
+                \CoreComponentRepository::instantiateShopRepository();
+                return redirect()->route('admin.dashboard');
+            } elseif (auth()->user()->user_type == 'seller') {
+                return redirect()->route('seller.dashboard');
+            }
+
             return redirect()->route('home');
         }
         return view('frontend.user_login');
