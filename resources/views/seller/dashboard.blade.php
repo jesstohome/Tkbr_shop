@@ -277,7 +277,7 @@
                                 <span class="fs-13 text-primary fw-600">{{ translate('New Order') }}</span>
                             </p>
                             <h3 class="mb-0 text-info">
-                                {{ \App\Models\OrderDetail::where('seller_id', Auth::user()->id)->where('delivery_status', 'pending')->count() }}
+                                {{ \App\Models\Order::where('seller_id', Auth::user()->id)->where('delivery_status', 'pending')->count() }}
                             </h3>
                         </div>
                     </div>
@@ -316,7 +316,7 @@
                                 <span class="fs-13 text-primary fw-600">{{ translate('Cancelled') }}</span>
                             </p>
                             <h3 class="mb-0 text-info">
-                                {{ \App\Models\OrderDetail::where('seller_id', Auth::user()->id)->where('delivery_status', 'cancelled')->count() }}
+                                {{ \App\Models\Order::where('seller_id', Auth::user()->id)->where('delivery_status', 'cancelled')->count() }}
                             </h3>
                         </div>
                     </div>
@@ -358,7 +358,7 @@
                                 <span class="fs-13 text-primary fw-600">{{ translate('On Delivery') }}</span>
                             </p>
                             <h3 class="mb-0 text-info">
-                                {{ \App\Models\OrderDetail::where('seller_id', Auth::user()->id)->where('delivery_status', 'on_the_way')->count() }}
+                                {{ \App\Models\Order::where('seller_id', Auth::user()->id)->where('delivery_status', 'on_the_way')->count() }}
                             </h3>
                         </div>
                     </div>
@@ -388,7 +388,7 @@
                                 <span class="fs-13 text-primary fw-600">{{ translate('Delivered') }}</span>
                             </p>
                             <h3 class="mb-0 text-info">
-                                {{ \App\Models\OrderDetail::where('seller_id', Auth::user()->id)->where('delivery_status', 'delivered')->count() }}
+                                {{ \App\Models\Order::where('seller_id', Auth::user()->id)->where('delivery_status', 'delivered')->count() }}
                             </h3>
                         </div>
                     </div>
