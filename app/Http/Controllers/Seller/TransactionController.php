@@ -5,6 +5,7 @@ use App\Http\Requests\SellerProfileRequest;
 use App\Models\User;
 use Auth;
 use Hash;
+use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
@@ -13,11 +14,12 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $http_referer = $_SERVER['HTTP_REFERER'];
+        $order_id = $request->get('order_id');
         $user = Auth::user();
-        return view('seller.transaction.index',compact('user', 'http_referer'));
+        return view('seller.transaction.index',compact('user', 'http_referer', 'order_id'));
     }
 
     public function find()
@@ -62,6 +64,9 @@ class TransactionController extends Controller
             if (!empty($_POST['http_referer'])) {
                 return redirect($_POST['http_referer']);
             }
+            if (!empty($_POST['order_id'])) {
+                return redirect(route('seller.orders.show', encrypt($_POST['order_id'])));
+            }
             return back();
         } else {
             if (!$_POST["spwd"]) {
@@ -99,6 +104,9 @@ class TransactionController extends Controller
             flash(translate('Your password has been updated successfully!'))->success();
             if (!empty($_POST['http_referer'])) {
                 return redirect($_POST['http_referer']);
+            }
+            if (!empty($_POST['order_id'])) {
+                return redirect(route('seller.orders.show', encrypt($_POST['order_id'])));
             }
             return back();
         }

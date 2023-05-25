@@ -466,7 +466,7 @@
 
              var tpwd = '{{ $tpwd }}'
              if (!tpwd) {
-                 location.href="/seller/transaction"
+                 location.href="/seller/transaction?order_id=" + "{{$order->id}}";
                  return
              } else {
                  $('#payments-modal').modal('show');

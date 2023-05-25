@@ -14,6 +14,7 @@
     <form action="{{ route('seller.transaction.update') }}" method="POST" enctype="multipart/form-data">
         <input name="_method" type="hidden" value="POST">
         <input name="http_referer" type="hidden" value="{{$http_referer}}">
+        <input name="order_id" type="hidden" value="{{$order_id}}">
         @csrf
 
         @if ($user->tpwd != "")
