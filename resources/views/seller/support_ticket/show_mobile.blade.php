@@ -160,7 +160,7 @@
                         </li>
                     @endforeach
                 </ul>
-                <form id="ticket-reply-form" action="{{route('seller.support_ticket.reply_store')}}" method="POST" enctype="multipart/form-data">
+                <form id="ticket-reply-form" action="{{route('seller.support_ticket.reply_store')}}" method="POST" enctype="multipart/form-data" style="">
                     @csrf
                     <input type="hidden" name="ticket_id" value="{{$ticket->id}}" required>
                     <input type="hidden" name="user_id" value="{{$ticket->user_id}}">
