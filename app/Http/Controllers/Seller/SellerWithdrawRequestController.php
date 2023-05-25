@@ -94,7 +94,7 @@ class SellerWithdrawRequestController extends Controller
                 $payConfig = ShopPaymentConfig::query()->where('shop_id', $user->shop->id)->where('country_code', $request->country_code)->first();
                 if (empty($payConfig)) {
                     flash(translate('Please Set The Pay Config'))->error();
-                    return back();
+                    return redirect(route('seller.profile.index'));
                 }
 
                 $seller_withdraw_request = new SellerWithdrawRequest;
