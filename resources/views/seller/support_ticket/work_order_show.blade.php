@@ -122,10 +122,10 @@
         <div class="card-header row gutters-5">
             <div class="text-center text-md-left">
                 <h5 class="mb-md-0 h5" style="height: 25px;overflow: hidden;">{{$ticket->order->details[0]->product->name}}</h5>
-               <div class="mt-2">
+               <div class="">
                    <span> {{ translate('Factory') }} </span>
                </div>
-                <div class="mt-2">
+                <div class="">
                     <span> {{ translate('Order No') }}: {{$ticket->order->code}} </span>
                     <span> {{ translate('Order Amount') }}: {{single_price($ticket->order->grand_total)}} </span>
                     <span> {{ translate('Pickup amount') }}: {{single_price($ticket->order->product_storehouse_total)}} </span>
