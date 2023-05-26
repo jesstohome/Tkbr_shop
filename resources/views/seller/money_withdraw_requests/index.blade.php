@@ -462,7 +462,7 @@
                                     <label>{{ translate('Country')}}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <select id="country_code" name="country_code" class="form-control" required onchange="changeCountry(this)">
+                                    <select id="country_code" name="country_code" class="form-control" required data-bv-notempty-message="{{translate('The Country is required')}}" onchange="changeCountry(this)">
                                         <option value="">{{translate('All')}}</option>
                                         @foreach(getPaymentCountries() as $country)
                                         <option value="{{$country->code}}" {{$shop->cur_payment_country_code == $country->code ? 'selected' : ''}}>{{translate($country->name)}}</option>
@@ -541,13 +541,19 @@
         }
 
         function changeCountry(evt) {
+            let country_code = $("#country_code").val().trim();
+            if (country_code === '') return;
+
             $.post('{{ route('seller.withdraw_request.change_country') }}', {
                 _token: '{{ @csrf_token() }}',
-                code: $("#country_code").val(),
+                code: country_code,
                 type: $("#p").val()
             }, function (data) {
-                if (data === '') {
-                    window.location.href = "/seller/profile";
+                if (data.trim() === '') {
+                    AIZ.plugins.notify('danger', '{{ translate('Please bind the withdrawal information first!') }}');
+                    setTimeout(function () {
+                        window.location.href = "/seller/profile";
+                    }, 1000);
                     return;
                 }
                 $("textarea[name=message]").val(data)
