@@ -92,7 +92,9 @@
                         },
                         type: 'POST',
                         success: function (response)
-                        {}
+                        {
+                            location.reload()
+                        }
                     } );
                 });
             }
@@ -115,6 +117,7 @@
                         data: data,
                         success: function (response)
                         {
+                            origin_list.push(response.data || data);
                             list.push(response.data || data);
                             table.reload('test');
                         }

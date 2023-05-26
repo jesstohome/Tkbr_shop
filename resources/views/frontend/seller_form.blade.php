@@ -35,19 +35,19 @@
                             <div class="p-3">
                                 <div class="form-group">
                                     <label>{{ translate('Your Name')}} <span class="text-primary">*</span></label>
-                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" placeholder="{{  translate('Name') }}" name="name" data-bv-notempty-message="The username is required and cannot be empty" required>
+                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" placeholder="{{  translate('Name') }}" name="name" data-bv-notempty-message="{{translate('The username is required and cannot be empty')}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Your Email')}} <span class="text-primary">*</span></label>
-                                    <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email" required>
+                                    <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email" data-bv-notempty-message="{{translate('The email is required and cannot be empty')}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Your Password')}} <span class="text-primary">*</span></label>
-                                    <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password" required>
+                                    <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password" data-bv-notempty-message="{{translate('The password is required and cannot be empty')}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Repeat Password')}} <span class="text-primary">*</span></label>
-                                    <input type="password" class="form-control" placeholder="{{  translate('Confirm Password') }}" name="password_confirmation" required>
+                                    <input type="password" class="form-control" placeholder="{{  translate('Confirm Password') }}" name="password_confirmation" data-bv-notempty-message="{{translate('The confirm password is required and cannot be empty')}}" required>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                         <div class="p-3">
                             <div class="form-group">
                                 <label>{{ translate('Shop Name')}} <span class="text-primary">*</span></label>
-                                <input type="text" class="form-control" placeholder="{{ translate('Shop Name')}}" name="name" required>
+                                <input type="text" class="form-control" placeholder="{{ translate('Shop Name')}}" name="name" data-bv-notempty-message="{{translate('The shop name is required and cannot be empty')}}" required>
                             </div>
 
                             @if(empty($invitation_code))
@@ -134,16 +134,16 @@
 <script type="text/javascript">
     // making the CAPTCHA  a required field for form submission
     $(document).ready(function(){
-        // $("#shop").bootstrapValidator();
+        $("#shop").bootstrapValidator();
         $("#shop").on("submit", function(evt)
         {
-            /*var bootstrapValidator = $("#shop").data('bootstrapValidator');
+            var bootstrapValidator = $("#shop").data('bootstrapValidator');
             //手动触发验证
             bootstrapValidator.validate();
-            alert(bootstrapValidator.isValid())
-            if(bootstrapValidator.isValid()){
-                //表单提交的方法、比如ajax提交
-            }*/
+            if(!bootstrapValidator.isValid()){
+                console.log(bootstrapValidator, bootstrapValidator.getMessages());
+                return;
+            }
 
             try {
                 var response = grecaptcha.getResponse();

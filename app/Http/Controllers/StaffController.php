@@ -44,7 +44,7 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        $bloc_id = $request->bloc_id ?? \Auth::user()->bloc_id;
+        $bloc_id = $request->bloc_id ?: \Auth::user()->bloc_id;
         if(User::where('email', $request->email)->first() == null){
             $user = new User;
             $user->name = $request->name;
@@ -104,18 +104,23 @@ class StaffController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $isAdmin = $user_type = \Auth::user()->user_type == 'admin';
         $staff = Staff::findOrFail($id);
         $user = $staff->user;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->mobile;
-        $user->bloc_id = $request->bloc_id;
+        if ($isAdmin) {
+            $user->bloc_id = $request->bloc_id;
+        }
         if(strlen($request->password) > 0){
             $user->password = Hash::make($request->password);
         }
         if($user->save()){
             $staff->role_id = $request->role_id;
-            $staff->bloc_id = $request->bloc_id;
+            if ($isAdmin) {
+                $staff->bloc_id = $request->bloc_id;
+            }
             $staff->invite_code = $request->invite_code;
             if($staff->save()){
                 flash(translate('Staff has been updated successfully'))->success();

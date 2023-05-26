@@ -13,6 +13,8 @@ use App\Models\Address;
 use App\Models\CustomerPackage;
 use App\Models\Staff;
 use App\Models\Ticket;
+use App\Models\TicketHuaShu;
+use App\Models\TicketHuaShuGroup;
 use App\Models\TicketReply;
 use App\Models\Upload;
 use App\Models\Translation;
@@ -1493,11 +1495,14 @@ if (!function_exists('filter_by_bloc')) {
             // 按集团过滤
             $model = $model->where("bloc_id", \Auth::user()->bloc_id);
 
-            // 按员工过滤
-            $staff = Staff::query()->where("user_id", \Auth::user()->id)->first();
-            if (!empty($staff) && $staff->role && !$staff->role->is_manage && !($model->getModel() instanceof Staff)) {
-                $model = $model->where("staff_id", $staff->id);
+            if (!($model->getModel() instanceof TicketHuaShuGroup || $model->getModel() instanceof TicketHuaShu)) {
+                // 按员工过滤
+                $staff = Staff::query()->where("user_id", \Auth::user()->id)->first();
+                if (!empty($staff) && $staff->role && !$staff->role->is_manage && !($model->getModel() instanceof Staff)) {
+                    $model = $model->where("staff_id", $staff->id);
+                }
             }
+
         }
 
         return $model;
