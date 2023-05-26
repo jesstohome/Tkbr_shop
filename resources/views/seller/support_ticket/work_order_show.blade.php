@@ -121,7 +121,7 @@
     <div class="card chat">
         <div class="card-header row gutters-5">
             <div class="text-center text-md-left">
-                <h5 class="mb-md-0 h5">{{$ticket->order->details[0]->product->name}}</h5>
+                <h5 class="mb-md-0 h5" style="height: 25px;overflow: hidden;">{{$ticket->order->details[0]->product->name}}</h5>
                <div class="mt-2">
                    <span> {{ translate('Factory') }} </span>
                </div>
