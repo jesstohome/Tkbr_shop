@@ -168,6 +168,7 @@
 
                 @php
                     $support_ticket = DB::table('tickets')
+                        ->where('type', 'service')
                         ->where('client_viewed', 0)
                         ->where('user_id', Auth::user()->id)
                         ->count();
