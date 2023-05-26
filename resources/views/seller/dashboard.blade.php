@@ -358,7 +358,12 @@
                                 <span class="fs-13 text-primary fw-600">{{ translate('On Delivery') }}</span>
                             </p>
                             <h3 class="mb-0 text-info">
-                                {{ \App\Models\Order::where('seller_id', Auth::user()->id)->where('delivery_status', 'on_the_way')->count() }}
+                                {{ \App\Models\Order::where('seller_id', Auth::user()->id)->whereIn('delivery_status', ['prepare_goods',
+            'sent_to_the_distribution_center',
+            'distribution_sorting',
+            'sent_to_the_delivery_center',
+            'delivery_sorting',
+            'delivery_in_progress'])->count() }}
                             </h3>
                         </div>
                     </div>
