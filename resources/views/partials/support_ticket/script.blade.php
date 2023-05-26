@@ -107,12 +107,14 @@
         });
     }
 
+    var last_reply_id = "{{$last_reply_id ?: 0}}";
     function loop_load_new_reply() {
         $.ajax( {
             url: "{{route(Auth::user()->user_type != 'seller' ? 'support_ticket.load_new_reply' : 'seller.support_ticket.load_new_reply')}}",
             type: 'GET',
             data: {
                 ticket_id: "{{$ticket->id}}",
+                last_reply_id: last_reply_id
             },
             success: function (response)
             {
@@ -130,6 +132,7 @@
 
         if (list.length) {
             list.forEach((item) => {
+                last_reply_id = item.id;
                 var images = '';
                 (item.file_list || []).forEach((img) => {
                     images += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">`

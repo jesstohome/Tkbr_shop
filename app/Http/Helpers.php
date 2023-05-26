@@ -1765,8 +1765,13 @@ if (!function_exists('load_new_reply')) {
             $ticket_id = $ticket->id;
         }
         $list = TicketReply::query()
-            ->where('user_id', '!=', $user_id)
-            ->where('read', 0);
+            ->where('user_id', '!=', $user_id);
+
+        if ($request->last_reply_id) {
+            $list = $list->where('id', '>', $request->last_reply_id);
+        } else {
+            $list = $list->where('read', 0);
+        }
 
         // 只检测有多少未读
         if ($check) {

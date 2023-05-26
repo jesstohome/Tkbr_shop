@@ -101,7 +101,12 @@ class SupportTicketController extends Controller
             $view = 'seller.support_ticket.show_mobile';
         }
 
-        return view($view, compact('ticket','ticket_replies', 'fullscreen', 'in_chat_page'));
+        $last_reply_id = 0;
+        if (!empty($ticket_replies)) {
+            $last_reply_id = max($ticket_replies->pluck('id')->toArray());
+        }
+
+        return view($view, compact('ticket','ticket_replies', 'fullscreen', 'in_chat_page', 'last_reply_id'));
     }
 
     public function ticket_reply_store(Request $request)
