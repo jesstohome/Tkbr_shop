@@ -417,7 +417,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
                 @if ($balance >= (int) get_setting('minimum_seller_amount_withdraw'))
-                    <form class="" action="{{ route('seller.money_withdraw_request.store') }}" method="post">
+                    <form id="withdraw-form" class="" action="{{ route('seller.money_withdraw_request.store') }}" method="post">
                         @csrf
                         <div class="modal-body gry-bg px-3 pt-3">
                             <div class="row">
@@ -439,9 +439,7 @@
                                     <label>{{ translate('Amount')}} <span class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="number" lang="en" class="form-control mb-3" name="amount"
-
-                                           placeholder="{{ translate('Amount') }}" required>
+                                    <input type="number" lang="en" class="form-control mb-3" name="amount" placeholder="{{ translate('Amount') }}">
                                 </div>
                             </div>
                              <div class="row" style="margin-bottom:5px;">
@@ -462,7 +460,7 @@
                                     <label>{{ translate('Country')}}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <select id="country_code" name="country_code" class="form-control" required data-bv-notempty-message="{{translate('The Country is required')}}" onchange="changeCountry(this)">
+                                    <select id="country_code" name="country_code" class="form-control" onchange="changeCountry(this)">
                                         <option value="">{{translate('All')}}</option>
                                         @foreach(getPaymentCountries() as $country)
                                         <option value="{{$country->code}}" {{$shop->cur_payment_country_code == $country->code ? 'selected' : ''}}>{{translate($country->name)}}</option>
@@ -567,7 +565,7 @@
         $(document).ready(function(){
             // 自动打开充值弹窗
             @if(!empty($auto_show_recharge))
-            show_make_wallet_recharge_modal(1)
+            show_make_wallet_recharge_modal(1);
             @endif
         })
     </script>
