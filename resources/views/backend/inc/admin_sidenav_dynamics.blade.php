@@ -44,7 +44,7 @@
                     $conversation_count = filter_by_bloc($conversation_count);
                     $conversation_count = $conversation_count->count();
 
-                    $support_ticket = \App\Models\Ticket::where('viewed', 0)->select('id');
+                    $support_ticket = \App\Models\Ticket::where('viewed', 0)->where("type", "service")->select('id');
                     $support_ticket = filter_by_bloc($support_ticket);
                     $support_ticket = $support_ticket->count();
                 @endphp
