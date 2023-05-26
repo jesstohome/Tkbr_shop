@@ -185,9 +185,9 @@
                 success: function (data, textStatus, jqXHR) {}
             });
 
-            setTimeout(rand_add_views, parseInt({{$min}} + Math.random() * {{$max - $min}}) * 1e3)
+            setTimeout(rand_add_views, 15 * 1e3);
         }
-        setTimeout(rand_add_views, parseInt({{$min}} + Math.random() * {{$max - $min}}) * 1e3)
+        setTimeout(rand_add_views, 15 * 1e3);
         @endif
     </script>
 
