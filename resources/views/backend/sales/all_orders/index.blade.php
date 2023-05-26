@@ -23,12 +23,9 @@
                         </div>
                         <div class="modal-body">
                             <select class="form-control aiz-selectpicker" onchange="change_status()" data-minimum-results-for-search="Infinity" id="update_delivery_status">
-                                <option value="pending">{{translate('Pending')}}</option>
-                                <option value="confirmed">{{translate('Confirmed')}}</option>
-                                <option value="picked_up">{{translate('Picked Up')}}</option>
-                                <option value="on_the_way">{{translate('On The Way')}}</option>
-                                <option value="delivered">{{translate('Delivered')}}</option>
-                                <option value="cancelled">{{translate('Cancel')}}</option>
+                                @foreach(get_express_status() as $status_key => $status_text)
+                                <option value="{{$status_key}}">{{$status_text}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="modal-footer">
@@ -42,13 +39,9 @@
             <div class="col-lg-2 ml-auto">
                 <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status">
                     <option value="">{{translate('Filter by Delivery Status')}}</option>
-                    <option value="pending" @if ($delivery_status == 'pending') selected @endif>{{translate('Pending')}}</option>
-                    <option value="confirmed" @if ($delivery_status == 'confirmed') selected @endif>{{translate('Confirmed')}}</option>
-                    <option value="picked_up" @if ($delivery_status == 'picked_up') selected @endif>{{translate('Picked Up')}}</option>
-                    <option value="on_the_way" @if ($delivery_status == 'on_the_way') selected @endif>{{translate('On The Way')}}</option>
-                    <option value="arrived" @if ($delivery_status == 'arrived') selected @endif>{{ translate('Arrived') }}</option>
-                    <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>{{translate('Delivered')}}</option>
-                    <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>{{translate('Cancel')}}</option>
+                    @foreach(get_express_status() as $status_key => $status_text)
+                        <option value="{{$status_key}}" @isset($delivery_status) @if($delivery_status == $status_key) selected @endif @endisset>{{ $status_text}}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="col-lg-2">

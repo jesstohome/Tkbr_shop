@@ -10,7 +10,6 @@
             {
                 if (response.count > 0) {
                     AIZ.plugins.notify('info', "{{translate('You have a new job message')}}");
-                    audioPlay && audioPlay(true);
 
                     $(".chat-num-tip").html(response.count).show();
                 }
@@ -29,10 +28,8 @@
             success: function (response)
             {
                 var count = response.count || 0;
-                console.log('只播放有新消息的声音', count);
                 if (count > 0) {
                     $(".chat-num-tip").html(count).show();
-                    audioPlay && audioPlay(true);
                 }
             }
         } );

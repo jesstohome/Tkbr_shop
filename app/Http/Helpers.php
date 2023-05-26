@@ -1385,17 +1385,17 @@ if (!function_exists('timedquery')) {
 if (!function_exists('get_express_status')) {
     function get_express_status() {
         $keys = [
-            'in_stock',
+            'prepare_goods',
             'sent_to_the_distribution_center',
             'distribution_sorting',
             'sent_to_the_delivery_center',
             'delivery_sorting',
             'delivery_in_progress',
-            'received',
+            'delivered',
         ];
         $status = [];
         foreach ($keys as $status_key) {
-            $status[$status_key] = translate(str_replace("_", " ", $status_key));
+            $status[$status_key] = $status_key == 'delivered' ? translate('Received') : translate(str_replace("_", " ", $status_key));
         }
 
         return $status;

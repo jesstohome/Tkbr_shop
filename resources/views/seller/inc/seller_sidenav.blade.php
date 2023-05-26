@@ -421,7 +421,6 @@
             {
                 if ( data.result > 0 ) {
                     $( '#conversations' ).show();
-                    audioPlay();
                 }
                 else {
                     $( '#conversations' ).hide();
@@ -438,7 +437,6 @@
                 {
                     if ( data.result > 0 ) {
                         $( '#order-red-tip' ).show();
-                        audioPlay();
                     }
                     else {
                         $( '#order-red-tip' ).hide();
@@ -583,22 +581,6 @@
             (force || !played) && $("#tip-audio")[0].play();
 
             played = 1;
-        }
-
-        window.onload = function ()
-        {
-            @if(!get_admin_setting('msg_tip_mute'))
-            setInterval( function ()
-            {
-                $.get( '{{route('conversations.check_new_msg')}}', {}, function (res)
-                {
-                    if ( res.code == 1 ) {
-                        audioPlay();
-                    }
-                }, 'json' )
-            }, 3000 );
-            @endif
-
         }
     </script>
 
