@@ -49,17 +49,21 @@
                     </div>
                 </div>
 
+                @if(Auth::user()->user_type == 'admin')
                 <div class="form-group row">
                     <label class="col-sm-2 col-from-label" for="name">{{translate('Bloc')}}</label>
                     <div class="col-sm-10">
-                        <select name="bloc_id[]" required class="form-control aiz-selectpicker" multiple>
-                            <option value=""></option>
-                            @foreach($blocs = \App\Models\Bloc::all() as $bloc)
-                                <option value="{{$bloc->id}}">{{$bloc->name}}</option>
-                            @endforeach
-                        </select>
+                            <select name="bloc_id[]" required class="form-control aiz-selectpicker" multiple>
+                                <option value=""></option>
+                                @foreach($blocs = \App\Models\Bloc::all() as $bloc)
+                                    <option value="{{$bloc->id}}">{{$bloc->name}}</option>
+                                @endforeach
+                            </select>
                     </div>
                 </div>
+                @else
+                    <input type="hidden" name="bloc_id[]" value="{{Auth::user()->bloc_id}}"/>
+                @endif
 
                 <div id="bank_payment_data">
                     <div id="bank_payment_informations">

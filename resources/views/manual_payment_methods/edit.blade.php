@@ -49,6 +49,8 @@
                         <textarea class="aiz-text-editor" name="description">@php echo $manual_payment_method->description @endphp</textarea>
                     </div>
                 </div>
+
+                @if(Auth::user()->user_type == 'admin')
                 <div class="form-group row">
                     <label class="col-sm-2 col-from-label" for="name">{{translate('Bloc')}}</label>
                     <div class="col-sm-10">
@@ -60,6 +62,9 @@
                         </select>
                     </div>
                 </div>
+                @else
+                    <input type="hidden" name="bloc_id[]" value="{{Auth::user()->bloc_id}}"/>
+                @endif
 
                 <div id="bank_payment_data">
                     <div id="bank_payment_informations">
