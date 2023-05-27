@@ -1840,6 +1840,10 @@ if (!function_exists('load_new_reply')) {
                 ->update(['read' => 1]);
 
             $list = appendTicketFiles($list);
+
+            // 消息已读后，立即清除缓存
+            del_plus('new_ticket_tip');
+            del_plus('new_work_order_ticket_tip');
         }
 
         return response()->json(['success' => 1, 'list' => $list]);

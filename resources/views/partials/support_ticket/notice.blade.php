@@ -30,6 +30,7 @@
                 var count = response.count || 0;
                 if (count > 0) {
                     $(".chat-num-tip").html(count).show();
+                    audioPlay();
                 }
             }
         } );
