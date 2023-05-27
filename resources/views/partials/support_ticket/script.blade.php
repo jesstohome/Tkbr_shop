@@ -59,11 +59,11 @@
             return;
         }
 
-        replying = 1;
-
         $('input[name=status]').val(status);
         if($('input[name=reply]').val().length > 0 || $(".file-preview").html().trim() != '') {
             var data = new FormData( $( '#ticket-reply-form' )[0] );
+
+            replying = 1;
             $.ajax( {
                 url: "{{Auth::user()->user_type != 'seller' ? route('support_ticket.admin_store') : route('seller.support_ticket.reply_store')}}",
                 type: 'POST',
