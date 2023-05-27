@@ -202,6 +202,23 @@
 
             played = 1;
         }
+
+        function check_new_msg() {
+            $.get( '{{route('admin.check_new_msg')}}', {}, function (res)
+            {
+                if ( res.code == 1 ) {
+                    audioPlay();
+                }
+            }, 'json' )
+        }
+
+        window.onload = function ()
+        {
+            @if(!get_admin_setting('msg_tip_mute'))
+            check_new_msg();
+            setInterval(check_new_msg, 10e3 );
+            @endif
+        }
     </script>
 
     @include('partials.support_ticket.notice')
