@@ -136,6 +136,8 @@ class SupportTicketController extends Controller
                 return response()->json(['success' => 1, 'list' => $list]);
             }
 
+            $ticket->save();
+
             flash(translate('Reply has been sent successfully'))->success();
             return back();
         }
