@@ -35,6 +35,7 @@
 </script>
 <script>
     var table;
+    var curGroupId = 0;
     var list = [], origin_list = [];
     layui.use(['table', 'dropdown'], function(){
         table = layui.table;
@@ -42,7 +43,6 @@
         @if($list)
         list = JSON.parse("{{json_encode($list, JSON_UNESCAPED_UNICODE)}}".replace(/&quot;/g, '"'));
         origin_list = list || [];
-        console.log(list, origin_list);
         @endif
 
         // 创建渲染实例
@@ -93,7 +93,21 @@
                         type: 'POST',
                         success: function (response)
                         {
-                            location.reload()
+                            origin_list.forEach(function(item, index, arr) {
+                                console.log(item.id, data.id, item.id === data.id);
+                                if(item.id === data.id) {
+                                    origin_list.splice(index, 1);    //满足条件 根据下标删除该元素
+                                }
+                            });
+
+                            console.log(list.length);
+                            list.forEach(function(item, index, arr) {
+                                if(item.id === data.id) {
+                                    list.splice(index, 1);    //满足条件 根据下标删除该元素
+                                }
+                            });
+
+                            console.log(list.length);
                         }
                     } );
                 });
@@ -108,6 +122,7 @@
             switch(obj.event){
                 case 'add':
                     let data = {
+                        group_id: curGroupId,
                         abstract: '',
                         content: '',
                     }
@@ -118,8 +133,7 @@
                         success: function (response)
                         {
                             origin_list.push(response.data || data);
-                            list.push(response.data || data);
-                            table.reload('test');
+                            filter_by_group(curGroupId)
                         }
                     } );
                     break;
@@ -152,6 +166,8 @@
     });
 
     function filter_by_group(group_id) {
+        curGroupId = group_id;
+
         if (group_id > 0) {
             list = origin_list.filter(function (it) {
                 return it.group_id == group_id;

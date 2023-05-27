@@ -40,6 +40,7 @@ class TicketHuaShuController extends Controller
             $huashu = new TicketHuaShu;
             $huashu->bloc_id = \Auth::user()->bloc_id;
             $huashu->staff_id = \Auth::user()->staff_id;
+            $huashu->group_id = $request->group_id ?? 0;
             $huashu->abstract = $request->abstract ?? '';
             $huashu->content = $request->content ?? '';
             if($huashu->save()){
