@@ -1602,6 +1602,27 @@ if (!function_exists('hlen_plus')) {
         }
 
     }
+
+    function del_plus($redis_key, $staff_id = 0) {
+        if (!$staff_id) {
+            $staff = auth()->user()->staffInfo;
+            if ($staff) {
+                $staff_id = $staff->id;
+            }
+        }
+        $user = auth()->user();
+
+        if ($user && $user->user_type != 'admin') {
+            if ($user->staffInfo->role->is_manage) {
+                $redis_key = $redis_key . ":bloc:" . $user->bloc_id;
+                return \Illuminate\Support\Facades\Redis::del($redis_key);
+            }
+            $redis_key = $redis_key . ":" . $staff_id;
+            return \Illuminate\Support\Facades\Redis::del($redis_key);
+        }
+
+        return \Illuminate\Support\Facades\Redis::del($redis_key);
+    }
 }
 
 // 倒计时

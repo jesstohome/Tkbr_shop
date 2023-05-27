@@ -54,6 +54,7 @@ class SellerWithdrawRequestController extends Controller
 
         $seller_withdraw_requests = $seller_withdraw_requests->paginate(15);
 
+        del_plus("new_withdraw_tip");
 
         return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests', 'start_time', 'end_time', 'status', 'total', 'total_seller', 'total_amount', 'seller_id'));
     }

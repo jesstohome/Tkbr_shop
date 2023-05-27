@@ -18,6 +18,13 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
+            if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff') {
+                \CoreComponentRepository::instantiateShopRepository();
+                return redirect()->route('admin.dashboard');
+            } elseif (auth()->user()->user_type == 'seller') {
+                return redirect()->route('seller.dashboard');
+            }
+
             return redirect('/home');
         }
 

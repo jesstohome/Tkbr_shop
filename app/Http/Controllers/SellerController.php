@@ -180,6 +180,8 @@ class SellerController extends Controller
         $shops = filter_by_bloc($shops);
         $shops = $shops->select("shops.*")->paginate(15);
 
+        del_plus('new_shop_created_tip');
+
         return view('backend.sellers.index', compact('shops', 'sort_search', 'approved', 'date_range', 'start_time', 'end_time'));
     }
 
@@ -535,6 +537,8 @@ class SellerController extends Controller
         $total_seller = $list_clone->distinct("seller_id")->count();
 
         $list = $list->paginate(20);
+
+        del_plus("orders_pick_up_tip");
 
         return view('backend.sellers.payment_records', compact('list', 'start_date', 'end_date', 'seller_id', 'buyer_id', 'payment_code', 'out_order_no', 'pay_status', 'order_no', 'total', 'total_seller', 'total_amount'));
     }
