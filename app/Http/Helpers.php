@@ -1871,6 +1871,8 @@ if (!function_exists('ticket_say_hello')) {
             $ticket_reply->files = '';
             $ticket_reply->save();
 
+            hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id);
+
             return $ticket->id;
         }
 

@@ -58,14 +58,6 @@
                             <span class="aiz-side-nav-text">{{translate($menu->name)}}</span>
                             @if($menu->show_red_tips) <span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
 
-                            @if($menu->name == 'Support')
-                                @if ($conversation_count > 0 || $support_ticket > 0)
-                                    <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
-                                @else
-                                    <span class="badge badge-danger badge-circle badge-sm badge-dot conversations" style="display: none"> </span>
-                                @endif
-                            @endif
-
                             @if($menu->children) <span class="aiz-side-nav-arrow"></span> @endif
                         </a>
                         @if($menu->children && (empty($menu->addon_name) || addon_is_activated($menu->addon_name)))
@@ -77,7 +69,7 @@
                                             @if($menu2->route == 'sellers.index' && $sellers > 0)<span class="badge badge-info">{{ $sellers }}</span> @endif
                                             @if($menu2->route == 'refund_requests_all' && $refund_count > 0) <span class="badge badge-info">{{ $refund_count }}</span> @endif
 
-                                            @if($menu2->show_red_tips || $menu2->route == 'support_ticket.admin_index' && $support_ticket > 0 || $menu2->route == 'conversations.admin_index' && $conversation_count > 0)
+                                            @if($menu2->show_red_tips)
                                                 <span class="badge badge-danger badge-circle badge-sm badge-dot"></span>
                                             @endif
 

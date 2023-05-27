@@ -111,6 +111,8 @@ class SupportTicketController extends Controller
 
     public function ticket_reply_store(Request $request)
     {
+        $ticket = Ticket::find($request->ticket_id);
+
         $ticket_reply = new TicketReply;
         $ticket_reply->ticket_id = $request->ticket_id;
         $ticket_reply->user_id = $request->user_id;
@@ -122,6 +124,12 @@ class SupportTicketController extends Controller
         if($ticket_reply->save()){
 
             \Cache::set('loop_load_new_reply_audio_backend', 1);
+
+            if ($ticket->type == 'service') {
+                hset_plus('new_ticket_tip', 1, $request->ticket_id);
+            } else {
+                hset_plus('new_work_order_ticket_tip', 1, $request->ticket_id);
+            }
 
             if ($request->ajax()) {
                 $list = appendTicketFiles([$ticket_reply]);

@@ -118,6 +118,8 @@ class OrderController extends Controller
             $ticket->details = '';
             $ticket->files = '';
             $ticket->save();
+
+            hset_plus('new_work_order_ticket_tip', $ticket->id, 1, $ticket->staff_id);
         }
 
         $ticket_replies = $ticket->ticketreplies;

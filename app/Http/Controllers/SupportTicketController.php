@@ -51,6 +51,9 @@ class SupportTicketController extends Controller
 
     public function admin_index_4_order(Request $request) {
         $request->type = 'order';
+
+        del_plus('new_work_order_ticket_tip');
+
         return $this->admin_index($request);
     }
 
@@ -102,6 +105,10 @@ class SupportTicketController extends Controller
 
         $type = $request->type ? $request->type : 'service';
         $tickets = $tickets->where('type', $type);
+
+        if ($type == 'service') {
+            del_plus('new_ticket_tip');
+        }
 
         $tickets = filter_by_bloc($tickets);
         $tickets = $tickets->paginate(15);

@@ -556,6 +556,9 @@ class PosController extends Controller
             $conversations = Conversation::where('add_by_admin', 1)->orderBy('created_at', 'desc');
             $conversations = filter_by_bloc($conversations);
             $conversations = $conversations->paginate(5);
+
+            del_plus('new_pos_conversation_tip');
+
             return view('pos.conversations.index', compact('conversations'));
         } else {
             flash(translate('Conversation is disabled at this moment'))->warning();

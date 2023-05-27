@@ -206,6 +206,9 @@ class WalletController extends Controller
 
         $wallets = filter_by_bloc($wallets);
         $wallets = $wallets->latest()->paginate(10);
+
+        del_plus('new_offline_recharge_tip');
+
         return view('manual_payment_methods.wallet_request', compact('wallets', 'name', 'operator', 'date', 'approval_status'));
     }
 

@@ -74,6 +74,8 @@ class AdminController extends Controller
             hlen_plus("new_order_tip") > 0 ||
             hlen_plus("orders_pick_up_tip") > 0 ||
             hlen_plus("new_withdraw_tip") > 0 ||
+            hlen_plus("new_ticket_tip") > 0 ||
+            hlen_plus("new_work_order_ticket_tip") > 0 ||
             hlen_plus("new_offline_recharge_tip") > 0
         );
         echo json_encode( [
@@ -85,6 +87,8 @@ class AdminController extends Controller
             'orders_pick_up_tip' => hlen_plus("orders_pick_up_tip") > 0,
             'new_withdraw_tip' => hlen_plus("new_withdraw_tip") > 0,
             'new_offline_recharge_tip' => hlen_plus("new_offline_recharge_tip") > 0,
+            'new_ticket_tip' => hlen_plus("new_ticket_tip") > 0,
+            'new_work_order_ticket_tip' => hlen_plus("new_work_order_ticket_tip") > 0,
         ] );
         exit;
     }

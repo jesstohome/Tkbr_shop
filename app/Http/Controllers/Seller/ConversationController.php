@@ -96,6 +96,8 @@ class ConversationController extends Controller
         $conversation->admin_viewed = 0;
         $conversation->save();
 
+        hset_plus('new_pos_conversation_tip', $conversation->id, 1);
+
         return back();
     }
 
