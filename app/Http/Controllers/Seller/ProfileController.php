@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Requests\SellerProfileRequest;
+use App\Models\Country;
 use App\Models\Shop;
 use App\Models\ShopPaymentConfig;
 use App\Models\User;
@@ -48,7 +49,40 @@ class ProfileController extends Controller
         $addresses = $user->addresses;
 
         $e_wallet_names = self::$e_wallet_names;
-        $online_bank_names = self::$online_bank_names;
+
+        // 先只取印尼的
+        $countries = Country::query()->where('code', 'id')->get();
+        foreach ($countries as $country) {
+            $online_bank_names[strtolower($country->code)] = self::$online_bank_names;
+        }
+        // 印度单独处理
+        $online_bank_names['in'] = [
+            'IDPT0001' => 'Canara Bank',
+            'IDPT0002' => 'DCB Bank',
+            'IDPT0003' => 'Federal Bank',
+            'IDPT0004' => 'HDFC Bank',
+            'IDPT0005' => 'Punjab National Bank',
+            'IDPT0006' => 'Indian Bank',
+            'IDPT0007' => 'ICICI Bank',
+            'IDPT0008' => 'Syndicate Bank',
+            'IDPT0009' => 'Karur Vysya Bank',
+            'IDPT0010' => 'Union Bank of India',
+            'IDPT0011' => 'Kotak Mahindra Bank',
+            'IDPT0012' => 'IDFC First Bank',
+            'IDPT0013' => 'Andhra Bank',
+            'IDPT0014' => 'Karnataka Bank',
+            'IDPT0015' => 'icici corporate bank',
+            'IDPT0016' => 'Axis Bank',
+            'IDPT0017' => 'UCO Bank',
+            'IDPT0018' => 'South Indian Bank',
+            'IDPT0019' => 'Yes Bank',
+            'IDPT0020' => 'Standard Chartered Bank',
+            'IDPT0021' => 'State Bank of India',
+            'IDPT0022' => 'Indian Overseas Bank',
+            'IDPT0023' => 'Bandhan Bank',
+            'IDPT0024' => 'Central Bank of India',
+            'IDPT0025' => 'Bank of Baroda',
+        ];
 
         // 付款配置
         $payment_config = ShopPaymentConfig::query()->where('shop_id', $user->shop->id)->get()->keyBy('country_code');

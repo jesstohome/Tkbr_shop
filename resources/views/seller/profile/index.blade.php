@@ -136,12 +136,12 @@
                         </div>
                         @endif
 
-                        @if($country_code == 'id')
+                        @if(isset($online_bank_names[$country_code]))
                             <div class="row">
                                 <label class="col-md-3 col-form-label" for="bank_name[{{$country_code}}]">{{ translate('Bank Name') }}</label>
                                 <div class="col-md-9">
                                     <select class="form-control mb-3 aiz-selectpicker" name="bank_name[{{$country_code}}]">
-                                        @foreach($online_bank_names as $online_bank_name)
+                                        @foreach($online_bank_names[$country_code] as $online_bank_name)
                                             <option value="{{$online_bank_name}}" @if ($payment_config[$country_code]->bank_name == $online_bank_name) selected  @endif>{{$online_bank_name}}</option>
                                         @endforeach
                                     </select>
