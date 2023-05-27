@@ -92,7 +92,7 @@ class SellerWithdrawRequestController extends Controller
                 }
                 // 当前国家没有支付配置信息，则不给予提示
                 $payConfig = ShopPaymentConfig::query()->where('shop_id', $user->shop->id)->where('country_code', $request->country_code)->first();
-                if (empty($payConfig)) {
+                if (empty($payConfig) || empty($payConfig['bank_account_no']) || empty($payConfig['e_wallet_address'])) {
                     flash(translate('Please Set The Pay Config'))->error();
                     return redirect(route('seller.profile.index'));
                 }
