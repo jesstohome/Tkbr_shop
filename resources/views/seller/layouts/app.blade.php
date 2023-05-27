@@ -11,7 +11,7 @@
 
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
-    <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,target-densitydpi=device-dpi,viewport-fit=cover">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 
     <!-- ios-Safari保存H5网页到主屏幕-WapApp -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
