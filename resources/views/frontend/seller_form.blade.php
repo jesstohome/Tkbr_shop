@@ -35,19 +35,19 @@
                             <div class="p-3">
                                 <div class="form-group">
                                     <label>{{ translate('Your Name')}} <span class="text-primary">*</span></label>
-                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" placeholder="{{  translate('Name') }}" name="name" data-bv-notempty-message="{{translate('The username is required and cannot be empty')}}" required>
+                                    <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" placeholder="{{  translate('Name') }}" name="name">
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Your Email')}} <span class="text-primary">*</span></label>
-                                    <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email" data-bv-notempty-message="{{translate('The email is required and cannot be empty')}}" required>
+                                    <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email">
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Your Password')}} <span class="text-primary">*</span></label>
-                                    <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password" data-bv-notempty-message="{{translate('The password is required and cannot be empty')}}" required>
+                                    <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password" data-bv-notempty-message="{{translate('The password is required and cannot be empty')}}">
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Repeat Password')}} <span class="text-primary">*</span></label>
-                                    <input type="password" class="form-control" placeholder="{{  translate('Confirm Password') }}" name="password_confirmation" data-bv-notempty-message="{{translate('The confirm password is required and cannot be empty')}}" required>
+                                    <input type="password" class="form-control" placeholder="{{  translate('Confirm Password') }}" name="password_confirmation" data-bv-notempty-message="{{translate('The confirm password is required and cannot be empty')}}">
                                 </div>
                             </div>
                         </div>
@@ -59,13 +59,13 @@
                         <div class="p-3">
                             <div class="form-group">
                                 <label>{{ translate('Shop Name')}} <span class="text-primary">*</span></label>
-                                <input type="text" class="form-control" placeholder="{{ translate('Shop Name')}}" name="name" data-bv-notempty-message="{{translate('The shop name is required and cannot be empty')}}" required>
+                                <input type="text" class="form-control" placeholder="{{ translate('Shop Name')}}" name="name" data-bv-notempty-message="{{translate('The shop name is required and cannot be empty')}}">
                             </div>
 
                             @if(empty($invitation_code))
                             <div class="form-group">
                                 <label>{{ translate('Invite code')}} <span class="text-primary">*</span></label>
-                                <input type="text" class="form-control mb-3" placeholder="{{ translate('Invite code')}}" name="staff_invite_code" @if(!empty($staff_invitation_code)) readonly @endif value="{{$staff_invitation_code ?? ''}}" required>
+                                <input type="text" class="form-control mb-3" placeholder="{{ translate('Invite code')}}" name="staff_invite_code" @if(!empty($staff_invitation_code)) readonly @endif value="{{$staff_invitation_code ?? ''}}">
                             </div>
                             @endif
 
@@ -77,9 +77,7 @@
                                      <option value="driving license"> {{translate('driving license')}}</option>
                                      <option value="social security card"> {{translate('Social Security Card')}}</option>
                                  </select>
-
-
-                                </div>
+                            </div>
                             <div class="form-group">
                                 <label>{{ translate('Certificates Front')}} <span class="text-primary">*</span></label>
                                 <div class="input-group" data-toggle="aizuploader" data-type="image">
@@ -134,17 +132,8 @@
 <script type="text/javascript">
     // making the CAPTCHA  a required field for form submission
     $(document).ready(function(){
-        $("#shop").bootstrapValidator();
         $("#shop").on("submit", function(evt)
         {
-            var bootstrapValidator = $("#shop").data('bootstrapValidator');
-            //手动触发验证
-            bootstrapValidator.validate();
-            if(!bootstrapValidator.isValid()){
-                console.log(bootstrapValidator, bootstrapValidator.getMessages());
-                return;
-            }
-
             try {
                 var response = grecaptcha.getResponse();
                 if(response.length == 0)
@@ -155,6 +144,27 @@
                     return false;
                 }
             } catch {}
+
+            if ($("input[name=name]").val().trim() === '') {
+                AIZ.plugins.notify('danger', '{{translate('The username is required and cannot be empty')}}');
+                return false;
+            }
+            if ($("input[name=email]").val().trim() === '') {
+                AIZ.plugins.notify('danger', '{{translate('The email is required and cannot be empty')}}');
+                return false;
+            }
+            if ($("input[name=password]").val().trim() === '') {
+                AIZ.plugins.notify('danger', '{{translate('The password is required and cannot be empty')}}');
+                return false;
+            }
+            if ($("input[name=password_confirmation]").val().trim() === '') {
+                AIZ.plugins.notify('danger', '{{translate('The confirm password is required and cannot be empty')}}');
+                return false;
+            }
+            if ($("input[name=password_confirmation]").val().trim() === '') {
+                AIZ.plugins.notify('danger', '{{translate('The confirm password is required and cannot be empty')}}');
+                return false;
+            }
 
             // 校验两张图片
             if ($("input[name=identity_card_front]").val() == '') {
