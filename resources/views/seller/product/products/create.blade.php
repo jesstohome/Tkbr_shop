@@ -195,8 +195,8 @@
                                 class="form-control aiz-selectpicker" data-live-search="true"
                                 data-selected-text-format="count" multiple
                                 data-placeholder="{{ translate('Choose Attributes') }}">
-                                @foreach (\App\Models\Attribute::all() as $key => $attribute)
-                                <option value="{{ $attribute->id }}">{{ $attribute->getTranslation('name') }}</option>
+                                @foreach (range(1, 10) as $key => $index)
+                                <option value="{{ $index }}">{{ translate('Attributes') }}({{$index}})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -207,6 +207,9 @@
                         <br>
                     </div>
 
+                    <div class="mb-1">
+                        <button type="button" class="btn btn-primary" onclick="update_sku()">{{translate('Generate')}}</button>
+                    </div>
                     <div class="customer_choice_options" id="customer_choice_options">
 
                     </div>
@@ -566,34 +569,17 @@
         });
 
         function add_more_customer_choice_option(i, name){
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type:"POST",
-                url:'{{ route('seller.products.add-more-choice-option') }}',
-                data:{
-                attribute_id: i
-                },
-                success: function(data) {
-                    var obj = JSON.parse(data);
-                    $('#customer_choice_options').append('\
+            $('#customer_choice_options').append('\
                     <div class="form-group row">\
                         <div class="col-md-3">\
                             <input type="hidden" name="choice_no[]" value="'+i+'">\
                             <input type="text" class="form-control" name="choice[]" value="'+name+'" placeholder="{{ translate('Choice Title') }}" readonly>\
                         </div>\
                         <div class="col-md-8">\
-                            <select class="form-control aiz-selectpicker attribute_choice" data-live-search="true" name="choice_options_'+ i +'[]" multiple>\
-                                '+obj+'\
-                            </select>\
+                            <input type="text" name="choice_options_'+i+'" value="" class="form-control attribute" />\
                         </div>\
                     </div>');
-                    AIZ.plugins.bootstrapSelect('refresh');
-            }
-        });
-
-
+            AIZ.plugins.bootstrapSelect('refresh');
         }
 
         $('input[name="colors_active"]').on('change', function() {
@@ -605,23 +591,23 @@
                 $('#colors').prop('disabled', false);
                 AIZ.plugins.bootstrapSelect('refresh');
             }
-            update_sku();
+            // update_sku();
         });
 
         $(document).on("change", ".attribute_choice",function() {
-            update_sku();
+            // update_sku();
         });
 
         $('#colors').on('change', function() {
-            update_sku();
+            // update_sku();
         });
 
         $('input[name="unit_price"]').on('keyup', function() {
-            update_sku();
+            // update_sku();
         });
 
         $('input[name="name"]').on('keyup', function() {
-            update_sku();
+            // update_sku();
         });
 
         function delete_row(em){
@@ -640,6 +626,10 @@
                data:$('#choice_form').serialize(),
                success: function(data){
                    $('#sku_combination').html(data);
+                   if (data == -1) {
+                       AIZ.plugins.notify('danger', '{{ translate('Up to 300 variant products') }}');
+                       return;
+                   }
                     AIZ.plugins.fooTable();
                    if (data.length > 1) {
                        $('#show-hide-div').hide();

@@ -218,6 +218,13 @@ class ProductController extends Controller
             foreach ($request->choice_no as $key => $no) {
                 $name = 'choice_options_' . $no;
                 $data = array();
+
+                $item = $request[$name];
+                if (is_string($item) && (strpos($item, ",") !== false || strpos($item, "，") !== false)) {
+                    $item = str_replace("，", ",", $item);
+                    $request[$name] = explode(",", $item);
+                }
+
                 foreach ($request[$name] as $key => $item) {
                     array_push($data, $item);
                 }
@@ -226,6 +233,9 @@ class ProductController extends Controller
         }
 
         $combinations = Combinations::makeCombinations($options);
+        if (count($combinations) > 300) {
+            return -1;
+        }
         return view('backend.product.products.sku_combinations', compact('combinations', 'unit_price', 'colors_active', 'product_name'));
     }
 
@@ -248,6 +258,13 @@ class ProductController extends Controller
             foreach ($request->choice_no as $key => $no) {
                 $name = 'choice_options_' . $no;
                 $data = array();
+
+                $item = $request[$name];
+                if (is_string($item) && (strpos($item, ",") !== false || strpos($item, "，") !== false)) {
+                    $item = str_replace("，", ",", $item);
+                    $request[$name] = explode(",", $item);
+                }
+
                 foreach ($request[$name] as $key => $item) {
                     array_push($data, $item);
                 }

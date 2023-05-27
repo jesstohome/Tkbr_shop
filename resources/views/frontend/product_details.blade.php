@@ -259,7 +259,7 @@
                                         <div class="row no-gutters">
                                             <div class="col-sm-2">
                                                 <div class="opacity-50 my-2">
-                                                    {{ \App\Models\Attribute::find($choice->attribute_id)->getTranslation('name') }}:
+                                                    {{ \App\Models\Attribute::find($key+1)->getTranslation('name') }}:
                                                 </div>
                                             </div>
                                             <div class="col-sm-10">

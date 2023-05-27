@@ -24,6 +24,13 @@ class ProductUtility
             foreach ($collection['choice_no'] as $key => $no) {
                 $name = 'choice_options_' . $no;
                 $data = array();
+
+                $item = request()[$name];
+                if (is_string($item) && (strpos($item, ",") !== false || strpos($item, "，") !== false)) {
+                    $item = str_replace("，", ",", $item);
+                    request()[$name] = explode(",", $item);
+                }
+
                 foreach (request()[$name] as $key => $eachValue) {
                     array_push($data, $eachValue);
                 }
