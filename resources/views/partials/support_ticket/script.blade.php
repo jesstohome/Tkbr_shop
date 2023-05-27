@@ -53,7 +53,14 @@
         }, 500)
     })
 
+    var replying = 0;
     function submit_reply(status) {
+        if (replying) {
+            return;
+        }
+
+        replying = 1;
+
         $('input[name=status]').val(status);
         if($('input[name=reply]').val().length > 0 || $(".file-preview").html().trim() != '') {
             var data = new FormData( $( '#ticket-reply-form' )[0] );
@@ -64,6 +71,8 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
+                    replying = 0;
+
                     $("input[name=attachments]").val('');
                     $("input[name=reply]").val('');
                     $(".remove-attachment").click();
