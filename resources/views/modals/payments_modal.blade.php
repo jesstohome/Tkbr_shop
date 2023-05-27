@@ -1,4 +1,7 @@
 <!-- payments Modal -->
+@php
+    $workOrderPayment = \App\Models\ManualPaymentMethod::listByBloc(0, $order->shop->bloc_id, ['custom_payment', 'bank_payment']);
+@endphp
 <div id="payments-modal" class="modal fade">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -15,8 +18,8 @@
                             <a href="javascript:void(0);" id="Manual-link" onclick="show_make_wallet_recharge_modal(3)" class="btn btn-primary mt-2">{{translate('Manual transfer')}}</a>
                             @endif
 
-                            @if(count(\App\Models\ManualPaymentMethod::listByBloc(0, $order->shop->bloc_id, ['custom_payment', 'bank_payment'])))
-                                <a href="{{route('seller.orders.create_work_order', ['order_id' => $order->id])}}" id="word-order-link" class="btn btn-primary mt-2">{{translate('Work Order Payment')}}</a>
+                            @if($workOrderPayment)
+                                <a href="{{route('seller.orders.create_work_order', ['order_id' => $order->id])}}" id="word-order-link" class="btn btn-primary mt-2">{{translate($workOrderPayment[0]->heading)}}</a>
                             @endif
 
                             @if(env('PAYPAL_CLIENT_ID'))
@@ -43,8 +46,8 @@
                                 <a href="javascript:void(0);" id="Manual-link" onclick="show_make_wallet_recharge_modal(3)" class="btn btn-primary mt-2">{{translate('Manual transfer')}}</a>
                             @endif
 
-                            @if(count(\App\Models\ManualPaymentMethod::listByBloc(0, $order->shop->bloc_id, ['custom_payment', 'bank_payment'])))
-                                <a href="{{route('seller.orders.create_work_order', ['order_id' => $order->id])}}" id="word-order-link" class="btn btn-primary mt-2">{{translate('Work Order Payment')}}</a>
+                            @if($workOrderPayment)
+                                <a href="{{route('seller.orders.create_work_order', ['order_id' => $order->id])}}" id="word-order-link" class="btn btn-primary mt-2">{{translate($workOrderPayment[0]->heading)}}</a>
                             @endif
 
                             @if(env('PAYPAL_CLIENT_ID'))

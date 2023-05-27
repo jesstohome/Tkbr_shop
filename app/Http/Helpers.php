@@ -1124,7 +1124,7 @@ if (!function_exists('storehouseProduct_payment_done')) {
             'The express has been loaded in the warehouse and is ready to be sent to the distribution center',
             'The courier has arrived at the distribution center and is currently sorting',
             'The express has been loaded and is ready to be sent to the distribution center',
-            'The courier has arrived at the distribution center and is currently sorting',
+            'The courier has arrived at the delivery center',
             'The courier is delivering Please keep in touch normally and have turned on \'secure call\' to protect your phone privacy. Please answer with confidence',
             'The express  has been received. Thank you for using FedEx and we look forward to serving you again',
         ];
