@@ -598,6 +598,9 @@ class PosController extends Controller
 
         $conversation->sender_viewed = "1";
         $conversation->save();
+
+        \Redis::set("seller_new_conversation_tip:" . $conversation->receiver_id, 1);
+
         return back();
     }
 }

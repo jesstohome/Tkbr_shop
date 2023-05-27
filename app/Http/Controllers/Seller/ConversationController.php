@@ -8,6 +8,7 @@ use App\Models\BusinessSetting;
 use App\Models\Message;
 use App\Models\ProductQuery;
 use Auth;
+use Illuminate\Support\Facades\Redis;
 use phpDocumentor\Fileset\Collection;
 use function response;
 use function strtotime;
@@ -24,6 +25,8 @@ class ConversationController extends Controller
     {
         if (BusinessSetting::where('type', 'conversation_system')->first()->value == 1) {
             $conversations = Conversation::where('sender_id', Auth::user()->id)->orWhere('receiver_id', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(5);
+
+            Redis::del("seller_new_conversation_tip:" . Auth::user()->id);
             return view('seller.conversations.index', compact('conversations'));
         } else {
             flash(translate('Conversation is disabled at this moment'))->warning();

@@ -48,18 +48,6 @@
                             </a>
                         </li>
 
-   <!--                     <li class="aiz-side-nav-item">
-                            <a href="{{ route('seller.product_bulk_upload.index') }}"
-                                class="aiz-side-nav-link {{ areActiveRoutes(['product_bulk_upload.index']) }}">
-                                <span class="aiz-side-nav-text">{{ translate('Product Bulk Upload') }}</span>
-                            </a>
-                        </li>
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('seller.digitalproducts') }}"
-                                class="aiz-side-nav-link {{ areActiveRoutes(['seller.digitalproducts', 'seller.digitalproducts.create', 'seller.digitalproducts.edit']) }}">
-                                <span class="aiz-side-nav-text">{{ translate('Digital Products') }}</span>
-                            </a>
-                        </li>-->
                         <li class="aiz-side-nav-item">
                             <a href="{{ route('seller.reviews') }}"
                                 class="aiz-side-nav-link {{ areActiveRoutes(['seller.reviews']) }}">
@@ -112,30 +100,6 @@
                     </li>
                 @endif
 
-                 <!--店铺直通车-->
-                <li class="aiz-side-nav-item" style="display: none">
-                    <a href="#" class="aiz-side-nav-link">
-                        <i class="las la-shopping-cart aiz-side-nav-icon"></i>
-                        <span class="aiz-side-nav-text">{{ translate('Spread Packages') }}</span>
-                        <span class="aiz-side-nav-arrow"></span>
-                    </a>
-                    <ul class="aiz-side-nav-list level-2">
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('seller.seller_spread_packages_list') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Spread Packages') }}</span>
-                            </a>
-                        </li>
-
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('seller.spread_packages_payment_list') }}" class="aiz-side-nav-link">
-                                <span class="aiz-side-nav-text">{{ translate('Purchase Spread Packages') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-
-
                  <!--三级分销-->
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('seller.affiliate.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['seller.support_ticket.index']) }}">
@@ -161,7 +125,9 @@
                             class="aiz-side-nav-link {{ areActiveRoutes(['seller.conversations.index', 'seller.conversations.show']) }}">
                             <i class="las la-comment aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Conversations') }}</span>
-                            <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations" style="display: none"> </span>
+                            @if(Redis::get("seller_new_conversation_tip:" . Auth::user()->id))
+                            <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations"> </span>
+                            @endif
                         </a>
                     </li>
                 @endif
@@ -252,17 +218,6 @@
                             </li>
                         </ul>
                     </li>
-                @endif
-                @if (addon_is_activated('pos_system') && false)
-                    @if (get_setting('pos_activation_for_seller') != null && get_setting('pos_activation_for_seller') != 0)
-                        <li class="aiz-side-nav-item">
-                            <a href="{{ route('poin-of-sales.seller_index') }}"
-                                class="aiz-side-nav-link {{ areActiveRoutes(['poin-of-sales.seller_index']) }}">
-                                <i class="las la-fax aiz-side-nav-icon"></i>
-                                <span class="aiz-side-nav-text">{{ translate('POS Manager') }}</span>
-                            </a>
-                        </li>
-                    @endif
                 @endif
 
                  <!--退款-->
@@ -446,13 +401,13 @@
             } );
         }
 
-    setInterval( function ()
-    {
-        getConversations()
 
-        get_not_view_count()
-    }, 10000 )
-    window.onload = function(){
+    window.onload = function() {
+        get_not_view_count();
+        setInterval( function ()
+        {
+            get_not_view_count()
+        }, 10000 );
         if(boolean==1 && count > 0){
             $('#conversations-modal').modal('show');
         }

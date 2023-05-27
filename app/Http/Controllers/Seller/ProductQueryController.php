@@ -16,6 +16,9 @@ class ProductQueryController extends Controller
     public function index()
     {
         $queries = ProductQuery::where('seller_id', Auth::id())->latest()->paginate(20);
+
+        Redis::del("product_query_red_tips:" . Auth::id());
+
         return view('seller.product_query.index', compact('queries'));
     }
     /**

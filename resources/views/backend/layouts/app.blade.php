@@ -177,16 +177,16 @@
         }
 
         setTimeout(function () {
-            getConversations();
+            // getConversations();
 
-            get_not_view_count();
+            // get_not_view_count();
         }, 2000);
 
         setInterval( function ()
         {
-            getConversations();
+            // getConversations();
 
-            get_not_view_count();
+            // get_not_view_count();
         }, 10000 )
     </script>
     <script>

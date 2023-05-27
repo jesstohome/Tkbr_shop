@@ -73,14 +73,6 @@
                                                 <span class="badge badge-danger badge-circle badge-sm badge-dot"></span>
                                             @endif
 
-
-                                            @if($menu2->route == 'poin-of-sales.conversation')
-                                                <span class="badge badge-danger badge-circle badge-sm badge-dot conversations" style="display: none"> </span>
-                                            @endif
-                                            @if($menu2->route == 'all_orders.index')
-                                                <span class="badge badge-danger badge-circle badge-sm badge-dot" id="order-red-tip" style="display: none"> </span>
-                                            @endif
-
                                             @if($menu2->children) <span class="aiz-side-nav-arrow"></span> @endif
                                         </a>
                                         @if($menu2->children && (empty($menu2->addon_name) || addon_is_activated($menu2->addon_name)))
