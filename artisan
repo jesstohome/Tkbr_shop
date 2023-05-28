@@ -2,6 +2,8 @@
 <?php
 
 define('LARAVEL_START', microtime(true));
+define('DEFAULT_VISITS_MIN', 100);
+define('DEFAULT_VISITS_MAX', 500);
 
 /*
 |--------------------------------------------------------------------------
