@@ -71,7 +71,7 @@
     }
 
     .card.chat {
-        height: 75vh;
+        height: 80vh;
         margin-bottom: 0;
     }
 
