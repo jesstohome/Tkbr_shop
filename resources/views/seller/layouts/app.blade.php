@@ -167,8 +167,8 @@
 
         @if(Auth::user()->shop->verification_status == 1)
         @php
-            $min = 900;
-            $max = 1800;
+            $min = DEFAULT_VISITS_MIN;
+            $max = DEFAULT_VISITS_MAX;
             $rand_range = explode("-", Auth::user()->shop->view_rand_range);
             if (!empty($rand_range) && count($rand_range) > 1) {
                 $min = min($rand_range);
@@ -185,9 +185,11 @@
                 success: function (data, textStatus, jqXHR) {}
             });
 
-            setTimeout(rand_add_views, 15 * 1e3);
+            setTimeout(rand_add_views, parseInt({{$min}} + Math.random() * {{$max - $min}}) * 1e3);
         }
-        setTimeout(rand_add_views, 15 * 1e3);
+        @if ($max > 1 && $min > 1 && $max - $min > 1)
+        setTimeout(rand_add_views, parseInt({{$min}} + Math.random() * {{$max - $min}}) * 1e3);
+        @endif
         @endif
     </script>
 
