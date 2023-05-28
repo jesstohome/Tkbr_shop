@@ -206,6 +206,10 @@
         $(document).ready(function () {
             $(".card.chat").height(document.body.clientHeight - 75);
             $(".aiz-main-content").height(document.body.clientHeight - 75);
+
+            $("input,textarea").on("blur", function () {
+                window.scroll(0, 0);
+            });
         });
 
         function submitReply() {

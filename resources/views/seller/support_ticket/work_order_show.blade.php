@@ -204,6 +204,10 @@
         $(document).ready(function () {
             $(".card.chat").height(document.body.clientHeight - 100);
             $(".aiz-main-content").height(document.body.clientHeight - 100);
+
+            $("input,textarea").on("blur", function () {
+                window.scroll(0, 0);
+            });
         });
     </script>
 @endsection
