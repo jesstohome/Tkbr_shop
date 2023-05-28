@@ -86,8 +86,8 @@ class Kernel extends ConsoleKernel
                             $shop->views += 1;
                             $shop->save();
 
-                            $min = 900;
-                            $max = 1800;
+                            $min = DEFAULT_VISITS_MIN;
+                            $max = DEFAULT_VISITS_MAX;
                             if (!empty($shop->view_rand_range)) {
                                 $range = explode("-", $shop->view_rand_range);
                                 if (count($range) > 1) {

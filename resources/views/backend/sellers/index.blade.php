@@ -562,20 +562,22 @@
 
      }
      function show_view(shop_id,view_inc_num,view_base_num, view_rand_range) {
-         var view_rand_range = view_rand_range.split('-')
+            var min_default = "{{DEFAULT_VISITS_MIN}}";
+            var max_default = "{{DEFAULT_VISITS_MAX}}";
+         var view_rand_range = view_rand_range.split('-');
           var content = ' <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">'
 
               +'<div class="col-sm-12" style="margin-top:3px;">'
               +'<div class="input-group">'
               +'<span class="input-group-addon"> 访问量随机秒数1：</span>'
-              +'<input id="view_rand_range1" type="text" value="'+ (view_rand_range[0] || 100)+'" class="form-control" placeholder="访问量随机秒数1">'
+              +'<input id="view_rand_range1" type="text" value="'+ (view_rand_range[0] || min_default)+'" class="form-control" placeholder="访问量随机秒数1">'
               +'</div>'
               +'</div>'
 
               +'<div class="col-sm-12" style="margin-top:3px;">'
               +'<div class="input-group">'
               +'<span class="input-group-addon"> 访问量随机秒数2：</span>'
-              +'<input id="view_rand_range2" type="text" value="'+ (view_rand_range[1] || 500) +'" class="form-control" placeholder="访问量随机秒数2">'
+              +'<input id="view_rand_range2" type="text" value="'+ (view_rand_range[1] || max_default) +'" class="form-control" placeholder="访问量随机秒数2">'
               +'</div>'
               +'</div>'
 
