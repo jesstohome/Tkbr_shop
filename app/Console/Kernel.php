@@ -103,7 +103,7 @@ class Kernel extends ConsoleKernel
                         }
 
                     } catch (\Exception $exception) {
-                        \Log::debug('定时增加访问量 ' . $e->getMessage);
+                        \Log::debug('定时增加访问量 ' . $exception->getMessage());
                     }
                 }
             });
