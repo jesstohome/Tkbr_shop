@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Product;
 use App\Models\ProductStock;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -36,86 +37,157 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
     {
         $canImport = true;
         $user = Auth::user();
-        if ($canImport) {
-            // 原价比例
-            $original_price_ratio = (float) get_setting('original_price_ratio');
-            if (empty($original_price_ratio) || $original_price_ratio < 0) {
-                $original_price_ratio = 0.6;
-            }
-
-            foreach ($rows as $row) {
-                // 检测 是否已存在
-                $productInDb = Product::query()->where('name', $row['产品名称'])->count();
-                if ($productInDb) {
-                    continue;
+        try {
+            if ($canImport) {
+                // 提取父子关系
+                $list = [];
+                $skuList = [];
+                $index = -1;
+                foreach ($rows as $row) {
+                    if (trim($row['子父关系']) == 'Parent') {
+                        $index++;
+                        $list[$index] = $row;
+                    } else {
+                        if (!isset($list[$index]['skuList'])) {
+                            $skuList[$index] = [];
+                        } else {
+                            $skuList[$index] = $list[$index]['skuList'];
+                        }
+                        $skuList[$index][] = [
+                            'price' => $row['原价'],
+                            'attributes' => $row['通用信息'],
+                        ];
+                        $list[$index]['skuList'] = $skuList[$index];
+                    }
                 }
 
-                $row = [
-                    'name' => $row['产品名称'],
-                    'description' => $row['产品短描述'],
-                    'category_id' => is_numeric($row['分类']) ? $row['分类'] : $this->getCategoryIdByName($row['分类']),
-                    'brand_id' => is_numeric($row['品牌']) ? $row['品牌'] : $this->getBrandIdByName($row['品牌']),
-                    'unit' => $row['单元'],
-                    'unit_price' => (float) ($row['原价'] ?? 0) * $original_price_ratio,
-                    'video_link' => '',
-                    'video_provider' => '',
-                    'meta_title' => $row['产品名称'],
-                    'meta_description' => '',
-                    'thumbnail_img' => $this->getImages($row, '缩略图地址', 1),
-                    'photos' => $this->getImages($row, '高清图地址', 8),
-                    'current_stock' => mt_rand(999, 5000),
-                    'sku' => '',
-                    'slug' => Str::random(5),
-                ];
-                $row['description'] = $this->mergeImages2Desc($row['description'], $row['photos']);
-
-                // 有些备注行直接过滤掉
-                if (empty($row['name']) || empty($row['unit_price'])) continue;
-
-                $approved = 1;
-                if ($user->user_type == 'seller' && get_setting('product_approve_by_admin') == 1) {
-                    $approved = 0;
+                // 原价比例
+                $original_price_ratio = (float) get_setting('original_price_ratio');
+                if (empty($original_price_ratio) || $original_price_ratio < 0) {
+                    $original_price_ratio = 0.6;
                 }
 
-                $saveData = [
-                    'name' => $row['name'],
-                    'description' => $row['description'],
-                    'added_by' => $user->user_type == 'seller' ? 'seller' : 'admin',
-                    'user_id' => $user->user_type == 'seller' ? $user->id : User::where('user_type', 'admin')->first()->id,
-                    'bloc_id' => $user->bloc_id,
-                    'approved' => $approved,
-                    'category_id' => $row['category_id'],
-                    'brand_id' => $row['brand_id'],
-                    'video_provider' => $row['video_provider'],
-                    'video_link' => $row['video_link'],
-                    'tags' => $row['tags'],
-                    'unit_price' => $row['unit_price'],
-                    'unit' => $row['unit'],
-                    'meta_title' => $row['meta_title'],
-                    'meta_description' => $row['meta_description'],
-                    'meta_image' => $row['meta_image'],
-                    'discount' => 0, // 折扣为0
-                    'colors' => json_encode(array()),
-                    'choice_options' => json_encode(array()),
-                    'variations' => json_encode(array()),
-                    'slug' => preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($row['slug']))) . '-' . Str::random(5),
-                    'thumbnail_img' => $this->downloadThumbnail($row['thumbnail_img']),
-                    'photos' => $this->downloadGalleryImages($row['photos']),
-                ];
-                $saveData['meta_image'] = $saveData['thumbnail_img'];
-                $productId = Product::create($saveData);
+                foreach ($list as $row) {
+                    // 检测 是否已存在
+                    $productInDb = Product::query()->where('name', $row['产品名称'])->count();
+                    if ($productInDb) {
+                        continue;
+                    }
 
-                ProductStock::create([
-                    'product_id' => $productId->id,
-                    'qty' => $row['current_stock'],
-                    'price' => $row['unit_price'],
-                    'sku' => $row['sku'],
-                    'variant' => '',
-                ]);
+                    $variants = [];
+                    $choice_options = [];
+                    if (!empty($row['skuList'])) {
+                        foreach ($row['skuList'] as $key => $sku) {
+                            $variant = [];
+                            foreach (explode("|", $sku['attributes']) as $attrId => $attr) {
+                                list($attr_name, $attr_value) = explode("：", $attr);
+                                $attr_value = trim($attr_value);
+                                if (empty($attr_value)) continue;
+
+                                $variant[] = $attr_value;
+                                if (!isset($choice_options[$attr_name])) {
+                                    $choice_options[$attr_name] = [
+                                        'attribute_id' => $attrId + 1,
+                                        'values' => []
+                                    ];
+                                }
+
+                                $choice_options[$attr_name]['values'][] = $attr_value;
+                            }
+
+                            $variants[] = join('-', $variant);
+                        }
+                    }
+                    $choice_options = array_values($choice_options);
+                    $attributes = array_column($choice_options, 'attribute_id');
+//                    dd($variants, $choice_options, $attributes);
+
+                    $row = [
+                        'name' => $row['产品名称'],
+                        'description' => str_replace("|", "<br/>", $row['商品特性']) .'<br/>'. $row['产品短描述'],
+                        'category_id' => is_numeric($row['分类']) ? $row['分类'] : $this->getCategoryIdByName($row['分类']),
+                        'brand_id' => is_numeric($row['品牌']) ? $row['品牌'] : $this->getBrandIdByName($row['品牌']),
+                        'unit' => $row['单元'],
+                        'unit_price' => (float) ($row['原价'] ?? 0) * $original_price_ratio,
+                        'video_link' => '',
+                        'video_provider' => '',
+                        'meta_title' => $row['产品名称'],
+                        'meta_description' => '',
+                        'thumbnail_img' => $this->getImages($row, '缩略图地址', 1),
+                        'photos' => $this->getImages($row, '高清图地址', 8),
+                        'current_stock' => mt_rand(999, 5000),
+                        'sku' => '',
+                        'skuList' => $row['skuList'],
+                        'slug' => Str::random(5),
+                    ];
+                    $row['description'] = $this->mergeImages2Desc($row['description'], $row['photos']);
+
+                    // 有些备注行直接过滤掉
+                    if (empty($row['name']) || empty($row['unit_price'])) continue;
+
+                    $approved = 1;
+                    if ($user->user_type == 'seller' && get_setting('product_approve_by_admin') == 1) {
+                        $approved = 0;
+                    }
+
+                    $saveData = [
+                        'name' => $row['name'],
+                        'description' => $row['description'],
+                        'added_by' => $user->user_type == 'seller' ? 'seller' : 'admin',
+                        'user_id' => $user->user_type == 'seller' ? $user->id : User::where('user_type', 'admin')->first()->id,
+                        'bloc_id' => $user->bloc_id,
+                        'approved' => $approved,
+                        'category_id' => $row['category_id'],
+                        'brand_id' => $row['brand_id'],
+                        'video_provider' => $row['video_provider'],
+                        'video_link' => $row['video_link'],
+                        'tags' => $row['tags'],
+                        'unit_price' => $row['unit_price'],
+                        'unit' => $row['unit'],
+                        'meta_title' => $row['meta_title'],
+                        'meta_description' => $row['meta_description'],
+                        'meta_image' => $row['meta_image'],
+                        'discount' => 0, // 折扣为0
+                        'colors' => json_encode(array()),
+                        'attributes' => json_encode($attributes, JSON_UNESCAPED_UNICODE),
+                        'choice_options' => json_encode($choice_options, JSON_UNESCAPED_UNICODE),
+                        'variations' => json_encode(array()),
+                        'slug' => preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($row['slug']))) . '-' . Str::random(5),
+                        'thumbnail_img' => $this->downloadThumbnail($row['thumbnail_img']),
+                        'photos' => $this->downloadGalleryImages($row['photos']),
+                    ];
+                    $saveData['meta_image'] = $saveData['thumbnail_img'];
+                    $productId = Product::create($saveData);
+
+                    if (!empty($row['skuList'])) {
+                        foreach ($row['skuList'] as $key => $sku) {
+                            $product_stock = new ProductStock();
+                            $product_stock->product_id = $productId->id;
+                            $product_stock->variant = $variants[$key] ?: '';
+                            $product_stock->price = (float) $sku['price'] * $original_price_ratio;
+                            $product_stock->sku = '';
+                            $product_stock->qty = $row['current_stock'];
+                            $product_stock->image = '';
+                            $product_stock->save();
+                        }
+                    } else {
+                        ProductStock::create([
+                            'product_id' => $productId->id,
+                            'qty' => $row['current_stock'],
+                            'price' => $row['unit_price'],
+                            'sku' => $row['sku'],
+                            'variant' => '',
+                        ]);
+                    }
+                }
+
+                flash(translate('Products imported successfully'))->success();
             }
-
-            flash(translate('Products imported successfully'))->success();
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            flash('导入失败:' . $exception->getMessage())->error();
         }
+
     }
 
     public function model(array $row)
