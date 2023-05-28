@@ -71,7 +71,7 @@
     }
 
     .card.chat {
-        height: 100%;
+        height: 75vh;
         margin-bottom: 0;
     }
 
@@ -197,8 +197,8 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".card.chat").height(document.body.clientHeight - 75)
-            $(".aiz-main-content").height(document.body.clientHeight - 75)
+            // $(".card.chat").height(document.body.clientHeight - 75);
+            // $(".aiz-main-content").height(document.body.clientHeight - 75);
         });
     </script>
 @endsection
