@@ -73,6 +73,10 @@
     </div>
     <div class="text-center">
         <button class="btn btn-outline-primary mb-3 mb-sm-0" data-dismiss="modal">{{ translate('Back to shopping')}}</button>
-        <a href="{{ route('cart') }}" class="btn btn-primary mb-3 mb-sm-0">{{ translate('Proceed to Checkout')}}</a>
+        @if(isSeller())
+            <a href="javascript:void(0);" class="btn btn-primary mb-3 mb-sm-0" onclick="showSellerBuyWarning()">{{ translate('Proceed to Checkout')}}</a>
+        @else
+            <a href="{{ route('cart') }}" class="btn btn-primary mb-3 mb-sm-0">{{ translate('Proceed to Checkout')}}</a>
+        @endif
     </div>
 </div>

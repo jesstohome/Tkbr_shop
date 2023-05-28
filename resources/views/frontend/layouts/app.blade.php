@@ -384,6 +384,11 @@
             @endif
         }
 
+        function showSellerBuyWarning () {
+            AIZ.plugins.notify('warning', "{{ translate('The product cannot be purchased in the region it belongs to') }}");
+            return false;
+        }
+
         function showAddToCartModal(id){
             if(!$('#modal-size').hasClass('modal-lg')){
                 $('#modal-size').addClass('modal-lg');
@@ -483,6 +488,10 @@
         }
 
         function buyNow(){
+            @if(Auth::user()->user_type == 'seller')
+                AIZ.plugins.notify('warning', "{{ translate('The product cannot be purchased in the region it belongs to') }}");
+                return false;
+            @endif
             if(checkAddToCartValidity()) {
                 $('#addToCart-modal-body').html(null);
                 $('#addToCart').modal();

@@ -296,7 +296,6 @@ Route::group(['middleware' => ['customer', 'verified', 'unbanned']], function() 
     });
 
     // Wishlist
-    Route::resource('wishlists', WishlistController::class);
     Route::post('/wishlists/remove', [WishlistController::class, 'remove'])->name('wishlists.remove');
 
     // Wallet
@@ -330,6 +329,10 @@ Route::group(['middleware' => ['customer', 'verified', 'unbanned']], function() 
         Route::get('/digital-products/download/{id}', 'download')->name('digital-products.download');
     });
 
+});
+
+Route::group(['middleware' => ['verified', 'unbanned']], function() {
+    Route::resource('wishlists', WishlistController::class);
 });
 
 Route::group(['middleware' => ['auth']], function() {
