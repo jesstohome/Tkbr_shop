@@ -15,17 +15,18 @@
 
                             <div class="px-4 py-3 py-lg-4">
                                 <div class="">
-                                    <form class="form-default" role="form" action="{{ route('login') }}" method="POST">
+                                    <form id="login-form" class="form-default" role="form" action="{{ route('login') }}" method="POST">
                                         @csrf
                                         @if (addon_is_activated('otp_system') && env("DEMO_MODE") != "On")
                                             <div class="form-group phone-form-group mb-1">
                                                 <input type="tel" id="phone-code" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" placeholder="" name="phone" autocomplete="off">
+                                                <span class="error" aria-live="polite"></span>
                                             </div>
 
                                             <input type="hidden" name="country_code" value="">
 
                                             <div class="form-group email-form-group mb-1 d-none">
-                                                <input type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email" id="email" autocomplete="off">
+                                                <input type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" title="输入正确的" name="email" id="email" autocomplete="off">
                                                 @if ($errors->has('email'))
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $errors->first('email') }}</strong>
@@ -140,39 +141,45 @@
 
 @section('script')
     <script type="text/javascript">
-        var isPhoneShown = true,
-            countryData = window.intlTelInputGlobals.getCountryData(),
-            input = document.querySelector("#phone-code");
+        try {
+            var isPhoneShown = true,
+                countryData = window.intlTelInputGlobals.getCountryData(),
+                input = document.querySelector("#phone-code");
 
-        for (var i = 0; i < countryData.length; i++) {
-            var country = countryData[i];
-            if(country.iso2 == 'bd'){
-                country.dialCode = '88';
-            }
-        }
-
-        var iti = intlTelInput(input, {
-            separateDialCode: true,
-            utilsScript: "{{ static_asset('assets/js/intlTelutils.js') }}?1590403638580",
-            onlyCountries: @php echo json_encode(\App\Models\Country::where('status', 1)->pluck('code')->toArray()) @endphp,
-            customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
-                if(selectedCountryData.iso2 == 'bd'){
-                    return "01xxxxxxxxx";
+            for (var i = 0; i < countryData.length; i++) {
+                var country = countryData[i];
+                if(country.iso2 == 'bd'){
+                    country.dialCode = '88';
                 }
-                return selectedCountryPlaceholder;
             }
-        });
 
-        var country = iti.getSelectedCountryData();
-        $('input[name=country_code]').val(country.dialCode);
-
-        input.addEventListener("countrychange", function(e) {
-            // var currentMask = e.currentTarget.placeholder;
+            var iti = intlTelInput(input, {
+                separateDialCode: true,
+                utilsScript: "{{ static_asset('assets/js/intlTelutils.js') }}?1590403638580",
+                onlyCountries: @php echo json_encode(\App\Models\Country::where('status', 1)->pluck('code')->toArray()) @endphp,
+                customPlaceholder: function(selectedCountryPlaceholder, selectedCountryData) {
+                    if(selectedCountryData.iso2 == 'bd'){
+                        return "01xxxxxxxxx";
+                    }
+                    return selectedCountryPlaceholder;
+                }
+            });
 
             var country = iti.getSelectedCountryData();
             $('input[name=country_code]').val(country.dialCode);
 
-        });
+            input.addEventListener("countrychange", function(e) {
+                // var currentMask = e.currentTarget.placeholder;
+
+                var country = iti.getSelectedCountryData();
+                $('input[name=country_code]').val(country.dialCode);
+
+            });
+        } catch (e) {
+
+        }
+
+
 
         function toggleEmailPhone(el){
             if(isPhoneShown){
@@ -205,5 +212,19 @@
             $('#email').val('deliveryboy@example.com');
             $('#password').val('123456');
         }
+
+        $(document).ready(function () {
+            const email = document.getElementById("email");
+            email.addEventListener("input", (event) => {
+                // console.log(email.validity);
+
+                if (email.validity.typeMismatch) {
+                    email.setCustomValidity("{{translate('Email format error')}}");
+                } else {
+                    email.setCustomValidity("");
+                }
+            });
+            email.reportValidity();
+        });
     </script>
 @endsection
