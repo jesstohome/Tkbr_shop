@@ -259,7 +259,11 @@ class ProductInit extends Command
             ->having("totalProduct", 0)
             ->limit($shop_num)
             ->get();
-        $products = Product::query()->where('in_storehouse', 1)->whereNotIn('id', $alreadyCopyIds);
+        $products = Product::query()->where('in_storehouse', 1);
+        
+        if (!empty($alreadyCopyIds)) {
+            $products = $products->whereNotIn('id', $alreadyCopyIds);
+        }
 
         $category_ids = $this->argument('category_ids');
         if (is_null($category_ids)) {
