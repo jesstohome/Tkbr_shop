@@ -65,6 +65,9 @@ class ProductBulkUploadController extends Controller
 
     public function bulk_upload(Request $request)
     {
+        set_time_limit(0);
+        ini_set('memory_limit', -1);
+        
         if($request->hasFile('bulk_file')){
             try {
                 $import = new ProductsImport;
