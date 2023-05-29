@@ -285,14 +285,7 @@
                             placeholder="{{ translate('Choice Title') }}" disabled>
                     </div>
                     <div class="col-lg-8">
-                        <select class="form-control aiz-selectpicker attribute_choice" data-live-search="true" name="choice_options_{{ $choice_option->attribute_id }}[]" multiple>
-                            @foreach (\App\Models\AttributeValue::where('attribute_id', $choice_option->attribute_id)->get() as $row)
-                                <option value="{{ $row->value }}" @if( in_array($row->value, $choice_option->values)) selected @endif>
-                                    {{ $row->value }}
-                                </option>
-                            @endforeach
-                        </select>
-                        {{-- <input type="text" class="form-control aiz-tag-input" name="choice_options_{{ $choice_option->attribute_id }}[]" placeholder="{{ translate('Enter choice values') }}" value="{{ implode(',', $choice_option->values) }}" data-on-change="update_sku"> --}}
+                         <input type="text" class="form-control aiz-tag-input" name="choice_options_{{ $choice_option->attribute_id }}[]" placeholder="{{ translate('Enter choice values') }}" value="{{ implode(',', $choice_option->values) }}" data-on-change="update_sku">
                     </div>
                 </div>
                 @endforeach

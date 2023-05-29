@@ -259,10 +259,9 @@ class ProductController extends Controller
                 $name = 'choice_options_' . $no;
                 $data = array();
 
-                $item = $request[$name];
-                if (is_string($item) && (strpos($item, ",") !== false || strpos($item, "，") !== false)) {
-                    $item = str_replace("，", ",", $item);
-                    $request[$name] = explode(",", $item);
+                $jsonData = json_decode($request[$name][0], true);
+                if (!empty($jsonData)) {
+                    $request[$name] = array_column($jsonData, 'value');
                 }
 
                 foreach ($request[$name] as $key => $item) {

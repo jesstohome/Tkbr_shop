@@ -233,7 +233,7 @@ if (!function_exists('cart_product_price')) {
         }
 
         $price = (float)$product->unit_price;
-        $product_stock = $product->stocks->where('variant', $str)->first();
+        $product_stock = $product->stocks ? $product->stocks->where('variant', $str)->first() : '';
         if ($product_stock) {
             $price = $product_stock->price;
         }

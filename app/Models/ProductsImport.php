@@ -94,7 +94,9 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                                     ];
                                 }
 
-                                $choice_options[$attr_name]['values'][] = $attr_value;
+                                if (!in_array($attr_value, $choice_options[$attr_name]['values'])) {
+                                    $choice_options[$attr_name]['values'][] = $attr_value;
+                                }
                             }
 
                             $variants[] = join('-', $variant);
