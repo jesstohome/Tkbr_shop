@@ -250,14 +250,15 @@ class ProductInit extends Command
         $shop_num = $this->argument('shop_num');
         if (empty($shop_num)) $shop_num = 200;
 
-        $shops = Shop::query()->join("products", "products.user_id", "=", "shops.user_id")
-            ->where('shops.bloc_id', 0)
-            ->where('shops.rating', '>=', 4)
-            ->where('shops.num_of_reviews', '>=', 10)
-            ->groupBy("shops.user_id")
-            ->selectRaw("shops.*, count(`products`.`id`) `totalProduct`")
-            ->having("totalProduct", 0)
-            ->limit($shop_num)
+        $shops = Shop::query()->where('bloc_id', 0)
+            ->where('rating', '>=', 4)
+            ->where('num_of_reviews', '>=', 10)
+            
+            ->orderBy('id')
+            ->limit(200)
+            // 剩下300个用下面的方式
+//            ->orderByDesc('id')
+//            ->limit(300)
             ->get();
         $products = Product::query()->where('in_storehouse', 1);
 
