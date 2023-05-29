@@ -89,6 +89,11 @@
                     <input type="text" class="form-control form-control-sm" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type & Enter') }}">
                 </div>
             </div>
+            <div class="col-auto">
+                <div class="form-group mb-0">
+                    <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                </div>
+            </div>
         </div>
 
         <div class="card-body">
