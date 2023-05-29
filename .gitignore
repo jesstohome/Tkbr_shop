@@ -60,3 +60,4 @@ public/uploads.zip
 /.idea
 /storage/logs/*.log
 public/uploads/all/
+/.user.ini
