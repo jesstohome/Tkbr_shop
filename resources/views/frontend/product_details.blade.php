@@ -262,7 +262,10 @@
                                         <div class="row no-gutters">
                                             <div class="col-sm-2">
                                                 <div class="opacity-50 my-2">
-                                                    {{ \App\Models\Attribute::query()->where("name", $attrs[$key] ?? 2)->first()->getTranslation('name') }}:
+                                                    @php
+                                                    $attribute = \App\Models\Attribute::query()->where("name", $attrs[$key] ?? 2)->first();
+                                                    @endphp
+                                                    {{ $attribute ? $attribute->getTranslation('name') : ''}}:
                                                 </div>
                                             </div>
                                             <div class="col-sm-10">
