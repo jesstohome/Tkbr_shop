@@ -26,7 +26,7 @@ class ProductInit extends Command
      *
      * @var string
      */
-    protected $signature = 'product:init {category_ids?}';
+    protected $signature = 'product:init {category_ids?} {shop_num?}';
 
     /**
      * The console command description.
@@ -247,10 +247,17 @@ class ProductInit extends Command
             ->toArray();
 
         // 虚拟店铺，无集团分组的
-        $shops = Shop::query()->where('bloc_id', 0)
-            ->where('rating', '>=', 4)
-            ->where('num_of_reviews', '>=', 10)
-            ->limit(500)
+        $shop_num = $this->argument('shop_num');
+        if (empty($shop_num)) $shop_num = 200;
+
+        $shops = Shop::query()->join("products", "products.user_id", "=", "shops.user_id")
+            ->where('shops.bloc_id', 0)
+            ->where('shops.rating', '>=', 4)
+            ->where('shops.num_of_reviews', '>=', 10)
+            ->groupBy("shops.user_id")
+            ->selectRaw("shops.*, count(`products`.`id`) `totalProduct`")
+            ->having("totalProduct", 0)
+            ->limit($shop_num)
             ->get();
         $products = Product::query()->where('in_storehouse', 1)->whereNotIn('id', $alreadyCopyIds);
 
