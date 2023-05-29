@@ -221,7 +221,7 @@
                                         </div>
                                         <div class="col-sm-10">
                                             <div class="">
-                                                <strong class="h2 fw-600 text-primary">
+                                                <strong class="h2 fw-600 text-primary" id="product-price">
                                                     {{ home_discounted_price($detailedProduct) }}
                                                 </strong>
                                                 @if ($detailedProduct->unit != null)
@@ -356,7 +356,7 @@
 
                                 <hr>
 
-                                <div class="row no-gutters pb-3 d-none" id="chosen_price_div">
+                                <div class="row no-gutters pb-3 d-none" id="chosen_price_div" style="display: none">
                                     <div class="col-sm-2">
                                         <div class="opacity-50 my-2">{{ translate('Total Price') }}:</div>
                                     </div>

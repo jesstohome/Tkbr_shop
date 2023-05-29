@@ -165,7 +165,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                         foreach ($row['skuList'] as $key => $sku) {
                             $product_stock = new ProductStock();
                             $product_stock->product_id = $productId->id;
-                            $product_stock->variant = $variants[$key] ?: '';
+                            $product_stock->variant = str_replace(' ', '', $variants[$key] ?: '');
                             $product_stock->price = (float) $sku['price'] * $original_price_ratio;
                             $product_stock->sku = '';
                             $product_stock->qty = $row['current_stock'];
