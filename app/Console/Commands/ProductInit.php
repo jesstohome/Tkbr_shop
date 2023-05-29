@@ -248,9 +248,9 @@ class ProductInit extends Command
 
         // 虚拟店铺，无集团分组的
         $shops = Shop::query()->where('bloc_id', 0)
-            ->where('created_at', '>=', '2023-05-16 10:00:00')
-            ->where('created_at', '<=', '2023-05-16 23:59:59')
-            ->limit(5)
+            ->where('rating', '>=', 4)
+            ->where('num_of_reviews', '>=', 10)
+            ->limit(500)
             ->get();
         $products = Product::query()->where('in_storehouse', 1)->whereNotIn('id', $alreadyCopyIds);
 
