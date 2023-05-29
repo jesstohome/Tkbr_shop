@@ -32,8 +32,8 @@
 
         const winHeight = window.innerHeight;
         $(window).resize(function(evt) {
-            var thisHeight = window.innerHeight
-            $(window).scrollTop(9999);
+            var thisHeight = window.innerHeight;
+            // $(window).scrollTop(9999);
 
             if (winHeight - thisHeight > 50) {
                 //当软键盘弹出，在这里面操作
@@ -46,12 +46,12 @@
                 $("#ticket-reply-form").css("position", 'absolute');
                 // $(".footer-site-name").show();
             }
-        })
+        });
 
         setTimeout(function () {
             $("ul.ticket").scrollTop(999990);
         }, 500)
-    })
+    });
 
     var replying = 0;
     function submit_reply(status) {
