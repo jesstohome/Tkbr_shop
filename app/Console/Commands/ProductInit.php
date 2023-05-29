@@ -260,7 +260,7 @@ class ProductInit extends Command
             ->limit($shop_num)
             ->get();
         $products = Product::query()->where('in_storehouse', 1);
-        
+
         if (!empty($alreadyCopyIds)) {
             $products = $products->whereNotIn('id', $alreadyCopyIds);
         }
@@ -270,6 +270,8 @@ class ProductInit extends Command
             $this->info('确定不指定分类，将category_ids参数设置为0');
             return;
         }
+
+        $this->info(var_export([$category_ids, !empty($category_ids)], true));
         if (!empty($category_ids)) {
             $category_ids = explode(",", $category_ids);
             $products = $products->whereIn('category_id', $category_ids);
