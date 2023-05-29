@@ -255,6 +255,12 @@ class ProductService
                 $str = 'choice_options_' . $no;
                 $item['attribute_id'] = $no;
                 $attribute_data = array();
+
+                $jsonData = json_decode($collection[$str][0], true);
+                if (!empty($jsonData)) {
+                    $collection[$str] = array_column($jsonData, 'value');
+                }
+
                 // foreach (json_decode($request[$str][0]) as $key => $eachValue) {
                 foreach ($collection[$str] as $key => $eachValue) {
                     // array_push($data, $eachValue->value);
