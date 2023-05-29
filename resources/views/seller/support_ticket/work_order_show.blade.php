@@ -72,7 +72,7 @@
         flex-direction: column;
         flex: 1;
         min-height:100%;
-        
+
         margin-bottom: 0;
     }
 
@@ -205,7 +205,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $(".card.chat").height(document.body.clientHeight - 100);
-            $(".aiz-main-content").height(document.body.clientHeight - 100);
+            // $(".aiz-main-content").height(document.body.clientHeight - 100);
 
             $("input,textarea").on("blur", function () {
                 window.scroll(0, 0);
