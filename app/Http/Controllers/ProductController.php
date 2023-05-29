@@ -1038,6 +1038,10 @@ class ProductController extends Controller
             {
                 $name = 'choice_options_' . $no;
                 $data = [];
+                $jsonData = json_decode($request[$name][0], true);
+                if (!empty($jsonData)) {
+                    $request[$name] = array_column($jsonData, 'value');
+                }
                 // foreach (json_decode($request[$name][0]) as $key => $item) {
                 foreach ( $request[$name] as $key => $item )
                 {

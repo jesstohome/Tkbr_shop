@@ -78,7 +78,7 @@
                                 echo $stock->sku;
                             }
                             else {
-                                echo $str;
+                                echo '';
                             }
                            @endphp" class="form-control">
                 </td>
