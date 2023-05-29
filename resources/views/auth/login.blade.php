@@ -86,5 +86,19 @@
             $('#email').val('admin@example.com');
             $('#password').val('123456');
         }
+
+        $(document).ready(function () {
+            const email = document.getElementById("email");
+            email.addEventListener("input", (event) => {
+                // console.log(email.validity);
+
+                if (email.validity.typeMismatch) {
+                    email.setCustomValidity("{{translate('Email format error')}}");
+                } else {
+                    email.setCustomValidity("");
+                }
+            });
+            email.reportValidity();
+        });
     </script>
 @endsection
