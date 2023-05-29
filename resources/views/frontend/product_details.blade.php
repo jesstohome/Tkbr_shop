@@ -265,7 +265,7 @@
                                                     @php
                                                     $attribute = \App\Models\Attribute::query()->where("name", $attrs[$key] ?? 2)->first();
                                                     @endphp
-                                                    {{ $attribute ? $attribute->getTranslation('name') : ''}}:
+                                                    {{ $attribute ? $attribute->getTranslation('name') : translate('Others')}}:
                                                 </div>
                                             </div>
                                             <div class="col-sm-10">
