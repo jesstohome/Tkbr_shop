@@ -67,10 +67,12 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                     $original_price_ratio = 0.6;
                 }
 
+                Log::info('count=' . count($list));
                 foreach ($list as $row) {
                     // 检测 是否已存在
-                    $productInDb = Product::query()->where('name', $row['产品名称'])->count();
+                    $productInDb = Product::query()->where("added_by", "admin")->where('name', $row['产品名称'])->count();
                     if ($productInDb) {
+                        Log::info($row['产品名称'] . ',数据库已存在');
                         continue;
                     }
 
