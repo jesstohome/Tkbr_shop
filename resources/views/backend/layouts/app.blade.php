@@ -198,16 +198,20 @@
                 return false;
             @endif
 
-            (force || !played) && $("#tip-audio")[0].play();
-
-            played = 1;
+            $("#tip-audio")[0].play();
         }
 
         function check_new_msg() {
             $.get( '{{route('admin.check_new_msg')}}', {}, function (res)
             {
                 if ( res.code == 1 ) {
-                    audioPlay();
+                    res.hasNewAudio && audioPlay(true);
+                    for (const ck in res.keys) {
+                        // console.log(ck, res.keys[ck]);
+                        if (res.keys[ck]) {
+                            $("." + ck).show()
+                        }
+                    }
                 }
             }, 'json' )
         }

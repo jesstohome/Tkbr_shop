@@ -78,17 +78,41 @@ class AdminController extends Controller
             hlen_plus("new_work_order_ticket_tip") > 0 ||
             hlen_plus("new_offline_recharge_tip") > 0
         );
+        $hasNewAudio = (int) (
+            hlen_plus("audio:new_shop_created_tip") > 0 ||
+            hlen_plus("audio:new_review_tip") > 0 ||
+            hlen_plus("audio:new_order_tip") > 0 ||
+            hlen_plus("audio:orders_pick_up_tip") > 0 ||
+            hlen_plus("audio:new_withdraw_tip") > 0 ||
+            hlen_plus("audio:new_ticket_tip") > 0 ||
+            hlen_plus("audio:new_work_order_ticket_tip") > 0 ||
+            hlen_plus("audio:new_offline_recharge_tip") > 0
+        );
+        if ($hasNewAudio) {
+            del_plus("audio:new_shop_created_tip");
+            del_plus("audio:new_review_tip");
+            del_plus("audio:new_order_tip");
+            del_plus("audio:orders_pick_up_tip");
+            del_plus("audio:new_withdraw_tip");
+            del_plus("audio:new_ticket_tip");
+            del_plus("audio:new_work_order_ticket_tip");
+            del_plus("audio:new_offline_recharge_tip");
+        }
         echo json_encode( [
             'code'=> $hasNew ,
+            'hasNew'=> $hasNew ,
+            'hasNewAudio'=> $hasNewAudio ,
             'msg'=> 'Yes',
-            'new_shop_created_tip' => hlen_plus("new_shop_created_tip") > 0,
-            'new_review_tip' => hlen_plus("new_review_tip") > 0,
-            'new_order_tip' => hlen_plus("new_order_tip") > 0,
-            'orders_pick_up_tip' => hlen_plus("orders_pick_up_tip") > 0,
-            'new_withdraw_tip' => hlen_plus("new_withdraw_tip") > 0,
-            'new_offline_recharge_tip' => hlen_plus("new_offline_recharge_tip") > 0,
-            'new_ticket_tip' => hlen_plus("new_ticket_tip") > 0,
-            'new_work_order_ticket_tip' => hlen_plus("new_work_order_ticket_tip") > 0,
+            'keys' => [
+                'new_shop_created_tip' => hlen_plus("new_shop_created_tip") > 0,
+                'new_review_tip' => hlen_plus("new_review_tip") > 0,
+                'new_order_tip' => hlen_plus("new_order_tip") > 0,
+                'orders_pick_up_tip' => hlen_plus("orders_pick_up_tip") > 0,
+                'new_withdraw_tip' => hlen_plus("new_withdraw_tip") > 0,
+                'new_offline_recharge_tip' => hlen_plus("new_offline_recharge_tip") > 0,
+                'new_ticket_tip' => hlen_plus("new_ticket_tip") > 0,
+                'new_work_order_ticket_tip' => hlen_plus("new_work_order_ticket_tip") > 0,
+            ]
         ] );
         exit;
     }

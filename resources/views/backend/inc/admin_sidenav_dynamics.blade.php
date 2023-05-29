@@ -56,7 +56,7 @@
                         <a href="{{$menu->route ? route($menu->route) : '#'}}" class="aiz-side-nav-link">
                             <i class="las la-{{$menu->icon}} aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{translate($menu->name)}}</span>
-                            @if($menu->show_red_tips) <span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
+                            <span class="badge badge-danger badge-circle badge-sm badge-dot {{str_replace(',', ' ', $menu->red_dot_keys)}}" style="display: none"></span>
 
                             @if($menu->children) <span class="aiz-side-nav-arrow"></span> @endif
                         </a>
@@ -69,9 +69,7 @@
                                             @if($menu2->route == 'sellers.index' && $sellers > 0)<span class="badge badge-info">{{ $sellers }}</span> @endif
                                             @if($menu2->route == 'refund_requests_all' && $refund_count > 0) <span class="badge badge-info">{{ $refund_count }}</span> @endif
 
-                                            @if($menu2->show_red_tips)
-                                                <span class="badge badge-danger badge-circle badge-sm badge-dot"></span>
-                                            @endif
+                                            <span class="badge badge-danger badge-circle badge-sm badge-dot {{str_replace(',', ' ', $menu2->red_dot_keys)}}" style="display: none"></span>
 
                                             @if($menu2->children) <span class="aiz-side-nav-arrow"></span> @endif
                                         </a>

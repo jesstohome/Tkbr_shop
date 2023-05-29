@@ -1571,6 +1571,11 @@ if (!function_exists('hlen_plus')) {
         foreach ($keys as $key) {
             \Illuminate\Support\Facades\Redis::hset($key, $field, $val);
         }
+
+        // 多加一个声音的缓存 声音的播放一次，立即删除
+        foreach ($keys as $key) {
+            \Illuminate\Support\Facades\Redis::hset('audio:' . $key, $field, $val);
+        }
     }
 
     function hget_plus($redis_key, $field, $staff_id = 0) {

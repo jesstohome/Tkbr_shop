@@ -404,9 +404,11 @@
 
     window.onload = function() {
         get_not_view_count();
+        getConversations();
         setInterval( function ()
         {
-            get_not_view_count()
+            get_not_view_count();
+            getConversations();
         }, 10000 );
         if(boolean==1 && count > 0){
             $('#conversations-modal').modal('show');
@@ -534,9 +536,8 @@
 
         let played = 0;
         function audioPlay(force) {
-            (force || !played) && $("#tip-audio")[0].play();
-
-            played = 1;
+            console.log("来消息啦 ，播放声音");
+            $("#tip-audio")[0].play();
         }
     </script>
 

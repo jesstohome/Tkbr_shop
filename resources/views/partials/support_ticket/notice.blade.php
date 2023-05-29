@@ -30,14 +30,13 @@
                 var count = response.count || 0;
                 if (count > 0) {
                     $(".chat-num-tip").html(count).show();
-                    audioPlay();
                 }
             }
         } );
     }
 
     $(document).ready(function () {
-        setInterval(check_unread, 30e3)
+        setInterval(check_unread, 10e3);
 
         @if(empty($in_chat_page))
         setInterval(loop_load_new_reply_audio, 5e3);
