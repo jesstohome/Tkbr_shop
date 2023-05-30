@@ -397,6 +397,10 @@
                     else {
                         $( '#order-red-tip' ).hide();
                     }
+
+                    if (data.new_order_audio) {
+                        audioPlay && audioPlay()
+                    }
                 }
             } );
         }

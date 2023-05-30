@@ -1608,6 +1608,56 @@ if (!function_exists('hlen_plus')) {
 
     }
 
+    function set_plus($redis_key, $val = 1, $staff_id = 0) {
+        $keys = [$redis_key];
+
+        $user = auth()->user();
+        if ($user && $user->user_type != 'admin') {
+            if (!$staff_id) {
+                $staff = auth()->user()->staffInfo;
+                if ($staff) {
+                    $staff_id = $staff->id;
+                }
+            }
+
+            if (!empty($staff_id)) {
+                $staff = Staff::find($staff_id);
+                $keys[] = $redis_key . ":bloc:" . $staff->bloc_id;
+            }
+
+            $keys[] = $redis_key . ":" . $staff_id;
+        }
+
+        foreach ($keys as $key) {
+            \Illuminate\Support\Facades\Redis::set($key, $val);
+        }
+
+        // 多加一个声音的缓存 声音的播放一次，立即删除
+        foreach ($keys as $key) {
+            \Illuminate\Support\Facades\Redis::set('audio:' . $key, $val);
+        }
+    }
+
+    function get_plus($redis_key, $staff_id = 0) {
+        if (!$staff_id) {
+            $staff = auth()->user()->staffInfo;
+            if ($staff) {
+                $staff_id = $staff->id;
+            }
+        }
+
+        $user = auth()->user();
+        if ($user && $user->user_type != 'admin') {
+            if ($user->staffInfo->role->is_manage) {
+                $redis_key = $redis_key . ":bloc:" . $user->bloc_id;
+            } else {
+                $redis_key = $redis_key . ":" . $staff_id;
+            }
+        }
+
+        return \Illuminate\Support\Facades\Redis::get($redis_key);
+    }
+
     function del_plus($redis_key, $staff_id = 0) {
         if (!$staff_id) {
             $staff = auth()->user()->staffInfo;

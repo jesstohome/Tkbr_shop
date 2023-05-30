@@ -10,8 +10,6 @@
             {
                 if (response.count > 0) {
                     AIZ.plugins.notify('info', "{{translate('You have a new job message')}}");
-
-                    $(".chat-num-tip").html(response.count).show();
                 }
             }
         } );
@@ -30,6 +28,9 @@
                 var count = response.count || 0;
                 if (count > 0) {
                     $(".chat-num-tip").html(count).show();
+                    @if(isSeller())
+                        audioPlay && audioPlay();
+                    @endif
                 }
             }
         } );

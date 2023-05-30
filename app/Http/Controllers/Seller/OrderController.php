@@ -306,7 +306,13 @@ class OrderController extends Controller
             ->distinct();
         $orders = $orders->where('created_at', '<=', date('Y-m-d H:i:s'));
 
+        $new_order_audio = hlen_plus("audio:new_order_tip") > 0;
+        if ($new_order_audio) {
+            del_plus("audio:new_order_tip");
+        }
+
         return response()->json([
+            'new_order_audio' => $new_order_audio,
             'result' => $orders->count(),
         ]);
     }

@@ -6,11 +6,15 @@
     .laytable-cell-1-0-2 {
         width: 200px!important;
     }
+    .btn-reply-group {
+        margin-top: 15px;
+        margin-left: 15px;
+    }
 </style>
-<div class="modal-header">
-    <button type="button" class="btn btn-light" onclick="filter_by_group(0)">全部</button>
+<div class="modal-header" style="justify-content: flex-start;flex-wrap: wrap;">
+    <button type="button" class="btn btn-light btn-reply-group" onclick="filter_by_group(0)">全部</button>
     @foreach(filter_by_bloc(\App\Models\TicketHuaShuGroup::query())->get() as $group)
-    <button type="button" class="btn btn-light" onclick="filter_by_group({{$group->id}})">{{$group->name}}</button>
+    <button type="button" class="btn btn-light btn-reply-group" onclick="filter_by_group({{$group->id}})">{{$group->name}}</button>
     @endforeach
 </div>
 <div class="modal-body">
