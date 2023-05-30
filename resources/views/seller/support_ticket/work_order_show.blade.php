@@ -6,7 +6,7 @@
     ul.ticket {
         height: calc(100% - 118px);
         overflow-y: scroll;
-        margin-top: 100px;
+        margin-top: 110px;
     }
     ul.ticket, ul.ticket li {
         background-color: #ebedf2;
