@@ -253,9 +253,9 @@ class ProductInit extends Command
         $shops = Shop::query()->where('bloc_id', 0)
             ->where('rating', '>=', 4)
             ->where('num_of_reviews', '>=', 10)
-            
+
             ->orderBy('id')
-            ->limit(200)
+            ->limit($shop_num)
             // 剩下300个用下面的方式
 //            ->orderByDesc('id')
 //            ->limit(300)
