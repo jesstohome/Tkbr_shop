@@ -17,10 +17,10 @@
                             <h1 class="h3 text-primary mb-0">{{ translate('Welcome to') }} {{ env('APP_NAME') }}</h1>
                             <p>{{ translate('Login to your account.') }}</p>
                         </div>
-                        <form class="pad-hor" method="POST" role="form" action="{{ route('login') }}">
+                        <form id="login-form" class="pad-hor" method="POST" role="form" action="{{ route('login') }}">
                             @csrf
                             <div class="form-group">
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus placeholder="{{ translate('Email') }}">
+                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" autofocus placeholder="{{ translate('Email') }}">
                                 @if ($errors->has('email'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -28,7 +28,7 @@
                                 @endif
                             </div>
                             <div class="form-group">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="{{ translate('Password') }}">
+                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="{{ translate('Password') }}">
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('password') }}</strong>
@@ -90,8 +90,7 @@
         $(document).ready(function () {
             const email = document.getElementById("email");
             email.addEventListener("input", (event) => {
-                // console.log(email.validity);
-
+                console.log(email.validity);
                 if (email.validity.typeMismatch) {
                     email.setCustomValidity("{{translate('Email format error')}}");
                 } else {
@@ -99,6 +98,17 @@
                 }
             });
             email.reportValidity();
+
+            $("#login-form").on("submit", function () {
+                if ($("#email").val().trim() === '') {
+                    AIZ.plugins.notify('danger', '{{ translate('The email is required and cannot be empty') }}');
+                    return false;
+                }
+                if ($("#password").val().trim() === '') {
+                    AIZ.plugins.notify('danger', '{{ translate('The password is required and cannot be empty') }}');
+                    return false;
+                }
+            });
         });
     </script>
 @endsection

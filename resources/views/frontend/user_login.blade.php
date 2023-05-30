@@ -26,7 +26,7 @@
                                             <input type="hidden" name="country_code" value="">
 
                                             <div class="form-group email-form-group mb-1 d-none">
-                                                <input type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" title="输入正确的" name="email" id="email" autocomplete="off">
+                                                <input type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email" id="email" autocomplete="off">
                                                 @if ($errors->has('email'))
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $errors->first('email') }}</strong>
@@ -225,6 +225,18 @@
                 }
             });
             email.reportValidity();
+
+            $("#login-form").on("submit", function () {
+                if ($("#email").val().trim() === '') {
+                    AIZ.plugins.notify('danger', '{{ translate('The email is required and cannot be empty') }}');
+                    return false;
+                }
+                if ($("#password").val().trim() === '') {
+                    AIZ.plugins.notify('danger', '{{ translate('The password is required and cannot be empty') }}');
+                    return false;
+                }
+            });
         });
+
     </script>
 @endsection
