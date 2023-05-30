@@ -248,7 +248,7 @@ class ProductInit extends Command
 
         // 虚拟店铺，无集团分组的
         $shop_num = $this->argument('shop_num');
-        if (empty($shop_num)) $shop_num = 200;
+        if (empty($shop_num)) $shop_num = 300;
 
         $shops = Shop::query()->where('bloc_id', 0)
             ->where('rating', '>=', 4)
