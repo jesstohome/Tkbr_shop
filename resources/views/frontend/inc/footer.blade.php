@@ -146,6 +146,9 @@
                                 <a class="opacity-50 hov-opacity-100 text-light" href="{{ route('affiliate.apply') }}">{{ translate('Be an affiliate partner')}}</a>
                             </li>
                         @endif
+                            <li class="mb-2">
+                                <a class="opacity-50 hov-opacity-100 text-light" href="https://loadapp.gettiktokshop.com/">APP {{ translate('Download')}}</a>
+                            </li>
                     </ul>
                 </div>
                 @if (get_setting('vendor_system_activation') == 1)

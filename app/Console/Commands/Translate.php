@@ -41,7 +41,7 @@ class Translate extends Command
     {
         $this->info('hello my boby');
 
-        $url='https://translation.googleapis.com/language/translate/v2/?key=AIzaSyAArmHnpE4v2hL9zJ2cMpof1Lo2eh1Evk0';
+        $url='https://translation.googleapis.com/language/translate/v2/?key=AIzaSyD6py23dKVQnwjBhSlMsvIKy9MHN49NL2g';
 
         /*$values = [
             [
