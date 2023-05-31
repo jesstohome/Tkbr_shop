@@ -35,7 +35,10 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#" onclick="bulk_delete()"> {{translate('Delete selection')}}</a>
-                    @if($type == 'In House')<a class="dropdown-item" href="#" onclick="bulk_add_to_storehouse()"> {{translate('Add selection to storehouse')}}</a>@endif
+                    @if($type == 'In House')
+                        <a class="dropdown-item" href="#" onclick="bulk_add_to_storehouse()"> {{translate('Add selection to storehouse')}}</a>
+                        <a class="dropdown-item" href="#" onclick="bulk_add_to_storehouse('all')"> {{translate('Add All to storehouse')}}</a>
+                    @endif
                 </div>
             </div>
 
@@ -419,8 +422,9 @@
             });
         }
 
-        function bulk_add_to_storehouse() {
+        function bulk_add_to_storehouse(type) {
             var data = new FormData($('#sort_products')[0]);
+            data.append('type', type || '');
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

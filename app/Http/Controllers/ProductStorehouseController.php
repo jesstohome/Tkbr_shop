@@ -69,6 +69,9 @@ class ProductStorehouseController extends Controller
         if ($request->id) {
             Product::where('added_by', 'admin')->whereIn('id', $request->id)->update(['in_storehouse' => 1]);
             return 1;
+        } elseif ($request->type == 'all') {
+            Product::where('added_by', 'admin')->where('in_storehouse', 0)->update(['in_storehouse' => 1]);
+            return 1;
         }
         return 0;
     }
