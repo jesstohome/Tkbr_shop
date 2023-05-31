@@ -122,12 +122,11 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket->status = 'pending';
         $ticket_reply->ticket->save();
         if($ticket_reply->save()){
-
-            set_plus('loop_load_new_reply_audio_backend', 1, $ticket->staff_id);
-
             if ($ticket->type == 'service') {
+                set_plus('loop_load_new_reply_audio_backend', 1, $ticket->staff_id);
                 hset_plus('new_ticket_tip', 1, $request->ticket_id);
             } else {
+                set_plus('work_order_loop_load_new_reply_audio_backend', 1, $ticket->staff_id);
                 hset_plus('new_work_order_ticket_tip', 1, $request->ticket_id);
             }
 

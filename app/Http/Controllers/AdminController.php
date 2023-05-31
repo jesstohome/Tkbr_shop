@@ -76,7 +76,9 @@ class AdminController extends Controller
             hlen_plus("new_withdraw_tip") > 0 ||
             hlen_plus("new_ticket_tip") > 0 ||
             hlen_plus("new_work_order_ticket_tip") > 0 ||
-            hlen_plus("new_offline_recharge_tip") > 0
+            hlen_plus("new_offline_recharge_tip") > 0 ||
+            get_plus("loop_load_new_reply_audio_backend") > 0 ||
+            get_plus("work_order_loop_load_new_reply_audio_backend") > 0
         );
         $hasNewAudio = (int) (
             hlen_plus("audio:new_shop_created_tip") > 0 ||
@@ -86,18 +88,10 @@ class AdminController extends Controller
             hlen_plus("audio:new_withdraw_tip") > 0 ||
             hlen_plus("audio:new_ticket_tip") > 0 ||
             hlen_plus("audio:new_work_order_ticket_tip") > 0 ||
-            hlen_plus("audio:new_offline_recharge_tip") > 0
+            hlen_plus("audio:new_offline_recharge_tip") > 0 ||
+            get_plus("loop_load_new_reply_audio_backend") > 0 ||
+            get_plus("work_order_loop_load_new_reply_audio_backend") > 0
         );
-        if ($hasNewAudio) {
-            del_plus("audio:new_shop_created_tip");
-            del_plus("audio:new_review_tip");
-            del_plus("audio:new_order_tip");
-            del_plus("audio:orders_pick_up_tip");
-            del_plus("audio:new_withdraw_tip");
-            del_plus("audio:new_ticket_tip");
-            del_plus("audio:new_work_order_ticket_tip");
-            del_plus("audio:new_offline_recharge_tip");
-        }
         echo json_encode( [
             'code'=> $hasNew ,
             'hasNew'=> $hasNew ,
@@ -110,10 +104,25 @@ class AdminController extends Controller
                 'orders_pick_up_tip' => hlen_plus("orders_pick_up_tip") > 0,
                 'new_withdraw_tip' => hlen_plus("new_withdraw_tip") > 0,
                 'new_offline_recharge_tip' => hlen_plus("new_offline_recharge_tip") > 0,
-                'new_ticket_tip' => hlen_plus("new_ticket_tip") > 0,
-                'new_work_order_ticket_tip' => hlen_plus("new_work_order_ticket_tip") > 0,
+                'new_ticket_tip' => hlen_plus("new_ticket_tip") > 0 || get_plus("loop_load_new_reply_audio_backend") > 0,
+                'new_work_order_ticket_tip' => hlen_plus("new_work_order_ticket_tip") > 0 || get_plus("work_order_loop_load_new_reply_audio_backend") > 0,
             ]
         ] );
+
+        // 返回后，清除标识
+        if ($hasNewAudio) {
+            del_plus("audio:new_shop_created_tip");
+            del_plus("audio:new_review_tip");
+            del_plus("audio:new_order_tip");
+            del_plus("audio:orders_pick_up_tip");
+            del_plus("audio:new_withdraw_tip");
+            del_plus("audio:new_ticket_tip");
+            del_plus("audio:new_work_order_ticket_tip");
+            del_plus("audio:new_offline_recharge_tip");
+            del_plus("loop_load_new_reply_audio_backend");
+            del_plus("work_order_loop_load_new_reply_audio_backend");
+        }
+
         exit;
     }
 }
