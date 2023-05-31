@@ -250,16 +250,24 @@ class ProductInit extends Command
         $shop_num = $this->argument('shop_num');
         if (empty($shop_num)) $shop_num = 300;
 
-        $shops = Shop::query()->where('bloc_id', 0)
-            ->where('rating', '>=', 4)
-            ->where('num_of_reviews', '>=', 10)
+//        \DB::connection()->enableQueryLog();#开启执行日志
+        $shops = Shop::query()
+            ->leftJoin("products", "products.user_id", "=", "shops.user_id")
+            ->where('shops.bloc_id', 0)
+            ->where('shops.rating', '>=', 4)
+            ->where('shops.num_of_reviews', '>=', 10)
+            ->selectRaw("shops.*, count(products.id) as totalProduct")
+            ->groupBy("shops.user_id")
+            ->having("totalProduct", 0)
 
-            ->orderBy('id')
+            ->orderBy('shops.id')
             ->limit($shop_num)
             // 剩下300个用下面的方式
 //            ->orderByDesc('id')
 //            ->limit(300)
             ->get();
+//        print_r(\DB::getQueryLog());//打印SQL语句
+        
         $products = Product::query()->where('in_storehouse', 1);
 
         if (!empty($alreadyCopyIds)) {
