@@ -224,20 +224,23 @@ class BusinessSettingsController extends Controller
 
         $bloc_ids_key = $request->payment_method.'_bloc_ids';
         $payment_bloc_ids = $request->{$bloc_ids_key};
-        $payment_bloc_ids = is_array($payment_bloc_ids) ? join(",", $payment_bloc_ids) : $payment_bloc_ids;
+        if (!is_null($payment_bloc_ids)) {
+            $payment_bloc_ids = is_array($payment_bloc_ids) ? join(",", $payment_bloc_ids) : $payment_bloc_ids;
 
-        $business_settings = BusinessSetting::where('type', $request->payment_method.'_bloc_ids')->first();
-        if($business_settings != null){
-            if ($request->has($request->payment_method.'_bloc_ids')) {
+            $business_settings = BusinessSetting::where('type', $request->payment_method.'_bloc_ids')->first();
+            if($business_settings != null){
+                if ($request->has($request->payment_method.'_bloc_ids')) {
+                    $business_settings->value = $payment_bloc_ids;
+                    $business_settings->save();
+                }
+            } else {
+                $business_settings = new BusinessSetting;
+                $business_settings->type = $bloc_ids_key;
                 $business_settings->value = $payment_bloc_ids;
                 $business_settings->save();
             }
-        } else {
-            $business_settings = new BusinessSetting;
-            $business_settings->type = $bloc_ids_key;
-            $business_settings->value = $payment_bloc_ids;
-            $business_settings->save();
         }
+
 
         Artisan::call('cache:clear');
 
@@ -447,9 +450,14 @@ class BusinessSettingsController extends Controller
             if (file_exists($path)) {
                 $val = '"'.trim($val).'"';
                 if(is_numeric(strpos(file_get_contents($path), $type)) && strpos(file_get_contents($path), $type) >= 0){
-                    file_put_contents($path, str_replace(
-                        $type.'="'.env($type).'"', $type.'='.$val, file_get_contents($path)
-                    ));
+                    $old_content = file_get_contents($path);
+                    $new_content = str_replace(
+                        $type.'="'.env($type).'"', $type.'='.$val, $old_content
+                    );
+                    $new_content = str_replace(
+                        $type.'='.env($type), $type.'='.$val, $new_content
+                    );
+                    file_put_contents($path, $new_content);
                 }
                 else{
                     file_put_contents($path, file_get_contents($path)."\r\n".$type.'='.$val);
