@@ -1631,11 +1631,6 @@ if (!function_exists('hlen_plus')) {
         foreach ($keys as $key) {
             \Illuminate\Support\Facades\Redis::set($key, $val);
         }
-
-        // 多加一个声音的缓存 声音的播放一次，立即删除
-        foreach ($keys as $key) {
-            \Illuminate\Support\Facades\Redis::set('audio:' . $key, $val);
-        }
     }
 
     function get_plus($redis_key, $staff_id = 0) {
@@ -1860,7 +1855,7 @@ if (!function_exists('load_new_reply')) {
             }
 
             $tips_key = Auth::user()->user_type == 'seller' || Auth::user()->user_type == 'customer' ? 'loop_load_new_reply_audio_frontend' : 'loop_load_new_reply_audio_backend';
-            if (empty(Cache::get($tips_key)) && $check == 2){
+            if (empty(get_plus($tips_key)) && $check == 2){
                 return response()->json(['success' => 2, 'count' => 0, 'k' => $tips_key]);
             }
 
@@ -1881,7 +1876,7 @@ if (!function_exists('load_new_reply')) {
                 Cache::delete($tips_key);
             }
 
-            return response()->json(['success' => 1, 'count' => $count, 'tag_names' => $tag_names]);
+            return response()->json(['success' => 1, 'count' => $count, 'k' => $tips_key, 'tag_names' => $tag_names]);
         }
 
         $list = $list->where('ticket_id', $ticket_id);

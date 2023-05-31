@@ -123,7 +123,7 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket->save();
         if($ticket_reply->save()){
 
-            \Cache::set('loop_load_new_reply_audio_backend', 1);
+            set_plus('loop_load_new_reply_audio_backend', 1, $ticket->staff_id);
 
             if ($ticket->type == 'service') {
                 hset_plus('new_ticket_tip', 1, $request->ticket_id);

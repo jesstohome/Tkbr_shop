@@ -408,4 +408,22 @@ class SupportTicketController extends Controller
 
         return response()->json(['success' => 0, 'msg' => '失败']);
     }
+
+    /**
+     * 保存卖家的备注信息
+     * author: Sym
+     * time: 2023-05-31 14:52
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function save_remark(Request $request) {
+        $seller = User::find($request->seller_id);
+        if (empty($seller)) {
+            return response()->json(['success' => 0, 'msg' => '卖家不存在']);
+        }
+
+        $seller->remark = $request->remark;
+        $seller->save();
+        return response()->json(['success' => 1, 'msg' => '保存成功']);
+    }
 }

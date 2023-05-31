@@ -94,7 +94,11 @@
                 <div class="top-info" style="margin-bottom: 15px">
                     <div class="row">
                         <div class="col-md-10">
-                            <p>产品： <a href="{{route('product', $ticket->order->details[0]->product->slug)}}" target="_blank">{{$ticket->order->details[0]->product->name}}</a> </p>
+                            <p>产品：
+                                @if($ticket->order->details[0]->product)
+                                <a href="{{route('product', $ticket->order->details[0]->product->slug)}}" target="_blank">{{$ticket->order->details[0]->product->name}}</a>
+                                @endif
+                            </p>
                         </div>
                     </div>
                     <div class="order-info row">
@@ -116,7 +120,7 @@
                     </div>
                     <div class="order-opt row">
                         <div class="col-md-8">
-                            备注：<input name="order_remark" value="" />
+                            备注：<input name="order_remark" value="{{$ticket->user->remark ?: ''}}" />
 
                         </div>
                     </div>
@@ -206,5 +210,17 @@
                 res.success && location.reload()
             });
         }
+
+        $(document).ready(function () {
+            $("input[name=order_remark]").on("blur", function () {
+                $.post('{{ route('support_ticket.save_remark') }}', {
+                    _token: '{{ @csrf_token() }}',
+                    seller_id: "{{$ticket->order->seller_id}}",
+                    remark: $(this).val().trim(),
+                }, function (res) {
+                    AIZ.plugins.notify(res.success ? 'success' : 'danger', res.msg || '');
+                });
+            });
+        });
     </script>
 @endsection

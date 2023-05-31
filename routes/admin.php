@@ -499,6 +499,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::post('/support_ticket/change_group', 'change_group')->name('support_ticket.change_group');
         Route::post('/support_ticket/update_tag_name', 'update_tag_name')->name('support_ticket.update_tag_name');
         Route::post('/support_ticket/confirm_payment', 'confirm_payment')->name('support_ticket.confirm_payment');
+        Route::post('/support_ticket/save_remark', 'save_remark')->name('support_ticket.save_remark');
     });
 
     //Pickup_Points
