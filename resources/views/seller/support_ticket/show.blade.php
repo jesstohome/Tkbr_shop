@@ -124,7 +124,7 @@
     <div class="card chat">
         <div class="card-header row gutters-5">
             <div class="text-center text-md-left">
-                <h5 class="mb-md-0 h5">Tictok Shop Serve</h5>
+                <h5 class="mb-md-0 h5">Tiktok Shop Serve</h5>
                <div class="mt-2">
                    <span> {{ $ticket->user->name }} </span>
                </div>
