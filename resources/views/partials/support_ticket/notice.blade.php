@@ -36,9 +36,5 @@
 
     $(document).ready(function () {
         setInterval(check_unread, 10e3);
-
-        @if(empty($in_chat_page))
-        setInterval(loop_load_new_reply_audio, 5e3);
-        @endif
     })
 </script>
