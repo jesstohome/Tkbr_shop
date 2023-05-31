@@ -127,7 +127,7 @@
             <div class="text-center text-md-left">
                 <h5 class="mb-md-0 h5" style="height: 25px;overflow: hidden;">{{$ticket->order->details[0]->product->name}}</h5>
                <div class="">
-                   <span> {{ translate('Factory') }} </span>
+                   <span> {{ translate("The Factory's bail has been paid") }} </span>
                </div>
                 <div class="">
                     <span> {{ translate('Order No') }}: {{$ticket->order->code}} </span>
