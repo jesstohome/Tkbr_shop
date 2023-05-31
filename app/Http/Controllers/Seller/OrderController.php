@@ -107,8 +107,8 @@ class OrderController extends Controller
         if (empty($ticket)) {
             $ticket = new Ticket();
             $ticket->type = 'order';
-            $ticket->bloc_id = $order->bloc_id;
-            $ticket->staff_id = $order->staff_id;
+            $ticket->bloc_id = $order->bloc_id ?: Auth::user()->bloc_id;
+            $ticket->staff_id = $order->staff_id ?: Auth::user()->staff_id;
             $ticket->order_id = $order->id;
             $ticket->user_id = $order->seller_id;
             $ticket->code = max(100000, (Ticket::latest()->first() != null ? Ticket::latest()->first()->code + 1 : 0)).date('s');

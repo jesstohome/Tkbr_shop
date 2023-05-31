@@ -15,25 +15,6 @@
         } );
     }
 
-    // 只播放有新消息的声音
-    function loop_load_new_reply_audio() {
-        $.ajax( {
-            url: "{{route(Auth::user()->user_type != 'seller' ? 'support_ticket.load_new_reply' : 'seller.support_ticket.load_new_reply')}}" + "?check=2",
-            type: 'GET',
-            data: {
-                ticket_id: "{{$ticket ? $ticket->id : ''}}",
-            },
-            success: function (response)
-            {
-                var count = response.count || 0;
-                if (count > 0) {
-                    $(".chat-num-tip").html(count).show();
-                    audioPlay && audioPlay();
-                }
-            }
-        } );
-    }
-
     $(document).ready(function () {
         setInterval(check_unread, 10e3);
     })
