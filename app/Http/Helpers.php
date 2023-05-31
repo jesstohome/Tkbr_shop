@@ -1873,7 +1873,7 @@ if (!function_exists('load_new_reply')) {
             }
 
             if ($check == 2) {
-                Cache::delete($tips_key);
+                del_plus($tips_key);
             }
 
             return response()->json(['success' => 1, 'count' => $count, 'k' => $tips_key, 'tag_names' => $tag_names]);
