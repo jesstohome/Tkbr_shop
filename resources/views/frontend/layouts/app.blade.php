@@ -385,7 +385,7 @@
         }
 
         function showSellerBuyWarning () {
-            AIZ.plugins.notify('warning', "{{ translate('The product cannot be purchased in the region it belongs to') }}");
+            AIZ.plugins.notify('warning', "{{ translate('you cannot buy this product in your region') }}");
             return false;
         }
 
@@ -490,7 +490,7 @@
 
         function buyNow(){
             @if(Auth::user()->user_type == 'seller')
-                AIZ.plugins.notify('warning', "{{ translate('The product cannot be purchased in the region it belongs to') }}");
+                AIZ.plugins.notify('warning', "{{ translate('you cannot buy this product in your region') }}");
                 return false;
             @endif
             if(checkAddToCartValidity()) {

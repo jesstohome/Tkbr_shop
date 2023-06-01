@@ -711,7 +711,7 @@ class AffiliateController extends Controller
             $users_2 = User::where('pid', '=', $user_1->id)->where('user_type', '=', 'seller')->get();//下二级商家
             $statistics['total_seller'] += count($users_2);
             //查询所有订单
-            $orders_1 = $orders = Order::where('seller_id', $user_1->id)->get();
+            $orders_1 = $orders = Order::where('seller_id', $user_1->id)->where("product_storehouse_status", 1)->get();
             $statistics['total_orders'] += count($orders_1);
             $one = [
                 'shop_name' => $user_1->shop->name,
@@ -732,7 +732,7 @@ class AffiliateController extends Controller
                 $users_3 = User::where('pid', '=', $user_2->id)->where('user_type', '=', 'seller')->get();//下二级商家
                 $statistics['total_seller'] += count($users_3);
                 //查询所有订单
-                $orders_2 = $orders = Order::where('seller_id', $user_2->id)->get();
+                $orders_2 = $orders = Order::where('seller_id', $user_2->id)->where("product_storehouse_status", 1)->get();
                 $statistics['total_orders'] += count($orders_2);
                 $two = [
                     'shop_name' => $user_2->shop->name,
@@ -752,7 +752,7 @@ class AffiliateController extends Controller
                 foreach ( $users_3 as $user_3 )
                 {
                     //查询所有订单
-                    $orders_3 = $orders = Order::where('seller_id', $user_3->id)->get();
+                    $orders_3 = $orders = Order::where('seller_id', $user_3->id)->where("product_storehouse_status", 1)->get();
                     $statistics['total_orders'] += count($orders_3);
                     $three = [
                         'shop_name' => $user_3->shop->name,
