@@ -111,9 +111,7 @@ class SupportTicketController extends Controller
         }
 
         $tickets = filter_by_bloc($tickets);
-        \DB::connection()->enableQueryLog();#开启执行日志
         $tickets = $tickets->paginate(15);
-        \Log::debug(var_export([\DB::getQueryLog()], true));
 
         $groups = $this->groups;
 
