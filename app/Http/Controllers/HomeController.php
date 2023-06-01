@@ -538,6 +538,16 @@ class HomeController extends Controller
         }
 
         $product_stock = $product->stocks->where('variant', $str)->first();
+        if (empty($product_stock)) {
+            return array(
+                'price' => 0,
+                'quantity' => 0,
+                'digital' => 0,
+                'variation' => 0,
+                'max_limit' => 0,
+                'in_stock' => 0
+            );
+        }
 
         $price = $product_stock->price;
 
