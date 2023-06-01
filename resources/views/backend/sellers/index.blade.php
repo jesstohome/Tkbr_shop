@@ -144,7 +144,7 @@
                             <select class="form-control admin_ids" data-max-options="50" data-live-search="true" name="admin_ids[]" data-selected="{{$admin_ids}}" data-seller-id="{{$shop->user->id}}" style="width: 100px" onchange="changeStaff(this)">
                                 <option value="">请选择一个负责人</option>
                                 @foreach($manages as $manage)
-                                    <option value="{{$manage->id}}" @if(in_array($manage->id, $admin_ids)) selected @endif>{{$manage->name}}</option>
+                                    <option value="{{$manage->id}}" @if($shop->staff_id == $manage->staffInfo->id) selected @endif>{{$manage->name}}</option>
                                 @endforeach
                             </select>
                         </td>
@@ -830,7 +830,7 @@
             });
         }
 
-        function changeStaff() {
+        function changeStaff(evt) {
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -838,8 +838,8 @@
                 url: "{{route('sellers.update-seller-staff')}}",
                 type: 'POST',
                 data: {
-                    seller_id: $("select.admin_ids").data("seller-id"),
-                    staff_user_id: $("select.admin_ids").val(),
+                    seller_id: $(evt).data("seller-id"),
+                    staff_user_id: $(evt).val(),
                 },
                 success: function (response) {
                     if(response == 1) {

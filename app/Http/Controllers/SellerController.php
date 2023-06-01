@@ -383,20 +383,23 @@ class SellerController extends Controller
 
     public function updateApproved(Request $request)
     {
+        $staff = User::find($request->admin_ids)->staffInfo;
         $shop = Shop::findOrFail($request->id);
         $shop->verification_status = $request->status;
+        $shop->bloc_id = $staff->bloc_id;
+        $shop->staff_id = $staff->id;
+        $shop->user->bloc_id = $staff->bloc_id;
+        $shop->user->staff_id = $staff->id;
         if ($shop->save()) {
             hdel_plus('new_shop_created_tip', $shop->id);
             Cache::forget('verified_sellers_id');
 
             ShopManage::query()->where('shop_id', $shop->id)->delete();
             if (!empty($request->admin_ids)) {
-                foreach ($request->admin_ids as $admin_id) {
-                    $sm = new ShopManage();
-                    $sm->shop_id = $shop->id;
-                    $sm->admin_id = $admin_id;
-                    $sm->save();
-                }
+                $sm = new ShopManage();
+                $sm->shop_id = $shop->id;
+                $sm->admin_id = $request->admin_ids;
+                $sm->save();
             }
 
             if ($request->status) {
