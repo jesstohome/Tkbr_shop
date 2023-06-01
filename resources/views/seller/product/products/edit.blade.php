@@ -279,9 +279,12 @@
                 @foreach (json_decode($product->choice_options) as $key => $choice_option)
                 <div class="form-group row">
                     <div class="col-lg-3">
+                        @php
+                        $attribute = \App\Models\Attribute::find($choice_option->attribute_id);
+                        @endphp
                         <input type="hidden" name="choice_no[]" value="{{ $choice_option->attribute_id }}">
                         <input type="text" class="form-control" name="choice[]"
-                            value="{{ \App\Models\Attribute::find($choice_option->attribute_id)->getTranslation('name') }}"
+                            value="{{ $attribute ? $attribute->getTranslation('name') : ''}}"
                             placeholder="{{ translate('Choice Title') }}" disabled>
                     </div>
                     <div class="col-lg-8">

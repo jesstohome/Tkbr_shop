@@ -87,7 +87,7 @@
                         <select class="form-control mb-3 aiz-selectpicker" name="cur_payment_country_code" data-live-search="true" onchange="change_country(this)">
                             <option value="">{{ translate('Please select a country') }}</option>
                             @foreach($payment_countries as $country)
-                                <option value="{{$country->code}}" @if ($user->shop->cur_payment_country_code == $country->code) selected  @endif>{{$country->name}}</option>
+                                <option value="{{$country->code}}" @if ($user->shop->cur_payment_country_code == $country->code) selected  @endif>{{translate($country->name)}}</option>
                             @endforeach
                         </select>
                     </div>
