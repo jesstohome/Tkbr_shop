@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Payment;
 
 use App\Http\Controllers\Controller;
 use App\Models\CombinedOrder;
+use App\Models\Currency;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\PaymentStatement;
@@ -133,7 +134,12 @@ class HtpayController extends Controller
 
         list($pay_memberid, $sign_key) = $this->getMchId();
 
-        $exchange_rate = $this->getExchangeRate();
+        $currency = Currency::query()->where('code', $withdrawRequest->currency)->first();
+        if (!empty($currency->exchange_rate)) {
+            $exchange_rate = $currency->exchange_rate;
+        } else {
+            $exchange_rate = $this->getExchangeRate();
+        }
         $money = $withdrawRequest->amount * $exchange_rate;
 
         $paymentStatement = new PaymentStatement();

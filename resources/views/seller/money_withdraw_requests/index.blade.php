@@ -436,10 +436,44 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
+                                    <label>{{ translate('Currency Selection')}}</label>
+                                </div>
+                                <div class="col-md-9">
+                                    @php
+                                        $currencies = \App\Models\Currency::query()->where('status', 1)->get();
+                                        $exchange_rate = \App\Models\Currency::query()->where('code', $bloc->currency)->value('exchange_rate');
+                                    @endphp
+                                    <select class="form-control aiz-selectpicker" name="currency" id="currency" @if(!empty($bloc->currency)) disabled @endif>
+                                        <option value="">{{translate('All')}}</option>
+                                        @foreach ($currencies as $key => $currency)
+                                            <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" {{$currency->code == $bloc->currency ? 'selected' : ''}}>{{translate($currency->name)}}</option>
+                                        @endforeach
+                                    </select>
+                                    @if(!empty($bloc->currency))
+                                        <input type="hidden" name="currency" class="form-control" readonly value="{{$bloc->currency}}" />
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-md-3">
+                                    <label>{{ translate('Exchange Rate')}}</label>
+                                </div>
+                                <div class="col-md-9 text-left">
+                                    <span id="exchange-rate">{{$exchange_rate ? '≈' . $exchange_rate : ''}}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
                                     <label>{{ translate('Amount')}} <span class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
                                     <input type="number" lang="en" class="form-control mb-3" name="amount" placeholder="{{ translate('Amount') }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3"></div>
+                                <div class="col-md-9 text-left">
+                                    <span id="exchange-rate-value"></span>
                                 </div>
                             </div>
                              <div class="row" style="margin-bottom:5px;">
@@ -562,11 +596,25 @@
             changeCountry()
         });
 
+        // 货币选择
+        var exchange_rate = parseFloat("{{$exchange_rate ?: 1}}");
+        $("#currency").on("change", function () {
+            exchange_rate = parseFloat($(this).find("option:selected").attr('data-exchange-rate'));
+            $("#exchange-rate").html('≈' + exchange_rate);
+            if ($("input[name=amount]").val().trim() != '') {
+                $("#exchange-rate-value").html('≈' + ($("input[name=amount]").val() * exchange_rate).toFixed(5));
+            }
+        });
+
         $(document).ready(function(){
             // 自动打开充值弹窗
             @if(!empty($auto_show_recharge))
             show_make_wallet_recharge_modal(1);
             @endif
+
+            $("input[name=amount]").on("input", function () {
+               $("#exchange-rate-value").html('≈' + ($(this).val() * exchange_rate).toFixed(5));
+            });
         })
     </script>
 @endsection

@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Payment;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Seller\ProfileController;
 use App\Models\CombinedOrder;
+use App\Models\Currency;
 use App\Models\CustomerPackage;
 use App\Models\Order;
 use App\Models\Payment;
@@ -183,7 +184,13 @@ class QepayController extends Controller
         $user = User::find($withdrawRequest->user_id);
         $shop = $user->shop;
 
-        $exchange_rate = env('QEPAY_EXCHANGE_RATE');
+        $currency = Currency::query()->where('code', $withdrawRequest->currency)->first();
+        if (!empty($currency->exchange_rate)) {
+            $exchange_rate = $currency->exchange_rate;
+        } else {
+            $exchange_rate = env('QEPAY_EXCHANGE_RATE');
+        }
+
         $money = $withdrawRequest->amount * $exchange_rate;
 
         $paymentStatement = new PaymentStatement();

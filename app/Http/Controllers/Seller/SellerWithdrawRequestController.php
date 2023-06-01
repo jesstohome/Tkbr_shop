@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\Models\Currency;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\ShopPaymentConfig;
@@ -50,7 +51,11 @@ class SellerWithdrawRequestController extends Controller
         $walletExpenseList = WalletExpenseLog::orderBy('id', 'desc')->where('user_id',Auth::user()->id)->paginate(15);
 
         $auto_show_recharge = $request->get('auto_show_recharge', 0);
-        return view('seller.money_withdraw_requests.index', compact('paymentList','seller_withdraw_requests', 'freezeOrders', 'rechargeList', 'balance', 'shop', 'auto_show_recharge', 'walletExpenseList', 'shop_payment_config'));
+
+        $currencies = Currency::query()->where('status', 1)->get();
+        $exchange_rate = Currency::query()->where('code', $user->bloc->currency)->value('exchange_rate');
+
+        return view('seller.money_withdraw_requests.index', compact('paymentList','seller_withdraw_requests', 'freezeOrders', 'rechargeList', 'balance', 'shop', 'auto_show_recharge', 'walletExpenseList', 'shop_payment_config', 'currencies', 'exchange_rate'));
     }
 
 
@@ -102,6 +107,7 @@ class SellerWithdrawRequestController extends Controller
                 $seller_withdraw_request->bloc_id = $user->bloc_id;
                 $seller_withdraw_request->staff_id = $user->staff_id;
                 $seller_withdraw_request->cur_select_country_code = $request->country_code;
+                $seller_withdraw_request->currency = $request->currency;
                 $seller_withdraw_request->amount = $request->amount;
                 $seller_withdraw_request->message = $request->message;
                 $seller_withdraw_request->status = '0';
