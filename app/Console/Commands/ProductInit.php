@@ -251,8 +251,9 @@ class ProductInit extends Command
         if (empty($shop_num)) $shop_num = 300;
 
 //        \DB::connection()->enableQueryLog();#开启执行日志
-        $shops = Shop::query()
+        $shops = Shop::query()->join("users", "users.id", "=", "shops.user_id")
             ->leftJoin("products", "products.user_id", "=", "shops.user_id")
+            ->where('users.is_virtual_user', 1)
             ->where('shops.bloc_id', 0)
             ->where('shops.rating', '>=', 4)
             ->where('shops.num_of_reviews', '>=', 10)
@@ -266,8 +267,8 @@ class ProductInit extends Command
 //            ->orderByDesc('id')
 //            ->limit(300)
             ->get();
-//        print_r(\DB::getQueryLog());//打印SQL语句
-        
+//        dd(\DB::getQueryLog());//打印SQL语句
+
         $products = Product::query()->where('in_storehouse', 1);
 
         if (!empty($alreadyCopyIds)) {
