@@ -529,6 +529,11 @@
             });
         });
 
+        // 货币选择
+        $("#currency").on("change", function () {
+            $("#exchange-rate").html('≈' + $(this).find("option:selected").attr('data-exchange-rate'))
+        });
+
         var showtime = function (mydate,mycreated) {
 
                var nowtime = new Date();  //获取当前时间

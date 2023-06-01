@@ -115,6 +115,9 @@ class Kernel extends ConsoleKernel
                 Artisan::call("translate:run");
             }
         })->everyMinute();
+
+
+        $schedule->command("queryExchangeRates")->dailyAt('23:00');
     }
 
     /**

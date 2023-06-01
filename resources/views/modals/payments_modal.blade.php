@@ -30,11 +30,11 @@
                         @endif
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-1">
                     <div class="col-md-3">
                         <label>{{ translate('Exchange Rate')}}</label>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-2">
                         <span id="exchange-rate">{{$exchange_rate ? '≈' . $exchange_rate : ''}}</span>
                     </div>
                 </div>
@@ -162,8 +162,4 @@
 
         return false;
     }
-
-    $("#currency").on("change", function () {
-        $("#exchange-rate").html('≈' + $(this).find("option:selected").attr('data-exchange-rate'))
-    });
 </script>

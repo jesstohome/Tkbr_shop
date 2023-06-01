@@ -2024,3 +2024,40 @@ if (!function_exists('getPaymentCountries')) {
         return $payment_countries;
     }
 }
+
+// 获取当天最新的汇率
+// https://currencylayer.com/documentation
+if (!function_exists('queryExchangeRates()')) {
+    function queryExchangeRates() {
+        // set API Endpoint and access key (and any options of your choice)
+        $endpoint = 'live';
+        $access_key = 'c856a54da462a5122838e3c5aa607ca2';
+
+        // Initialize CURL:
+        $ch = curl_init('http://api.currencylayer.com/'.$endpoint.'?access_key='.$access_key.'');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Store the data:
+        $json = curl_exec($ch);
+        Log::info($json);
+        curl_close($ch);
+
+        // Decode JSON response:
+        $exchangeRates = json_decode($json, true);
+
+        // Access the exchange rate values, e.g. GBP:
+        if (!empty($exchangeRates['quotes'])) {
+            foreach ($exchangeRates['quotes'] as $currency_code => $rateValue) {
+                // USDCNY 去掉前面的USD
+                $currency_code = substr($currency_code, 3);
+                $currency = Currency::query()->where('code', $currency_code)->first();
+                Log::info(var_export([$currency_code => !empty($currency)], true));
+                if (!empty($currency)) {
+                    Log::info(var_export([$currency->name ?: '' . " 最新值:" . $rateValue], true));
+                    $currency->exchange_rate = $rateValue;
+                    $currency->save();
+                }
+            }
+        }
+    }
+}
