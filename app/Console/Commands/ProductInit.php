@@ -260,12 +260,7 @@ class ProductInit extends Command
             ->selectRaw("shops.*, count(products.id) as totalProduct")
             ->groupBy("shops.user_id")
             ->having("totalProduct", 0)
-
-            ->orderBy('shops.id')
             ->limit($shop_num)
-            // 剩下300个用下面的方式
-//            ->orderByDesc('id')
-//            ->limit(300)
             ->get();
 //        dd(\DB::getQueryLog());//打印SQL语句
 
