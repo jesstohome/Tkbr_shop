@@ -40,34 +40,32 @@
             </thead>
             <tbody>
                     @foreach ($tickets as $key => $ticket)
-                    @if ($ticket->user != null)
-                        <tr>
-                            <td class="edit" data-ticket-id="{{$ticket->id}}">{{$ticket->tag_name ?: translate('Permanent Work Order')}}</td>
-                            <td>{{ $ticket->created_at }} @if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
-                            <td>{{ $ticket->subject }}</td>
-                            <td>{{ $ticket->user->shop ? $ticket->user->shop->name : '' }}</td>
-                            <td>{{ $ticket->user->email }}</td>
-                            <td>
-                                <select class="form-control ticket-group" data-ticket-id="{{$ticket->id}}" onchange="change_group(this, {{$ticket->id}})">
-                                    @foreach($groups as $group_val => $_group)
-                                        <option value="{{$group_val}}"  @if($ticket->group == $group_val) selected @endif>{{$_group}}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                @if (count($ticket->ticketreplies) > 0)
-                                    {{ $ticket->ticketreplies->last()->created_at }}
-                                @else
-                                    {{ $ticket->created_at }}
-                                @endif
-                            </td>
-                            <td class="text-right">
-                                <a href="{{route('support_ticket.admin_show', encrypt($ticket->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('View Details') }}">
-                                    <i class="las la-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    @endif
+                    <tr>
+                        <td class="edit" data-ticket-id="{{$ticket->id}}">{{$ticket->tag_name ?: translate('Permanent Work Order')}}</td>
+                        <td>{{ $ticket->created_at }} @if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
+                        <td>{{ $ticket->subject }}</td>
+                        <td>{{ $ticket->user && $ticket->user->shop ? $ticket->user->shop->name : '' }}</td>
+                        <td>{{ $ticket->user ? $ticket->user->email : ''}}</td>
+                        <td>
+                            <select class="form-control ticket-group" data-ticket-id="{{$ticket->id}}" onchange="change_group(this, {{$ticket->id}})">
+                                @foreach($groups as $group_val => $_group)
+                                    <option value="{{$group_val}}"  @if($ticket->group == $group_val) selected @endif>{{$_group}}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            @if (count($ticket->ticketreplies) > 0)
+                                {{ $ticket->ticketreplies->last()->created_at }}
+                            @else
+                                {{ $ticket->created_at }}
+                            @endif
+                        </td>
+                        <td class="text-right">
+                            <a href="{{route('support_ticket.admin_show', encrypt($ticket->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('View Details') }}">
+                                <i class="las la-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
