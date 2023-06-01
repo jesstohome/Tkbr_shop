@@ -383,7 +383,7 @@ class SellerController extends Controller
 
     public function updateApproved(Request $request)
     {
-        $staff = User::find($request->admin_ids)->staffInfo;
+        $staff = Staff::find($request->admin_ids);
         $shop = Shop::findOrFail($request->id);
         $shop->verification_status = $request->status;
         $shop->bloc_id = $staff->bloc_id;
@@ -398,7 +398,7 @@ class SellerController extends Controller
             if (!empty($request->admin_ids)) {
                 $sm = new ShopManage();
                 $sm->shop_id = $shop->id;
-                $sm->admin_id = $request->admin_ids;
+                $sm->admin_id = $staff->user_id;
                 $sm->save();
             }
 
