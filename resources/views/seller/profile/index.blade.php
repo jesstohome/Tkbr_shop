@@ -100,7 +100,7 @@
                     <input type="hidden" name="bank_switch[{{$country_code}}]" value="1">
                     <input type="hidden" name="e_wallet_switch[{{$country_code}}]" value="1">
                     <div class="bank_info lang_{{$country_code}}" style="display: none">
-                    @if($country_code != 'in')
+                        @if(in_array($country_code, ['id', 'tr']))
                         <!-- 电子钱包配置 -->
                         <div class="row" id="e-wallet">
                             <label class="col-md-3 col-form-label">{{ translate('e-Wallet') }}</label>
@@ -127,15 +127,6 @@
                         <div class="row" id="online_bank">
                             <label class="col-md-3 col-form-label">{{ translate('Online Bank') }}</label>
                         </div>
-                        @if(false)
-                        <div class="row">
-                            <label class="col-md-3 col-form-label" for="bank_no[{{$country_code}}]">{{ translate('Online Bank Card No') }}</label>
-                            <div class="col-md-9">
-                                <input type="text" name="bank_no[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_no }}" class="form-control mb-3" >
-                            </div>
-                        </div>
-                        @endif
-
                         @if(isset($online_bank_names[$country_code]))
                             <div class="row">
                                 <label class="col-md-3 col-form-label" for="bank_name[{{$country_code}}]">{{ translate('Bank Name') }}</label>

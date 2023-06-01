@@ -39,6 +39,18 @@
                         </div>
                     </div>
 
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label" for="lang">{{translate('Currency')}} </label>
+                        <div class="col-md-9">
+                            <select class="form-control aiz-selectpicker" name="currency" id="currency">
+                                <option value="">{{translate('All')}}</option>
+                                @foreach (\App\Models\Currency::query()->where('status', 1)->get() as $key => $currency)
+                                    <option value="{{$currency->code}}" {{$currency->code == $bloc->currency ? 'selected' : ''}}>{{translate($currency->name)}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
                     </div>

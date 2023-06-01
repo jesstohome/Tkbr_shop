@@ -444,11 +444,9 @@
                         </div>
                     </div>
                     <div class="row">
-
-                                <div class="col-md-9">
-                                    <input type="password" lang="en" class="form-control mb-3" id="tpwd" name="tpwd"
-                                   placeholder="{{ translate('Transaction password') }}" max=6 required>
-                                </div>
+                        <div class="col-md-9">
+                            <input type="password" lang="en" class="form-control mb-3" id="tpwd" name="tpwd" placeholder="{{ translate('Transaction password') }}" max=6 required />
+                        </div>
                     </div>
                     <div class="form-group text-right">
                         <button type="button" class="btn btn-sm btn-light transition-3d-hover mr-3" data-dismiss="modal">{{translate('Cancel')}}</button>

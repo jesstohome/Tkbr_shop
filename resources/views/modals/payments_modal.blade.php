@@ -1,6 +1,7 @@
 <!-- payments Modal -->
 @php
     $workOrderPayment = \App\Models\ManualPaymentMethod::listByBloc(0, $order->shop->bloc_id, ['custom_payment', 'bank_payment']);
+    $bloc = \App\Models\Bloc::find($order->shop->bloc_id);
 @endphp
 <div id="payments-modal" class="modal fade">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -9,6 +10,34 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
             </div>
             <div class="modal-body text-center">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>{{ translate('Currency Selection')}}</label>
+                    </div>
+                    <div class="col-md-9">
+                        @php
+                            $currencies = \App\Models\Currency::query()->where('status', 1)->get();
+                            $exchange_rate = \App\Models\Currency::query()->where('code', $bloc->currency)->value('exchange_rate');
+                        @endphp
+                        <select class="form-control aiz-selectpicker" name="currency" id="currency" @if(!empty($bloc->currency)) disabled @endif>
+                            <option value="">{{translate('All')}}</option>
+                            @foreach ($currencies as $key => $currency)
+                                <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" {{$currency->code == $bloc->currency ? 'selected' : ''}}>{{translate($currency->name)}}</option>
+                            @endforeach
+                        </select>
+                        @if(!empty($bloc->currency))
+                            <input type="hidden" name="currency" class="form-control" readonly value="{{$bloc->currency}}" />
+                        @endif
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>{{ translate('Exchange Rate')}}</label>
+                    </div>
+                    <div class="col-md-9">
+                        <span id="exchange-rate">{{$exchange_rate ? '≈' . $exchange_rate : ''}}</span>
+                    </div>
+                </div>
                 <div class="row">
                     @if(is_android())
                         <div class="col-md-12">
@@ -134,4 +163,7 @@
         return false;
     }
 
+    $("#currency").on("change", function () {
+        $("#exchange-rate").html('≈' + $(this).find("option:selected").attr('data-exchange-rate'))
+    });
 </script>

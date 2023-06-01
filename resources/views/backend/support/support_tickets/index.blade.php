@@ -12,7 +12,7 @@
                 <select class="form-control aiz-selectpicker" name="group" id="group" onchange="sort_support()">
                     <option value="">{{translate('All')}}</option>
                     @foreach($groups as $group_val => $_group)
-                    <option value="{{$group_val}}"  @isset($group) @if($group == $group_val) selected @endif @endisset>{{$_group}} ({{\App\Models\Ticket::query()->where("group", $group_val)->count() . ' ' . translate('Peoples')}})</option>
+                    <option value="{{$group_val}}"  @isset($group) @if($group == $group_val) selected @endif @endisset>{{$_group}} ({{filter_by_bloc(\App\Models\Ticket::query()->where("group", $group_val))->count() . ' ' . translate('Peoples')}})</option>
                     @endforeach
                 </select>
             </div>
