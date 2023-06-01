@@ -562,7 +562,7 @@ class SellerController extends Controller
         if (empty($seller)) {
             return response()->json(['success' => 0, 'msg' => '卖家不存在']);
         }
-        $staff = Staff::query()->where("user_id", $request->staff_user_id)->first();
+        $staff = Staff::query()->where("id", $request->staff_id)->first();
         $seller->staff_id = $staff->id;
         $seller->bloc_id = $staff->bloc_id;
         $seller->save();

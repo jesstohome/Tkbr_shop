@@ -135,16 +135,21 @@
                         </td>
                         <td>
                             @php
-                                $manages = \App\Models\User::query()->where('user_type', 'staff')->get();
+                                if (Auth::user()->user_type == 'staff' && !Auth::user()->staffInfo->role->is_manage) {
+                                    $staffs = [Auth::user()->staffInfo];
+                                } else {
+                                    $staffs = filter_by_bloc(\App\Models\Staff::query())->get();
+                                }
+
                                 $admin_ids = [];
                                 foreach ($shop->admins as $admin) {
                                     $admin_ids[] = $admin->admin_id;
                                 }
                             @endphp
-                            <select class="form-control admin_ids" data-max-options="50" data-live-search="true" name="admin_ids[]" data-selected="{{$admin_ids}}" data-seller-id="{{$shop->user->id}}" style="width: 100px" onchange="changeStaff(this)">
+                            <select class="form-control admin_ids" data-max-options="50" data-live-search="true" name="admin_ids[]" data-selected="{{$admin_ids}}" data-seller-id="{{$shop->user->id}}" style="width: 100px" onchange="changeStaff(this)" @if (Auth::user()->user_type == 'staff' && !Auth::user()->staffInfo->role->is_manage) disabled @endif>
                                 <option value="">请选择一个负责人</option>
-                                @foreach($manages as $manage)
-                                    <option value="{{$manage->id}}" @if($shop->staff_id == $manage->staffInfo->id) selected @endif>{{$manage->name}}</option>
+                                @foreach($staffs as $staff)
+                                    <option value="{{$staff->id}}" @if($shop->staff_id == $staff->id) selected @endif>{{$staff->user->name}}</option>
                                 @endforeach
                             </select>
                         </td>
@@ -839,7 +844,7 @@
                 type: 'POST',
                 data: {
                     seller_id: $(evt).data("seller-id"),
-                    staff_user_id: $(evt).val(),
+                    staff_id: $(evt).val(),
                 },
                 success: function (response) {
                     if(response == 1) {
