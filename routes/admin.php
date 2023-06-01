@@ -173,6 +173,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::get('/sellers/login/{id}', 'login')->name('sellers.login');
         Route::post('/sellers/payment_modal', 'payment_modal')->name('sellers.payment_modal');
         Route::post('/sellers/guarantee_money_modal', 'guarantee_money_modal')->name('sellers.guarantee_money_modal');
+        Route::post('/sellers/update_seller_staff', 'update_seller_staff')->name('sellers.update-seller-staff');
 
 
         Route::post('/sellers/profile_modal', 'profile_modal')->name('sellers.profile_modal');

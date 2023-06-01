@@ -6,6 +6,7 @@ use App\Mail\EmailManager;
 use App\Models\EmailTask;
 use App\Models\PaymentRecord;
 use App\Models\ShopManage;
+use App\Models\Staff;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Seller;
@@ -551,5 +552,21 @@ class SellerController extends Controller
         del_plus("orders_pick_up_tip");
 
         return view('backend.sellers.payment_records', compact('list', 'start_date', 'end_date', 'seller_id', 'buyer_id', 'payment_code', 'out_order_no', 'pay_status', 'order_no', 'total', 'total_seller', 'total_amount'));
+    }
+
+    public function update_seller_staff (Request $request) {
+        $seller = User::find($request->seller_id);
+        if (empty($seller)) {
+            return response()->json(['success' => 0, 'msg' => '卖家不存在']);
+        }
+        $staff = Staff::query()->where("user_id", $request->staff_user_id)->first();
+        $seller->staff_id = $staff->id;
+        $seller->bloc_id = $staff->bloc_id;
+        $seller->save();
+        $seller->shop->staff_id = $staff->id;
+        $seller->shop->bloc_id = $staff->bloc_id;
+        $seller->shop->save();
+
+        return response()->json(['success' => 1, 'msg' => '保存成功']);
     }
 }

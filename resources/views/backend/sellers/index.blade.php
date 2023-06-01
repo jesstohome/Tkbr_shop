@@ -141,7 +141,8 @@
                                     $admin_ids[] = $admin->admin_id;
                                 }
                             @endphp
-                            <select class="form-control selectpicker admin_ids" multiple data-max-options="50" data-live-search="true" name="admin_ids[]" data-selected="{{$admin_ids}}">
+                            <select class="form-control admin_ids" data-max-options="50" data-live-search="true" name="admin_ids[]" data-selected="{{$admin_ids}}" data-seller-id="{{$shop->user->id}}" style="width: 100px" onchange="changeStaff(this)">
+                                <option value="">请选择一个负责人</option>
                                 @foreach($manages as $manage)
                                     <option value="{{$manage->id}}" @if(in_array($manage->id, $admin_ids)) selected @endif>{{$manage->name}}</option>
                                 @endforeach
@@ -829,7 +830,27 @@
             });
         }
 
+        function changeStaff() {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('sellers.update-seller-staff')}}",
+                type: 'POST',
+                data: {
+                    seller_id: $("select.admin_ids").data("seller-id"),
+                    staff_user_id: $("select.admin_ids").val(),
+                },
+                success: function (response) {
+                    if(response == 1) {
+                        AIZ.plugins.notify('success', '{{ translate('updated successfully') }}');
+                    }
+                }
+            });
+        }
 
+        $(document).ready(function () {
+        });
 
     </script>
 @endsection
