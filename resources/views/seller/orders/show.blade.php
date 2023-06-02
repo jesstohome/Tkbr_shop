@@ -530,7 +530,14 @@
         });
 
         // 货币选择
+        let oldValue = $("#currency").val();
         $("#currency").on("change", function () {
+            @if($bloc->currency_code)
+            $(this).selectpicker("val", oldValue).selectpicker('refresh');
+            AIZ.plugins.notify('danger', '{{ sprintf(translate('In your region, only %s payment is supported.'), translate($currency_name)) }}');
+            return false;
+            @endif
+
             $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + $(this).find("option:selected").attr('data-exchange-rate') + ' ' + $(this).find("option:selected").attr('data-currency-name'))
         });
 

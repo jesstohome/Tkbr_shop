@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\Models\Currency;
 use App\Models\Order;
 use App\Models\ProductStock;
 use App\Models\SmsTemplate;
@@ -81,7 +82,12 @@ class OrderController extends Controller
 
         $order->viewed = 1;
         $order->save();
-        return view('seller.orders.show', compact('order', 'delivery_boys', 'express', 'tpwd'));
+
+        $bloc = Auth::user()->bloc;
+        $currency = Currency::query()->where('code', $bloc->currency_code)->first();
+        $currency_name = $currency->name;
+
+        return view('seller.orders.show', compact('order', 'delivery_boys', 'express', 'tpwd', 'bloc', 'currency_name'));
     }
 
     public function buy_package(Request $request)

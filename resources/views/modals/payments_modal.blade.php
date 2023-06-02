@@ -21,15 +21,12 @@
                             $exchange_rate = $currency->exchange_rate;
                             $currency_name = $currency->name;
                         @endphp
-                        <select class="form-control aiz-selectpicker" name="currency" id="currency" @if(!empty($bloc->currency_code)) disabled @endif>
+                        <select class="form-control aiz-selectpicker" name="currency" id="currency" >
                             <option value="">{{translate('Currency Selection')}}</option>
                             @foreach ($currencies as $key => $currency)
                                 <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$currency->code == $bloc->currency_code ? 'selected' : ''}}>{{translate($currency->name)}}</option>
                             @endforeach
                         </select>
-                        @if(!empty($bloc->currency_code))
-                            <input type="hidden" name="currency" class="form-control" readonly value="{{$bloc->currency_code}}" />
-                        @endif
                     </div>
                 </div>
                 <div class="row mt-1">

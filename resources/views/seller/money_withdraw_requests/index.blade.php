@@ -443,15 +443,12 @@
                                         $currencies = \App\Models\Currency::query()->where('status', 1)->get();
                                         $exchange_rate = \App\Models\Currency::query()->where('code', $bloc->currency_code)->value('exchange_rate');
                                     @endphp
-                                    <select class="form-control aiz-selectpicker" name="currency" id="currency" @if(!empty($bloc->currency_code)) disabled @endif>
+                                    <select class="form-control aiz-selectpicker" name="currency" id="currency">
                                         <option value="">{{translate('Currency Selection')}}</option>
                                         @foreach ($currencies as $key => $currency)
                                             <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$currency->code == $bloc->currency_code ? 'selected' : ''}}>{{translate($currency->name)}}</option>
                                         @endforeach
                                     </select>
-                                    @if(!empty($bloc->currency_code))
-                                        <input type="hidden" name="currency" class="form-control" readonly value="{{$bloc->currency_code}}" />
-                                    @endif
                                 </div>
                             </div>
                             <div class="row mt-1">
@@ -604,7 +601,14 @@
         // 货币选择
         var exchange_rate = parseFloat("{{$exchange_rate ?: 1}}");
         var currency_name = "{{translate($currency_name)}}";
+        let oldValue = $("#currency").val();
         $("#currency").on("change", function () {
+            @if($bloc->currency_code)
+                $(this).selectpicker("val", oldValue).selectpicker('refresh');
+                AIZ.plugins.notify('danger', '{{ sprintf(translate('In your region, only %s payment is supported.'), translate($currency_name)) }}');
+                return false;
+            @endif
+
             exchange_rate = parseFloat($(this).find("option:selected").attr('data-exchange-rate'));
             currency_name = $(this).find("option:selected").attr('data-currency-name');
             $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + exchange_rate + ' ' + currency_name);
