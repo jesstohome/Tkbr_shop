@@ -194,10 +194,14 @@ class SellerWithdrawRequestController extends Controller
         if (!empty($shop_payment_config)) {
             // wallet
             if ($request->type == 5) {
-                $html = join(" ", [$shop_payment_config->e_wallet_name, $shop_payment_config->e_wallet_address]);
+                $html = join("&#13;", [$shop_payment_config->e_wallet_name, $shop_payment_config->e_wallet_address]);
             } elseif($request->type == 2) {
                 // bank
-                $html = join(" ", [$shop_payment_config->bank_name, $shop_payment_config->bank_no, $shop_payment_config->bank_account_name]);
+                $html = join("&#13;", [
+                    translate('Bank Name') . ':' . $shop_payment_config->bank_name,
+                    translate('Bank Account') . ':' . $shop_payment_config->bank_account_no,
+                    translate('Bank Account Name') . ':' . $shop_payment_config->bank_account_name
+                ]);
             }
         }
 
