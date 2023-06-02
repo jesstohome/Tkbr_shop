@@ -225,6 +225,9 @@ if (!function_exists('discount_in_percentage')) {
 if (!function_exists('cart_product_price')) {
     function cart_product_price($cart_product, $product, $formatted = true, $tax = true)
     {
+        // 两个字段都取下，存的位置不太一样
+        $cart_product['variation'] = $cart_product['variation'] ?: $cart_product['variant'];
+
         $str = '';
         if (isset($cart_product['variation'])){
             if ($cart_product['variation'] != null) {
@@ -239,10 +242,11 @@ if (!function_exists('cart_product_price')) {
         }
 
         file_put_contents(storage_path('logs/order_store.log'), var_export([
-            '$str' => $str,
+            'variation' => $str,
+            'cart_product' => $cart_product,
             'unit_price' => $product->unit_price,
-            'price' => $product_stock ? $product_stock->price : '',
-            '$price' => $price,
+            'sku_price' => $product_stock ? $product_stock->price : '',
+            'price' => $price,
         ], true), FILE_APPEND);
 
 
