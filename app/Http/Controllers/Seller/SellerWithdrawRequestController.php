@@ -53,9 +53,11 @@ class SellerWithdrawRequestController extends Controller
         $auto_show_recharge = $request->get('auto_show_recharge', 0);
 
         $currencies = Currency::query()->where('status', 1)->get();
-        $exchange_rate = Currency::query()->where('code', $user->bloc->currency)->value('exchange_rate');
+        $currency = Currency::query()->where('code', $user->bloc->currency)->first();
+        $exchange_rate = $currency->exchange_rate;
+        $currency_name = $currency->name;
 
-        return view('seller.money_withdraw_requests.index', compact('paymentList','seller_withdraw_requests', 'freezeOrders', 'rechargeList', 'balance', 'shop', 'auto_show_recharge', 'walletExpenseList', 'shop_payment_config', 'currencies', 'exchange_rate'));
+        return view('seller.money_withdraw_requests.index', compact('paymentList','seller_withdraw_requests', 'freezeOrders', 'rechargeList', 'balance', 'shop', 'auto_show_recharge', 'walletExpenseList', 'shop_payment_config', 'currencies', 'exchange_rate', 'currency_name'));
     }
 
 

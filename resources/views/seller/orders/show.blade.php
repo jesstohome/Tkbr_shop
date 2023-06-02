@@ -531,7 +531,7 @@
 
         // 货币选择
         $("#currency").on("change", function () {
-            $("#exchange-rate").html('≈' + $(this).find("option:selected").attr('data-exchange-rate'))
+            $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + $(this).find("option:selected").attr('data-exchange-rate') + ' ' + $(this).find("option:selected").attr('data-currency-name'))
         });
 
         var showtime = function (mydate,mycreated) {

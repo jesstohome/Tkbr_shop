@@ -446,7 +446,7 @@
                                     <select class="form-control aiz-selectpicker" name="currency" id="currency" @if(!empty($bloc->currency)) disabled @endif>
                                         <option value="">{{translate('All')}}</option>
                                         @foreach ($currencies as $key => $currency)
-                                            <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" {{$currency->code == $bloc->currency ? 'selected' : ''}}>{{translate($currency->name)}}</option>
+                                            <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$currency->code == $bloc->currency ? 'selected' : ''}}>{{translate($currency->name)}}</option>
                                         @endforeach
                                     </select>
                                     @if(!empty($bloc->currency))
@@ -459,7 +459,7 @@
                                     <label>{{ translate('Exchange Rate')}}</label>
                                 </div>
                                 <div class="col-md-9 text-left">
-                                    <span id="exchange-rate">{{$exchange_rate ? '≈' . $exchange_rate : ''}}</span>
+                                    <span id="exchange-rate">{{$exchange_rate ? '1 ' . translate('dollar') . ' ≈ ' . $exchange_rate . ' ' . translate($currency_name) : ''}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -598,11 +598,13 @@
 
         // 货币选择
         var exchange_rate = parseFloat("{{$exchange_rate ?: 1}}");
+        var currency_name = "{{translate($currency_name)}}";
         $("#currency").on("change", function () {
             exchange_rate = parseFloat($(this).find("option:selected").attr('data-exchange-rate'));
-            $("#exchange-rate").html('≈' + exchange_rate);
+            currency_name = $(this).find("option:selected").attr('data-currency-name');
+            $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + exchange_rate + ' ' + currency_name);
             if ($("input[name=amount]").val().trim() != '') {
-                $("#exchange-rate-value").html('≈' + ($("input[name=amount]").val() * exchange_rate).toFixed(5));
+                $("#exchange-rate-value").html(' ≈ ' + ($("input[name=amount]").val() * exchange_rate).toFixed(5) + ' ' + currency_name);
             }
         });
 
@@ -613,7 +615,7 @@
             @endif
 
             $("input[name=amount]").on("input", function () {
-               $("#exchange-rate-value").html('≈' + ($(this).val() * exchange_rate).toFixed(5));
+               $("#exchange-rate-value").html(' ≈ ' + ($(this).val() * exchange_rate).toFixed(5) + ' ' + currency_name);
             });
         })
     </script>

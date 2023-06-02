@@ -16,13 +16,15 @@
                     </div>
                     <div class="col-md-9">
                         @php
-                            $currencies = \App\Models\Currency::query()->where('status', 1)->get();
-                            $exchange_rate = \App\Models\Currency::query()->where('code', $bloc->currency)->value('exchange_rate');
+                            use App\Models\Currency;$currencies = Currency::query()->where('status', 1)->get();
+                            $currency = Currency::query()->where('code', $bloc->currency)->first();
+                            $exchange_rate = $currency->exchange_rate;
+                            $currency_name = $currency->name;
                         @endphp
                         <select class="form-control aiz-selectpicker" name="currency" id="currency" @if(!empty($bloc->currency)) disabled @endif>
                             <option value="">{{translate('All')}}</option>
                             @foreach ($currencies as $key => $currency)
-                                <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" {{$currency->code == $bloc->currency ? 'selected' : ''}}>{{translate($currency->name)}}</option>
+                                <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$currency->code == $bloc->currency ? 'selected' : ''}}>{{translate($currency->name)}}</option>
                             @endforeach
                         </select>
                         @if(!empty($bloc->currency))
@@ -34,8 +36,8 @@
                     <div class="col-md-3">
                         <label>{{ translate('Exchange Rate')}}</label>
                     </div>
-                    <div class="col-md-2">
-                        <span id="exchange-rate">{{$exchange_rate ? '≈' . $exchange_rate : ''}}</span>
+                    <div class="col-md-9 text-left">
+                        <span id="exchange-rate">{{$exchange_rate ? '1' . translate('dollar') . '≈' . $exchange_rate . translate($currency_name) : ''}}</span>
                     </div>
                 </div>
                 <div class="row">
