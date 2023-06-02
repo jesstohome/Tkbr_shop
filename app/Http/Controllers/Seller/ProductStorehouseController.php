@@ -55,13 +55,19 @@ class ProductStorehouseController extends Controller
             ->toArray();
 
         // 排除已被其他商家上架的产品
+        $limitShop = (int) get_setting('warehouse_product_merchant_limit');
         $othersAlreadyCopyIds = Product::query()
             ->where('published', 1)
             ->whereNotNull('original_id')
+            ->groupBy('original_id')
+            ->selectRaw("original_id, count(*) total")
+            ->having("total", ">=", $limitShop)
             ->pluck('original_id')
             ->toArray();
 
-        $alreadyCopyIds = array_merge($alreadyCopyIds, $othersAlreadyCopyIds);
+        if (!empty($othersAlreadyCopyIds)) {
+            $alreadyCopyIds = array_merge($alreadyCopyIds, $othersAlreadyCopyIds);
+        }
 
         $products = ProductStock::join('products', 'product_stocks.product_id', '=', 'products.id')
             ->where('products.in_storehouse', 1)
