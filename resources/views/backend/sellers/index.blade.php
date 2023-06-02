@@ -146,7 +146,7 @@
                                     $admin_ids[] = $admin->admin_id;
                                 }
                             @endphp
-                            <select class="form-control admin_ids" data-max-options="50" data-live-search="true" name="admin_ids[]" data-selected="{{$admin_ids}}" data-seller-id="{{$shop->user->id}}" style="width: 100px" onchange="changeStaff(this)" @if (Auth::user()->user_type == 'staff' && !Auth::user()->staffInfo->role->is_manage) disabled @endif>
+                            <select class="form-control admin_ids" data-max-options="50" data-live-search="true" name="admin_ids[]" data-selected="{{$admin_ids}}" data-seller-id="{{$shop->user->id}}" style="width: 100px" onchange="changeStaff(this)" @if (Auth::user()->user_type == 'staff' && !Auth::user()->staffInfo->role->is_manage || $shop->verification_status) disabled @endif>
                                 <option value="">请选择一个负责人</option>
                                 @foreach($staffs as $staff)
                                     <option value="{{$staff->id}}" @if($shop->staff_id == $staff->id) selected @endif>{{$staff->user->name}}</option>
