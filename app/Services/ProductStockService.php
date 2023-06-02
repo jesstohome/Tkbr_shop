@@ -44,15 +44,21 @@ class ProductStockService
         }
     }
 
-    public function product_duplicate_store($product_stocks, $product_new, $profitPrice = 0)
+    public function product_duplicate_store($product_stocks, $product_new, $maxProfit = 0)
     {
         foreach ($product_stocks as $key => $stock) {
             $product_stock = new ProductStock;
             $product_stock->product_id = $product_new->id;
             $product_stock->variant = $stock->variant;
-            $product_stock->price = $stock->price + $profitPrice;
             $product_stock->sku = $stock->sku;
             $product_stock->qty = $stock->qty;
+            $product_stock->price = $stock->price;
+
+            // 利润计算
+            if (!empty($maxProfit)) {
+                $product_stock->price = $stock->price + $stock->price * $maxProfit;
+            }
+
             $product_stock->save();
         }
     }

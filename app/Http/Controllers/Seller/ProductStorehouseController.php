@@ -221,7 +221,7 @@ class ProductStorehouseController extends Controller
                 }
 
                 //Product Stock
-                $this->productStockService->product_duplicate_store($product->stocks, $product_new, $profitPrice);
+                $this->productStockService->product_duplicate_store($product->stocks, $product_new, $maxProfit);
 
                 //VAT & Tax
                 $this->productTaxService->product_duplicate_store($product->taxes, $product_new);
