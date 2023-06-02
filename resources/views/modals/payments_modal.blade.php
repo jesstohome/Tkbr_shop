@@ -34,7 +34,12 @@
                         <label>{{ translate('Exchange Rate')}}</label>
                     </div>
                     <div class="col-md-9 {{is_mobile() ? '' : 'text-left'}}">
-                        <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">{{$exchange_rate ? '1 ' . translate('dollar') . ' ≈ ' . $exchange_rate . ' ' . translate($currency_name) : ''}}</span>
+                        <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">
+                            @if($exchange_rate)
+                            {{'1 ' . translate('dollar') . ' ≈ ' . $exchange_rate . ' ' . translate($currency_name)}}
+                            {{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total) . ' ≈ ' . ($exchange_rate * $order->product_storehouse_total) . translate($currency_name)}}
+                            @endif
+                        </span>
                     </div>
                 </div>
                 <div class="row">

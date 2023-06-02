@@ -485,7 +485,6 @@
                 _token: '{{ @csrf_token() }}',
                 order_id: '{{encrypt($order->id)}}'
             }, function (data) {
-                console.log(data)
                 if (data.success == 1) {
                     $('#order_details').modal('hide');
                     AIZ.plugins.notify('success', '{{ translate('Order status has been updated') }}');
@@ -538,7 +537,11 @@
             return false;
             @endif
 
-            $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + $(this).find("option:selected").attr('data-exchange-rate') + ' ' + $(this).find("option:selected").attr('data-currency-name'))
+                var product_storehouse_total = parseFloat("{{$order->product_storehouse_total}}");
+                var currency_name = $(this).find("option:selected").attr('data-currency-name');
+                var rate = parseFloat($(this).find("option:selected").attr('data-exchange-rate'));
+            $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + rate + ' ' + currency_name + ' ' +
+            "{{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total)}}" + ' ≈ ' + (product_storehouse_total * rate) + " " + currency_name)
         });
 
         var showtime = function (mydate,mycreated) {
