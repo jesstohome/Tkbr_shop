@@ -125,9 +125,9 @@
     <div class="card chat">
         <div class="card-header row gutters-5">
             <div class="text-center text-md-left">
-                <h5 class="mb-md-0 h5" style="height: 25px;overflow: hidden;">{{$ticket->order->details[0]->product->name}}</h5>
+                <h5 class="mb-md-0 h5" style="height: 25px;overflow: hidden;">{{$ticket->order->details[0]->product->getTranslation('name')}}</h5>
                <div class="">
-                   <span> {{ translate("The Factory's bail has been paid") }} </span>
+                   <span> {{ translate("The manufacturer has paid a bail") }} </span>
                </div>
                 <div class="">
                     <span> {{ translate('Order No') }}: {{$ticket->order->code}} </span>
