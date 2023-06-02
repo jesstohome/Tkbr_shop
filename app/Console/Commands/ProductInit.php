@@ -304,7 +304,7 @@ class ProductInit extends Command
             $randCategoryId = array_rand($categoriesProductIds, 1);
             // 生成店铺
             $user = $shop->user;
-            $limit = mt_rand(20, 40);
+            $limit = mt_rand(30, 40);
             $partProductIds = [];
             for ($i  = 0; $i < $limit; $i++) {
                 $partProductIds[] = array_pop($categoriesProductIds[$randCategoryId]);
