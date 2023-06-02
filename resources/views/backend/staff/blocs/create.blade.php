@@ -39,8 +39,8 @@
                 <div class="form-group row">
                     <label class="col-md-3 col-from-label" for="lang">{{translate('Currency')}} </label>
                     <div class="col-md-9">
-                        <select class="form-control aiz-selectpicker" name="currency" id="currency">
-                            <option value="">{{translate('All')}}</option>
+                        <select class="form-control aiz-selectpicker" name="currency_code" id="currency" required>
+                            <option value="">请选择货币</option>
                             @foreach (\App\Models\Currency::query()->where('status', 1)->get() as $key => $currency)
                                 <option value="{{$currency->code}}">{{translate($currency->name)}}</option>
                             @endforeach

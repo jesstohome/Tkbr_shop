@@ -41,6 +41,7 @@ class BlocController extends Controller
             $bloc->name = $request->name;
             $bloc->lang = $request->lang;
             $bloc->time_zone = $request->time_zone;
+            $bloc->currency_code = $request->currency_code;
             $bloc->save();
 
             flash(translate('Bloc has been inserted successfully'))->success();
@@ -90,6 +91,7 @@ class BlocController extends Controller
             $bloc->name = $request->name;
             $bloc->lang = $request->lang;
             $bloc->time_zone = $request->time_zone;
+            $bloc->currency_code = $request->currency_code;
             $bloc->save();
 
             flash(translate('Bloc has been updated successfully'))->success();

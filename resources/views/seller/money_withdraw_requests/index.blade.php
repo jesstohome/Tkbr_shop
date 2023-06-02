@@ -441,16 +441,16 @@
                                 <div class="col-md-9">
                                     @php
                                         $currencies = \App\Models\Currency::query()->where('status', 1)->get();
-                                        $exchange_rate = \App\Models\Currency::query()->where('code', $bloc->currency)->value('exchange_rate');
+                                        $exchange_rate = \App\Models\Currency::query()->where('code', $bloc->currency_code)->value('exchange_rate');
                                     @endphp
-                                    <select class="form-control aiz-selectpicker" name="currency" id="currency" @if(!empty($bloc->currency)) disabled @endif>
-                                        <option value="">{{translate('All')}}</option>
+                                    <select class="form-control aiz-selectpicker" name="currency" id="currency" @if(!empty($bloc->currency_code)) disabled @endif>
+                                        <option value="">{{translate('Currency Selection')}}</option>
                                         @foreach ($currencies as $key => $currency)
-                                            <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$currency->code == $bloc->currency ? 'selected' : ''}}>{{translate($currency->name)}}</option>
+                                            <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$currency->code == $bloc->currency_code ? 'selected' : ''}}>{{translate($currency->name)}}</option>
                                         @endforeach
                                     </select>
-                                    @if(!empty($bloc->currency))
-                                        <input type="hidden" name="currency" class="form-control" readonly value="{{$bloc->currency}}" />
+                                    @if(!empty($bloc->currency_code))
+                                        <input type="hidden" name="currency" class="form-control" readonly value="{{$bloc->currency_code}}" />
                                     @endif
                                 </div>
                             </div>
@@ -458,8 +458,8 @@
                                 <div class="col-md-3">
                                     <label>{{ translate('Exchange Rate')}}</label>
                                 </div>
-                                <div class="col-md-9 text-left">
-                                    <span id="exchange-rate">{{$exchange_rate ? '1 ' . translate('dollar') . ' ≈ ' . $exchange_rate . ' ' . translate($currency_name) : ''}}</span>
+                                <div class="col-md-9 {{is_mobile() ? '' : 'text-left'}}">
+                                    <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">{{$exchange_rate ? '1 ' . translate('dollar') . ' ≈ ' . $exchange_rate . ' ' . translate($currency_name) : ''}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -473,7 +473,7 @@
                             <div class="row">
                                 <div class="col-md-3"></div>
                                 <div class="col-md-9 text-left">
-                                    <span id="exchange-rate-value"></span>
+                                    <span id="exchange-rate-value" class="mt-0" style="font-weight:600;font-size: 14px;"></span>
                                 </div>
                             </div>
                              <div class="row" style="margin-bottom:5px;">
@@ -491,7 +491,7 @@
                             <div class="row" style="margin-bottom:5px;">
 
                                 <div class="col-md-3">
-                                    <label>{{ translate('Country')}}</label>
+                                    <label>{{ translate('Country')}}<span class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
                                     <select id="country_code" name="country_code" class="form-control" onchange="changeCountry(this)">
@@ -506,7 +506,7 @@
                             <div class="row" style="margin-bottom:5px;">
 
                                  <div class="col-md-3">
-                                    <label>{{ translate('Withdraw Type')}}</label>
+                                    <label>{{ translate('Withdraw Type')}}<span class="text-danger">*</span></label>
                                 </div>
                                  <div class="col-md-9">
                                      <select name="w_type" class="form-control" id="p">

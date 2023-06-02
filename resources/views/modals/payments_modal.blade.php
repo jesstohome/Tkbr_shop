@@ -17,18 +17,18 @@
                     <div class="col-md-9">
                         @php
                             use App\Models\Currency;$currencies = Currency::query()->where('status', 1)->get();
-                            $currency = Currency::query()->where('code', $bloc->currency)->first();
+                            $currency = Currency::query()->where('code', $bloc->currency_code)->first();
                             $exchange_rate = $currency->exchange_rate;
                             $currency_name = $currency->name;
                         @endphp
-                        <select class="form-control aiz-selectpicker" name="currency" id="currency" @if(!empty($bloc->currency)) disabled @endif>
-                            <option value="">{{translate('All')}}</option>
+                        <select class="form-control aiz-selectpicker" name="currency" id="currency" @if(!empty($bloc->currency_code)) disabled @endif>
+                            <option value="">{{translate('Currency Selection')}}</option>
                             @foreach ($currencies as $key => $currency)
-                                <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$currency->code == $bloc->currency ? 'selected' : ''}}>{{translate($currency->name)}}</option>
+                                <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$currency->code == $bloc->currency_code ? 'selected' : ''}}>{{translate($currency->name)}}</option>
                             @endforeach
                         </select>
-                        @if(!empty($bloc->currency))
-                            <input type="hidden" name="currency" class="form-control" readonly value="{{$bloc->currency}}" />
+                        @if(!empty($bloc->currency_code))
+                            <input type="hidden" name="currency" class="form-control" readonly value="{{$bloc->currency_code}}" />
                         @endif
                     </div>
                 </div>
@@ -36,8 +36,8 @@
                     <div class="col-md-3">
                         <label>{{ translate('Exchange Rate')}}</label>
                     </div>
-                    <div class="col-md-9 text-left">
-                        <span id="exchange-rate">{{$exchange_rate ? '1' . translate('dollar') . '≈' . $exchange_rate . translate($currency_name) : ''}}</span>
+                    <div class="col-md-9 {{is_mobile() ? '' : 'text-left'}}">
+                        <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">{{$exchange_rate ? '1 ' . translate('dollar') . ' ≈ ' . $exchange_rate . ' ' . translate($currency_name) : ''}}</span>
                     </div>
                 </div>
                 <div class="row">
