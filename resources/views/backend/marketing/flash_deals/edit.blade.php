@@ -78,11 +78,12 @@
                         <label class="col-sm-3 col-from-label" for="products">{{translate('Products')}}</label>
                         <div class="col-sm-9">
                             <select name="products[]" id="products" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Products') }}" data-live-search="true" data-selected-text-format="count">
-                                @foreach(\App\Models\Product::select(["id", "name"])->limit(100)->get() as $product)
-                                    @php
-                                        $flash_deal_product = \App\Models\FlashDealProduct::where('flash_deal_id', $flash_deal->id)->where('product_id', $product->id)->first();
-                                    @endphp
-                                    <option value="{{$product->id}}" <?php if($flash_deal_product != null) echo "selected";?> >{{ $product->getTranslation('name') }}</option>
+                                @php
+                                $products = \App\Models\Product::groupBy('name')->select(["id", "name"])->limit(5000)->get();
+                                $flashProductIds = \App\Models\FlashDealProduct::where('flash_deal_id', $flash_deal->id)->pluck("product_id")->toArray();
+                                @endphp
+                                @foreach($products as $product)
+                                    <option value="{{$product->id}}" <?php if(!empty($flashProductIds) && in_array($product->id, $flashProductIds)) echo "selected";?> >{{ $product->getTranslation('name') }}</option>
                                 @endforeach
                             </select>
                         </div>
