@@ -986,6 +986,16 @@ function hex2rgba($color, $opacity = false)
     return false;
 }
 
+if (!function_exists('isSupperAdmin')) {
+    function isSupperAdmin()
+    {
+        if (Auth::check() && (Auth::user()->user_type == 'admin')) {
+            return true;
+        }
+        return false;
+    }
+}
+
 if (!function_exists('isAdmin')) {
     function isAdmin()
     {

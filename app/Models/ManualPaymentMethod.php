@@ -33,7 +33,11 @@ class ManualPaymentMethod extends Model
         }
 
         $allowPayments = [];
-        $payments = ManualPaymentMethod::query()->whereNotIn('type', $exclude_type)->where('status', 1)->get();
+        $payments = ManualPaymentMethod::query()->where('status', 1);
+        if (!empty($exclude_type)) {
+            $payments = $payments->whereNotIn('type', $exclude_type);
+        }
+        $payments = $payments->get();
         foreach ($payments as $payment) {
             if (in_array($bloc_id, explode(",", $payment->bloc_ids))) {
                 $allowPayments[] = $payment;

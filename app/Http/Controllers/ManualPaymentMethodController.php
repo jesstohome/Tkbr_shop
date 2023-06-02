@@ -30,7 +30,12 @@ class ManualPaymentMethodController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $manual_payment_methods = ManualPaymentMethod::all();
+        if (!isSupperAdmin()) {
+            $staff = Auth::user()->staffInfo();
+            $manual_payment_methods = ManualPaymentMethod::listByBloc(0, $staff->bloc_id, false);
+        } else {
+            $manual_payment_methods = ManualPaymentMethod::all();
+        }
         return view('manual_payment_methods.index', compact('manual_payment_methods'));
     }
 
