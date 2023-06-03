@@ -421,7 +421,7 @@ class SellerController extends Controller
             if (!empty($ticket)) {
                 $ticket->bloc_id = $staff->bloc_id;
                 $ticket->staff_id = $staff->id;
-                $ticket_reply->save();
+                $ticket->save();
             }
 
             return 1;
