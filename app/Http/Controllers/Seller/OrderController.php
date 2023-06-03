@@ -134,7 +134,7 @@ class OrderController extends Controller
             $ticket_reply = new TicketReply();
             $ticket_reply->ticket_id = $ticket->id;
             $ticket_reply->user_id = 0;
-            $ticket_reply->reply = translate('In order to safeguard the interests of both parties involved in the transaction, Tiktok will permanently save the conversation content of this order transaction. If both parties have any questions, the seller should contact Tiktok customer service at the [Store Center] and the manufacturer at the [Delivery Center]');
+            $ticket_reply->reply = 'In order to protect the interests of both parties to the transaction, Douyin will permanently save the content of this order transaction dialogue. If both parties to the transaction have any questions, please contact Douyin customer service, sellers please contact [Store Center], manufacturers please contact [Delivery Center].';
             $ticket_reply->files = '';
             $ticket_reply->save();
 

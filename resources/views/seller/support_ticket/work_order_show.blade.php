@@ -4,9 +4,9 @@
         display: none;
     }
     ul.ticket {
-        height: calc(100% - 118px);
+        height: calc(100% - 158px);
         overflow-y: scroll;
-        margin-top: 110px;
+        margin-top: 150px;
     }
     ul.ticket, ul.ticket li {
         background-color: #ebedf2;
@@ -95,6 +95,7 @@
         right: 0;
         background-color: white;
         height: 100px;
+        border-bottom: 0 !important;
     }
     .card .card-body {
         /*padding: 0 !important;*/
@@ -157,7 +158,7 @@
                                             <p class="text-bold h6 text-center ctime">{{date('Y/m/d', strtotime($ticketreply->created_at))}}</p>
                                         @endif
                                         <span class="text-bold h6 text-muted title">
-                                            @php echo $ticketreply->reply; @endphp
+                                            @php echo $ticketreply->user_id ? $ticketreply->reply : translate($ticketreply->reply); @endphp
                                             @if($ticketreply->user_id)
                                             <p class="text-muted text-sm fs-11 time">{{date('m-d H:i', strtotime($ticketreply->created_at))}}</p>
                                             @endif
@@ -219,7 +220,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".card.chat").height(document.body.clientHeight - 100);
+            $(".card.chat").height(document.body.clientHeight - 80);
             // $(".aiz-main-content").height(document.body.clientHeight - 100);
 
             $("input,textarea").on("blur", function () {
