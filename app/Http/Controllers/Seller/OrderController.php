@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use function dd;
 
@@ -324,9 +325,9 @@ class OrderController extends Controller
             ->distinct();
         $orders = $orders->where('created_at', '<=', date('Y-m-d H:i:s'));
 
-        $new_order_audio = hlen_plus("audio:new_order_tip") > 0;
+        $new_order_audio = hlen_plus("audio:new_order_tip:seller") > 0;
         if ($new_order_audio) {
-            del_plus("audio:new_order_tip");
+            del_plus("audio:new_order_tip:seller");
         }
 
         return response()->json([

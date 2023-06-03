@@ -401,7 +401,7 @@ class PosController extends Controller
                         }
 
                         $order_detail = new OrderDetail;
-                        $order_detail->order_id  =$order->id;
+                        $order_detail->order_id = $order->id;
                         $order_detail->seller_id = $product->user_id;
                         $order_detail->product_id = $product->id;
                         $order_detail->payment_status = $request->payment_type != 'cash_on_delivery' ? 'paid' : 'unpaid';
@@ -448,9 +448,10 @@ class PosController extends Controller
                 $order->product_storehouse_total = $productStorehouseTotal;
                 $order->save();
 
+                $shop = $order->shop;
                 if ( get_setting('picking_switch') != 1 )
-                {//如果不需要提货，直接修改订单为已提货状态
-                    $shop = $order->shop;
+                {
+                    //如果不需要提货，直接修改订单为已提货状态
                     $shop->admin_to_pay += ( $order->grand_total - $order->product_storehouse_total );
                     $shop->save();
                     // 保存订单冻结资金过期时间
@@ -501,16 +502,6 @@ class PosController extends Controller
                     }
                 }
 
-                //sends email to customer with the invoice pdf attached
-                if(env('MAIL_USERNAME') != null){
-                    try {
-//                        Mail::to($request->session()->get('pos.shipping_info')['email'])->queue(new InvoiceEmailManager($array));
-//                        Mail::to(User::where('user_type', 'admin')->first()->email)->queue(new InvoiceEmailManager($array));
-                    } catch (\Exception $e) {
-
-                    }
-                }
-
                 if($request->user_id != NULL){
                     if (Addon::where('unique_identifier', 'club_point')->first() != null && Addon::where('unique_identifier', 'club_point')->first()->activated) {
                         $clubpointController = new ClubPointController;
@@ -519,6 +510,8 @@ class PosController extends Controller
                 }
 
                 calculateCommissionAffilationClubPoint($order);
+
+                hset_plus("new_order_tip", $order->id, 1, $shop->staff_id, $shop->user_id);
 
                 Session::forget('pos.shipping_info');
                 Session::forget('pos.shipping');

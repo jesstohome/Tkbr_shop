@@ -250,7 +250,7 @@ class HtpayController extends Controller
                             $order->payment_details = $data;
                             $order->save();
 
-                            hset_plus("new_order_tip", $order->id, 1, $order->staff_id);
+                            hset_plus("new_order_tip", $order->id, 1, $order->staff_id, $order->seller_id);
                             calculateCommissionAffilationClubPoint($order);
                         }
 

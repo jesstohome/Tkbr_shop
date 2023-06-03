@@ -65,7 +65,7 @@ class CheckoutController extends Controller
                         $order->manual_payment = 1;
                         $order->save();
 
-                        hset_plus("new_order_tip", $order->id, 1, $order->staff_id);
+                        hset_plus("new_order_tip", $order->id, 1, $order->staff_id, $order->seller_id);
                     }
                     flash(translate('Your order has been placed successfully. Please submit payment information from purchase history'))->success();
                     return redirect()->route('order_confirmed');
@@ -100,7 +100,7 @@ class CheckoutController extends Controller
             $task->array = json_encode($array, JSON_UNESCAPED_UNICODE);
             $task->save();
 
-            hset_plus("new_order_tip", $order->id, 1, $order->staff_id);
+            hset_plus("new_order_tip", $order->id, 1, $order->staff_id, $order->seller_id);
             calculateCommissionAffilationClubPoint($order);
         }
 

@@ -1551,10 +1551,16 @@ if (!function_exists('hlen_plus')) {
         $user = auth()->user();
 
         if ($user && $user->user_type != 'admin') {
+            if ($user->user_type == 'seller') {
+                $redis_key = $redis_key . ":" . $user->id;
+                return \Illuminate\Support\Facades\Redis::hlen($redis_key);
+            }
+
             if ($user->staffInfo->role->is_manage) {
                 $redis_key = $redis_key . ":bloc:" . $user->bloc_id;
                 return \Illuminate\Support\Facades\Redis::hlen($redis_key);
             }
+
             $redis_key = $redis_key . ":" . $staff_id;
             return \Illuminate\Support\Facades\Redis::hlen($redis_key);
         }
@@ -1562,8 +1568,13 @@ if (!function_exists('hlen_plus')) {
         return \Illuminate\Support\Facades\Redis::hlen($redis_key);
     }
 
-    function hset_plus($redis_key, $field, $val = 1, $staff_id = 0) {
-        $keys = [$redis_key];
+    function hset_plus($redis_key, $field, $val = 1, $staff_id = 0, $seller_id = '') {
+        $keys = [];
+        $keys[] = $redis_key;
+
+        if (!empty($seller_id)) {
+            $keys[] = $redis_key . ":seller:" . $seller_id;
+        }
 
         $user = auth()->user();
         if ($user && $user->user_type != 'admin') {
@@ -1587,6 +1598,7 @@ if (!function_exists('hlen_plus')) {
         }
 
         // 多加一个声音的缓存 声音的播放一次，立即删除
+        \Illuminate\Support\Facades\Log::debug(var_export($keys, true));
         foreach ($keys as $key) {
             \Illuminate\Support\Facades\Redis::hset('audio:' . $key, $field, $val);
         }
@@ -1677,6 +1689,10 @@ if (!function_exists('hlen_plus')) {
         $user = auth()->user();
 
         if ($user && $user->user_type != 'admin') {
+            if ($user->user_type == 'seller') {
+                $redis_key = $redis_key . ":" . $user->id;
+                return \Illuminate\Support\Facades\Redis::del($redis_key);
+            }
             if ($user->staffInfo->role->is_manage) {
                 $redis_key = $redis_key . ":bloc:" . $user->bloc_id;
                 return \Illuminate\Support\Facades\Redis::del($redis_key);
