@@ -12,6 +12,7 @@ use App\Models\User;
 use Auth;
 use App\Models\TicketReply;
 use App\Mail\SupportMailManager;
+use Illuminate\Support\Facades\Redis;
 use Mail;
 
 class SupportTicketController extends Controller
@@ -208,8 +209,8 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket->status = $request->status;
         $ticket_reply->ticket->save();
 
-        if($ticket_reply->save()){
-            \Cache::set('loop_load_new_reply_audio_frontend', 1);
+        if($ticket_reply->save()) {
+            Redis::set('loop_load_new_reply_audio_frontend', 1);
 
             if ($request->ajax()) {
                 $list = appendTicketFiles([$ticket_reply]);

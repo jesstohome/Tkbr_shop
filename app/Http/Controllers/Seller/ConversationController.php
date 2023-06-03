@@ -26,7 +26,7 @@ class ConversationController extends Controller
         if (BusinessSetting::where('type', 'conversation_system')->first()->value == 1) {
             $conversations = Conversation::where('sender_id', Auth::user()->id)->orWhere('receiver_id', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(5);
 
-            Redis::del("seller_new_conversation_tip:" . Auth::user()->id);
+            del_plus("new_conversation_tip:seller");
             return view('seller.conversations.index', compact('conversations'));
         } else {
             flash(translate('Conversation is disabled at this moment'))->warning();
@@ -105,22 +105,18 @@ class ConversationController extends Controller
     }
 
     public function message_count(Request $request){
-        $conversations = \App\Models\Conversation::where('sender_id', Auth::user()->id)
-            ->orWhere('receiver_id', Auth::user()->id)
-            ->with('messages')
-            ->get();
-        $count = 0;
-        foreach ($conversations as $k=>$v){
-            if($v->sender_id === Auth::user()->id && $v->sender_viewed==0) $count++;
-            if($v->receiver_id === Auth::user()->id  && $v->receiver_viewed==0) $count++;
-            foreach ($v->messages as &$vv){
-                if(strtotime($vv->created_at) === strtotime($vv->updated_at) && $vv->user_id != Auth::user()->id) {
-                    $count++;
-                }
-            }
+        $count = hlen_plus('new_conversation_tip:seller');
+        $ticket_count = Redis::get('loop_load_new_reply_audio_frontend');
+        $newAudio = hlen_plus('audio:new_conversation_tip:seller') || hlen_plus('audio:new_ticket_tip:seller');
+        if ($newAudio || $ticket_count) {
+            del_plus('audio:new_conversation_tip:seller');
+            del_plus('audio:new_ticket_tip:seller');
+            Redis::del('loop_load_new_reply_audio_frontend');
         }
         return response()->json([
             'result' => $count,
+            'ticket_count' => $ticket_count,
+            'newAudio' => $newAudio || $ticket_count,
         ]);
     }
 
