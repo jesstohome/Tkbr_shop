@@ -56,10 +56,13 @@ class ShopReviewInit extends Command
         $this->info('reviews init......');
 
         try {
-            $shops = Shop::all();
+            $shops = Shop::query()
+                ->join("users", "users.id", '=', "shops.user_id")
+                ->where("users.is_virtual_user", 1)
+                ->select("shops.*")
+                ->get();
             $pb = $this->output->createProgressBar(Product::query()->where(['added_by' => 'seller'])->count() + $shops->count());
             Product::query()->where(['added_by' => 'seller'])->chunk(100, function ($products) use ($pb) {
-//                $this->info(count($products));
                 foreach ($products as $product) {
                     if(Review::where('product_id', $product->id)->where('status', 1)->count() > 0){
                         $product->rating = Review::where('product_id', $product->id)->where('status', 1)->sum('rating')/Review::where('product_id', $product->id)->where('status', 1)->count();
