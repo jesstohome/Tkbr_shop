@@ -5,7 +5,7 @@
         .aiz-table td, .aiz-table th {
             padding: 1rem 0.1rem;
         }
-        span.badge {
+        table span.badge {
             word-break: break-word;
             width: 5rem;
             height: auto;
