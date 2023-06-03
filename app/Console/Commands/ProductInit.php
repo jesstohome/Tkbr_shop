@@ -302,7 +302,7 @@ class ProductInit extends Command
             }
 
             $randCategoryId = array_rand($categoriesProductIds, 1);
-            // 生成店铺
+            // 生成店铺产品
             $user = $shop->user;
             $limit = mt_rand(30, 40);
             $partProductIds = [];
