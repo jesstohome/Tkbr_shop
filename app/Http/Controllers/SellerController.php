@@ -418,17 +418,10 @@ class SellerController extends Controller
             }
 
             $ticket = Ticket::where('user_id', $shop->user_id)->where("type", 'service')->first();
-            if (!empty($ticket) && empty($ticket->ticketreplies)) {
-                $ticket_reply = new TicketReply();
-                $ticket_reply->ticket_id = $ticket->id;
-                $ticket_reply->user_id = $shop->user_id;
-                $ticket_reply->reply = translate('Hello');
-                $ticket_reply->files = '';
+            if (!empty($ticket)) {
+                $ticket->bloc_id = $staff->bloc_id;
+                $ticket->staff_id = $staff->id;
                 $ticket_reply->save();
-
-                hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id);
-            } else {
-                ticket_say_hello();
             }
 
             return 1;
