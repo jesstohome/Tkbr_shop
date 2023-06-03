@@ -537,11 +537,17 @@
             return false;
             @endif
 
-                var product_storehouse_total = parseFloat("{{$order->product_storehouse_total}}");
-                var currency_name = $(this).find("option:selected").attr('data-currency-name');
-                var rate = parseFloat($(this).find("option:selected").attr('data-exchange-rate'));
-            $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + rate + ' ' + currency_name + ' ' +
-            "{{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total)}}" + ' ≈ ' + (product_storehouse_total * rate) + " " + currency_name)
+            var product_storehouse_total = parseFloat("{{$order->product_storehouse_total}}");
+            var currency_name = $(this).find("option:selected").attr('data-currency-name');
+            var rate = parseFloat($(this).find("option:selected").attr('data-exchange-rate')).toFixed(2);
+
+            @if(is_pc())
+            $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + rate + ' ' + currency_name + ', ' +
+            "{{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total)}}" + ' ≈ ' + (product_storehouse_total * rate) + " " + currency_name);
+            @else
+            $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + rate + ' ' + currency_name);
+            $("#exchange-rate-2").html("{{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total)}}" + ' ≈ ' + (product_storehouse_total * rate).toFixed(2) + " " + currency_name);
+            @endif
         });
 
         var showtime = function (mydate,mycreated) {

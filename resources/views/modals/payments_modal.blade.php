@@ -34,12 +34,25 @@
                         <label>{{ translate('Exchange Rate')}}</label>
                     </div>
                     <div class="col-md-9 {{is_mobile() ? '' : 'text-left'}}">
-                        <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">
-                            @if($exchange_rate)
-                            {{'1 ' . translate('dollar') . ' ≈ ' . $exchange_rate . ' ' . translate($currency_name)}}
-                            {{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total) . ' ≈ ' . ($exchange_rate * $order->product_storehouse_total) . translate($currency_name)}}
-                            @endif
-                        </span>
+                        @if(is_pc())
+                            <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">
+                                @if($exchange_rate)
+                                {{'1 ' . translate('dollar') . ' ≈ ' . number_format($exchange_rate, 2) . ' ' . translate($currency_name)}},
+                                {{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total) . ' ≈ ' . number_format($exchange_rate * $order->product_storehouse_total, 2) . translate($currency_name)}}
+                                @endif
+                            </span>
+                        @else
+                            <p id="exchange-rate" style="font-weight: 600;font-size: 14px;">
+                                @if($exchange_rate)
+                                    {{'1 ' . translate('dollar') . ' ≈ ' . number_format($exchange_rate, 2) . ' ' . translate($currency_name)}}
+                                @endif
+                            </p>
+                            <p id="exchange-rate-2" style="font-weight: 600;font-size: 14px;">
+                                @if($exchange_rate)
+                                    {{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total) . ' ≈ ' . number_format($exchange_rate * $order->product_storehouse_total, 2) . translate($currency_name)}}
+                                @endif
+                            </p>
+                        @endif
                     </div>
                 </div>
                 <div class="row">

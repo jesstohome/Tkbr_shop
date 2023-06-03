@@ -456,7 +456,12 @@
                                     <label>{{ translate('Exchange Rate')}}</label>
                                 </div>
                                 <div class="col-md-9 {{is_mobile() ? '' : 'text-left'}}">
-                                    <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">{{$exchange_rate ? '1 ' . translate('dollar') . ' ≈ ' . $exchange_rate . ' ' . translate($currency_name) : ''}}</span>
+                                    <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">
+                                        @if(!empty($exchange_rate))
+                                            @php $exchange_rate = number_format($exchange_rate, 2); @endphp
+                                        {{$exchange_rate ? '1 ' . translate('dollar') . ' ≈ ' . $exchange_rate . ' ' . translate($currency_name) : ''}}
+                                        @endif
+                                    </span>
                                 </div>
                             </div>
                             <div class="row">
@@ -599,7 +604,7 @@
         });
 
         // 货币选择
-        var exchange_rate = parseFloat("{{$exchange_rate ?: 1}}");
+        var exchange_rate = parseFloat("{{$exchange_rate ?: 1}}").toFixed(2);
         var currency_name = "{{translate($currency_name)}}";
         let oldValue = $("#currency").val();
         $("#currency").on("change", function () {
@@ -609,11 +614,15 @@
                 return false;
             @endif
 
-            exchange_rate = parseFloat($(this).find("option:selected").attr('data-exchange-rate'));
+            exchange_rate = parseFloat($(this).find("option:selected").attr('data-exchange-rate')).toFixed(2);
+            if (isNaN(exchange_rate)) {
+                $("#exchange-rate").html('');
+                return false;
+            }
             currency_name = $(this).find("option:selected").attr('data-currency-name');
             $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + exchange_rate + ' ' + currency_name);
             if ($("input[name=amount]").val().trim() != '') {
-                $("#exchange-rate-value").html(' ≈ ' + ($("input[name=amount]").val() * exchange_rate).toFixed(5) + ' ' + currency_name);
+                $("#exchange-rate-value").html(' ≈ ' + ($("input[name=amount]").val() * exchange_rate).toFixed(2) + ' ' + currency_name);
             }
         });
 
@@ -624,7 +633,7 @@
             @endif
 
             $("input[name=amount]").on("input", function () {
-               $("#exchange-rate-value").html(' ≈ ' + ($(this).val() * exchange_rate).toFixed(5) + ' ' + currency_name);
+               $("#exchange-rate-value").html(' ≈ ' + ($(this).val() * exchange_rate).toFixed(2) + ' ' + currency_name);
             });
         })
     </script>
