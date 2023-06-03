@@ -7,6 +7,8 @@ use App\Models\EmailTask;
 use App\Models\PaymentRecord;
 use App\Models\ShopManage;
 use App\Models\Staff;
+use App\Models\Ticket;
+use App\Models\TicketReply;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Seller;
@@ -413,6 +415,20 @@ class SellerController extends Controller
                 $task->email = $shop->user->email;
                 $task->array = json_encode($array, JSON_UNESCAPED_UNICODE);
                 $task->save();
+            }
+
+            $ticket = Ticket::where('user_id', $shop->user_id)->where("type", 'service')->first();
+            if (!empty($ticket) && empty($ticket->ticketreplies)) {
+                $ticket_reply = new TicketReply();
+                $ticket_reply->ticket_id = $ticket->id;
+                $ticket_reply->user_id = $shop->user_id;
+                $ticket_reply->reply = translate('Hello');
+                $ticket_reply->files = '';
+                $ticket_reply->save();
+
+                hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id);
+            } else {
+                ticket_say_hello();
             }
 
             return 1;

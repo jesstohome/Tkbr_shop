@@ -1934,12 +1934,15 @@ if (!function_exists('load_new_reply')) {
  * 工单打招呼
  */
 if (!function_exists('ticket_say_hello')) {
-    function ticket_say_hello() {
+    function ticket_say_hello($seller = '') {
+        if (empty($seller)) {
+            $seller = Auth::user();
+        }
         $ticket = new Ticket;
         $ticket->code = max(100000, (Ticket::latest()->first() != null ? Ticket::latest()->first()->code + 1 : 0)).date('s');
-        $ticket->user_id = Auth::user()->id;
-        $ticket->bloc_id = Auth::user()->bloc_id;
-        $ticket->staff_id = get_staff_id();
+        $ticket->user_id = $seller->id;
+        $ticket->bloc_id = $seller->bloc_id;
+        $ticket->staff_id = $seller->staff_id ?: get_staff_id();
         $ticket->subject = 'Tiktok Shop Serve';
         $ticket->viewed = 0;
         $ticket->type = 'service';
@@ -1948,14 +1951,17 @@ if (!function_exists('ticket_say_hello')) {
         $ticket->files = '';
 
         if($ticket->save()) {
-            $ticket_reply = new TicketReply;
-            $ticket_reply->ticket_id = $ticket->id;
-            $ticket_reply->user_id = Auth::user()->id;
-            $ticket_reply->reply = translate('Hello');
-            $ticket_reply->files = '';
-            $ticket_reply->save();
+            // 审核通过的店铺，直接发送 HELLO
+            if ($shop->verification_status) {
+                $ticket_reply = new TicketReply;
+                $ticket_reply->ticket_id = $ticket->id;
+                $ticket_reply->user_id = $seller->id;
+                $ticket_reply->reply = translate('Hello');
+                $ticket_reply->files = '';
+                $ticket_reply->save();
 
-            hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id);
+                hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id, $seller->id);
+            }
 
             return $ticket->id;
         }
