@@ -134,7 +134,7 @@ class OrderController extends Controller
             $ticket_reply = new TicketReply();
             $ticket_reply->ticket_id = $ticket->id;
             $ticket_reply->user_id = 0;
-            $ticket_reply->reply = 'In order to protect the interests of both parties to the transaction, Douyin will permanently save the content of this order transaction dialogue. If both parties to the transaction have any questions, please contact Douyin customer service, sellers please contact [Store Center], manufacturers please contact [Delivery Center].';
+            $ticket_reply->reply = 'In order to protect the interests of both parties to the transaction, the platform will permanently save the content of this order transaction dialogue';
             $ticket_reply->files = '';
             $ticket_reply->save();
 
