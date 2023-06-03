@@ -31,6 +31,12 @@
         padding-bottom: 1.5rem;
         line-height: 2rem;
     }
+    ul.ticket li.system .title {
+        margin: auto;
+        background-color: blanchedalmond !important;
+        width: 90%;
+        max-width: none;
+    }
     ul.ticket li.mine .title {
         background-color: #d9fdd3;
     }
@@ -50,6 +56,10 @@
 
     ul.ticket li .comment-header {
         margin-left: 0.5rem;
+    }
+    ul.ticket li .comment-header .ctime {
+        margin: auto;
+        padding: 5px;
     }
     ul.ticket li.mine .comment-header {
         display: flex;
@@ -125,7 +135,7 @@
     <div class="card chat">
         <div class="card-header row gutters-5">
             <div class="text-center text-md-left">
-                <h5 class="mb-md-0 h5" style="height: 25px;overflow: hidden;">{{$ticket->order->details[0]->product->getTranslation('name')}}</h5>
+                <h5 class="mb-md-0 h5" style="height: 25px;overflow: hidden;">{{$ticket->order->details[0]->product ? $ticket->order->details[0]->product->getTranslation('name') : ''}}</h5>
                <div class="">
                    <span> {{ translate("The manufacturer has paid a security deposit") }} </span>
                </div>
@@ -139,13 +149,18 @@
         <div class="card-body msg-box" style="padding: 0!important;">
             <ul class="list-group list-group-flush ticket">
                 @foreach($ticket->ticketreplies as $ticketreply)
-                    <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
+                    <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}} {{$ticketreply->user_id == 0 ? 'system' : ''}}">
                         <div class="media">
                             <div class="media-body">
                                 <div class="comment-header">
+                                        @if(empty($ticketreply->user_id))
+                                            <p class="text-bold h6 text-center ctime">{{date('Y/m/d', strtotime($ticketreply->created_at))}}</p>
+                                        @endif
                                         <span class="text-bold h6 text-muted title">
                                             @php echo $ticketreply->reply; @endphp
+                                            @if($ticketreply->user_id)
                                             <p class="text-muted text-sm fs-11 time">{{date('m-d H:i', strtotime($ticketreply->created_at))}}</p>
+                                            @endif
                                         </span>
                                 </div>
                             </div>

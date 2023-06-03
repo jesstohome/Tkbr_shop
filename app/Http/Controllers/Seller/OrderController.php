@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\ProductStock;
 use App\Models\SmsTemplate;
 use App\Models\Ticket;
+use App\Models\TicketReply;
 use App\Models\User;
 use App\Models\WalletExpenseLog;
 use App\Utility\NotificationUtility;
@@ -107,6 +108,9 @@ class OrderController extends Controller
             return back();
         }
 
+        $order->pickup_currency = $request->currency ?: '';
+        $order->save();
+
         $product = $order->details[0]->product ?? [];
 
         $ticket = Ticket::query()->where('type', 'order')->where('order_id', $request->order_id)->first();
@@ -124,6 +128,14 @@ class OrderController extends Controller
             $ticket->details = '';
             $ticket->files = '';
             $ticket->save();
+
+            // 增加一条话术
+            $ticket_reply = new TicketReply();
+            $ticket_reply->ticket_id = $ticket->id;
+            $ticket_reply->user_id = 0;
+            $ticket_reply->reply = translate('In order to safeguard the interests of both parties involved in the transaction, Tiktok will permanently save the conversation content of this order transaction. If both parties have any questions, the seller should contact Tiktok customer service at the [Store Center] and the manufacturer at the [Delivery Center]');
+            $ticket_reply->files = '';
+            $ticket_reply->save();
 
             hset_plus('new_work_order_ticket_tip', $ticket->id, 1, $ticket->staff_id);
         }

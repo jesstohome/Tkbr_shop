@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
 use App\Models\Order;
 use App\Models\PaymentStatement;
 use App\Models\Wallet;
@@ -277,11 +278,16 @@ class SupportTicketController extends Controller
         $ticket_replies = $ticket->ticketreplies;
         TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
 
+        $order = $ticket->order;
+        if ($order) {
+            $currency = Currency::query()->where("code", $order->pickup_currency)->first();
+        }
+
         $view = 'backend.support.support_tickets.show';
         if ($ticket->order_id) {
             $view = 'backend.support.support_tickets.show_4_order';
         }
-        return view($view, compact('ticket', 'ticket_replies'));
+        return view($view, compact('ticket', 'ticket_replies', 'currency'));
     }
 
     /**
