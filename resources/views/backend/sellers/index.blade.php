@@ -128,7 +128,7 @@
                         </td>
                         <td>
                             <label class="aiz-switch aiz-switch-success mb-0">
-                                <input onchange="update_approved(this)" value="{{ $shop->id }}" type="checkbox" <?php if($shop->verification_status == 1) echo "checked";?> >
+                                <input onchange="update_approved(this)" value="{{ $shop->id }}" type="checkbox" <?php if($shop->verification_status == 1) echo "checked";?> @if($shop->verification_status) disabled @endif>
                                 <span class="slider round"></span>
                             </label>
                             @if(hget_plus('new_shop_created_tip', $shop->id))<span class="badge badge-danger badge-circle badge-sm badge-dot"></span> @endif
