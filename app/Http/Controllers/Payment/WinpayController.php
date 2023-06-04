@@ -109,10 +109,12 @@ class WinpayController extends Controller
             \Log::debug(var_export(['pay_request_arr' => $postdata, 'res' => $response, $curl_info], true));
             if (!empty($response)) {
                 $res = json_decode($response, true);
-                if (!empty($res) && $res['tradeResult'] == 1 && !empty($res['payInfo'])) {
-                    $paymentStatement->out_order_no = $res['orderNo'];
+                \Log::debug(var_export(['res' => $res], true));
+                if (!empty($res) && $res['code'] == 200 && !empty($res['params'])) {
+                    $resultData = is_array($res['params']) ? $res['params'] : json_decode($res['params'], true);
+                    $paymentStatement->out_order_no = $resultData['system_ref'];
                     $paymentStatement->save();
-                    return \Redirect::to($res['payInfo']);
+                    return \Redirect::to($resultData['payurl']);
                 } else {
                     \Log::warning(var_export(['WinPayResult' => $res], true));
                 }
