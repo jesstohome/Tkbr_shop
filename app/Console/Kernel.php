@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command("queryExchangeRates")->everyMinute()->runInBackground();
+        $schedule->command("queryExchangeRates")->dailyAt('23:00')->runInBackground();
 
         $cache_key = 'generate_shop_product';
         $create_json = Redis::get($cache_key);
