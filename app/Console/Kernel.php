@@ -117,7 +117,7 @@ class Kernel extends ConsoleKernel
         })->everyMinute();
 
 
-        $schedule->command("queryExchangeRates")->dailyAt('23:00');
+        $schedule->command("queryExchangeRates")->dailyAt('15:50');
     }
 
     /**
