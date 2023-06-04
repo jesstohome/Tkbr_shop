@@ -1582,7 +1582,7 @@ if (!function_exists('hlen_plus')) {
 
         if ($user && $user->user_type != 'admin') {
             if (!$staff_id) {
-                $staff = auth()->user()->staffInfo;
+                $staff = $user->staffInfo;
                 if ($staff) {
                     $staff_id = $staff->id;
                 }
