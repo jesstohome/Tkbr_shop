@@ -395,7 +395,7 @@ class ProductInit extends Command
             $shopProductIds = Product::query()->where('user_id', $shop->user_id)->pluck('id');
             if (!empty($shopProductIds)) {
                 $num_of_reviews = Review::whereIn('product_id', $shopProductIds)->where('status', 1)->count();
-                if (empty($num_of_reviews)) {
+                if (!empty($num_of_reviews)) {
                     $rating = Review::whereIn('product_id', $shopProductIds)->where('status', 1)->sum('rating') / $num_of_reviews;
                     $shop->rating = $rating;
                     $shop->num_of_reviews = $num_of_reviews;
