@@ -54,6 +54,7 @@ class ProductInit extends Command
      */
     public function handle()
     {
+        ini_set('memory_limit', -1);
         $this->info('start init products......');
 
         $comments = [
@@ -271,9 +272,21 @@ class ProductInit extends Command
         }
 
         $category_ids = $this->argument('category_ids');
-        if (is_null($category_ids)) {
-            $this->info('确定不指定分类，将category_ids参数设置为0');
-            return;
+        if (empty($category_ids)) {
+            $cate = \DB::query("SELECT
+	category_id,
+	count( 1 ) t
+FROM
+	products
+WHERE
+	added_by = 'admin'
+	AND category_id NOT IN ( SELECT category_id FROM products WHERE added_by = 'seller' GROUP BY category_id )
+GROUP BY
+	category_id ")->get();
+            if (!empty($cate)) {
+                $cate = $cate->toArray();
+                $category_ids = array_column($cate, 'category_id');
+            }
         }
 
         $this->info(var_export([$category_ids, !empty($category_ids)], true));
@@ -352,9 +365,7 @@ class ProductInit extends Command
                 $this->productTaxService->product_duplicate_store($product->taxes, $product_new);
 
                 // 生成评论
-//                echo 'contents:' . count($comments) . PHP_EOL;
                 $rand_index = array_rand($comments, mt_rand(2, 5));
-//                echo 'rand contents:' . count($rand_index) . PHP_EOL;
                 foreach ( $rand_index as $index) {
                     $reviewUserIdIndex = array_rand($customerIds, 1);
                     $reviewModel = new Review;
@@ -366,6 +377,26 @@ class ProductInit extends Command
                     $reviewModel->comment = $comments[$index];
                     $reviewModel->viewed = '0';
                     $reviewModel->save();
+                }
+
+                // 计算产品评分
+                if(Review::where('product_id', $product_new->id)->where('status', 1)->count() > 0) {
+                    $product_new->rating = Review::where('product_id', $product_new->id)->where('status', 1)->sum('rating')/Review::where('product_id', $product_new->id)->where('status', 1)->count();
+                } else {
+                    $product_new->rating = 0;
+                }
+                $product_new->save();
+            }
+
+            // 计算店铺评分
+            $shopProductIds = Product::query()->where('user_id', $shop->user_id)->pluck('id');
+            if (!empty($shopProductIds)) {
+                $num_of_reviews = Review::whereIn('product_id', $shopProductIds)->where('status', 1)->count();
+                if (empty($num_of_reviews)) {
+                    $rating = Review::whereIn('product_id', $shopProductIds)->where('status', 1)->sum('rating') / $num_of_reviews;
+                    $shop->rating = $rating;
+                    $shop->num_of_reviews = $num_of_reviews;
+                    $shop->save();
                 }
             }
 

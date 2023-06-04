@@ -10,6 +10,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class Kernel extends ConsoleKernel
 {
@@ -30,6 +31,25 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command("queryExchangeRates")->everyMinute()->runInBackground();
+
+        $cache_key = 'generate_shop_product';
+        $create_json = Redis::get($cache_key);
+        Log::debug($cache_key  . ' ' . $create_json);
+        if (!empty($create_json)) {
+            Log::debug($create_json);
+
+            Redis::del($cache_key);
+
+            $create_data = json_decode($create_json, true);
+            if (!empty($create_data)) {
+                $category_ids = $create_data['category_ids'] ?: 0;
+                $shop_num = $create_data['shop_num'] ?: 1;
+
+                $schedule->command(join(' ', ['product:init', $category_ids, $shop_num]))->runInBackground();
+            }
+        }
+
         $schedule->call(function () {
             $timestamp = now()->timestamp;
             $ok1 = Order::query()->whereNotNull('freeze_expired_at')
@@ -114,10 +134,7 @@ class Kernel extends ConsoleKernel
                 \Redis::del('trigger_translate');
                 Artisan::call("translate:run");
             }
-        })->everyMinute();
-
-
-        $schedule->command("queryExchangeRates")->dailyAt('15:50');
+        })->everyMinute()->runInBackground();
     }
 
     /**

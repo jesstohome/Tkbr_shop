@@ -1095,4 +1095,15 @@ class ProductController extends Controller
 
         return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'sort_search'));
     }
+
+    // 触发店铺生成产品
+    public function generate_shop_product(Request $request) {
+
+        $max = (int) $request->input('max');
+        if ($max < 0) $max = 1;
+
+        \Redis::set('generate_shop_product', json_encode(['shop_num' => $max]));
+
+        return 1;
+    }
 }

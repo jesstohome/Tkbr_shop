@@ -18,6 +18,13 @@
             </a>
         </div>
         @endif
+
+        @if (isSupperAdmin())
+        <div class="ml-auto" style="margin-right: 6px;">
+            <button id="generate_shop_product" type="button" class="btn btn-outline-primary btn-block">
+                生成店铺产品</button>
+        </div>
+        @endif
     </div>
 </div>
 <br>
@@ -262,6 +269,34 @@
 @section('modal')
     @include('modals.delete_modal')
 
+    <div class="modal fade" id="generate_shop_product_modal" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h6">{{translate('Generate Shop Products')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-bottom: 16px; font-size: 14px; ">
+                        <i>提交后，脚本会自动把未上架过产品的分类中的产品，随机导入到店铺，等待后台把产品导入完成后，清理缓存，并在前台对应分类下查看导入的产品</i>
+                    </div>
+                    <form class="form-horizontal" action="{{ route('products.generate_shop_product') }}" method="POST">
+                        <div class="form-group row">
+                            <div class="col-lg-2">店铺数量</div>
+                            <div class="col-lg-6">
+                                <input type="number" min="1" step="1" max="100" class="form-control" name="quantity" value="1" placeholder="Quantity of generate" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Cancel')}}</button>
+                    <a type="button" id="submitVirtualCustomer" class="btn btn-primary">{{translate('Submit')}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Product Review Modal -->
     <div class="modal fade" id="product-review-modal">
         <div class="modal-dialog">
@@ -306,7 +341,6 @@
                     this.checked = false;
                 });
             }
-
         });
 
         function update_todays_deal(el){
@@ -444,5 +478,42 @@
             });
         }
 
+        $(document).ready(function () {
+            // 触发导入产品
+            $( '#generate_shop_product' ).bind( 'click', function () {
+                $( '#generate_shop_product_modal' ).modal( 'show' );
+            });
+            $( '#submitVirtualCustomer' ).bind( 'click', function () {
+                let target = $( this );
+                if ( target.hasClass( 'disabled' ) ) return false;
+
+                target.addClass( 'disabled' );
+                let max = $( 'input[name=quantity]' ).val();
+
+                fetch( '{{route('products.generate_shop_product')}}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'fetch'
+                    },
+                    body: JSON.stringify( {
+                        _token: '{{csrf_token()}}',
+                        max,
+                    } )
+                } ).then( resp => resp.text() ).then( res => {
+                    if ( res == 1 ) {
+                        AIZ.plugins.notify( 'success', '触发成功，等待导入产品' );
+                        setTimeout( () =>
+                        {
+                            window.location.reload()
+                        }, 500 )
+                    }
+                    else {
+                        AIZ.plugins.notify( 'danger', '{{translate('Executed failure Try again')}}' )
+                        target.removeClass( 'disabled' )
+                    }
+                } ).catch( err => null ).finally( () => {} )
+            } );
+        });
     </script>
 @endsection

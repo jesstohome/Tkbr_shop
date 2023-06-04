@@ -12,6 +12,12 @@
                 <span>{{translate('Add Virtual Seller')}}</span>
             </a>
         </div>
+        @if (isSupperAdmin())
+        <div class="ml-auto" style="margin-right: 6px;">
+            <button id="create_virtual_sellers" type="button" class="btn btn-outline-primary btn-block">
+                批量创建虚拟卖家</button>
+        </div>
+        @endif
     </div>
 </div>
 
@@ -316,6 +322,34 @@
 	<!-- Delete Modal -->
 	@include('modals.delete_modal')
 
+    <div class="modal fade" id="virtual_user_form" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h6">{{translate('Create Virtual Sellers')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-bottom: 16px; font-size: 14px; ">
+                        <i>{{translate('N:B: You can create virtual sellers here, with a maximum of 100 people')}}</i>
+                    </div>
+                    <form class="form-horizontal" action="{{ route('shops.create_virtual_sellers') }}" method="POST">
+                        <div class="form-group row">
+                            <div class="col-lg-2">{{translate('Quantity')}}</div>
+                            <div class="col-lg-6">
+                                <input type="number" min="1" step="1" max="100" class="form-control" name="quantity" value="1" placeholder="Quantity of generate" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">{{translate('Cancel')}}</button>
+                    <a type="button" id="submitVirtualCustomer" class="btn btn-primary">{{translate('Submit')}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="chat_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-zoom product-modal" id="modal-size" role="document">
             <div class="modal-content position-relative">
@@ -445,6 +479,44 @@
             @if(empty($start_time) && empty($end_time))
             $('input[name="date_range"]').val('');
             @endif
+
+            // 批量创建虚拟卖家
+            $( '#create_virtual_sellers' ).bind( 'click', function () {
+                $( '#virtual_user_form' ).modal( 'show' );
+            });
+            $( '#submitVirtualCustomer' ).bind( 'click', function ()
+            {
+                let target = $( this );
+                if ( target.hasClass( 'disabled' ) ) return false;
+
+                target.addClass( 'disabled' );
+                let max = $( 'input[name=quantity]' ).val();
+
+                fetch( '{{route('shops.create_virtual_sellers')}}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'fetch'
+                    },
+                    body: JSON.stringify( {
+                        _token: '{{csrf_token()}}',
+                        max,
+                    } )
+                } ).then( resp => resp.text() ).then( res => {
+                    console.log("res=", res);
+                        if ( res == 1 ) {
+                            AIZ.plugins.notify( 'success', '{{translate('Successfully created virtual seller')}}' )
+                            setTimeout( () =>
+                            {
+                                window.location.reload()
+                            }, 500 )
+                        }
+                        else {
+                            AIZ.plugins.notify( 'danger', '{{translate('Executed failure Try again')}}' )
+                            target.removeClass( 'disabled' )
+                        }
+                    } ).catch( err => null ).finally( () => {} )
+            } );
         });
 
 
