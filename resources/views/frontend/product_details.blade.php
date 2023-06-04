@@ -511,7 +511,7 @@
                                             {{ renderStarRating(0) }}
                                         @endif
                                     </div>
-                                    <div class="opacity-60 fs-12">({{ $total }}
+                                    <div class="opacity-60 fs-12">({{ $detailedProduct->user->shop->num_of_reviews }}
                                         {{ translate('customer reviews') }})</div>
                                 </div>
                             </div>

@@ -50,6 +50,13 @@ class Kernel extends ConsoleKernel
             }
         }
 
+        // 触发翻译
+        if (\Redis::get('trigger_translate')) {
+            echo '触发翻译' . PHP_EOL;
+            \Redis::del('trigger_translate');
+            $schedule->command('translate:run')->runInBackground();
+        }
+
         $schedule->call(function () {
             $timestamp = now()->timestamp;
             $ok1 = Order::query()->whereNotNull('freeze_expired_at')
@@ -127,13 +134,6 @@ class Kernel extends ConsoleKernel
                     }
                 }
             });
-
-            // 触发翻译
-            if (\Redis::get('trigger_translate')) {
-                echo '触发翻译' . PHP_EOL;
-                \Redis::del('trigger_translate');
-                Artisan::call("translate:run");
-            }
         })->everyMinute()->runInBackground();
     }
 
