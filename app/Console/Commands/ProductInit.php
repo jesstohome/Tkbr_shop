@@ -263,7 +263,7 @@ class ProductInit extends Command
             ->having("totalProduct", 0)
             ->limit($shop_num)
             ->get();
-//        dd(\DB::getQueryLog());//打印SQL语句
+//        $this->info(\DB::getQueryLog());//打印SQL语句
 
         $products = Product::query()->where('in_storehouse', 1);
 
@@ -273,19 +273,21 @@ class ProductInit extends Command
 
         $category_ids = $this->argument('category_ids');
         if (empty($category_ids)) {
-            $cate = \DB::query("SELECT
-	category_id,
-	count( 1 ) t
-FROM
-	products
-WHERE
-	added_by = 'admin'
-	AND category_id NOT IN ( SELECT category_id FROM products WHERE added_by = 'seller' GROUP BY category_id )
-GROUP BY
-	category_id ")->get();
+            $cate = \DB::select("SELECT
+                                            category_id,
+                                            count( 1 ) t
+                                        FROM
+                                            products
+                                        WHERE
+                                            added_by = 'admin'
+                                            AND category_id NOT IN ( SELECT category_id FROM products WHERE added_by = 'seller' GROUP BY category_id )
+                                        GROUP BY
+                                            category_id "
+            );
             if (!empty($cate)) {
-                $cate = $cate->toArray();
                 $category_ids = array_column($cate, 'category_id');
+                $category_ids = join(",", $category_ids);
+                $this->info('准备导入的分类为:' . $category_ids);
             }
         }
 
@@ -296,6 +298,7 @@ GROUP BY
         }
         $products = $products->select(['id', 'category_id'])->get()->toArray();
         $categoriesProductIds = [];
+
         foreach ($products as $product) {
             if (!isset($categoriesProductIds[$product['category_id']])) {
                 $categoriesProductIds[$product['category_id']] = [];
@@ -308,7 +311,7 @@ GROUP BY
         }
 
         $pb = $this->output->createProgressBar(count($shops));
-        foreach ($shops as $shop) {
+        foreach ($shops as $key => $shop) {
             if (empty($categoriesProductIds)) {
                 $this->info('所有分类下产品已使用完毕或者不够20个产品');
                 break;
@@ -322,7 +325,7 @@ GROUP BY
             for ($i  = 0; $i < $limit; $i++) {
                 $partProductIds[] = array_pop($categoriesProductIds[$randCategoryId]);
             }
-            echo 'LIMIT=' . $limit . ':' . count($partProductIds) . PHP_EOL;
+            $this->info("第{$key}家店铺,随机产品数量" . '=' . $limit . ':' . count($partProductIds) . PHP_EOL);
 
             // 不够20个产品的，直接去掉这个分类
             if (count($categoriesProductIds[$randCategoryId]) < 20) {
@@ -334,7 +337,7 @@ GROUP BY
             foreach ($partProductIds as $productId) {
                 $product = Product::find($productId);
                 if (empty($product)) {
-                    echo $productId . "不存在产品" . PHP_EOL;
+                    $this->info($productId . "不存在产品" . PHP_EOL);
                     continue;
                 }
                 $profitPrice = $product->unit_price * $maxProfit;
@@ -404,5 +407,10 @@ GROUP BY
         }
 
         $pb->finish();
+    }
+
+    public function info($msg, $verbosity = null) {
+        if (!is_string($msg)) $msg = var_export($msg, true);
+        Log::debug($msg);
     }
 }

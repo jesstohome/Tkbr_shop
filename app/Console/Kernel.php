@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel
 
             $create_data = json_decode($create_json, true);
             if (!empty($create_data)) {
-                $category_ids = $create_data['category_ids'] ?: 0;
+                $category_ids = 0;
                 $shop_num = $create_data['shop_num'] ?: 1;
 
                 $schedule->command(join(' ', ['product:init', $category_ids, $shop_num]))->runInBackground();
