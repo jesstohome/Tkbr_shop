@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\BusinessSetting;
 use Artisan;
 use CoreComponentRepository;
+use Illuminate\Support\Facades\Log;
 
 class BusinessSettingsController extends Controller
 {
@@ -448,7 +449,8 @@ class BusinessSettingsController extends Controller
         if(env('DEMO_MODE') != 'On'){
             $path = base_path('.env');
             if (file_exists($path)) {
-                $val = '"'.trim($val).'"';
+                $val = trim($val);
+                Log::debug(var_export([$type, $val], true));
                 if(is_numeric(strpos(file_get_contents($path), $type)) && strpos(file_get_contents($path), $type) >= 0){
                     $old_content = file_get_contents($path);
                     $new_content = str_replace(

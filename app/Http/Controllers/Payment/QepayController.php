@@ -167,7 +167,7 @@ class QepayController extends Controller
             }
         } catch (\Exception $exception) {
             flash(translate('Something was wrong'))->error();
-            \Log::error(var_export(['PayFailed' => $ex->getMessage(), $ex->getTraceAsString()], true));
+            \Log::error(var_export(['PayFailed' => $exception->getMessage(), $exception->getTraceAsString()], true));
             return redirect()->route('home');
         }
     }

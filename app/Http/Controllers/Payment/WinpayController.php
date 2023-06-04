@@ -71,7 +71,7 @@ class WinpayController extends Controller
 
             $mch_id = env('WINPAY_MEMBERID');
             $merchant_key = env('WINPAY_SECRET');// 支付秘钥
-            $notify_url = route('winapy.notify');
+            $notify_url = route('winpay.notify');
 
             $trade_amount = number_format($amount * $exchange_rate, 2, '.', '');
             $sign_type = 'MD5';
@@ -114,12 +114,12 @@ class WinpayController extends Controller
                     $paymentStatement->save();
                     return \Redirect::to($res['payInfo']);
                 } else {
-                    \Log::warning(var_export(['QePayResult' => $res], true));
+                    \Log::warning(var_export(['WinPayResult' => $res], true));
                 }
             }
         } catch (\Exception $exception) {
             flash(translate('Something was wrong'))->error();
-            \Log::error(var_export(['PayFailed' => $ex->getMessage(), $ex->getTraceAsString()], true));
+            \Log::error(var_export(['PayFailed' => $exception->getMessage(), $exception->getTraceAsString()], true));
             return redirect()->route('home');
         }
     }

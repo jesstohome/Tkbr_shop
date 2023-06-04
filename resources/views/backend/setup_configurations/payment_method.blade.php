@@ -240,7 +240,7 @@
                 </div>
                 <div class="card-body">
                     <form class="form-horizontal" action="{{ route('payment_method.update') }}" method="POST">
-                        <input type="hidden" name="payment_method" value="winapy">
+                        <input type="hidden" name="payment_method" value="winpay">
                         @csrf
                         <div class="form-group row">
                             <input type="hidden" name="types[]" value="WINPAY_NAME">
