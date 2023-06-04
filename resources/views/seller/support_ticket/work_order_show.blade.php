@@ -34,7 +34,7 @@
     ul.ticket li.system .title {
         margin: auto;
         background-color: blanchedalmond !important;
-        width: 90%;
+        padding-bottom: 0;
         max-width: none;
     }
     ul.ticket li.mine .title {

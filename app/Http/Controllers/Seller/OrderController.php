@@ -134,7 +134,7 @@ class OrderController extends Controller
             $ticket_reply = new TicketReply();
             $ticket_reply->ticket_id = $ticket->id;
             $ticket_reply->user_id = 0;
-            $ticket_reply->reply = 'In order to protect the interests of both parties to the transaction, the platform will permanently save the content of this order transaction dialogue';
+            $ticket_reply->reply = get_setting('work_order_caveat');
             $ticket_reply->files = '';
             $ticket_reply->save();
 
