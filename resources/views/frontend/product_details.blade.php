@@ -441,14 +441,14 @@
                                         <div class="opacity-50 mt-2">{{ translate('Refund') }}:</div>
                                     </div>
                                     <div class="col-10">
-                                        <a href="{{ route('returnpolicy') }}" @if(is_pc()) target="_blank" @endif>
+                                        <a href="{{ route('returnpolicy') }}">
                                             @if ($refund_sticker != null)
                                                 <img src="{{ uploaded_asset($refund_sticker) }}" height="36">
                                             @else
                                                 <img src="{{ static_asset('assets/img/refund-sticker.jpg') }}" height="36">
                                             @endif
                                         </a>
-                                        <a href="{{ route('returnpolicy') }}" class="ml-2" @if(is_pc()) target="_blank" @endif>{{ translate('View Policy') }}</a>
+                                        <a href="{{ route('returnpolicy') }}" class="ml-2">{{ translate('View Policy') }}</a>
                                     </div>
                                 </div>
                             @endif
