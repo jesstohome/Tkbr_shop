@@ -424,8 +424,6 @@ class SellerController extends Controller
                 $ticket->save();
             }
 
-            hset_plus('new_shop_created_tip', $shop->id, 1, $staff->id, '', $staff->user);
-
             return 1;
         }
         return 0;
@@ -580,6 +578,8 @@ class SellerController extends Controller
         $seller->shop->staff_id = $staff->id;
         $seller->shop->bloc_id = $staff->bloc_id;
         $seller->shop->save();
+
+        hset_plus('new_shop_created_tip', $seller->shop->id, 1, $staff->id, '', $staff->user);
 
         return response()->json(['success' => 1, 'msg' => '保存成功']);
     }
