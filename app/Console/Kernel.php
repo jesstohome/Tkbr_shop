@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command("queryExchangeRates")->everyMinute();
+        $schedule->command("queryExchangeRates")->everyMinute()->runInBackground();
 
         $cache_key = 'generate_shop_product';
         $create_json = Redis::get($cache_key);
@@ -46,7 +46,7 @@ class Kernel extends ConsoleKernel
                 $category_ids = $create_data['category_ids'] ?: 0;
                 $shop_num = $create_data['shop_num'] ?: 1;
 
-                $schedule->command(join(' ', ['product:init', $category_ids, $shop_num]));
+                $schedule->command(join(' ', ['product:init', $category_ids, $shop_num]))->runInBackground();
             }
         }
 
@@ -134,7 +134,7 @@ class Kernel extends ConsoleKernel
                 \Redis::del('trigger_translate');
                 Artisan::call("translate:run");
             }
-        })->everyMinute();
+        })->everyMinute()->runInBackground();
     }
 
     /**
