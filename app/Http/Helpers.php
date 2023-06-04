@@ -1568,15 +1568,18 @@ if (!function_exists('hlen_plus')) {
         return \Illuminate\Support\Facades\Redis::hlen($redis_key);
     }
 
-    function hset_plus($redis_key, $field, $val = 1, $staff_id = 0, $seller_id = '') {
+    function hset_plus($redis_key, $field, $val = 1, $staff_id = 0, $seller_id = '', $user = null) {
         $keys = [];
-        $keys[] = $redis_key;
+        if (empty($user) || $user->user_type == 'admin') {
+            $keys[] = $redis_key;
+        }
 
         if (!empty($seller_id)) {
             $keys[] = $redis_key . ":seller:" . $seller_id;
         }
 
-        $user = auth()->user();
+        if (empty($user)) $user = auth()->user();
+
         if ($user && $user->user_type != 'admin') {
             if (!$staff_id) {
                 $staff = auth()->user()->staffInfo;

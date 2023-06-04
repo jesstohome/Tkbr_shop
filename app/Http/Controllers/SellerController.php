@@ -424,6 +424,8 @@ class SellerController extends Controller
                 $ticket->save();
             }
 
+            hset_plus('new_shop_created_tip', $shop->id, 1, $staff->id, '', $staff->user);
+
             return 1;
         }
         return 0;
