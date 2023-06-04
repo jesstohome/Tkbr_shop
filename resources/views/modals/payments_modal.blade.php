@@ -83,6 +83,10 @@
                             @if(get_setting('qepay_collection_behalf') == 1 && is_open_this_payment('qepay', $order))
                                 <a href="javascript:void(0);" onclick="toAndroidPay(2)" id="qepay-link" class="btn btn-primary mt-2" target="_blank">{{env('QEPAY_NAME', 'QEPAY')}}</a>
                             @endif
+
+                            @if(get_setting('winpay_collection_behalf') == 1 && is_open_this_payment('winpay', $order))
+                                <a href="javascript:void(0);" onclick="toAndroidPay(4)" id="winpay-link" class="btn btn-primary mt-2" target="_blank">{{env('WINPAY_NAME', 'WINPAY')}}</a>
+                            @endif
                         </div>
                         @else
                         <div class="col-md-12">
@@ -110,6 +114,10 @@
 
                             @if(get_setting('qepay_collection_behalf') == 1 && is_open_this_payment('qepay', $order))
                                 <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'qepay', 'order_id' => $order->id ?? 0]) }}" onclick="toPay()" id="qepay-link" class="btn btn-primary mt-2" target="_blank">{{env('QEPAY_NAME', 'QEPAY')}}</a>
+                            @endif
+
+                            @if(get_setting('winpay_collection_behalf') == 1 && is_open_this_payment('winpay', $order))
+                                <a href="{{ route('seller.orders.payment_for_storehouse_product_online', ['payment_code' => 'winpay', 'order_id' => $order->id ?? 0]) }}" onclick="toPay()" id="winpay-link" class="btn btn-primary mt-2" target="_blank">{{env('WINPAY_NAME', 'WINPAY')}}</a>
                             @endif
                         </div>
                     @endif
