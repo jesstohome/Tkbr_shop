@@ -1817,22 +1817,15 @@ if (!function_exists("getExchangeRate")) {
      * 美元兑换印尼盾
      * author: Sym
      * time: 2023-05-07 17:23
-     * @param string $payment_type
+     * @param string $currency_code
      * @return int|mixed
      */
-    function getExchangeRate($payment_type) {
-        if ($payment_type == 'htpay') {
-            // 印尼 HTPAY
-            return env('HTPAY_EXCHANGE_RATE', 1);
-        } elseif ($payment_type == 'india_htpay') {
-            //　印度HTPAY
-            return env('HTPAY_EXCHANGE_RATE_IN', 1);
-        }  elseif ($payment_type == 'qepay') {
-            // 印尼 QEPAY
-            return env('QEPAY_EXCHANGE_RATE', 1);
-        }
+    function getExchangeRate($currency_code) {
+        if (empty($currency_code)) return 0;
 
-        return 1;
+        $exchange_rate = Currency::query()->where("code", $currency_code)->value('exchange_rate');
+
+        return $exchange_rate ?: 0;
     }
 }
 

@@ -18,10 +18,6 @@ class IndiaHtpayController extends HtpayController
         return [env('HTPAY_MEMBERID_IN'), env('HTPAY_SECRET_IN')];
     }
 
-    protected function getExchangeRate() {
-        return env('HTPAY_EXCHANGE_RATE_IN');
-    }
-
     protected function getPayBankCode()
     {
         return env('HTPAY_BANK_CODE_IN');

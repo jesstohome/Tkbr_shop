@@ -37,7 +37,7 @@ class HtpayController extends Controller
                 $user = User::find($order->user_id);
                 $amount = $order->product_storehouse_total;
 
-                $exchange_rate = $this->getExchangeRate();
+                $exchange_rate = getExchangeRate($order->pickup_currency);
 
                 $paymentStatement = new PaymentStatement();
                 $paymentStatement->bloc_id = $order->bloc_id;
@@ -134,12 +134,7 @@ class HtpayController extends Controller
 
         list($pay_memberid, $sign_key) = $this->getMchId();
 
-        $currency = Currency::query()->where('code', $withdrawRequest->currency)->first();
-        if (!empty($currency->exchange_rate)) {
-            $exchange_rate = $currency->exchange_rate;
-        } else {
-            $exchange_rate = $this->getExchangeRate();
-        }
+        $exchange_rate = getExchangeRate($withdrawRequest->currency);
         $money = $withdrawRequest->amount * $exchange_rate;
 
         $paymentStatement = new PaymentStatement();
@@ -290,10 +285,6 @@ class HtpayController extends Controller
      */
     protected function getMchId() {
         return [env('HTPAY_MEMBERID'), env('HTPAY_SECRET')];
-    }
-
-    protected function getExchangeRate() {
-        return env('HTPAY_EXCHANGE_RATE');
     }
 
     protected function getPayBankCode()
