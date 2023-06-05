@@ -1821,7 +1821,12 @@ if (!function_exists("getExchangeRate")) {
      * @return int|mixed
      */
     function getExchangeRate($currency_code) {
-        if (empty($currency_code)) return 0;
+        if (empty($currency_code)) {
+            $bloc = Auth::user()->bloc;
+            if (empty($bloc->currency_code)) return 0;
+
+            $currency_code = $bloc->currency_code;
+        }
 
         $exchange_rate = Currency::query()->where("code", $currency_code)->value('exchange_rate');
 
