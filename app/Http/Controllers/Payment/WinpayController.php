@@ -7,13 +7,16 @@ use App\Http\Controllers\Seller\ProfileController;
 use App\Models\CombinedOrder;
 use App\Models\Currency;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\PaymentStatement;
+use App\Models\SellerWithdrawRequest;
 use App\Models\ShopPaymentConfig;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Utility\SignApi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -46,7 +49,7 @@ class WinpayController extends Controller
                     $user = User::find($order->user_id);
                     $amount = $order->product_storehouse_total;
 
-                    $exchange_rate = env('QEPAY_EXCHANGE_RATE');
+                    $exchange_rate = getExchangeRate($order->pickup_currency);
 
                     $paymentStatement = new PaymentStatement();
                     $paymentStatement->bloc_id = $order->bloc_id;
@@ -138,7 +141,6 @@ class WinpayController extends Controller
 
     public function daifu_pay ($withdrawRequest) {
         $mch_id = env('WINPAY_MEMBERID');
-        $merchant_key = env('WINPAY_SECRET');
 
         $user = User::find($withdrawRequest->user_id);
         $shop = $user->shop;
@@ -172,15 +174,10 @@ class WinpayController extends Controller
             return flash('卖家的当前国家的银行配置不存在')->error();
         }
 
-        $bank_name = $shop_payment_conf->bank_name;
-        // Name对应银行CODE
-        $online_bank_names = ProfileController::$online_bank_names;
-
-
         $now = time();
         $params = [
             'merchant_ref' => $paymentStatement->order_no,
-            'product' => 'IndiaH5',
+            'product' => 'IndiaPayout',
             'amount' => $money,
         ];
         $paramsJson = empty($params) ? '' : json_encode($params, JSON_UNESCAPED_UNICODE);
@@ -193,7 +190,7 @@ class WinpayController extends Controller
             'params' => $paramsJson
         );
 
-        $reqUrl = "https://payment.qeapay.com/pay/transfer";
+        $reqUrl = "https://api.winpay.club/api/gateway/withdraw";
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL,$reqUrl);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -215,18 +212,19 @@ class WinpayController extends Controller
         $curl_error = curl_error($ch);
         curl_close($ch);
 
-        \Log::debug(var_export(['daifu_pay_request_arr' => $postdata, 'res' => $response, $curl_error, $curl_info], true));
+        \Log::debug(var_export(['winpay_daifu_pay_request_arr' => $postdata, 'res' => $response, $curl_error, $curl_info], true));
         $res = json_decode($response, true);
-        if (isset($res['respCode']) && $res['respCode'] == "SUCCESS") {
-            $paymentStatement->status = $res['tradeResult'];
-            $paymentStatement->out_order_no = $res['tradeNo'];
+        if (!empty($res) && $res['code'] == 200 && !empty($res['params'])) {
+            $resultData = is_array($res['params']) ? $res['params'] : json_decode($res['params'], true);
+            $paymentStatement->status = 0; // 1:success 2:pending 5:拒绝
+            $paymentStatement->out_order_no = $resultData['system_ref'];
             $paymentStatement->save();
             // 提交成功
             flash(translate('Payment completed'))->success();
         }else{
             // 提交失败
             $paymentStatement->status = 2;
-            $paymentStatement->failure_reason = $res['errorMsg'] ?? '';
+            $paymentStatement->failure_reason = $res['message'] ?? '';
             $paymentStatement->save();
 
             if ($res['errorMsg'] == 'Payment is under temporary maintenance') {
@@ -239,6 +237,69 @@ class WinpayController extends Controller
     public function notify(Request $request) {
         $data = $request->post();
         \Log::info(var_export(['WinPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
+
+        try {
+            if (!empty($data)) {
+                // 正常回调带 mchId时，执行回调签名校验
+                if (!empty($data["mchId"])) {
+                    if ($data['sign'] != $this->sign($data['params'], $data['timestamp'])) {
+                        \Log::info(var_export(['Signature error', 'time' => date('Y-m-d H:i:s')], true));
+                        exit('Signature error');
+                    }
+                }
+
+                $params = json_decode($data['params'], true);
+                $out_order_no = $params['system_ref'];
+                if (!empty($out_order_no)) {
+                    $paymentStatement = PaymentStatement::query()->where('out_order_no', $out_order_no)->where('payment_type', $this->payment_type)->first();
+                }
+                if ($paymentStatement) {
+                    $paymentStatement->status = $params['status'] == 1 ? 1 : 2;
+                    $paymentStatement->save();
+                    if ($paymentStatement->business_type == 'pick_up') {
+                        storehouseProduct_payment_done($paymentStatement->target_id, $this->payment_type);
+                    } elseif ($paymentStatement->business_type == 'shopping') {
+                        $combined_order_id = $paymentStatement->target_id;
+                        $combined_order = CombinedOrder::findOrFail($combined_order_id);
+
+                        foreach ($combined_order->orders as $key => $order) {
+                            $order = Order::findOrFail($order->id);
+                            $order->payment_status = $params['status'] == 1 ? 'paid' : 'unpaid';
+                            $order->payment_details = $data;
+                            $order->save();
+
+                            hset_plus("new_order_tip", $order->id, 1, $order->staff_id, $order->seller_id);
+                            calculateCommissionAffilationClubPoint($order);
+                        }
+
+                        Session::put('combined_order_id', $combined_order_id);
+                    } elseif ($paymentStatement->business_type == 'withdraw') {
+                        $withdrawRequest = SellerWithdrawRequest::find($paymentStatement->target_id);
+                        $user = User::find($paymentStatement->user_id);
+                        $payment = new Payment();
+                        $payment->seller_id = $user->id;
+                        $payment->bloc_id = $user->bloc_id;
+                        $payment->staff_id = $user->staff_id;
+                        $payment->amount = $params['amount'];
+                        $payment->payment_method = $this->payment_type;
+                        $payment->txn_code = $out_order_no;
+                        $payment->payment_details = $data;
+                        $payment->t_type = $withdrawRequest->t_type;
+                        $payment->save();
+
+                        // 更新提现状态
+                        $withdrawRequest->status = $params['status'] == 1 ? 1 : 4;
+                        $withdrawRequest->save();
+                    }
+                }
+
+                exit('success');
+            }
+        } catch (\Exception $exception) {
+            Log::warning('winpay-notify-exception:' . $exception->getMessage());
+        }
+
+        exit('error') ;
     }
 
     private function sign($paramsJson, $now) {
