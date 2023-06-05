@@ -528,7 +528,7 @@
                                     <label>{{ translate('Display Information')}}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <textarea name="message" rows="8" class="form-control mb-3 text-left" readonly>@if(get_setting('withdraw_type_bank_card') == 1){{translate('Bank Name')}}:{{$shop_payment_config->bank_name}}&#13;{{translate('Bank Account')}}:{{$shop_payment_config->bank_account_no}}&#13;{{translate('Bank Account Name')}}:{{$shop_payment_config->bank_account_name}}
+                                    <textarea name="message" rows="8" class="form-control mb-3 text-left" readonly>@if(get_setting('withdraw_type_bank_card') == 1){{translate('Bank Name')}}:{{$shop_payment_config->bank_name}}&#13;{{translate('Bank Account')}}:{{$shop_payment_config->bank_account_no}}&#13;{{translate('Bank Account Name')}}:{{$shop_payment_config->bank_account_name}}&#13;{{$shop_payment_config->bank_var1 ? 'IFSC:' . $shop_payment_config->bank_var1 : ''}}
                                         @elseif(get_setting('withdraw_type_e_wallet') == 1)
                                             {{$shop_payment_config->e_wallet_name}}
                                             {{$shop_payment_config->e_wallet_address}}
