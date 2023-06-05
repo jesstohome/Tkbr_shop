@@ -183,7 +183,7 @@ class OrderController extends Controller
             return response()->json(['success' => 1, 'message' => translate('Payment completed')]);
         }
         DB::rollBack();
-        return response()->json(['success' => 0, 'type' => 'balance_insufficient', 'message' => translate('Insufficient balance')]);
+        return response()->json(['success' => 0, 'type' => 'balance_insufficient', 'message' => translate('Insufficient wallet balance, please choose another payment method')]);
     }
 
     // Update Delivery Status
