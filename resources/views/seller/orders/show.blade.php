@@ -493,8 +493,8 @@
                     AIZ.plugins.notify('danger', data.message ? data.message : '{{ translate('Something went wrong') }}');
                     if (!!data.type && data.type == 'balance_insufficient') {
                         setTimeout(function () {
-                            location.href = '{{route('seller.money_withdraw_requests.index')}}?auto_show_recharge=1'
-                        }, 1000)
+                            $("#payment_for_storehouse_modal").modal("hide");
+                        }, 100)
                     }
                 }
             });
