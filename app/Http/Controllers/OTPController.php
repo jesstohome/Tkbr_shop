@@ -72,7 +72,14 @@ class OTPController extends Controller
     {
         $path = base_path('.env');
         if (file_exists($path)) {
+
             $val = trim($val);
+
+            // 带空格的，用双引号包起来
+            if (strpos($val, " ") != false) {
+                $val = '"' . $val . '"';
+            }
+
             if(is_numeric(strpos(file_get_contents($path), $type)) && strpos(file_get_contents($path), $type) >= 0){
                 $old_content = file_get_contents($path);
                 $new_content = str_replace(
