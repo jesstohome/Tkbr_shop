@@ -103,7 +103,7 @@
                                 <td class="remark" data-id="{{$value->id}}">{{$value->remark}}</td>
                                 <td class="text-right">{{$value->failure_reason}}</td>
                                 <td class="text-right" style="min-width: 100px">
-                                    <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="manual_callback('{{ $value->out_order_no }}', '{{ $value->transaction_id }}', '{{ $value->amount }}', '{{ $value->payment_type }}')" title="{{ translate('Manual callback') }}">
+                                    <a class="btn btn-soft-warning btn-icon btn-circle btn-sm comfirm-link" style="width: auto"  href="javascript:void(0);" onclick="showCallbackModal('{{ $value->out_order_no }}', '{{ $value->transaction_id }}', '{{ $value->amount }}', '{{ $value->payment_type }}')" title="{{ translate('Manual callback') }}">
                                         {{ translate('Manual callback') }}
                                     </a>
                                 </td>
@@ -121,12 +121,37 @@
 
 @endsection
 
+@section('modal')
+    <div id="callback-modal" class="modal fade">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title h6">回调确认</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mt-1">确认手动回调该订单?</p>
+                    <button type="button" class="btn btn-link mt-2" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                    <a href="javascript:void(0)" class="btn btn-primary mt-2 comfirm-link" onclick="manual_callback()">确定</a>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
 @section('script')
     <script>
-        function manual_callback(orderid, transaction_id, money, pay_type) {
+        var orderid, transaction_id, money, pay_type;
+        function showCallbackModal(p1, p2, p3, p4) {
+            orderid = p1;
+            transaction_id = p2;
+            money = p3;
+            pay_type = p4;
+            $("#callback-modal").modal("show");
+        }
+        function manual_callback() {
             var url, postData;
-            if (pay_type == 'htpay' || pay_type == 'india_htpay') {
-                if (pay_type == 'htpay') {
+            if (pay_type === 'htpay' || pay_type === 'india_htpay') {
+                if (pay_type === 'htpay') {
                     url = "{{route('htpay.notify')}}";
                 } else {
                     url = "{{route('india_htpay.notify')}}";
@@ -138,8 +163,16 @@
                     transaction_id: transaction_id,
                     money: money,
                 }
-            } else if (pay_type == 'qepay') {
+            } else if (pay_type === 'qepay') {
                 url = "{{route('qepay.notify')}}";
+                postData = {
+                    tradeResult: 1,
+                    orderNo: orderid,
+                    amount: money,
+                    oriAmount: money,
+                }
+            } else if (pay_type === 'winpay') {
+                url = "{{route('winpay.notify')}}";
                 postData = {
                     tradeResult: 1,
                     orderNo: orderid,

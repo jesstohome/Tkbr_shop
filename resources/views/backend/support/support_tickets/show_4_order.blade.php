@@ -86,7 +86,7 @@
                </div>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-sm btn-primary" onclick="confirmPayment()">确定订单已付款</button>
+                <button type="button" class="btn btn-sm btn-primary" {{$ticket->order->product_storehouse_status ? 'disabled' : ''}} onclick="$('#confirm-payment-modal').modal('show');">确定订单已付款</button>
             </div>
         </div>
         <div class="card-body">
@@ -197,6 +197,22 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content" id="fast-reply-modal-content">
 
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-payment-modal" class="modal fade">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title h6">确认提示</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mt-1">确认已收到卖家货款？</p>
+                    <button type="button" class="btn btn-link mt-2" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                    <a href="javascript:void(0)" class="btn btn-primary mt-2 comfirm-link" onclick="confirmPayment()">确定</a>
+                </div>
             </div>
         </div>
     </div>
