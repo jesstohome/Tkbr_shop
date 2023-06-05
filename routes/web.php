@@ -373,6 +373,7 @@ Route::group(['middleware' => ['auth']], function() {
 });
 
 Route::resource('shops', ShopController::class);
+Route::post('/shops/create_virtual_sellers', [ShopController::class, 'create_virtual_sellers'])->name('shops.create_virtual_sellers');
 
 Route::get('/instamojo/payment/pay-success', [InstamojoController::class, 'success'])->name('instamojo.success');
 

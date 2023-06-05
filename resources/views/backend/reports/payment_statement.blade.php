@@ -88,7 +88,7 @@
                                 <td>{{ $value->order_no }}</td>
                                 <td>{{ $value->out_order_no ?: $value->transaction_id}}</td>
                                 <td>{{ single_price($value->amount) }}</td>
-                                <td>{{ number_format($value->amount_exchanged ?: $value->amount * getExchangeRate($value->payment_type), 2) }}</td>
+                                <td>{{ number_format($value->amount_exchanged, 2) }}</td>
                                 <td>{{ translate($value->business_type) }}</td>
                                 <td>{{ ucfirst(str_replace('_', ' ', $value ->payment_type)) }}</td>
                                 <td class="text-right">

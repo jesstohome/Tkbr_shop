@@ -125,9 +125,7 @@
                             class="aiz-side-nav-link {{ areActiveRoutes(['seller.conversations.index', 'seller.conversations.show']) }}">
                             <i class="las la-comment aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Conversations') }}</span>
-                            @if(Redis::get("seller_new_conversation_tip:" . Auth::user()->id))
-                            <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations"> </span>
-                            @endif
+                            <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations" style="display: none"> </span>
                         </a>
                     </li>
                 @endif
@@ -144,11 +142,7 @@
                        class="aiz-side-nav-link {{ areActiveRoutes(['seller.support_ticket.index']) }}">
                         <i class="las la-atom aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Support Ticket') }}</span>
-                        @if ($support_ticket > 0)
-                            <span class="badge badge-inline badge-success chat-num-tip">{{ $support_ticket }}</span>
-                        @else
-                            <span class="badge badge-inline badge-success chat-num-tip" style="display: none"></span>
-                        @endif
+                        <span class="badge badge-danger badge-circle badge-sm badge-dot chat-num-tip" style="display: none"></span>
                     </a>
                 </li>
 
@@ -375,11 +369,12 @@
             url: '{{ route('seller.conversations.message_count') }}',
             success: function (data)
             {
-                if ( data.result > 0 ) {
-                    $( '#conversations' ).show();
-                }
-                else {
-                    $( '#conversations' ).hide();
+                if ( data.result > 0 ) $( '#conversations' ).show();
+
+                if (data.ticket_count) $( '.chat-num-tip' ).show();
+
+                if (data.newAudio) {
+                    audioPlay();
                 }
             }
         } );
@@ -393,9 +388,6 @@
                 {
                     if ( data.result > 0 ) {
                         $( '#order-red-tip' ).show();
-                    }
-                    else {
-                        $( '#order-red-tip' ).hide();
                     }
 
                     if (data.new_order_audio) {
@@ -442,22 +434,6 @@
              $show_modal2 = 1;
           }
           $must_guarantee_close = get_setting('must_guarantee_close') == 'on' ? 1 : 0;
-
-          /*$shopid = Auth::user()->shop->id;
-          $shop = DB::table('shops')->find($shopid);
-          $bzj_money = $shop->bzj_money;
-          $must_bzj = $shop->mandatory_payment_switch;
-          $show_modal = 0;
-          $show_modal2 = 0;
-          if( $must_bzj && $bzj_money < $shop->compulsory_margin_amount )
-          {
-              $show_modal = 1;
-          }
-          if( strpos($_SERVER['REQUEST_URI'],'money-withdraw-requests') !== false)
-          {
-             $show_modal2 = 1;
-          }
-          $must_guarantee_close = get_setting('must_guarantee_close') == 'on' ? 1 : 0;*/
       @endphp
     <div class="modal fade shop" id="payment_modalsss">
 	    <div class="modal-dialog">

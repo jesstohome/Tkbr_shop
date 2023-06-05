@@ -4,9 +4,9 @@
         display: none;
     }
     ul.ticket {
-        height: calc(100% - 118px);
+        height: calc(100% - 158px);
         overflow-y: scroll;
-        margin-top: 110px;
+        margin-top: 150px;
     }
     ul.ticket, ul.ticket li {
         background-color: #ebedf2;
@@ -31,6 +31,12 @@
         padding-bottom: 1.5rem;
         line-height: 2rem;
     }
+    ul.ticket li.system .title {
+        margin: auto;
+        background-color: blanchedalmond !important;
+        padding-bottom: 0;
+        max-width: none;
+    }
     ul.ticket li.mine .title {
         background-color: #d9fdd3;
     }
@@ -50,6 +56,10 @@
 
     ul.ticket li .comment-header {
         margin-left: 0.5rem;
+    }
+    ul.ticket li .comment-header .ctime {
+        margin: auto;
+        padding: 5px;
     }
     ul.ticket li.mine .comment-header {
         display: flex;
@@ -85,6 +95,7 @@
         right: 0;
         background-color: white;
         height: 100px;
+        border-bottom: 0 !important;
     }
     .card .card-body {
         /*padding: 0 !important;*/
@@ -125,7 +136,7 @@
     <div class="card chat">
         <div class="card-header row gutters-5">
             <div class="text-center text-md-left">
-                <h5 class="mb-md-0 h5" style="height: 25px;overflow: hidden;">{{$ticket->order->details[0]->product->getTranslation('name')}}</h5>
+                <h5 class="mb-md-0 h5" style="height: 25px;overflow: hidden;">{{$ticket->order->details[0]->product ? $ticket->order->details[0]->product->getTranslation('name') : ''}}</h5>
                <div class="">
                    <span> {{ translate("The manufacturer has paid a security deposit") }} </span>
                </div>
@@ -139,13 +150,21 @@
         <div class="card-body msg-box" style="padding: 0!important;">
             <ul class="list-group list-group-flush ticket">
                 @foreach($ticket->ticketreplies as $ticketreply)
-                    <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
+                    <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}} {{$ticketreply->user_id == 0 ? 'system' : ''}}">
                         <div class="media">
                             <div class="media-body">
                                 <div class="comment-header">
+                                        @if(empty($ticketreply->user_id))
+                                            <p class="text-bold h6 text-center ctime">{{date('Y/m/d', strtotime($ticketreply->created_at))}}</p>
+                                        @endif
                                         <span class="text-bold h6 text-muted title">
-                                            @php echo $ticketreply->reply; @endphp
+                                            @if(empty($ticketreply->user_id))
+                                                <svg t="1685791561209" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3147" width="16" height="16"><path d="M809.6 416.64h-53.76V308.48c0-135.68-108.096-243.84-243.2-243.84-135.04 0-243.2 108.16-243.2 243.84v108.16h-53.76c-29.44 0-53.76 24.32-53.76 53.76v433.28c0 29.44 24.32 53.76 53.76 53.76h593.92c30.08 0 54.4-24.32 54.4-53.76V470.4c0-29.44-24.32-53.76-54.4-53.76z m-135.04 0H350.72V308.48c0-89.6 72.96-162.56 161.92-162.56a162.56 162.56 0 0 1 161.92 162.56v108.16z" fill="#040000" p-id="3148"></path></svg>
+                                            @endif
+                                            @php echo $ticketreply->user_id ? $ticketreply->reply : translate($ticketreply->reply); @endphp
+                                            @if($ticketreply->user_id)
                                             <p class="text-muted text-sm fs-11 time">{{date('m-d H:i', strtotime($ticketreply->created_at))}}</p>
+                                            @endif
                                         </span>
                                 </div>
                             </div>
@@ -204,7 +223,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".card.chat").height(document.body.clientHeight - 100);
+            $(".card.chat").height(document.body.clientHeight - 80);
             // $(".aiz-main-content").height(document.body.clientHeight - 100);
 
             $("input,textarea").on("blur", function () {

@@ -65,7 +65,7 @@
                             @endif
 
                             @if($workOrderPayment)
-                                <a href="{{route('seller.orders.create_work_order', ['order_id' => $order->id])}}" id="word-order-link" class="btn btn-primary mt-2">{{translate($workOrderPayment[0]->heading)}}</a>
+                                <a href="javascript:void(0)" onclick="create_work_order()" id="word-order-link" class="btn btn-primary mt-2">{{translate($workOrderPayment[0]->heading)}}</a>
                             @endif
 
                             @if(env('PAYPAL_CLIENT_ID'))
@@ -97,7 +97,7 @@
                             @endif
 
                             @if($workOrderPayment)
-                                <a href="{{route('seller.orders.create_work_order', ['order_id' => $order->id])}}" id="word-order-link" class="btn btn-primary mt-2">{{translate($workOrderPayment[0]->heading)}}</a>
+                                <a href="javascript:void(0)" onclick="create_work_order()" id="word-order-link" class="btn btn-primary mt-2">{{translate($workOrderPayment[0]->heading)}}</a>
                             @endif
 
                             @if(env('PAYPAL_CLIENT_ID'))
@@ -186,5 +186,9 @@
         }, 2e3);
 
         return false;
+    }
+
+    function create_work_order() {
+        location.href = "{{route('seller.orders.create_work_order', ['order_id' => $order->id])}}&currency=" + $("#currency").val();
     }
 </script>

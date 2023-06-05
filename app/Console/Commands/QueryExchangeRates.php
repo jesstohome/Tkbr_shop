@@ -24,6 +24,7 @@ class QueryExchangeRates extends Command
     protected $description = '查询当天的实时汇率';
 
     public function handle() {
+        echo '查询当天的实时汇率' . PHP_EOL;
         queryExchangeRates();
     }
 }

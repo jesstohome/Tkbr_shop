@@ -1551,10 +1551,16 @@ if (!function_exists('hlen_plus')) {
         $user = auth()->user();
 
         if ($user && $user->user_type != 'admin') {
+            if ($user->user_type == 'seller') {
+                $redis_key = $redis_key . ":" . $user->id;
+                return \Illuminate\Support\Facades\Redis::hlen($redis_key);
+            }
+
             if ($user->staffInfo->role->is_manage) {
                 $redis_key = $redis_key . ":bloc:" . $user->bloc_id;
                 return \Illuminate\Support\Facades\Redis::hlen($redis_key);
             }
+
             $redis_key = $redis_key . ":" . $staff_id;
             return \Illuminate\Support\Facades\Redis::hlen($redis_key);
         }
@@ -1562,13 +1568,21 @@ if (!function_exists('hlen_plus')) {
         return \Illuminate\Support\Facades\Redis::hlen($redis_key);
     }
 
-    function hset_plus($redis_key, $field, $val = 1, $staff_id = 0) {
-        $keys = [$redis_key];
+    function hset_plus($redis_key, $field, $val = 1, $staff_id = 0, $seller_id = '', $user = null) {
+        $keys = [];
+        if (empty($user) || $user->user_type == 'admin') {
+            $keys[] = $redis_key;
+        }
 
-        $user = auth()->user();
+        if (!empty($seller_id)) {
+            $keys[] = $redis_key . ":seller:" . $seller_id;
+        }
+
+        if (empty($user)) $user = auth()->user();
+
         if ($user && $user->user_type != 'admin') {
             if (!$staff_id) {
-                $staff = auth()->user()->staffInfo;
+                $staff = $user->staffInfo;
                 if ($staff) {
                     $staff_id = $staff->id;
                 }
@@ -1587,6 +1601,7 @@ if (!function_exists('hlen_plus')) {
         }
 
         // 多加一个声音的缓存 声音的播放一次，立即删除
+        \Illuminate\Support\Facades\Log::debug(var_export($keys, true));
         foreach ($keys as $key) {
             \Illuminate\Support\Facades\Redis::hset('audio:' . $key, $field, $val);
         }
@@ -1677,6 +1692,10 @@ if (!function_exists('hlen_plus')) {
         $user = auth()->user();
 
         if ($user && $user->user_type != 'admin') {
+            if ($user->user_type == 'seller') {
+                $redis_key = $redis_key . ":" . $user->id;
+                return \Illuminate\Support\Facades\Redis::del($redis_key);
+            }
             if ($user->staffInfo->role->is_manage) {
                 $redis_key = $redis_key . ":bloc:" . $user->bloc_id;
                 return \Illuminate\Support\Facades\Redis::del($redis_key);
@@ -1798,22 +1817,15 @@ if (!function_exists("getExchangeRate")) {
      * 美元兑换印尼盾
      * author: Sym
      * time: 2023-05-07 17:23
-     * @param string $payment_type
+     * @param string $currency_code
      * @return int|mixed
      */
-    function getExchangeRate($payment_type) {
-        if ($payment_type == 'htpay') {
-            // 印尼 HTPAY
-            return env('HTPAY_EXCHANGE_RATE', 1);
-        } elseif ($payment_type == 'india_htpay') {
-            //　印度HTPAY
-            return env('HTPAY_EXCHANGE_RATE_IN', 1);
-        }  elseif ($payment_type == 'qepay') {
-            // 印尼 QEPAY
-            return env('QEPAY_EXCHANGE_RATE', 1);
-        }
+    function getExchangeRate($currency_code) {
+        if (empty($currency_code)) return 0;
 
-        return 1;
+        $exchange_rate = Currency::query()->where("code", $currency_code)->value('exchange_rate');
+
+        return $exchange_rate ?: 0;
     }
 }
 
@@ -1918,12 +1930,15 @@ if (!function_exists('load_new_reply')) {
  * 工单打招呼
  */
 if (!function_exists('ticket_say_hello')) {
-    function ticket_say_hello() {
+    function ticket_say_hello($seller = '') {
+        if (empty($seller)) {
+            $seller = Auth::user();
+        }
         $ticket = new Ticket;
         $ticket->code = max(100000, (Ticket::latest()->first() != null ? Ticket::latest()->first()->code + 1 : 0)).date('s');
-        $ticket->user_id = Auth::user()->id;
-        $ticket->bloc_id = Auth::user()->bloc_id;
-        $ticket->staff_id = get_staff_id();
+        $ticket->user_id = $seller->id;
+        $ticket->bloc_id = $seller->bloc_id;
+        $ticket->staff_id = $seller->staff_id ?: get_staff_id();
         $ticket->subject = 'Tiktok Shop Serve';
         $ticket->viewed = 0;
         $ticket->type = 'service';
@@ -1932,14 +1947,17 @@ if (!function_exists('ticket_say_hello')) {
         $ticket->files = '';
 
         if($ticket->save()) {
-            $ticket_reply = new TicketReply;
-            $ticket_reply->ticket_id = $ticket->id;
-            $ticket_reply->user_id = Auth::user()->id;
-            $ticket_reply->reply = translate('Hello');
-            $ticket_reply->files = '';
-            $ticket_reply->save();
+            // 审核通过的店铺，直接发送 HELLO
+            if ($shop->verification_status) {
+                $ticket_reply = new TicketReply;
+                $ticket_reply->ticket_id = $ticket->id;
+                $ticket_reply->user_id = $seller->id;
+                $ticket_reply->reply = translate('Hello');
+                $ticket_reply->files = '';
+                $ticket_reply->save();
 
-            hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id);
+                hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id, $seller->id);
+            }
 
             return $ticket->id;
         }

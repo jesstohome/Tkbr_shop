@@ -6,6 +6,7 @@ use App\Models\ShopManage;
 use App\Models\Staff;
 use App\Models\Upload;
 use Cookie;
+use Faker\Factory;
 use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\User;
@@ -375,5 +376,64 @@ class ShopController extends Controller
 
     public function destroy( $id ) {
         //
+    }
+
+    /**
+     * 批量创建虚拟店铺
+     * author: Sym
+     * time: 2023-06-04 14:44
+     */
+    public function create_virtual_sellers(Request $request) {
+        try
+        {
+            \DB::beginTransaction();
+
+            $bloc_id = 0;
+            $staff_id = 0;
+            $package = SellerPackage::where(['is_default' => 1 ])->first();
+            $package_id = $package['id'];
+
+            $max = \intval($request->input('max')) < 1 ? 1 : ( \intval($request->input('max')) > 100 ? 100 : \intval($request->input('max')) );
+            for ( $i = 0; $i < $max; $i++ ) {
+                $faker = Factory::create();
+                $user = new User();
+                $user->name = $faker->name;
+                $user->is_virtual_user = 1;
+                $user->bloc_id = $bloc_id;
+                $user->staff_id = $staff_id;
+                $user->email = $faker->email;
+                $user->email_verified_at = \date('Y-m-d H:i:s');
+                $user->balance = 0;
+                $user->user_type = "seller";
+                $user->creditscore = "60";
+                $user->saveOrFail();
+
+                $shop = new Shop;
+                $shop->bloc_id = $bloc_id;
+                $shop->staff_id = $staff_id;
+                $shop->user_id = $user->id;
+                $shop->name = $user->name . " Shop";
+                $shop->address = '';
+                $shop->slug = preg_replace('/\s+/', '-', $user->name);
+                $shop->seller_package_id = $package_id;
+                $shop->verification_status = 1;
+                $shop->save();
+
+                $seller_package = new SellerPackagePayment;
+                $seller_package->user_id = $user->id;
+                $seller_package->seller_package_id =  $package_id;
+                $seller_package->payment_method = 'free';
+                $seller_package->payment_details = '';
+                $seller_package->approval = 1;
+                $seller_package->offline_payment = 0;
+                $seller_package->save();
+            }
+            \DB::commit();
+            return 1;
+        } catch ( \Throwable $ex ) {
+            \DB::rollBack();
+            throw $ex;
+        }
+        return 0;
     }
 }

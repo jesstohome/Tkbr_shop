@@ -141,7 +141,7 @@ class ConversationController extends Controller
         $conversation->bloc_id = $product->bloc_id;
         $conversation->staff_id = $product->staff_id;
         $conversation->sender_id = $sender_id;
-        $conversation->receiver_id = Product::findOrFail($request->product_id)->user->id;
+        $conversation->receiver_id = $product->user_id;
         $conversation->title = $request->title;
         $conversation->add_by_admin = $add_by_admin;
 
@@ -152,7 +152,7 @@ class ConversationController extends Controller
             $message->message = $request->message;
 
             if ($message->save()) {
-                Redis::set("seller_new_conversation_tip:" . $conversation->receiver_id, 1);
+                hset_plus('new_conversation_tip', $conversation->id, 1, $product->staff_id, $product->user_id);
             }
         }
 

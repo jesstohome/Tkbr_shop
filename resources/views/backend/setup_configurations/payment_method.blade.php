@@ -52,16 +52,6 @@
                         </div>
 
                         <div class="form-group row">
-                            <input type="hidden" name="types[]" value="QEPAY_EXCHANGE_RATE">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('QEPAY exchange rate')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="QEPAY_EXCHANGE_RATE" value="{{  env('QEPAY_EXCHANGE_RATE') }}" placeholder="{{ translate('QEPAY exchange rate') }}" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
                             <label class="col-sm-4 col-from-label" for="products">{{translate('Blocs')}}</label>
                             <div class="col-sm-8">
                                 <input type="hidden" name="types[]" value="qepay_bloc_ids">
@@ -125,15 +115,6 @@
                             </div>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="HTPAY_SECRET" value="{{  env('HTPAY_SECRET') }}" placeholder="{{ translate('Htpay Secret') }}" required>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="HTPAY_EXCHANGE_RATE">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('Htpay exchange rate')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="HTPAY_EXCHANGE_RATE" value="{{  env('HTPAY_EXCHANGE_RATE') }}" placeholder="{{ translate('Htpay exchange rate') }}" required>
                             </div>
                         </div>
 
@@ -200,16 +181,6 @@
                             </div>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="HTPAY_SECRET_IN" value="{{  env('HTPAY_SECRET_IN') }}" placeholder="{{ translate('Htpay Secret') }}" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <input type="hidden" name="types[]" value="HTPAY_EXCHANGE_RATE_IN">
-                            <div class="col-md-4">
-                                <label class="col-from-label">{{translate('Htpay exchange rate')}}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="HTPAY_EXCHANGE_RATE_IN" value="{{  env('HTPAY_EXCHANGE_RATE_IN') }}" placeholder="{{ translate('Htpay exchange rate') }}" required>
                             </div>
                         </div>
 

@@ -7,6 +7,8 @@ use App\Models\EmailTask;
 use App\Models\PaymentRecord;
 use App\Models\ShopManage;
 use App\Models\Staff;
+use App\Models\Ticket;
+use App\Models\TicketReply;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Seller;
@@ -415,6 +417,13 @@ class SellerController extends Controller
                 $task->save();
             }
 
+            $ticket = Ticket::where('user_id', $shop->user_id)->where("type", 'service')->first();
+            if (!empty($ticket)) {
+                $ticket->bloc_id = $staff->bloc_id;
+                $ticket->staff_id = $staff->id;
+                $ticket->save();
+            }
+
             return 1;
         }
         return 0;
@@ -569,6 +578,8 @@ class SellerController extends Controller
         $seller->shop->staff_id = $staff->id;
         $seller->shop->bloc_id = $staff->bloc_id;
         $seller->shop->save();
+
+        hset_plus('new_shop_created_tip', $seller->shop->id, 1, $staff->id, '', $staff->user);
 
         return response()->json(['success' => 1, 'msg' => '保存成功']);
     }

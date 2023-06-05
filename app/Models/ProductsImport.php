@@ -124,6 +124,10 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                         'skuList' => $row['skuList'],
                         'slug' => Str::random(5),
                     ];
+
+                    // 未指定分类的产品，不导入
+                    if (empty($row['category_id'])) continue;
+
                     $row['description'] = $this->mergeImages2Desc($row['description'], $row['photos']);
 
                     // 有些备注行直接过滤掉

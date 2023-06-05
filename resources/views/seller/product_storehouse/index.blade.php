@@ -101,12 +101,6 @@
 
             $('#product-list').on('click', '.add-plus.set-meal:not(.c-not-allowed)', function () {
                 var set_meal_id = $(this).data('set-meal-id');
-                console.log("set_meal_id", set_meal_id);
-                if (set_meal_id != selected_set_meal_id && selected_set_meal_id !== 0) {
-                    AIZ.plugins.notify('danger', '{{ translate('Only one set meal can be added') }}');
-                    return;
-                }
-
                 updateSetMealSelection(set_meal_id);
             });
 

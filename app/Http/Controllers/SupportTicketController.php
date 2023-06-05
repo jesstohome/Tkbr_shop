@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
 use App\Models\Order;
 use App\Models\PaymentStatement;
 use App\Models\Wallet;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Auth;
 use App\Models\TicketReply;
 use App\Mail\SupportMailManager;
+use Illuminate\Support\Facades\Redis;
 use Mail;
 
 class SupportTicketController extends Controller
@@ -207,8 +209,8 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket->status = $request->status;
         $ticket_reply->ticket->save();
 
-        if($ticket_reply->save()){
-            \Cache::set('loop_load_new_reply_audio_frontend', 1);
+        if($ticket_reply->save()) {
+            Redis::set('loop_load_new_reply_audio_frontend', 1);
 
             if ($request->ajax()) {
                 $list = appendTicketFiles([$ticket_reply]);
@@ -277,11 +279,16 @@ class SupportTicketController extends Controller
         $ticket_replies = $ticket->ticketreplies;
         TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
 
+        $order = $ticket->order;
+        if ($order) {
+            $currency = Currency::query()->where("code", $order->pickup_currency)->first();
+        }
+
         $view = 'backend.support.support_tickets.show';
         if ($ticket->order_id) {
             $view = 'backend.support.support_tickets.show_4_order';
         }
-        return view($view, compact('ticket', 'ticket_replies'));
+        return view($view, compact('ticket', 'ticket_replies', 'currency'));
     }
 
     /**

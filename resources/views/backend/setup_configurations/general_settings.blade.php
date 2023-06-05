@@ -119,6 +119,15 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">工单对话话术</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="work_order_caveat">
+                                <input type="text" class="form-control"  value="{{ get_setting('work_order_caveat') }}" placeholder="" name="work_order_caveat"  />
+
+                            </div>
+                        </div>
+
                         <hr>
                         <div class="form-group row">
                             <label class="col-md-3 col-from-label">{{translate('Automatically Unfrozen')}} ( {{translate('Days')}} )</label>

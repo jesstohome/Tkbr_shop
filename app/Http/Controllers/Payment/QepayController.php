@@ -39,7 +39,7 @@ class QepayController extends Controller
                     $user = User::find($order->user_id);
                     $amount = $order->product_storehouse_total;
 
-                    $exchange_rate = env('QEPAY_EXCHANGE_RATE');
+                    $exchange_rate = getExchangeRate($order->pickup_currency);
 
                     $paymentStatement = new PaymentStatement();
                     $paymentStatement->bloc_id = $order->bloc_id;
@@ -184,12 +184,7 @@ class QepayController extends Controller
         $user = User::find($withdrawRequest->user_id);
         $shop = $user->shop;
 
-        $currency = Currency::query()->where('code', $withdrawRequest->currency)->first();
-        if (!empty($currency->exchange_rate)) {
-            $exchange_rate = $currency->exchange_rate;
-        } else {
-            $exchange_rate = env('QEPAY_EXCHANGE_RATE');
-        }
+        $exchange_rate = getExchangeRate($withdrawRequest->currency);
 
         $money = $withdrawRequest->amount * $exchange_rate;
 
@@ -342,7 +337,7 @@ class QepayController extends Controller
                             $order->payment_details = $data;
                             $order->save();
 
-                            hset_plus("new_order_tip", $order->id, 1, $order->staff_id);
+                            hset_plus("new_order_tip", $order->id, 1, $order->staff_id, $order->seller_id);
                             calculateCommissionAffilationClubPoint($order);
                         }
 

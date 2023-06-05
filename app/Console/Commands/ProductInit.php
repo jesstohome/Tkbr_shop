@@ -54,6 +54,7 @@ class ProductInit extends Command
      */
     public function handle()
     {
+        ini_set('memory_limit', -1);
         $this->info('start init products......');
 
         $comments = [
@@ -255,14 +256,14 @@ class ProductInit extends Command
             ->leftJoin("products", "products.user_id", "=", "shops.user_id")
             ->where('users.is_virtual_user', 1)
             ->where('shops.bloc_id', 0)
-            ->where('shops.rating', '>=', 4)
-            ->where('shops.num_of_reviews', '>=', 10)
+            ->where('shops.rating', 0)
+            ->where('shops.num_of_reviews', 0)
             ->selectRaw("shops.*, count(products.id) as totalProduct")
             ->groupBy("shops.user_id")
             ->having("totalProduct", 0)
             ->limit($shop_num)
             ->get();
-//        dd(\DB::getQueryLog());//打印SQL语句
+//        $this->info(\DB::getQueryLog());//打印SQL语句
 
         $products = Product::query()->where('in_storehouse', 1);
 
@@ -271,9 +272,23 @@ class ProductInit extends Command
         }
 
         $category_ids = $this->argument('category_ids');
-        if (is_null($category_ids)) {
-            $this->info('确定不指定分类，将category_ids参数设置为0');
-            return;
+        if (empty($category_ids)) {
+            $cate = \DB::select("SELECT
+                                            category_id,
+                                            count( 1 ) t
+                                        FROM
+                                            products
+                                        WHERE
+                                            added_by = 'admin'
+                                            AND category_id NOT IN ( SELECT category_id FROM products WHERE added_by = 'seller' GROUP BY category_id )
+                                        GROUP BY
+                                            category_id "
+            );
+            if (!empty($cate)) {
+                $category_ids = array_column($cate, 'category_id');
+                $category_ids = join(",", $category_ids);
+                $this->info('准备导入的分类为:' . $category_ids);
+            }
         }
 
         $this->info(var_export([$category_ids, !empty($category_ids)], true));
@@ -283,6 +298,7 @@ class ProductInit extends Command
         }
         $products = $products->select(['id', 'category_id'])->get()->toArray();
         $categoriesProductIds = [];
+
         foreach ($products as $product) {
             if (!isset($categoriesProductIds[$product['category_id']])) {
                 $categoriesProductIds[$product['category_id']] = [];
@@ -295,7 +311,7 @@ class ProductInit extends Command
         }
 
         $pb = $this->output->createProgressBar(count($shops));
-        foreach ($shops as $shop) {
+        foreach ($shops as $key => $shop) {
             if (empty($categoriesProductIds)) {
                 $this->info('所有分类下产品已使用完毕或者不够20个产品');
                 break;
@@ -309,7 +325,7 @@ class ProductInit extends Command
             for ($i  = 0; $i < $limit; $i++) {
                 $partProductIds[] = array_pop($categoriesProductIds[$randCategoryId]);
             }
-            echo 'LIMIT=' . $limit . ':' . count($partProductIds) . PHP_EOL;
+            $this->info("第{$key}家店铺,随机产品数量" . '=' . $limit . ':' . count($partProductIds) . PHP_EOL);
 
             // 不够20个产品的，直接去掉这个分类
             if (count($categoriesProductIds[$randCategoryId]) < 20) {
@@ -321,7 +337,7 @@ class ProductInit extends Command
             foreach ($partProductIds as $productId) {
                 $product = Product::find($productId);
                 if (empty($product)) {
-                    echo $productId . "不存在产品" . PHP_EOL;
+                    $this->info($productId . "不存在产品" . PHP_EOL);
                     continue;
                 }
                 $profitPrice = $product->unit_price * $maxProfit;
@@ -352,9 +368,7 @@ class ProductInit extends Command
                 $this->productTaxService->product_duplicate_store($product->taxes, $product_new);
 
                 // 生成评论
-//                echo 'contents:' . count($comments) . PHP_EOL;
                 $rand_index = array_rand($comments, mt_rand(2, 5));
-//                echo 'rand contents:' . count($rand_index) . PHP_EOL;
                 foreach ( $rand_index as $index) {
                     $reviewUserIdIndex = array_rand($customerIds, 1);
                     $reviewModel = new Review;
@@ -367,11 +381,36 @@ class ProductInit extends Command
                     $reviewModel->viewed = '0';
                     $reviewModel->save();
                 }
+
+                // 计算产品评分
+                if(Review::where('product_id', $product_new->id)->where('status', 1)->count() > 0) {
+                    $product_new->rating = Review::where('product_id', $product_new->id)->where('status', 1)->sum('rating')/Review::where('product_id', $product_new->id)->where('status', 1)->count();
+                } else {
+                    $product_new->rating = 0;
+                }
+                $product_new->save();
+            }
+
+            // 计算店铺评分
+            $shopProductIds = Product::query()->where('user_id', $shop->user_id)->pluck('id');
+            if (!empty($shopProductIds)) {
+                $num_of_reviews = Review::whereIn('product_id', $shopProductIds)->where('status', 1)->count();
+                if (!empty($num_of_reviews)) {
+                    $rating = Review::whereIn('product_id', $shopProductIds)->where('status', 1)->sum('rating') / $num_of_reviews;
+                    $shop->rating = $rating;
+                    $shop->num_of_reviews = $num_of_reviews;
+                    $shop->save();
+                }
             }
 
             $pb->advance(1);
         }
 
         $pb->finish();
+    }
+
+    public function info($msg, $verbosity = null) {
+        if (!is_string($msg)) $msg = var_export($msg, true);
+        Log::debug($msg);
     }
 }

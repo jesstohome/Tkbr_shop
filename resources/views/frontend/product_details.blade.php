@@ -441,16 +441,14 @@
                                         <div class="opacity-50 mt-2">{{ translate('Refund') }}:</div>
                                     </div>
                                     <div class="col-10">
-                                        <a href="{{ route('returnpolicy') }}" target="_blank">
+                                        <a href="{{ route('returnpolicy') }}">
                                             @if ($refund_sticker != null)
                                                 <img src="{{ uploaded_asset($refund_sticker) }}" height="36">
                                             @else
-                                                <img src="{{ static_asset('assets/img/refund-sticker.jpg') }}"
-                                                    height="36">
+                                                <img src="{{ static_asset('assets/img/refund-sticker.jpg') }}" height="36">
                                             @endif
                                         </a>
-                                        <a href="{{ route('returnpolicy') }}" class="ml-2"
-                                            target="_blank">{{ translate('View Policy') }}</a>
+                                        <a href="{{ route('returnpolicy') }}" class="ml-2">{{ translate('View Policy') }}</a>
                                     </div>
                                 </div>
                             @endif
@@ -513,7 +511,7 @@
                                             {{ renderStarRating(0) }}
                                         @endif
                                     </div>
-                                    <div class="opacity-60 fs-12">({{ $total }}
+                                    <div class="opacity-60 fs-12">({{ $detailedProduct->user->shop->num_of_reviews }}
                                         {{ translate('customer reviews') }})</div>
                                 </div>
                             </div>
@@ -999,6 +997,27 @@
             getVariantPrice();
             @if ($detailedProduct->source=="alibaba")
             imgReplace();
+            @endif
+
+            @if(!is_pc())
+            $('.aiz-share').jsSocials({
+                showLabel: false,
+                showCount: false,
+                shares: [
+                    {
+                        share: "twitter",
+                        logo: "lab la-twitter"
+                    },
+                    {
+                        share: "facebook",
+                        logo: "lab la-facebook-f"
+                    },
+                    {
+                        share: "linkedin",
+                        logo: "lab la-linkedin-in"
+                    },
+                ]
+            });
             @endif
         });
 

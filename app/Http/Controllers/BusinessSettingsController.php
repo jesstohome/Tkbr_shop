@@ -442,29 +442,11 @@ class BusinessSettingsController extends Controller
      * overWrite the Env File values.
      * @param  String type
      * @param  String value
-     * @return \Illuminate\Http\Response
      */
     public function overWriteEnvFile($type, $val)
     {
         if(env('DEMO_MODE') != 'On'){
-            $path = base_path('.env');
-            if (file_exists($path)) {
-                $val = trim($val);
-                Log::debug(var_export([$type, $val], true));
-                if(is_numeric(strpos(file_get_contents($path), $type)) && strpos(file_get_contents($path), $type) >= 0){
-                    $old_content = file_get_contents($path);
-                    $new_content = str_replace(
-                        $type.'="'.env($type).'"', $type.'='.$val, $old_content
-                    );
-                    $new_content = str_replace(
-                        $type.'='.env($type), $type.'='.$val, $new_content
-                    );
-                    file_put_contents($path, $new_content);
-                }
-                else{
-                    file_put_contents($path, file_get_contents($path)."\r\n".$type.'='.$val);
-                }
-            }
+            (new OTPController())->overWriteEnvFile($type, $val);
         }
     }
 

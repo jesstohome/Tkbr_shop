@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\ProductStock;
 use App\Models\SmsTemplate;
 use App\Models\Ticket;
+use App\Models\TicketReply;
 use App\Models\User;
 use App\Models\WalletExpenseLog;
 use App\Utility\NotificationUtility;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use function dd;
 
@@ -107,6 +109,9 @@ class OrderController extends Controller
             return back();
         }
 
+        $order->pickup_currency = $request->currency ?: '';
+        $order->save();
+
         $product = $order->details[0]->product ?? [];
 
         $ticket = Ticket::query()->where('type', 'order')->where('order_id', $request->order_id)->first();
@@ -124,6 +129,14 @@ class OrderController extends Controller
             $ticket->details = '';
             $ticket->files = '';
             $ticket->save();
+
+            // 增加一条话术
+            $ticket_reply = new TicketReply();
+            $ticket_reply->ticket_id = $ticket->id;
+            $ticket_reply->user_id = 0;
+            $ticket_reply->reply = get_setting('work_order_caveat');
+            $ticket_reply->files = '';
+            $ticket_reply->save();
 
             hset_plus('new_work_order_ticket_tip', $ticket->id, 1, $ticket->staff_id);
         }
@@ -312,9 +325,9 @@ class OrderController extends Controller
             ->distinct();
         $orders = $orders->where('created_at', '<=', date('Y-m-d H:i:s'));
 
-        $new_order_audio = hlen_plus("audio:new_order_tip") > 0;
+        $new_order_audio = hlen_plus("audio:new_order_tip:seller") > 0;
         if ($new_order_audio) {
-            del_plus("audio:new_order_tip");
+            del_plus("audio:new_order_tip:seller");
         }
 
         return response()->json([
