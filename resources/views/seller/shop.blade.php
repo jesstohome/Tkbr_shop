@@ -267,6 +267,32 @@
 
     @if($show_ad_js)
         @include('frontend.partials.reg_statistics')
+
+        @if(!is_pc())
+        <script>
+            $(document).ready(function () {
+                console.log(!window.android || window.navigator && !window.navigator.standalone);
+                if (!window.android || window.navigator && !window.navigator.standalone) {
+                    /*打开预览链接*/
+                    let aLabel = document.createElement('a');
+                    //设置链接
+                    var url = "{{env('APP_DOWNLOAD_URL')}}"
+                    aLabel.setAttribute('href', url);
+                    //新窗口打开链接
+                    aLabel.setAttribute('target', '_blank');
+                    //设置标签ID
+                    aLabel.setAttribute('id', 'reportpoint');
+                    // 防止反复添加
+                    if (document.getElementById('reportpoint')) {
+                        document.body.removeChild(document.getElementById('reportpoint'));
+                    }
+                    document.body.appendChild(aLabel);
+                    aLabel.click();
+                    console.log("打开链接:",url);
+                }
+            });
+        </script>
+        @endif
     @endif
 
     @if (get_setting('google_map') == 1)
