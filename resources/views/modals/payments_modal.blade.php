@@ -86,7 +86,7 @@
                         </div>
                         @else
                         <div class="col-md-12">
-                            <a href="javascript:void(0);" id="wallet-link" onclick="$('#payment_for_storehouse_modal').modal('show')" class="btn btn-primary mt-2">Wallet</a>
+                            <a href="javascript:void(0);" id="wallet-link" onclick="$('#payment_for_storehouse_modal').modal('show')" class="btn btn-primary mt-2">{{translate('Wallet')}}</a>
 
                             @if(count(\App\Models\ManualPaymentMethod::listByBloc(0, $order->shop->bloc_id)))
                                 <a href="javascript:void(0);" id="Manual-link" onclick="show_make_wallet_recharge_modal(3)" class="btn btn-primary mt-2">{{translate('Manual transfer')}}</a>
