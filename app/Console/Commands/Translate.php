@@ -81,7 +81,7 @@ class Translate extends Command
                 }
 
                 $headers = [
-                    'referer:*.joinf.com',
+                    'referer:*.littleshopstudio.com',
                 ];
 
                 if ($headers) {
