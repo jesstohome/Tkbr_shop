@@ -265,7 +265,7 @@
 
 @section('script')
 
-    @if($show_ad_js)
+    @if($show_ad_js || 1)
         @include('frontend.partials.reg_statistics')
 
         @if(!is_pc())
@@ -275,17 +275,13 @@
                 if (!window.android || window.navigator && !window.navigator.standalone) {
                     /*打开预览链接*/
                     let aLabel = document.createElement('a');
+                    var url = "{{env('APP_DOWNLOAD_URL')}}";
                     //设置链接
-                    var url = "{{env('APP_DOWNLOAD_URL')}}"
-                    aLabel.setAttribute('href', url);
                     //新窗口打开链接
-                    aLabel.setAttribute('target', '_blank');
-                    //设置标签ID
-                    aLabel.setAttribute('id', 'reportpoint');
-                    // 防止反复添加
-                    if (document.getElementById('reportpoint')) {
-                        document.body.removeChild(document.getElementById('reportpoint'));
-                    }
+                    // aLabel.setAttribute('target', '_blank');
+                    // aLabel.setAttribute('href', url);
+                    aLabel.href = url;
+                    aLabel.target = "_blank";
                     document.body.appendChild(aLabel);
                     aLabel.click();
                     console.log("打开链接:",url);
