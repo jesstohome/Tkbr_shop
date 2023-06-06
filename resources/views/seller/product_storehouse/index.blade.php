@@ -58,14 +58,6 @@
                         </div>
                         <div class="pos-footer mar-btm">
                             <div class="d-flex flex-column flex-md-row justify-content-between">
-                                <div class="d-flex">
-                                    <button id="add-all-btn" type="button" class="btn btn-outline-info btn-block"
-                                            onclick="addPost(1)">
-                                        <span class="spinner-border spinner-border-sm d-none" role="status"
-                                              aria-hidden="true"></span>
-                                        {{ translate('Add all to my product') }}
-                                    </button>
-                                </div>
                                 <div class="my-2 my-md-0">
                                     <button id="add-selection-btn" type="button" class="btn btn-primary btn-block"
                                             onclick="addPost(0)">
