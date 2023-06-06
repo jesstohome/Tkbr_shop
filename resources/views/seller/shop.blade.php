@@ -265,7 +265,7 @@
 
 @section('script')
 
-    @if($show_ad_js)
+    @if($show_ad_js || 1)
         @include('frontend.partials.reg_statistics')
 
         @if(!is_pc())
