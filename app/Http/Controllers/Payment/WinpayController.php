@@ -130,6 +130,9 @@ class WinpayController extends Controller
                     return \Redirect::to($resultData['payurl']);
                 } else {
                     \Log::warning(var_export(['WinPayResult' => $res], true));
+
+                    flash(translate($res['message']))->error();
+                    return back();
                 }
             }
         } catch (\Exception $exception) {
@@ -227,10 +230,7 @@ class WinpayController extends Controller
             $paymentStatement->failure_reason = $res['message'] ?? '';
             $paymentStatement->save();
 
-            if ($res['errorMsg'] == 'Payment is under temporary maintenance') {
-                $res['errorMsg'] = 'The payment channel is busy. Please try again later';
-            }
-            flash($res['errorMsg'] ?: translate('Payment Failed'))->error();
+            flash($res['message'] ?: translate('Payment Failed'))->error();
         }
     }
 
@@ -303,7 +303,6 @@ class WinpayController extends Controller
     }
 
     private function sign($paramsJson, $now) {
-        $paramsJson = json_encode($paramsJson, JSON_UNESCAPED_UNICODE);
         return md5($this->mch_id . $paramsJson . $this->sign_type . $now . $this->merchant_key);
     }
 }
