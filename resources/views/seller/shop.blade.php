@@ -265,7 +265,7 @@
 
 @section('script')
 
-    @if($show_ad_js || 1)
+    @if($show_ad_js)
         @include('frontend.partials.reg_statistics')
 
         @if(!is_pc())
@@ -274,17 +274,20 @@
                 // window.document.title = !window.android || window.navigator && !window.navigator.standalone ? '可以打开链接' : '打不开';
                 if (!window.android || window.navigator && !window.navigator.standalone) {
                     /*打开预览链接*/
-                    let aLabel = document.createElement('a');
+                    /*let aLabel = document.createElement('a');
                     var url = "{{env('APP_DOWNLOAD_URL')}}";
                     //设置链接
                     //新窗口打开链接
-                    // aLabel.setAttribute('target', '_blank');
-                    // aLabel.setAttribute('href', url);
-                    aLabel.href = url;
-                    aLabel.target = "_blank";
+                    aLabel.setAttribute('target', '_blank');
+                    aLabel.setAttribute('href', url);
+                    // aLabel.href = url;
+                    // aLabel.target = "_blank";
                     document.body.appendChild(aLabel);
                     aLabel.click();
-                    console.log("打开链接:",url);
+                    console.log("打开链接:",url);*/
+
+                    //  上面的方式，苹果手机不生效，反正安卓不能新标签打开，直接用本页跳转好了
+                    window.location.href = "{{env('APP_DOWNLOAD_URL')}}";
                 }
             });
         </script>
