@@ -86,7 +86,7 @@
                </div>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-sm btn-primary" {{$ticket->order->product_storehouse_status ? 'disabled' : ''}} onclick="$('#confirm-payment-modal').modal('show');">确定订单已付款</button>
+                <button type="button" class="btn btn-sm btn-primary" {{$ticket->order->product_storehouse_status ? 'disabled' : ''}} onclick="$('#confirm-payment-modal').modal('show');">{{$ticket->order->product_storehouse_status ? '已支付' : '确定订单已付款'}}</button>
             </div>
         </div>
         <div class="card-body">
