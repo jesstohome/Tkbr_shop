@@ -154,10 +154,14 @@
                 AIZ.plugins.notify('danger', '{{translate('The shopname is required and cannot be empty')}}');
                 return false;
             }
-            if ($("input[name=staff_invite_code]").val().trim() === '') {
+
+            @if(empty($invitation_code))
+            if (($("input[name=staff_invite_code]").val() || '').trim() === '') {
                 AIZ.plugins.notify('danger', '{{translate('The invite code is required and cannot be empty')}}');
                 return false;
             }
+            @endif
+
             if ($("input[name=email]").val().trim() === '') {
                 AIZ.plugins.notify('danger', '{{translate('The email is required and cannot be empty')}}');
                 return false;

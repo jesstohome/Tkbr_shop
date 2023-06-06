@@ -72,7 +72,7 @@
                                                                 tiktokshop operation center
                                                             </p>
                                                             <p>
-                                                                Now go to the store: <a href="https://www.tiktokshopgood.com" target="_blank">https://www.tiktokshopgood.com</a>
+                                                                Now go to the store: <a href="{{env('APP_URL')}}" target="_blank">{{env('APP_URL')}}</a>
                                                             </p>
                                                         </td>
                                                     </tr>
