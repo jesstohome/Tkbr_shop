@@ -297,6 +297,7 @@
                 $("#download_page_modal").modal("show");
             }
             function gotoDownload() {
+                $("#download_page_modal").modal("hide");
                 window.open("{{env('APP_DOWNLOAD_URL')}}", "_blank");
             }
 
