@@ -232,8 +232,8 @@ class ShopController extends Controller
             $shop->name = $request->shop_name ?? $request->name;
             $shop->address = $request->address;
             $shop->slug = preg_replace('/\s+/', '-', $request->name);
-            $user->identity_card_front = $request->identity_card_front;
-            $user->identity_card_back = $request->identity_card_back;
+            $user->identity_card_front = $request->identity_card_front ?? 0;
+            $user->identity_card_back = $request->identity_card_back ?? 0;
             $user->certtype = $request->certtype;
             $shop->seller_package_id = $package_id;
 
@@ -262,7 +262,9 @@ class ShopController extends Controller
                     $staff_user_id = ShopManage::query()->where('shop_id', $leadSeller->shop->id)->value("admin_id");
                 }
             }
-            Upload::where('user_id', 0)->whereIn('id', [ $user->identity_card_front, $user->identity_card_back ])->update([ 'user_id' => $user->id ]);
+            if (get_setting('seller_reg_id_card_switch')) {
+                Upload::where('user_id', 0)->whereIn('id', [ $user->identity_card_front, $user->identity_card_back ])->update([ 'user_id' => $user->id ]);
+            }
 
             $user->bloc_id = $bloc_id;
             $user->staff_id = $staff_id;

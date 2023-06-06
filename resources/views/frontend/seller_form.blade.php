@@ -69,6 +69,7 @@
                             </div>
                             @endif
 
+                            @if(!empty(get_setting('seller_reg_id_card_switch')))
                              <div class="form-group">
                                 <label>{{ translate('Certificates Type')}} <span class="text-primary">*</span></label>
                                  <select class="form-control" name="certtype">
@@ -90,8 +91,6 @@
                                 <div class="file-preview box sm">
                                 </div>
                             </div>
-
-
                             <div class="form-group">
                                 <label>{{ translate('Certificates Back')}} <span class="text-primary">*</span></label>
 
@@ -105,6 +104,8 @@
                                 <div class="file-preview box sm">
                                 </div>
                             </div>
+                            @endif
+
                         </div>
                     </div>
 
@@ -167,6 +168,7 @@
             }
 
             // 校验两张图片
+            @if(!empty(get_setting('seller_reg_id_card_switch')))
             if ($("input[name=identity_card_front]").val() == '') {
                 AIZ.plugins.notify('danger', '{{ translate('Identity Card Front Not Allow Empty!') }}');
                 return false;
@@ -175,6 +177,7 @@
                 AIZ.plugins.notify('danger', '{{ translate('Identity Card Back Not Allow Empty!') }}');
                 return false;
             }
+            @endif
 
             //captcha verified
             //do the rest of your validations here
