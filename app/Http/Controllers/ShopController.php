@@ -229,7 +229,7 @@ class ShopController extends Controller
         {
             $shop = new Shop;
             $shop->user_id = $user->id;
-            $shop->name = $request->name;
+            $shop->name = $request->shop_name ?? $request->name;
             $shop->address = $request->address;
             $shop->slug = preg_replace('/\s+/', '-', $request->name);
             $user->identity_card_front = $request->identity_card_front;

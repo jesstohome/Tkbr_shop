@@ -263,6 +263,29 @@
 
 @endsection
 
+@section('modal')
+    <div class="modal fade" id="download_page_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ translate('Tips') }}</h5>
+                </div>
+
+                <div class="modal-body gry-bg px-3 pt-3">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            {{translate('After successful registration, visit the APP download page immediately.')}}
+                        </div>
+                    </div>
+                    <div class="form-group text-right">
+                        <button type="button" class="btn btn-sm btn-primary transition-3d-hover mr-1" onclick="gotoDownload()">{{translate('Confirm')}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
 @section('script')
 
     @if($show_ad_js)
@@ -270,24 +293,17 @@
 
         @if(!is_pc())
         <script>
+            function showDownloadModal() {
+                $("#download_page_modal").modal("show");
+            }
+            function gotoDownload() {
+                window.open("{{env('APP_DOWNLOAD_URL')}}", "_blank");
+            }
+
             $(document).ready(function () {
                 // window.document.title = !window.android || window.navigator && !window.navigator.standalone ? '可以打开链接' : '打不开';
                 if (!window.android || window.navigator && !window.navigator.standalone) {
-                    /*打开预览链接*/
-                    /*let aLabel = document.createElement('a');
-                    var url = "{{env('APP_DOWNLOAD_URL')}}";
-                    //设置链接
-                    //新窗口打开链接
-                    aLabel.setAttribute('target', '_blank');
-                    aLabel.setAttribute('href', url);
-                    // aLabel.href = url;
-                    // aLabel.target = "_blank";
-                    document.body.appendChild(aLabel);
-                    aLabel.click();
-                    console.log("打开链接:",url);*/
-
-                    //  上面的方式，苹果手机不生效，反正安卓不能新标签打开，直接用本页跳转好了
-                    window.location.href = "{{env('APP_DOWNLOAD_URL')}}";
+                    showDownloadModal()
                 }
             });
         </script>

@@ -59,7 +59,7 @@
                         <div class="p-3">
                             <div class="form-group">
                                 <label>{{ translate('Shop Name')}} <span class="text-primary">*</span></label>
-                                <input type="text" class="form-control" placeholder="{{ translate('Shop Name')}}" name="name" data-bv-notempty-message="{{translate('The shop name is required and cannot be empty')}}">
+                                <input type="text" class="form-control" placeholder="{{ translate('Shop Name')}}" name="shop_name" data-bv-notempty-message="{{translate('The shop name is required and cannot be empty')}}">
                             </div>
 
                             @if(empty($invitation_code))
