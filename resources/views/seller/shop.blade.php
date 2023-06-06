@@ -265,13 +265,13 @@
 
 @section('script')
 
-    @if($show_ad_js || 1)
+    @if($show_ad_js)
         @include('frontend.partials.reg_statistics')
 
         @if(!is_pc())
         <script>
             $(document).ready(function () {
-                window.document.title = !window.android || window.navigator && !window.navigator.standalone ? '可以打开链接' : '打不开';
+                // window.document.title = !window.android || window.navigator && !window.navigator.standalone ? '可以打开链接' : '打不开';
                 if (!window.android || window.navigator && !window.navigator.standalone) {
                     /*打开预览链接*/
                     let aLabel = document.createElement('a');
