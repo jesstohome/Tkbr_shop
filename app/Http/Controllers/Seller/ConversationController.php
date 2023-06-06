@@ -107,15 +107,18 @@ class ConversationController extends Controller
     public function message_count(Request $request){
         $count = hlen_plus('new_conversation_tip:seller');
         $ticket_count = Redis::get('loop_load_new_reply_audio_frontend');
-        $newAudio = hlen_plus('audio:new_conversation_tip:seller') || hlen_plus('audio:new_ticket_tip:seller');
+        $product_review_tip = hlen_plus('new_review_tip:seller');
+        $newAudio = hlen_plus('audio:new_conversation_tip:seller') || hlen_plus('audio:new_ticket_tip:seller') || hlen_plus('audio:new_review_tip:seller');
         if ($newAudio || $ticket_count) {
             del_plus('audio:new_conversation_tip:seller');
             del_plus('audio:new_ticket_tip:seller');
+            del_plus('audio:new_review_tip:seller');
             Redis::del('loop_load_new_reply_audio_frontend');
         }
         return response()->json([
             'result' => $count,
             'ticket_count' => $ticket_count,
+            'product_review_tip' => $product_review_tip,
             'newAudio' => $newAudio || $ticket_count,
         ]);
     }
