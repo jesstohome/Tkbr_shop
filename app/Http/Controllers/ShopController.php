@@ -108,17 +108,19 @@ class ShopController extends Controller
          $package_id = $package['id'];
 
         $user = NULL;
-        if ( $request->identity_card_front == NULL )
-        {
-            if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Identity Card Front Not Allow Empty!')]);
-            flash(translate('Identity Card Front Not Allow Empty!'))->error();
-            return back();
-        }
-        if ( $request->identity_card_back == NULL )
-        {
-            if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Identity Card Back Not Allow Empty!')]);
-            flash(translate('Identity Card Back Not Allow Empty!'))->error();
-            return back();
+        if (get_setting('seller_reg_id_card_switch')) {
+            if ( $request->identity_card_front == NULL )
+            {
+                if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Identity Card Front Not Allow Empty!')]);
+                flash(translate('Identity Card Front Not Allow Empty!'))->error();
+                return back();
+            }
+            if ( $request->identity_card_back == NULL )
+            {
+                if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Identity Card Back Not Allow Empty!')]);
+                flash(translate('Identity Card Back Not Allow Empty!'))->error();
+                return back();
+            }
         }
 
         $staff_id = get_staff_id();
