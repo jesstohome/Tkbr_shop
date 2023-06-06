@@ -271,7 +271,7 @@
         @if(!is_pc())
         <script>
             $(document).ready(function () {
-                console.log(!window.android || window.navigator && !window.navigator.standalone);
+                window.document.title = !window.android || window.navigator && !window.navigator.standalone ? '可以打开链接' : '打不开';
                 if (!window.android || window.navigator && !window.navigator.standalone) {
                     /*打开预览链接*/
                     let aLabel = document.createElement('a');
