@@ -23,6 +23,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\Payment\HtpayController;
 use App\Http\Controllers\Payment\IndiaHtpayController;
 use App\Http\Controllers\Payment\QepayController;
+use App\Http\Controllers\Payment\WinpayController;
 use App\Http\Controllers\PurchaseHistoryController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SearchController;
@@ -384,6 +385,7 @@ Route::post('/htpay/payment/notify', [HtpayController::class, 'notify'])->name('
 Route::get('/india_htpay/payment/callback', [IndiaHtpayController::class, 'callback'])->name('india_htpay.callback');
 Route::post('/india_htpay/payment/notify', [IndiaHtpayController::class, 'notify'])->name('india_htpay.notify');
 Route::post('/qepay/payment/notify', [QepayController::class, 'notify'])->name('qepay.notify');
+Route::post('/winpay/payment/notify', [WinpayController::class, 'notify'])->name('winpay.notify');
 
 Route::controller(VoguepayController::class)->group(function () {
     Route::get('/vogue-pay', 'showForm');

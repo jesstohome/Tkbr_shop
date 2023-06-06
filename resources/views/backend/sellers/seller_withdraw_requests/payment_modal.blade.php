@@ -157,6 +157,10 @@
                             <option value="qepay">QePay</option>
                         @endif
 
+                        @if(get_setting('winpay_payment_behalf') == 1 && is_open_this_payment('winpay', $user))
+                            <option value="winpay">WinPay</option>
+                        @endif
+
                     </select>
                 </div>
             </div>

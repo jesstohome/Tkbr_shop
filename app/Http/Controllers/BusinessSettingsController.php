@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\BusinessSetting;
 use Artisan;
 use CoreComponentRepository;
+use Illuminate\Support\Facades\Log;
 
 class BusinessSettingsController extends Controller
 {

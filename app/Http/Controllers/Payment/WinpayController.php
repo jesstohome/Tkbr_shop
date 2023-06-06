@@ -3,29 +3,39 @@
 
 namespace App\Http\Controllers\Payment;
 
-
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\Seller\ProfileController;
 use App\Models\CombinedOrder;
 use App\Models\Currency;
-use App\Models\CustomerPackage;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\PaymentStatement;
-use App\Models\SellerPackage;
-use App\Models\SellerSpreadPackage;
 use App\Models\SellerWithdrawRequest;
 use App\Models\ShopPaymentConfig;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Utility\SignApi;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
-use Session;
+use Illuminate\Support\Facades\Session;
 
-class QepayController extends Controller
+/**
+ * winpay
+ * Class WinpayController
+ * @package App\Http\Controllers\Payment
+ */
+class WinpayController extends Controller
 {
-    private $payment_type = 'qepay';
+    private $payment_type = 'winpay';
+    private $mch_id = '';
+    private $merchant_key = '';
+    private $sign_type = 'MD5';
+
+    public function __construct()
+    {
+        $this->mch_id = env('WINPAY_MEMBERID');
+        $this->merchant_key = env('WINPAY_SECRET');// 支付秘钥
+    }
 
     public function pay(Request $request) {
         try {
@@ -74,71 +84,29 @@ class QepayController extends Controller
                 }
             }
 
-            $version = '1.0';
-            $mch_id = env('QEPAY_MCH_ID');
-            $merchant_key = env('QEPAY_ZHIFU_MCH_KEY');// 支付秘钥
-            $notify_url = route('qepay.notify');
-            $mch_order_no = $paymentStatement->order_no;
-            /**
-             * 支付类型
-             * 200	印尼网银B2C
-             * 202	印尼OVO钱包
-             */
-            $pay_type = 200;
+            $mch_id = $this->mch_id;
+            $notify_url = route('winpay.notify');
 
             $trade_amount = number_format($amount * $exchange_rate, 2, '.', '');
-            $order_date = date('Y-m-d H:i:s');
-
-            // 网银通道必填，其他类型一定不能填该参数
-            $bank_code = '';
-
-            $goods_name = $paymentStatement->order_no;
             $sign_type = 'MD5';
-            $mch_return_msg = '';
-
-            $signStr = "";
-            if($bank_code != ""){
-                $signStr = $signStr."bank_code=".$bank_code."&";
-            }
-
-            $signStr = $signStr."goods_name=".$goods_name."&";
-            $signStr = $signStr."mch_id=".$mch_id."&";
-            $signStr = $signStr."mch_order_no=".$mch_order_no."&";
-            if($mch_return_msg != ""){
-                $signStr = $signStr."mch_return_msg=".$mch_return_msg."&";
-            }
-            $signStr = $signStr."notify_url=".$notify_url."&";
-            $signStr = $signStr."order_date=".$order_date."&";
-            if($page_url != ""){
-                $signStr = $signStr."page_url=".$page_url."&";
-            }
-            $signStr = $signStr."pay_type=".$pay_type."&";
-            $signStr = $signStr."trade_amount=".$trade_amount."&";
-            $signStr = $signStr."version=".$version;
-            $signAPI = new SignApi();
-            $sign = $signAPI->sign($signStr,$merchant_key);
-
-            $postdata=array(
-                'goods_name'=>$goods_name,
-                'mch_id'=>$mch_id,
-                'mch_order_no'=>$mch_order_no,
-                'notify_url'=>$notify_url,
-                'order_date'=>$order_date,
-                'pay_type'=>$pay_type,
-                'trade_amount'=>$trade_amount,
-                'version' => $version,
-                /** 下面这些参数有填写才需要提交，不填写的不需要提交也不需要参与签名 */
-                /**'bank_code'=>$bank_code,
-                'mch_return_msg'=>$mch_return_msg,
-                'page_url'=>$page_url,*/
-                'sign_type'=>$sign_type,
-                'sign'=>$sign);
-            if (!empty($bank_code)) {
-                $postdata['bank_code'] = $bank_code;
-            }
+            $now = time();
+            $params = [
+                'merchant_ref' => $paymentStatement->order_no,
+                'product' => 'IndiaH5',
+                'amount' => $trade_amount,
+            ];
+            $paramsJson = empty($params) ? '' : json_encode($params, JSON_UNESCAPED_UNICODE);
+            $sign = $this->sign($paramsJson, $now);
+            $postdata = array(
+                'merchant_no' => $mch_id,
+                'timestamp'=> $now,
+                'sign_type' => $sign_type,
+                'sign' => $sign,
+                'params' => $paramsJson
+            );
 
             $ch = curl_init();
-            curl_setopt($ch,CURLOPT_URL,"https://payment.qeapay.com/pay/web"); //支付请求地址
+            curl_setopt($ch,CURLOPT_URL,"https://api.winpay.club/api/gateway/pay"); //支付请求地址
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($ch, CURLOPT_POST, true);
@@ -149,20 +117,19 @@ class QepayController extends Controller
 
             $response=curl_exec($ch);
             $curl_info = curl_getinfo($ch);
-
-            //$res=simplexml_load_string($response);
-
             curl_close($ch);
 
             \Log::debug(var_export(['pay_request_arr' => $postdata, 'res' => $response, $curl_info], true));
             if (!empty($response)) {
                 $res = json_decode($response, true);
-                if (!empty($res) && $res['tradeResult'] == 1 && !empty($res['payInfo'])) {
-                    $paymentStatement->out_order_no = $res['orderNo'];
+                \Log::debug(var_export(['res' => $res], true));
+                if (!empty($res) && $res['code'] == 200 && !empty($res['params'])) {
+                    $resultData = is_array($res['params']) ? $res['params'] : json_decode($res['params'], true);
+                    $paymentStatement->out_order_no = $resultData['system_ref'];
                     $paymentStatement->save();
-                    return \Redirect::to($res['payInfo']);
+                    return \Redirect::to($resultData['payurl']);
                 } else {
-                    \Log::warning(var_export(['QePayResult' => $res], true));
+                    \Log::warning(var_export(['WinPayResult' => $res], true));
                 }
             }
         } catch (\Exception $exception) {
@@ -172,19 +139,18 @@ class QepayController extends Controller
         }
     }
 
-    /**
-     * 代付，充值到钱包
-     * author: Sym
-     * time: 2023-05-04 14:48
-     */
     public function daifu_pay ($withdrawRequest) {
-        $mch_id = env('QEPAY_MCH_ID');
-        $merchant_key = env('QEPAY_DAIFU_MCH_KEY');
+        $mch_id = env('WINPAY_MEMBERID');
 
         $user = User::find($withdrawRequest->user_id);
         $shop = $user->shop;
 
-        $exchange_rate = getExchangeRate($withdrawRequest->currency);
+        $currency = Currency::query()->where('code', $withdrawRequest->currency)->first();
+        if (!empty($currency->exchange_rate)) {
+            $exchange_rate = $currency->exchange_rate;
+        } else {
+            $exchange_rate = env('QEPAY_EXCHANGE_RATE');
+        }
 
         $money = $withdrawRequest->amount * $exchange_rate;
 
@@ -208,55 +174,23 @@ class QepayController extends Controller
             return flash('卖家的当前国家的银行配置不存在')->error();
         }
 
-        $bank_name = $shop_payment_conf->bank_name;
-        // Name对应银行CODE
-        $online_bank_names = ProfileController::$online_bank_names;
-        $online_bank_names = array_flip($online_bank_names);
-        $bank_code = isset($online_bank_names[$bank_name]) ? $online_bank_names[$bank_name] : $bank_name;
-
-        $apply_date = date('Y-m-d H:i:s');
-        $mch_transferId = $paymentStatement->order_no;
-        $receive_account = $shop_payment_conf->bank_no;
-        $receive_name = $shop_payment_conf->bank_account_name;
-        $transfer_amount = $money;
-        $sign_type='MD5';
-
-        $signStr = "";
-        $signStr = $signStr."apply_date=".$apply_date."&";
-
-        if($bank_code != ""){
-            $signStr = $signStr . "bank_code=" . $bank_code . "&";
-        }
-
-        $signStr = $signStr."mch_id=".$mch_id."&";
-
-        $signStr = $signStr."mch_transferId=".$mch_transferId."&";
-
-        $signStr = $signStr."receive_account=".$receive_account."&";
-
-        $signStr = $signStr."receive_name=".$receive_name."&";
-
-        $signStr = $signStr."transfer_amount=".$transfer_amount;
-
-
-        $reqUrl = "https://payment.qeapay.com/pay/transfer";
-
-        $signAPI = new signapi();
-
-        $sign = $signAPI->sign($signStr, $merchant_key);
-
+        $now = time();
+        $params = [
+            'merchant_ref' => $paymentStatement->order_no,
+            'product' => 'IndiaPayout',
+            'amount' => $money,
+        ];
+        $paramsJson = empty($params) ? '' : json_encode($params, JSON_UNESCAPED_UNICODE);
+        $sign = $this->sign($paramsJson, $now);
         $postdata = array(
-            'apply_date'=>$apply_date,
-            'bank_code'=>$bank_code,
-            'mch_id'=>$mch_id,
-            'mch_transferId'=>$mch_transferId,
-            'receive_account'=>$receive_account,
-            'receive_name'=>$receive_name,
-            'transfer_amount'=>$transfer_amount,
-            'sign_type'=>$sign_type,
-            'sign'=>$sign
+            'merchant_no' => $mch_id,
+            'timestamp'=> $now,
+            'sign_type' => $this->sign_type,
+            'sign' => $sign,
+            'params' => $paramsJson
         );
 
+        $reqUrl = "https://api.winpay.club/api/gateway/withdraw";
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL,$reqUrl);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -278,18 +212,19 @@ class QepayController extends Controller
         $curl_error = curl_error($ch);
         curl_close($ch);
 
-        \Log::debug(var_export(['daifu_pay_request_arr' => $postdata, 'res' => $response, $curl_error, $curl_info], true));
+        \Log::debug(var_export(['winpay_daifu_pay_request_arr' => $postdata, 'res' => $response, $curl_error, $curl_info], true));
         $res = json_decode($response, true);
-        if (isset($res['respCode']) && $res['respCode'] == "SUCCESS") {
-            $paymentStatement->status = $res['tradeResult'];
-            $paymentStatement->out_order_no = $res['tradeNo'];
+        if (!empty($res) && $res['code'] == 200 && !empty($res['params'])) {
+            $resultData = is_array($res['params']) ? $res['params'] : json_decode($res['params'], true);
+            $paymentStatement->status = 0; // 1:success 2:pending 5:拒绝
+            $paymentStatement->out_order_no = $resultData['system_ref'];
             $paymentStatement->save();
             // 提交成功
             flash(translate('Payment completed'))->success();
         }else{
             // 提交失败
             $paymentStatement->status = 2;
-            $paymentStatement->failure_reason = $res['errorMsg'] ?? '';
+            $paymentStatement->failure_reason = $res['message'] ?? '';
             $paymentStatement->save();
 
             if ($res['errorMsg'] == 'Payment is under temporary maintenance') {
@@ -301,29 +236,25 @@ class QepayController extends Controller
 
     public function notify(Request $request) {
         $data = $request->post();
-        \Log::info(var_export(['QepayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
+        \Log::info(var_export(['WinPayNotifyData' => $data, 'time' => date('Y-m-d H:i:s')], true));
 
         try {
             if (!empty($data)) {
                 // 正常回调带 mchId时，执行回调签名校验
                 if (!empty($data["mchId"])) {
-                    if (!$this->signValidate($data)) {
+                    if ($data['sign'] != $this->sign($data['params'], $data['timestamp'])) {
                         \Log::info(var_export(['Signature error', 'time' => date('Y-m-d H:i:s')], true));
                         exit('Signature error');
                     }
                 }
 
-                if ($data['oriAmount'] != $data['amount']) {
-                    \Log::warning(var_export(['实际支付金额不准确' => $data], true));
-                    exit('实际支付金额不准确');
-                }
-
-                $out_order_no = $data['orderNo'];
+                $params = json_decode($data['params'], true);
+                $out_order_no = $params['system_ref'];
                 if (!empty($out_order_no)) {
                     $paymentStatement = PaymentStatement::query()->where('out_order_no', $out_order_no)->where('payment_type', $this->payment_type)->first();
                 }
                 if ($paymentStatement) {
-                    $paymentStatement->status = $data['tradeResult'] == 1 ? 1 : 2;
+                    $paymentStatement->status = $params['status'] == 1 ? 1 : 2;
                     $paymentStatement->save();
                     if ($paymentStatement->business_type == 'pick_up') {
                         storehouseProduct_payment_done($paymentStatement->target_id, $this->payment_type);
@@ -333,7 +264,7 @@ class QepayController extends Controller
 
                         foreach ($combined_order->orders as $key => $order) {
                             $order = Order::findOrFail($order->id);
-                            $order->payment_status = 'paid';
+                            $order->payment_status = $params['status'] == 1 ? 'paid' : 'unpaid';
                             $order->payment_details = $data;
                             $order->save();
 
@@ -345,11 +276,11 @@ class QepayController extends Controller
                     } elseif ($paymentStatement->business_type == 'withdraw') {
                         $withdrawRequest = SellerWithdrawRequest::find($paymentStatement->target_id);
                         $user = User::find($paymentStatement->user_id);
-                        $payment = new Payment;
+                        $payment = new Payment();
                         $payment->seller_id = $user->id;
                         $payment->bloc_id = $user->bloc_id;
                         $payment->staff_id = $user->staff_id;
-                        $payment->amount = $data['amount'];
+                        $payment->amount = $params['amount'];
                         $payment->payment_method = $this->payment_type;
                         $payment->txn_code = $out_order_no;
                         $payment->payment_details = $data;
@@ -357,7 +288,7 @@ class QepayController extends Controller
                         $payment->save();
 
                         // 更新提现状态
-                        $withdrawRequest->status = $data['tradeResult'] == 1 ? 1 : 4;
+                        $withdrawRequest->status = $params['status'] == 1 ? 1 : 4;
                         $withdrawRequest->save();
                     }
                 }
@@ -365,55 +296,14 @@ class QepayController extends Controller
                 exit('success');
             }
         } catch (\Exception $exception) {
-            Log::warning('qepay-notify-exception:' . $exception->getMessage());
+            Log::warning('winpay-notify-exception:' . $exception->getMessage());
         }
 
         exit('error') ;
     }
 
-    /**
-     * 回调校验
-     * author: Sym
-     * time: 2023-05-07 19:39
-     * @param $data
-     * @return bool
-     */
-    private function signValidate($data) {
-        $merchant_key = env('QEPAY_ZHIFU_MCH_KEY');
-
-        $amount = $data["amount"];
-
-        $mchId = $data["mchId"];
-
-        $mchOrderNo = $data["mchOrderNo"];
-
-        $merRetMsg = $data["merRetMsg"];
-
-        $orderDate = $data["orderDate"];
-
-        $orderNo = $data["orderNo"];
-
-        $oriAmount = $data["oriAmount"];
-
-        $tradeResult = $data["tradeResult"];
-
-        $signType = $data["signType"];
-
-        $sign = $data["sign"];
-
-
-        $signStr = "";
-        $signStr = $signStr."amount=".$amount."&";
-        $signStr = $signStr."mchId=".$mchId."&";
-        $signStr = $signStr."mchOrderNo=".$mchOrderNo."&";
-        $signStr = $signStr."merRetMsg=".$merRetMsg."&";
-        $signStr = $signStr."orderDate=".$orderDate."&";
-        $signStr = $signStr."orderNo=".$orderNo."&";
-        $signStr = $signStr."oriAmount=".$oriAmount."&";
-        $signStr = $signStr."tradeResult=".$tradeResult;
-
-        $signAPI = new SignApi();
-
-        return $signAPI->validateSignByKey($signStr,$merchant_key,$sign);
+    private function sign($paramsJson, $now) {
+        $paramsJson = json_encode($paramsJson, JSON_UNESCAPED_UNICODE);
+        return md5($this->mch_id . $paramsJson . $this->sign_type . $now . $this->merchant_key);
     }
 }
