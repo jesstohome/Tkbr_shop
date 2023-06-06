@@ -24,7 +24,7 @@ class ReviewController extends Controller
             $review->save();
         }
 
-        \Redis::del('new_review_tip');
+        del_plus('new_review_tip:seller');
 
         return view('seller.reviews', compact('reviews'));
     }
