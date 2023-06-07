@@ -187,7 +187,8 @@
         }
 
         function removeSelected(product_id) {
-            $('#product-selection').find("li[data-product-id='" + product_id + "']").remove()
+            $('#product-selection').find("li[data-product-id='" + product_id + "']").remove();
+            $("#product-num").html("{{translate('Product Number')}}:" + $('#product-selection').find("li").length);
         }
 
         function filterProducts() {
