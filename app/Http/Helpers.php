@@ -1956,7 +1956,7 @@ if (!function_exists('ticket_say_hello')) {
         if($ticket->save()) {
             // 审核通过的店铺，直接发送 HELLO
             if ($shop->verification_status) {
-//                send_hello_msg($ticket, $seller);
+                send_hello_msg($ticket, $seller);
             }
 
             return $ticket->id;
