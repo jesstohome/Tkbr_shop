@@ -1,5 +1,10 @@
 @extends('seller.layouts.app')
-
+<style>
+    .no-product {
+        width: 100%;
+        text-align: center;
+    }
+</style>
 @section('panel_content')
 
     <section class="gry-bg py-4 profile">
@@ -51,12 +56,17 @@
                                 <div class="">
                                     <div class="aiz-pos-cart-list mb-4 mt-3 c-scrollbar-light">
                                         <ul class="list-group list-group-flush" id="product-selection">
+                                            <li class="no-product">{{translate('Please click to select the product')}}</li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="pos-footer mar-btm">
+                            <div class="my-2 my-md-0" style="display: flex;justify-content: space-between;">
+                                <span id="product-num">{{translate('Product Number')}}:0</span>
+                                <span id="remaining-uploads">{{translate('Remaining uploads')}}:{{max(0, $package->product_upload_limit - auth()->user()->products()->count())}}</span>
+                            </div>
                             <div class="d-flex flex-column flex-md-row justify-content-between">
                                 <div class="my-2 my-md-0">
                                     <button id="add-selection-btn" type="button" class="btn btn-primary btn-block"
@@ -111,7 +121,11 @@
                         if (response.msg) {
                             AIZ.plugins.notify('warning', response.msg);
                         }
-                        $("#set_meal_name").html(response.set_meal_name || '');
+                        if ($("#set_meal_name").html().trim() === '') {
+                            $("#set_meal_name").html(response.set_meal_name || '');
+                        } else if ($("#set_meal_name").html().indexOf(response.set_meal_name || '') === -1) {
+                            $("#set_meal_name").html($("#set_meal_name").html() + ','+ response.set_meal_name || '');
+                        }
                         if (response.products) {
                             response.products.forEach((product) => {
                                 updateSelection(product.id, product.name, product.unit_price, set_meal_id);
@@ -131,6 +145,9 @@
             let container = $('#product-selection');
 
             if (!already_selected_ids.includes(product_id)) {
+                if (container.find(".no-product").length > 0) {
+                    container.html('');
+                }
                 container.append(`<li class="list-group-item py-3 pl-2" data-product-id="${product_id}">
                                             <div class="row gutters-5 align-items-center">
 
@@ -153,6 +170,7 @@
 
                                             </div>
                                         </li>`)
+                $("#product-num").html("{{translate('Product Number')}}:" + container.find("li").length);
             } else {
                 container.find("li[data-product-id='" + product_id + "']")
                     .clearQueue().stop()

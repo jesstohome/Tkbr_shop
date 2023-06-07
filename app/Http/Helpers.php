@@ -1955,10 +1955,12 @@ if (!function_exists('ticket_say_hello')) {
         if($ticket->save()) {
             // 审核通过的店铺，直接发送 HELLO
             if ($shop->verification_status) {
+                $bloc = \App\Models\Bloc::find($ticket->bloc_id);
+
                 $ticket_reply = new TicketReply;
                 $ticket_reply->ticket_id = $ticket->id;
                 $ticket_reply->user_id = $seller->id;
-                $ticket_reply->reply = translate('Hello');
+                $ticket_reply->reply = translate($bloc->welcome_message ?: 'Hello');
                 $ticket_reply->files = '';
                 $ticket_reply->save();
 

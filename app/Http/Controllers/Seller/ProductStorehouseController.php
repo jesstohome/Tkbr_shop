@@ -9,6 +9,7 @@ use App\Models\ProductSetMeal;
 use App\Models\ProductStock;
 use App\Models\Review;
 use App\Models\Seller;
+use App\Models\SellerPackage;
 use App\Services\ProductStockService;
 use App\Services\ProductTaxService;
 use App\Utility\CategoryUtility;
@@ -41,7 +42,8 @@ class ProductStorehouseController extends Controller
 
     public function index()
     {
-        return view('seller.product_storehouse.index');
+        $package = SellerPackage::query()->where('is_default', 1)->first();
+        return view('seller.product_storehouse.index', compact('package'));
     }
 
     public function searchProduct(Request $request)
@@ -155,7 +157,7 @@ class ProductStorehouseController extends Controller
         $shop = Auth::user()->shop;
         if ($shop->verification_status==0) return response()->json(['success' => 0, 'message' => translate('Shop under review.')]);
 
-        $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+        $package = SellerPackage::query()->where('is_default', 1)->first();
         if (
             $package->product_upload_limit < ($shop->user->products()->count() + count($productIds))
         ) {
