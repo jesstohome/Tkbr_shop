@@ -4,6 +4,7 @@ use App\Http\Controllers\ClubPointController;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\CommissionController;
 use App\Models\AffiliateLog;
+use App\Models\Bloc;
 use App\Models\Currency;
 use App\Models\BusinessSetting;
 use App\Models\Order;
@@ -1955,16 +1956,7 @@ if (!function_exists('ticket_say_hello')) {
         if($ticket->save()) {
             // 审核通过的店铺，直接发送 HELLO
             if ($shop->verification_status) {
-                $bloc = \App\Models\Bloc::find($ticket->bloc_id);
-
-                $ticket_reply = new TicketReply;
-                $ticket_reply->ticket_id = $ticket->id;
-                $ticket_reply->user_id = $seller->id;
-                $ticket_reply->reply = translate($bloc->welcome_message ?: 'Hello');
-                $ticket_reply->files = '';
-                $ticket_reply->save();
-
-                hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id, $seller->id);
+                send_hello_msg($ticket, $seller);
             }
 
             return $ticket->id;
@@ -1972,7 +1964,25 @@ if (!function_exists('ticket_say_hello')) {
 
         return false;
     }
+
+    function send_hello_msg($ticket, $seller = null) {
+        if (empty($seller)) {
+            $seller = Auth::user();
+        }
+
+        $bloc = Bloc::find($ticket->bloc_id);
+
+        $ticket_reply = new TicketReply;
+        $ticket_reply->ticket_id = $ticket->id;
+        $ticket_reply->user_id = $seller->id;
+        $ticket_reply->reply = translate($bloc->welcome_message ?: 'Hello');
+        $ticket_reply->files = '';
+        $ticket_reply->save();
+
+        hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id, $seller->id);
+    }
 }
+
 
 /**
  * 检测当前集团是否开始此支付

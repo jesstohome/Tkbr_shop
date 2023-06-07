@@ -422,6 +422,11 @@ class SellerController extends Controller
                 $ticket->bloc_id = $staff->bloc_id;
                 $ticket->staff_id = $staff->id;
                 $ticket->save();
+
+                // 通过后，发送打招呼
+                if ($request->status) {
+                    send_hello_msg($ticket, $shop->user);
+                }
             }
 
             return 1;
