@@ -167,7 +167,8 @@
 
     function toPay() {
         setTimeout(function () {
-            location.href = "{{ route('seller.money_withdraw_requests.index') }}";
+            // location.href = "{{ route('seller.money_withdraw_requests.index') }}";
+            location.reload();
         }, 2e3);
     }
 
@@ -182,7 +183,8 @@
         }
         window.open(url.replace('&amp;', '&'), '_target');
         setTimeout(function () {
-            location.href = "{{ route('seller.money_withdraw_requests.index') }}";
+            // location.href = "{{ route('seller.money_withdraw_requests.index') }}";
+            location.reload();
         }, 2e3);
 
         return false;
