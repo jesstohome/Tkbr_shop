@@ -592,7 +592,13 @@ class PosController extends Controller
         $conversation->sender_viewed = "1";
         $conversation->save();
 
-        hset_plus('new_conversation_tip', $conversation->id, 1, $conversation->staff_id, $conversation->receiver_id);
+        $cache_key = $conversation->add_by_admin ? 'new_pos_conversation_tip' : 'new_conversation_tip';
+        if (isAdmin()) {
+            $to_user = User::find($conversation->receiver_id);
+            hset_plus($cache_key, $conversation->id, 1, $conversation->staff_id, $conversation->receiver_id, $to_user, true);
+        } else {
+            hset_plus($cache_key, $conversation->id, 1, $conversation->staff_id, $conversation->receiver_id, '', true);
+        }
 
         return back();
     }

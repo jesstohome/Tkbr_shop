@@ -152,7 +152,11 @@ class ConversationController extends Controller
             $message->message = $request->message;
 
             if ($message->save()) {
-                hset_plus('new_conversation_tip', $conversation->id, 1, $product->staff_id, $product->user_id);
+                if ($add_by_admin) {
+                    hset_plus('new_pos_conversation_tip', $conversation->id, 1, $product->staff_id, $product->user_id);
+                } else {
+                    hset_plus('new_conversation_tip', $conversation->id, 1, $product->staff_id, $product->user_id);
+                }
             }
         }
 
