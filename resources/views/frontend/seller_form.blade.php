@@ -147,11 +147,11 @@
             } catch {}
 
             if ($("input[name=name]").val().trim() === '') {
-                AIZ.plugins.notify('danger', '{{translate('The username is required and cannot be empty')}}');
+                AIZ.plugins.notify('danger', '{{translate('The user name is required and cannot be empty')}}');
                 return false;
             }
             if ($("input[name=shop_name]").val().trim() === '') {
-                AIZ.plugins.notify('danger', '{{translate('The shopname is required and cannot be empty')}}');
+                AIZ.plugins.notify('danger', '{{translate('The shop name is required and cannot be empty')}}');
                 return false;
             }
 
