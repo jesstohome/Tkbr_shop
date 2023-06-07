@@ -76,6 +76,7 @@ class AdminController extends Controller
             hlen_plus("new_withdraw_tip") > 0 ||
             hlen_plus("new_ticket_tip") > 0 ||
             hlen_plus("new_work_order_ticket_tip") > 0 ||
+            hlen_plus("new_pos_conversation_tip") > 0 ||
             hlen_plus("new_offline_recharge_tip") > 0 ||
             get_plus("loop_load_new_reply_audio_backend") > 0 ||
             get_plus("work_order_loop_load_new_reply_audio_backend") > 0
@@ -88,6 +89,7 @@ class AdminController extends Controller
             hlen_plus("audio:new_withdraw_tip") > 0 ||
             hlen_plus("audio:new_ticket_tip") > 0 ||
             hlen_plus("audio:new_work_order_ticket_tip") > 0 ||
+            hlen_plus("audio:new_pos_conversation_tip") > 0 ||
             hlen_plus("audio:new_offline_recharge_tip") > 0 ||
             get_plus("loop_load_new_reply_audio_backend") > 0 ||
             get_plus("work_order_loop_load_new_reply_audio_backend") > 0
@@ -118,6 +120,7 @@ class AdminController extends Controller
             del_plus("audio:new_withdraw_tip");
             del_plus("audio:new_ticket_tip");
             del_plus("audio:new_work_order_ticket_tip");
+            del_plus("audio:new_pos_conversation_tip");
             del_plus("audio:new_offline_recharge_tip");
             del_plus("loop_load_new_reply_audio_backend");
             del_plus("work_order_loop_load_new_reply_audio_backend");
