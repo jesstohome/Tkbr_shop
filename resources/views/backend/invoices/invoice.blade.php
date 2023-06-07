@@ -97,9 +97,9 @@
 				@endphp
 				<tr><td class="strong small gry-color">{{ translate('Bill to') }}:</td></tr>
 				<tr><td class="strong">{{ $shipping_address->name }}</td></tr>
-				<tr><td class="gry-color small">{{ $shipping_address->address }}, {{ $shipping_address->city }}, {{ $shipping_address->postal_code }}, {{ $shipping_address->country }}</td></tr>
-				<tr><td class="gry-color small">{{ translate('Email') }}: {{ $shipping_address->email }}</td></tr>
-				<tr><td class="gry-color small">{{ translate('Phone') }}: {{ $shipping_address->phone }}</td></tr>
+				<tr><td class="gry-color small">*******, ***********, ************,***********************</td></tr>
+				<tr><td class="gry-color small">{{ translate('Email') }}: {{ substr($shipping_address->email, 0, 3) . '****************' }}</td></tr>
+				<tr><td class="gry-color small">{{ translate('Phone') }}: {{ substr($shipping_address->phone, 0, 3) . '****************' }}</td></tr>
 			</table>
 		</div>
 
