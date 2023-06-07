@@ -27,6 +27,7 @@ class ConversationController extends Controller
             $conversations = Conversation::where('sender_id', Auth::user()->id)->orWhere('receiver_id', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(5);
 
             del_plus("new_conversation_tip:seller");
+            del_plus("new_pos_conversation_tip:seller");
             return view('seller.conversations.index', compact('conversations'));
         } else {
             flash(translate('Conversation is disabled at this moment'))->warning();
@@ -109,12 +110,13 @@ class ConversationController extends Controller
     }
 
     public function message_count(Request $request){
-        $count = hlen_plus('new_conversation_tip:seller');
+        $count = hlen_plus('new_conversation_tip:seller') || hlen_plus('new_pos_conversation_tip:seller');
         $ticket_count = Redis::get('loop_load_new_reply_audio_frontend');
         $product_review_tip = hlen_plus('new_review_tip:seller');
-        $newAudio = hlen_plus('audio:new_conversation_tip:seller') || hlen_plus('audio:new_ticket_tip:seller') || hlen_plus('audio:new_review_tip:seller');
+        $newAudio = hlen_plus('audio:new_conversation_tip:seller') || hlen_plus('audio:new_pos_conversation_tip:seller') || hlen_plus('audio:new_ticket_tip:seller') || hlen_plus('audio:new_review_tip:seller');
         if ($newAudio || $ticket_count) {
             del_plus('audio:new_conversation_tip:seller');
+            del_plus('audio:new_pos_conversation_tip:seller');
             del_plus('audio:new_ticket_tip:seller');
             del_plus('audio:new_review_tip:seller');
             Redis::del('loop_load_new_reply_audio_frontend');
