@@ -140,9 +140,9 @@
 @endsection
 @section('script')
     <script>
-        var orderid, transaction_id, money, pay_type;
+        var out_order_no, transaction_id, money, pay_type;
         function showCallbackModal(p1, p2, p3, p4) {
-            orderid = p1;
+            out_order_no = p1;
             transaction_id = p2;
             money = p3;
             pay_type = p4;
@@ -150,6 +150,7 @@
         }
         function manual_callback() {
             var url, postData;
+            console.log(out_order_no, transaction_id, money, pay_type);
             if (pay_type === 'htpay' || pay_type === 'india_htpay') {
                 if (pay_type === 'htpay') {
                     url = "{{route('htpay.notify')}}";
@@ -159,7 +160,7 @@
 
                 postData = {
                     returncode: '00',
-                    orderid: orderid,
+                    orderid: out_order_no,
                     transaction_id: transaction_id,
                     money: money,
                 }
@@ -167,17 +168,18 @@
                 url = "{{route('qepay.notify')}}";
                 postData = {
                     tradeResult: 1,
-                    orderNo: orderid,
+                    orderNo: out_order_no,
                     amount: money,
                     oriAmount: money,
                 }
             } else if (pay_type === 'winpay') {
                 url = "{{route('winpay.notify')}}";
                 postData = {
-                    tradeResult: 1,
-                    orderNo: orderid,
-                    amount: money,
-                    oriAmount: money,
+                    params: JSON.stringify({
+                        system_ref: out_order_no,
+                        amount: money,
+                        status: 1,
+                    }),
                 }
             }
             $.ajax({
@@ -190,6 +192,8 @@
                 success: function (response) {
                     if(response == 'ok' || response == 'success') {
                         location.reload();
+                    } else {
+                        AIZ.plugins.notify('danger', response);
                     }
                 }
             });
