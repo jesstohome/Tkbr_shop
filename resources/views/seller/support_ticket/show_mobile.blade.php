@@ -142,7 +142,7 @@
                                 <div class="media-body">
                                     <div class="comment-header">
                                         <span class="text-bold h6 text-muted title">
-                                            @php echo empty($ticketreply->user_id) ? translate($ticketreply->reply) : $ticketreply->reply; @endphp
+                                            @php echo empty($ticketreply->user_id) || -1 == $ticketreply->user_id ? translate($ticketreply->reply) : $ticketreply->reply; @endphp
                                             @if($ticketreply->files)
                                                 <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
                                                 @foreach ((explode(",",$ticketreply->files)) as $key => $file)

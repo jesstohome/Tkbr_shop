@@ -147,6 +147,9 @@ class OrderController extends Controller
             $ticket_reply->save();
         }
 
+        // 每次进入都发送欢迎语
+        send_hello_msg($ticket);
+
         return view('seller.support_ticket.work_order_show', compact('order', 'ticket', 'ticket_replies', 'product'));
     }
 

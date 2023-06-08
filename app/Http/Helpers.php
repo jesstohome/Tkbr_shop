@@ -1976,7 +1976,7 @@ if (!function_exists('ticket_say_hello')) {
 
         $ticket_reply = new TicketReply;
         $ticket_reply->ticket_id = $ticket->id;
-        $ticket_reply->user_id = 0;
+        $ticket_reply->user_id = -1;
         $ticket_reply->reply = $bloc->welcome_message ?: 'Hello';
         $ticket_reply->files = '';
         $ticket_reply->save();
