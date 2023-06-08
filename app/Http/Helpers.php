@@ -1695,6 +1695,9 @@ if (!function_exists('hlen_plus')) {
 
         if ($user && $user->user_type != 'admin') {
             if ($user->user_type == 'seller') {
+                if (substr($redis_key, -7) != ':seller') {
+                    $redis_key .= ":seller";
+                }
                 $redis_key = $redis_key . ":" . $user->id;
                 return \Illuminate\Support\Facades\Redis::del($redis_key);
             }

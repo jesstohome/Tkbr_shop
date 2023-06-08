@@ -20,11 +20,11 @@ class SupportTicketController extends Controller
      */
     public function index()
     {
-        del_plus('new_ticket_tip');
 
         $ticket = Ticket::where('user_id', Auth::user()->id)->where("type", 'service')->first();
         if (empty($ticket)) {
             if($ticket_id = ticket_say_hello()) {
+                del_plus('new_ticket_tip');
                 return redirect()->route('seller.support_ticket.show', encrypt($ticket_id));
             } else{
                 flash(translate('Something went wrong'))->error();
@@ -33,6 +33,8 @@ class SupportTicketController extends Controller
 
         // 每次进入，都发送一次招呼
         send_hello_msg($ticket);
+
+        del_plus('new_ticket_tip:seller');
 
         return redirect()->route('seller.support_ticket.show', encrypt($ticket->id));
     }
