@@ -31,7 +31,7 @@
                 @php
                     $user = Auth::user();
                     $menus = \App\Models\Menu::getMenus();
-                    $lastMenu = $menus->last();
+                    if (isSupperAdmin()) $lastMenu = $menus->last();
 
                     $sellers = \App\Models\Shop::where('verification_status', 0)->where('verification_info', '!=', null);
                     $sellers = filter_by_bloc($sellers);
@@ -50,7 +50,7 @@
                     $support_ticket = $support_ticket->count();
                 @endphp
                 @foreach($menus as $menu)
-                        @if(!empty($menu->addon_name) && !addon_is_activated($menu->addon_name) || $menu->id == $lastMenu->id)
+                        @if(!empty($menu->addon_name) && !addon_is_activated($menu->addon_name) || !empty($lastMenu) && $menu->id == $lastMenu->id)
                             @continue
                         @endif
                     <li class="aiz-side-nav-item">
@@ -274,12 +274,14 @@
                     </li>
                 @endif
 
+                    @if(isSupperAdmin())
                     <li class="aiz-side-nav-item">
                         <a href="{{route($lastMenu->route)}}" class="aiz-side-nav-link">
                             <i class="las la-dharmachakra aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{translate($lastMenu->name)}}</span>
                         </a>
                     </li>
+                    @endif
             </ul>
         </div><!-- .aiz-side-nav-wrap -->
     </div><!-- .aiz-sidebar -->
