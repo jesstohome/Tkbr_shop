@@ -8,6 +8,7 @@
     </div>
     <div class="d-flex justify-content-between align-items-stretch flex-grow-xl-1">
         <div class="d-flex justify-content-around align-items-center align-items-stretch">
+            @if(is_pc())
             <div class="d-flex justify-content-around align-items-center align-items-stretch">
                 <div class="aiz-topbar-item">
                     <div class="d-flex align-items-center">
@@ -17,6 +18,8 @@
                     </div>
                 </div>
             </div>
+            @endif
+
             @if (addon_is_activated('pos_system'))
                 <div class="d-flex justify-content-around align-items-center align-items-stretch ml-3">
                     <div class="aiz-topbar-item">
@@ -62,6 +65,7 @@
                 </div>
             </div>
 
+            @if(is_pc())
             <div class="aiz-topbar-item ml-2">
                 <div class="align-items-stretch d-flex dropdown">
                     <a class="dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">
@@ -112,6 +116,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             {{-- language --}}
             @php
