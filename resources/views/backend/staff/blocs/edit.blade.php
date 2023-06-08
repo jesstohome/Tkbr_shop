@@ -51,20 +51,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label" for="lang">{{translate('Welcome Message')}} </label>
-                        <div class="col-md-9">
-                            <input type="text" placeholder="{{translate('Welcome Message')}}" id="welcome_message" name="welcome_message" class="form-control" value="{{ $bloc->welcome_message }}" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-md-3 col-from-label" for="lang">{{translate('Work Order Welcome Message')}} </label>
-                        <div class="col-md-9">
-                            <input type="text" placeholder="{{translate('Work Order Welcome Message')}}" id="work_order_welcome_message" name="work_order_welcome_message" class="form-control" value="{{ $bloc->work_order_welcome_message }}" required>
-                        </div>
-                    </div>
-
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
                     </div>

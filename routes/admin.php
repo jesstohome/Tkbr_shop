@@ -53,6 +53,7 @@ use App\Http\Controllers\TicketHuaShuGroupController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WebsiteController;
+use App\Http\Controllers\WelcomeController;
 
 /*
   |--------------------------------------------------------------------------
@@ -368,6 +369,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::get('blocs_ban/{id}', 'ban')->name('bloc.ban');
         Route::get('/bloc/destroy/{id}', 'destroy')->name('bloc.destroy');
     });
+
+    Route::controller(WelcomeController::class)->group(function () {
+        Route::get('/welcome/bloc_list', 'bloc_list')->name('welcome.bloc_list');
+        Route::get('/welcome/edit', 'edit')->name('welcome.edit');
+        Route::post('/welcome/update', 'update')->name('welcome.update');
+    });
+
 
     // Staff Roles
     Route::resource('roles', RoleController::class);

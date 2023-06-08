@@ -76,7 +76,7 @@
                                 @endif
                             </td>
                             <td>{{$ticket->created_at}}</td>
-                            <td>{{$ticket->updated_at}}</td>
+                            <td>{{$ticket->updated_at}}@if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
                             <td class="text-right">
                                 <a href="{{route('support_ticket.admin_show', encrypt($ticket->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('View Details') }}">
                                     <i class="las la-eye"></i>
