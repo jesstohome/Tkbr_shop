@@ -1,7 +1,8 @@
 <script src="{{ static_asset('assets/js/layui.js') }}"></script>
 <script src="{{ static_asset('assets/js/layer.min.js') }}"></script>
 <script type="text/javascript">
-    var user_id = "{{Auth::user()->id}}"
+    var user_id = "{{Auth::user()->id}}";
+    var isAdmin = parseInt("{{isAdmin() ? 1 : 0}}");
 
     $(document).ready(function () {
         $( '#ticket-reply-form' ).on("submit", function (){
@@ -146,7 +147,7 @@
                 (item.file_list || []).forEach((img) => {
                     images += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">`
                 })
-                $("ul.ticket").append(`<li class="list-group-item px-0 ${item.user_id == user_id ? 'mine' : ''}">
+                $("ul.ticket").append(`<li class="list-group-item px-0 ${-1 == item.user_id && isAdmin || item.user_id == user_id ? 'mine' : ''}">
                             ${item.reply || images ? `<div class="media">
                                 <div class="media-body">
                                     <div class="comment-header">
