@@ -141,14 +141,14 @@ class OrderController extends Controller
             hset_plus('new_work_order_ticket_tip', $ticket->id, 1, $ticket->staff_id);
         }
 
+        // 每次进入都发送欢迎语
+        send_hello_msg($ticket);
+
         $ticket_replies = $ticket->ticketreplies;
         foreach ($ticket_replies as $ticket_reply) {
             $ticket_reply->read = 1;
             $ticket_reply->save();
         }
-
-        // 每次进入都发送欢迎语
-        send_hello_msg($ticket);
 
         return view('seller.support_ticket.work_order_show', compact('order', 'ticket', 'ticket_replies', 'product'));
     }

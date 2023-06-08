@@ -1988,7 +1988,12 @@ if (!function_exists('ticket_say_hello')) {
         $ticket_reply->files = '';
         $ticket_reply->save();
 
-        hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id, $seller->id);
+        // 客服工单显示红点
+        if ($ticket->type == 'service') {
+            hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id, $seller->id, null, true);
+        } else {
+            Redis::hset('audio:new_pos_conversation_tip:seller:' . $seller->id, $ticket->id, 1);
+        }
     }
 }
 
