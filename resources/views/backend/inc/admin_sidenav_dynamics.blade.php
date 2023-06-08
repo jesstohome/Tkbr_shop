@@ -278,7 +278,6 @@
                         <a href="{{route($lastMenu->route)}}" class="aiz-side-nav-link">
                             <i class="las la-dharmachakra aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{translate($lastMenu->name)}}</span>
-                            <span class="aiz-side-nav-arrow"></span>
                         </a>
                     </li>
             </ul>
