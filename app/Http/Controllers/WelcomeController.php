@@ -13,7 +13,7 @@ class WelcomeController extends Controller
         if (!isSupperAdmin()) {
             return redirect()->route('welcome.edit', ['id' => \Auth::user()->bloc->id]);
         }
-        
+
         $blocs = Bloc::paginate(10);
         return view('backend.staff.bloc_welcome_message.index', compact('blocs'));
     }
