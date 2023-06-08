@@ -30,6 +30,9 @@ class SupportTicketController extends Controller
             }
         }
 
+        // 每次进入，都发送一次招呼
+        send_hello_msg($ticket);
+
         return redirect()->route('seller.support_ticket.show', encrypt($ticket->id));
     }
 

@@ -1971,11 +1971,13 @@ if (!function_exists('ticket_say_hello')) {
         }
 
         $bloc = Bloc::find($ticket->bloc_id);
+//        $staff = Staff::find($ticket->staff_id);
+//        $staff_user = $staff->user;
 
         $ticket_reply = new TicketReply;
         $ticket_reply->ticket_id = $ticket->id;
-        $ticket_reply->user_id = $seller->id;
-        $ticket_reply->reply = translate($bloc->welcome_message ?: 'Hello');
+        $ticket_reply->user_id = 0;
+        $ticket_reply->reply = $bloc->welcome_message ?: 'Hello';
         $ticket_reply->files = '';
         $ticket_reply->save();
 
