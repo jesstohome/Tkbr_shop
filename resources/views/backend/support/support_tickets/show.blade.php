@@ -88,7 +88,7 @@
             <div class="pad-top">
                 <ul class="list-group list-group-flush ticket">
                     @foreach($ticket->ticketreplies as $ticketreply)
-                        <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
+                        <li class="list-group-item px-0 {{-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id() ? 'mine' : ''}}">
                             @if(!empty($ticketreply->reply) || $ticketreply->files)
                             <div class="media">
                                 <div class="media-body">

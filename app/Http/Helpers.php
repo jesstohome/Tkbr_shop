@@ -1976,8 +1976,12 @@ if (!function_exists('ticket_say_hello')) {
 
         $ticket_reply = new TicketReply;
         $ticket_reply->ticket_id = $ticket->id;
-        $ticket_reply->user_id = -1;
-        $ticket_reply->reply = $bloc->welcome_message ?: 'Hello';
+        $ticket_reply->user_id = -1; // -1为招呼语，0为系统消息，其他正数为用户消息
+        if ($ticket->type == 'service') {
+            $ticket_reply->reply = $bloc->welcome_message ?: 'Hello';
+        } else {
+            $ticket_reply->reply = $bloc->work_order_welcome_message ?: 'Hello';
+        }
         $ticket_reply->files = '';
         $ticket_reply->save();
 

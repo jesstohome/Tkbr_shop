@@ -43,6 +43,7 @@ class BlocController extends Controller
             $bloc->time_zone = $request->time_zone;
             $bloc->currency_code = $request->currency_code;
             $bloc->welcome_message = $request->welcome_message;
+            $bloc->work_order_welcome_message = $request->work_order_welcome_message;
             $bloc->save();
 
             flash(translate('Bloc has been inserted successfully'))->success();
@@ -94,6 +95,7 @@ class BlocController extends Controller
             $bloc->time_zone = $request->time_zone;
             $bloc->currency_code = $request->currency_code;
             $bloc->welcome_message = $request->welcome_message;
+            $bloc->work_order_welcome_message = $request->work_order_welcome_message;
             $bloc->save();
 
             flash(translate('Bloc has been updated successfully'))->success();

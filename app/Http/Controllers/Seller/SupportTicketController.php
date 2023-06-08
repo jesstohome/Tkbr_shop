@@ -20,9 +20,10 @@ class SupportTicketController extends Controller
      */
     public function index()
     {
+        del_plus('new_ticket_tip');
+
         $ticket = Ticket::where('user_id', Auth::user()->id)->where("type", 'service')->first();
         if (empty($ticket)) {
-
             if($ticket_id = ticket_say_hello()) {
                 return redirect()->route('seller.support_ticket.show', encrypt($ticket_id));
             } else{

@@ -111,7 +111,7 @@ class ConversationController extends Controller
 
     public function message_count(Request $request){
         $count = hlen_plus('new_conversation_tip:seller') || hlen_plus('new_pos_conversation_tip:seller');
-        $ticket_count = Redis::get('loop_load_new_reply_audio_frontend');
+        $ticket_count = Redis::get('loop_load_new_reply_audio_frontend') || hlen_plus('new_ticket_tip:seller');
         $product_review_tip = hlen_plus('new_review_tip:seller');
         $newAudio = hlen_plus('audio:new_conversation_tip:seller') || hlen_plus('audio:new_pos_conversation_tip:seller') || hlen_plus('audio:new_ticket_tip:seller') || hlen_plus('audio:new_review_tip:seller');
         if ($newAudio || $ticket_count) {

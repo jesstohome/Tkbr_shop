@@ -132,7 +132,7 @@
                 <ul class="list-group list-group-flush ticket">
                     @foreach($ticket->ticketreplies as $ticketreply)
                         @if(empty($ticketreply->user_id)) @continue @endif
-                        <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
+                        <li class="list-group-item px-0 {{-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id() ? 'mine' : ''}}">
                             <div class="media">
                                 <div class="media-body">
                                     <div class="comment-header">
