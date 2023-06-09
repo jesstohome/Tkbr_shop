@@ -148,13 +148,7 @@ class WinpayController extends Controller
         $user = User::find($withdrawRequest->user_id);
         $shop = $user->shop;
 
-        $currency = Currency::query()->where('code', $withdrawRequest->currency)->first();
-        if (!empty($currency->exchange_rate)) {
-            $exchange_rate = $currency->exchange_rate;
-        } else {
-            $exchange_rate = env('QEPAY_EXCHANGE_RATE');
-        }
-
+        $exchange_rate = getExchangeRate($withdrawRequest->cur_currency_code);
         $money = $withdrawRequest->amount * $exchange_rate;
 
         $paymentStatement = new PaymentStatement();

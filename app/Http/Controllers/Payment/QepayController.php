@@ -184,7 +184,7 @@ class QepayController extends Controller
         $user = User::find($withdrawRequest->user_id);
         $shop = $user->shop;
 
-        $exchange_rate = getExchangeRate($withdrawRequest->currency);
+        $exchange_rate = getExchangeRate($withdrawRequest->cur_currency_code);
 
         $money = $withdrawRequest->amount * $exchange_rate;
 

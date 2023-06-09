@@ -134,7 +134,7 @@ class HtpayController extends Controller
 
         list($pay_memberid, $sign_key) = $this->getMchId();
 
-        $exchange_rate = getExchangeRate($withdrawRequest->currency);
+        $exchange_rate = getExchangeRate($withdrawRequest->cur_currency_code);
         $money = $withdrawRequest->amount * $exchange_rate;
 
         $paymentStatement = new PaymentStatement();
