@@ -50,6 +50,7 @@ class QepayController extends Controller
                     $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
                     $paymentStatement->out_order_no = '';
                     $paymentStatement->amount = $amount;
+                    $paymentStatement->exchange_rate = $exchange_rate;
                     $paymentStatement->amount_exchanged = $amount * $exchange_rate;
                     $paymentStatement->business_type = 'pick_up';
                     $paymentStatement->target_id = $order->id;
@@ -197,6 +198,7 @@ class QepayController extends Controller
         $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
         $paymentStatement->out_order_no = '';
         $paymentStatement->amount = $withdrawRequest->amount;
+        $paymentStatement->exchange_rate = $exchange_rate;
         $paymentStatement->amount_exchanged = $money;
         $paymentStatement->business_type = 'withdraw';
         $paymentStatement->target_id = $withdrawRequest->id;

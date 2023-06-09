@@ -66,6 +66,7 @@
                             <th>{{ translate('Outer Order No')}}</th>
                             <th>{{ translate('Amount')}}</th>
                             <th>{{ translate('Amount after exchanged')}}</th>
+                            <th>{{ translate('Exchange Rate')}}</th>
                             <th>{{ translate('Business Type')}}</th>
                             <th data-breakpoints="lg">{{ translate('Payment Method')}}</th>
                             <th data-breakpoints="lg" class="text-right">{{ translate('Status')}}</th>
@@ -89,6 +90,7 @@
                                 <td>{{ $value->out_order_no ?: $value->transaction_id}}</td>
                                 <td>{{ single_price($value->amount) }}</td>
                                 <td>{{ number_format($value->amount_exchanged, 2) }}</td>
+                                <td>{{ number_format($value->exchange_rate, 2) }}</td>
                                 <td>{{ translate($value->business_type) }}</td>
                                 <td>{{ ucfirst(str_replace('_', ' ', $value ->payment_type)) }}</td>
                                 <td class="text-right">

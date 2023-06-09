@@ -66,6 +66,8 @@
                         <th data-breakpoints="lg">{{translate('Total Amount to wallet withdraw')}}</th>
                         <th data-breakpoints="lg">{{translate('Total Amount to commission')}}</th>
                         <th>{{translate('Requested Amount')}}</th>
+                        <th>{{translate('Exchange Amount')}}</th>
+                        <th>{{translate('Exchange Rate')}}</th>
                         <th>{{translate('Type')}}</th>
                         <th data-breakpoints="lg">{{ translate('Withdraw type') }}</th>
                         <th data-breakpoints="lg" width="20%">{{ translate('Message') }}</th>
@@ -102,17 +104,17 @@
                                 <td>{{ single_price($total_wallet_withdraw) }}</td>
                                 <td>{{ single_price($total_commission) }}</td>
                                 <td>{{ single_price($seller_withdraw_request->amount) }}</td>
+                                <td>{{ number_format($seller_withdraw_request->amount * (float) $seller_withdraw_request->exchange_rate, 2) }}</td>
+                                <td>{{$seller_withdraw_request->exchange_rate }}</td>
 
-                                  <td>
-                            @if( $seller_withdraw_request->type == 1)
-
-                            {{translate('User Balance')}}
-                            @else
-
-                              {{translate('Guarantee')}}
-                            @endif
-                        </td>
-                                         <td>
+                                <td>
+                                    @if( $seller_withdraw_request->type == 1)
+                                        {{translate('User Balance')}}
+                                    @else
+                                      {{translate('Guarantee')}}
+                                    @endif
+                                </td>
+                                <td>
                                     @if ($seller_withdraw_request->w_type == 1)
                                     {{translate('Cash')}}
                                     @elseif ($seller_withdraw_request->w_type == 2)
