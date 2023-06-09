@@ -112,8 +112,6 @@ class OrderController extends Controller
         $order->pickup_currency = $request->currency ?: '';
         $order->save();
 
-        $product = $order->details[0]->product ?? [];
-
         $ticket = Ticket::query()->where('type', 'order')->where('order_id', $request->order_id)->first();
         if (empty($ticket)) {
             $ticket = new Ticket();
@@ -143,6 +141,20 @@ class OrderController extends Controller
 
         // 每次进入都发送欢迎语
         send_hello_msg($ticket);
+
+        return redirect()->route('seller.orders.show_work_order', ['order_id' => $order->id]);
+    }
+
+    public function showWorkOrderPayment(Request $request) {
+        $order = Order::find($request->order_id);
+        if (empty($order)) {
+            error(translate('Order does not exist'));
+            return back();
+        }
+
+        $product = $order->details[0]->product ?? [];
+
+        $ticket = Ticket::query()->where('type', 'order')->where('order_id', $request->order_id)->first();
 
         $ticket_replies = $ticket->ticketreplies;
         foreach ($ticket_replies as $ticket_reply) {

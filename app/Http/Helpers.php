@@ -1968,7 +1968,7 @@ if (!function_exists('ticket_say_hello')) {
         return false;
     }
 
-    function send_hello_msg($ticket, $seller = null) {
+    function send_hello_msg($ticket, $seller = null, $from_shop_approved = 0) {
         if (empty($seller)) {
             $seller = Auth::user();
         }
@@ -1981,16 +1981,28 @@ if (!function_exists('ticket_say_hello')) {
         $ticket_reply->ticket_id = $ticket->id;
         $ticket_reply->user_id = -1; // -1为招呼语，0为系统消息，其他正数为用户消息
         if ($ticket->type == 'service') {
-            $ticket_reply->reply = $bloc->welcome_message ?: 'Hello';
+            if ($from_shop_approved) {
+                // 店铺审核消息
+                $ticket_reply->reply = $bloc->examine_welcome_message ?: 'Hello';
+            } else {
+                // 客服欢迎语
+                $ticket_reply->reply = $bloc->welcome_message ?: 'Hello';
+            }
         } else {
+            // 工单欢迎
             $ticket_reply->reply = $bloc->work_order_welcome_message ?: 'Hello';
         }
+        // 打招呼话术(审核消息除外)，默认为已读
+        if (!$from_shop_approved) {
+            $ticket_reply->read = 1;
+        }
+
         $ticket_reply->files = '';
         $ticket_reply->save();
 
         // 客服工单显示红点
         if ($ticket->type == 'service') {
-            hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id, $seller->id, null, true);
+            hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id, $seller->id, $seller, true);
         } else {
             Redis::hset('audio:new_pos_conversation_tip:seller:' . $seller->id, $ticket->id, 1);
         }

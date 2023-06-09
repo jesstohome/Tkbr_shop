@@ -98,6 +98,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::post('/orders/update_payment_status', 'update_payment_status')->name('orders.update_payment_status');
         Route::post('/orders/get_not_view_count', 'get_not_view_count')->name('orders.get_not_view_count');
         Route::get('/orders/create_work_order', 'createWorkOrderPayment')->name('orders.create_work_order');
+        Route::get('/orders/show_work_order', 'showWorkOrderPayment')->name('orders.show_work_order');
     });
     Route::resource('orders', OrderController::class);
 

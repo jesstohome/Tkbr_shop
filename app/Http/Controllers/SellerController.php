@@ -425,7 +425,7 @@ class SellerController extends Controller
 
                 // 通过后，发送打招呼
                 if ($request->status) {
-                    send_hello_msg($ticket, $shop->user);
+                    send_hello_msg($ticket, $shop->user, 1);
                 }
             }
 
