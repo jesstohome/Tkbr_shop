@@ -871,7 +871,6 @@
         }
 
         function sort_sellers(el){
-            return false
             $('#sort_sellers').submit();
         }
 

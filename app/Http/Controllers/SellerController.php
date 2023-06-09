@@ -180,12 +180,27 @@ class SellerController extends Controller
             $shops = $shops->where('created_at', '<=', $end_time);
         }
 
+        if ($request->has('is_virtual_user') && $request->is_virtual_user != '') {
+            $is_virtual_user = $request->is_virtual_user;
+            $userIds = User::query()->where('is_virtual_user', $request->is_virtual_user)->pluck('id')->toArray();
+            if (!empty($userIds)) {
+                $shops = $shops->whereIn('user_id', $userIds);
+            } else {
+                $shops = $shops->whereRaw('1=2');
+            }
+        }
+
+        $user_id = $request->user_id;
+        if (!empty($user_id)) {
+            $shops = $shops->where('user_id', $request->user_id);
+        }
+
         $shops = filter_by_bloc($shops);
         $shops = $shops->select("shops.*")->paginate(15);
 
         del_plus('new_shop_created_tip');
 
-        return view('backend.sellers.index', compact('shops', 'sort_search', 'approved', 'date_range', 'start_time', 'end_time'));
+        return view('backend.sellers.index', compact('shops', 'sort_search', 'approved', 'date_range', 'start_time', 'end_time', 'is_virtual_user', 'user_id'));
     }
 
     /**
