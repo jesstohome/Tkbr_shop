@@ -30,11 +30,12 @@ class PosController extends Controller
 {
     public function index()
     {
+        $seller_id = Session::get('seller_id', 0);
         $customers = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->where('bloc_id', '>', 0)->orderBy('created_at', 'desc');
         $customers = filter_by_bloc($customers);
         $customers = $customers->get();
         if (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff') {
-            return view('pos.index', compact('customers'));
+            return view('pos.index', compact('customers', 'seller_id'));
         }elseif (Auth::user()->user_type == 'salesman'){
 
             $customers = User::where('user_type', 'customer')->where('referred_by', '=', Auth::user()->id )->orderBy('created_at', 'desc');
@@ -47,7 +48,7 @@ class PosController extends Controller
             if (get_setting('pos_activation_for_seller') == 1) {
                 flash(translate('POS is disable for Sellers!!!'))->error();
                 return back();
-                return view('pos.frontend.seller.pos.index', compact('customers'));
+//                return view('pos.frontend.seller.pos.index', compact('customers'));
             }
             else {
                 flash(translate('POS is disable for Sellers!!!'))->error();
@@ -512,6 +513,8 @@ class PosController extends Controller
                 calculateCommissionAffilationClubPoint($order);
 
                 hset_plus("new_order_tip", $order->id, 1, $shop->staff_id, $shop->user_id);
+
+                Session::put('seller_id', $shop->user_id);
 
                 Session::forget('pos.shipping_info');
                 Session::forget('pos.shipping');

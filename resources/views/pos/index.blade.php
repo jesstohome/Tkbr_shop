@@ -17,7 +17,7 @@
                         <select name="shop_id" class="form-control form-control-lg aiz-selectpicker" data-live-search="true" onchange="filterProducts()">
                             <option value="">{{ translate('All Sellers') }}</option>
                             @foreach (filter_by_bloc(\App\Models\Shop::with('user'))->get() as $key => $shop)
-                                <option value="{{ $shop->user->id }}">{{ $shop->name }}</option>
+                                <option value="{{ $shop->user->id }}" {{!empty($seller_id) && $seller_id == $shop->user->id ? 'selected' : ''}}>{{ $shop->name }} @if($shop->user) ({{$shop->user->email}}) @endif</option>
                             @endforeach
                         </select>
                     </div>
