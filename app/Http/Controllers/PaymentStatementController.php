@@ -47,6 +47,11 @@ class PaymentStatementController extends Controller
             $payment_statements = $payment_statements->where('payment_type', $request->payment_type);
         }
 
+        $seller_id = $request->seller_id;
+        if (!empty($seller_id)) {
+            $payment_statements = $payment_statements->where('seller_id', $seller_id);
+        }
+
         $payment_statements = filter_by_bloc($payment_statements);
 
         // 统计
@@ -56,7 +61,7 @@ class PaymentStatementController extends Controller
         $total_seller = $payment_statements_clone->distinct('seller_id')->count();
 
         $payment_statements = $payment_statements->paginate(15);
-        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type'));
+        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type', 'seller_id'));
     }
 
     /**
