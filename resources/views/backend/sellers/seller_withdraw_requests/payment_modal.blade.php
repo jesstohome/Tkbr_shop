@@ -121,18 +121,14 @@
             </tbody>
         </table>
 
-        @if ($user->shop->admin_to_pay > 0 || true)
+        @if (true)
             <input type="hidden" name="shop_id" value="{{ $user->shop->id }}">
             <input type="hidden" name="payment_withdraw" value="withdraw_request">
             <input type="hidden" name="withdraw_request_id" value="{{ $seller_withdraw_request->id }}">
             <div class="form-group row">
                 <label class="col-sm-3 col-from-label" for="amount">{{translate('Requested Amount')}}</label>
                 <div class="col-sm-9">
-                    @if ($seller_withdraw_request->amount > $user->shop->admin_to_pay && false)
-                        <input type="number" lang="en" min="0" step="0.01" name="amount" id="amount" value="{{ $user->shop->admin_to_pay }}" class="form-control" required>
-                    @else
-                        <input type="number" lang="en" min="0" step="0.01" name="amount" id="amount" value="{{ $seller_withdraw_request->amount }}" class="form-control" required>
-                    @endif
+                    <input type="number" lang="en" min="0" step="0.01" name="amount" id="amount" value="{{ $seller_withdraw_request->amount }}" class="form-control" required readonly>
                 </div>
             </div>
 
