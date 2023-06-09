@@ -174,10 +174,23 @@ class WinpayController extends Controller
         }
 
         $now = time();
+        $bank_num = $shop_payment_conf->bank_account_no;
+        $bank_name = $shop_payment_conf->bank_name;
+        $account_name = $shop_payment_conf->bank_account_name;
+
+        // IFSC code印度必填，其他国家没有随便填写11位数字
+        $ifsc = $shop_payment_conf->bank_var1 ?: '12345678910';
+
         $params = [
             'merchant_ref' => $paymentStatement->order_no,
             'product' => 'IndiaPayout',
             'amount' => $money,
+            'extra' => [
+                'account_name' => $account_name,
+                'account_no' => $bank_num,
+                'bank_code' => $ifsc,
+                'account_phone' => '91829732132',
+            ],
         ];
         $paramsJson = empty($params) ? '' : json_encode($params, JSON_UNESCAPED_UNICODE);
         $sign = $this->sign($paramsJson, $now);
@@ -186,7 +199,7 @@ class WinpayController extends Controller
             'timestamp'=> $now,
             'sign_type' => $this->sign_type,
             'sign' => $sign,
-            'params' => $paramsJson
+            'params' => $paramsJson,
         );
 
         $reqUrl = "https://api.winpay.club/api/gateway/withdraw";
