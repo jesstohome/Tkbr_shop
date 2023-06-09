@@ -9,33 +9,16 @@
                 <h5 class="mb-md-0 h6">{{ translate('All Orders') }}</h5>
             </div>
 
-            <!-- Change Status Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">
-                                {{translate('Choose an order status')}}
-                            </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <select class="form-control aiz-selectpicker" onchange="change_status()" data-minimum-results-for-search="Infinity" id="update_delivery_status">
-                                <option value="pending">{{translate('Pending')}}</option>
-                                <option value="confirmed">{{translate('Confirmed')}}</option>
-                                <option value="picked_up">{{translate('Picked Up')}}</option>
-                                <option value="on_the_way">{{translate('On The Way')}}</option>
-                                <option value="delivered">{{translate('Delivered')}}</option>
-                                <option value="cancelled">{{translate('Cancel')}}</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
+            <div class="col-lg-2">
+                <div class="form-group mb-0">
+                    <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="seller_id" name="seller_id" data-live-search="true">
+                        <option value="">{{ translate('All Sellers') }}</option>
+                        @foreach (filter_by_bloc(App\Models\User::where('user_type', '=', 'seller'))->get() as $key => $seller)
+                            <option value="{{ $seller->id }}" @if ($seller->id == $seller_id) selected @endif>
+                                {{ $seller->shop->name }} ({{ $seller->email }})
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 
@@ -221,44 +204,5 @@
 
         });
 
-//        function change_status() {
-//            var data = new FormData($('#order_form')[0]);
-//            $.ajax({
-//                headers: {
-//                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//                },
-//                url: "{{route('bulk-order-status')}}",
-//                type: 'POST',
-//                data: data,
-//                cache: false,
-//                contentType: false,
-//                processData: false,
-//                success: function (response) {
-//                    if(response == 1) {
-//                        location.reload();
-//                    }
-//                }
-//            });
-//        }
-
-        function bulk_delete() {
-            var data = new FormData($('#sort_orders')[0]);
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{route('bulk-order-delete')}}",
-                type: 'POST',
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    if(response == 1) {
-                        location.reload();
-                    }
-                }
-            });
-        }
     </script>
 @endsection

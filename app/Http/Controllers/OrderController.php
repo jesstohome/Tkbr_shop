@@ -317,6 +317,7 @@ class OrderController extends Controller
     {
         CoreComponentRepository::instantiateShopRepository();
         $date = $request->date;
+        $seller_id = $request->seller_id;
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
@@ -337,6 +338,10 @@ class OrderController extends Controller
         }
         if ($date != null) {
             $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+        }
+
+        if ($seller_id) {
+            $orders = $orders->where('seller_id', $seller_id);
         }
 
         $orders = filter_by_bloc($orders);
