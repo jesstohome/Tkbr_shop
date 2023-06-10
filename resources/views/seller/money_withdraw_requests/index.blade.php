@@ -406,7 +406,7 @@
                     <td>{{ $list->order ? $list->order->code : '' }}</td>
                     <td>{{ translate(ucwords(str_replace('_', ' ', $list->type))) }}</td>
 
-                    <td>{{ date('d-m-Y', strtotime($list->created_at)) }}</td>
+                    <td>{{ date('d-m-Y H:i:s', strtotime($list->created_at)) }}</td>
                 </tr>
             @endforeach
             </tbody>
