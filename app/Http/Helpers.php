@@ -2154,7 +2154,7 @@ if (!function_exists('back_withdraw_money')) {
         try {
             $user = User::find($withdrawRequest->user_id);
             if (!empty($user)) {
-                $user->blance += $withdrawRequest->amount;
+                $user->balance += $withdrawRequest->amount;
                 $user->save();
 
                 // 记录收入日志
