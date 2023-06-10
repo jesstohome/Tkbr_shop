@@ -306,6 +306,11 @@ class WinpayController extends Controller
                         // 更新提现状态
                         $withdrawRequest->status = $params['status'] == 1 ? 1 : 4;
                         $withdrawRequest->save();
+
+                        // 退回提现金额，并记录日志
+                        if ($paymentStatement->status == 2) {
+                            back_withdraw_money($withdrawRequest);
+                        }
                     }
                 }
 

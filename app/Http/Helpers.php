@@ -2146,3 +2146,30 @@ if (!function_exists('queryExchangeRates()')) {
         }
     }
 }
+
+if (!function_exists('back_withdraw_money')) {
+    function back_withdraw_money($withdrawRequest) {
+        DB::beginTransaction();
+
+        try {
+            $user = User::find($withdrawRequest->user_id);
+            if (!empty($user)) {
+                $user->blance += $withdrawRequest->amount;
+                $user->save();
+
+                // 记录收入日志
+                $walletExpenseLog = new WalletExpenseLog();
+                $walletExpenseLog->user_id = $withdrawRequest->user_id;
+                $walletExpenseLog->amount = $withdrawRequest->amount;
+                $walletExpenseLog->target_id = $withdrawRequest->id;
+                $walletExpenseLog->type = 'Withdrawal failed return';
+                $walletExpenseLog->save();
+            }
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            Log::error('提现失败退回:' . $exception->getMessage());
+            DB::rollBack();
+        }
+    }
+}
