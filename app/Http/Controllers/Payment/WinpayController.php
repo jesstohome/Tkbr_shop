@@ -299,7 +299,7 @@ class WinpayController extends Controller
                         $payment->amount = $params['amount'];
                         $payment->payment_method = $this->payment_type;
                         $payment->txn_code = $out_order_no;
-                        $payment->payment_details = $data;
+                        $payment->payment_details = is_string($data) ? $data : json_encode($data);
                         $payment->t_type = $withdrawRequest->t_type;
                         $payment->save();
 
