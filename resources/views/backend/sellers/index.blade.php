@@ -829,6 +829,8 @@
             $.post('{{ route('sellers.approved') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status, admin_ids: admin_ids}, function(data){
                 if(data == 1){
                     AIZ.plugins.notify('success', '{{ translate('Approved sellers updated successfully') }}');
+                    $(el).parents("td").next().find("select.admin_ids").attr("disabled", true);
+                    $(el).attr("disabled", true);
                 }
                 else{
                     AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
