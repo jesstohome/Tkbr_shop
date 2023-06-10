@@ -309,12 +309,14 @@ class WinpayController extends Controller
                     }
                 }
 
+                Log::info('通知三方回调:success');
                 exit('success');
             }
         } catch (\Exception $exception) {
             Log::warning(var_export(['winpay-notify-exception:' . $exception->getMessage(), $exception->getTraceAsString()], true));
         }
 
+        Log::warning('通知三方回调:error');
         exit('error') ;
     }
 
