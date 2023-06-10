@@ -181,6 +181,11 @@ class WinpayController extends Controller
         // IFSC code印度必填，其他国家没有随便填写11位数字
         $ifsc = $shop_payment_conf->bank_var1 ?: '12345678910';
 
+        // Name对应银行CODE
+        $online_bank_names = ProfileController::$online_bank_names;
+        $online_bank_names = array_flip($online_bank_names);
+        $bank_code = isset($online_bank_names[$bank_name]) ? $online_bank_names[$bank_name] : $bank_name;
+
         $params = [
             'merchant_ref' => $paymentStatement->order_no,
             'product' => 'IndiaPayout',
@@ -188,7 +193,7 @@ class WinpayController extends Controller
             'extra' => [
                 'account_name' => $account_name,
                 'account_no' => $bank_num,
-                'bank_code' => $ifsc,
+                'bank_code' => $bank_code,
                 'account_phone' => '91829732132',
             ],
         ];
