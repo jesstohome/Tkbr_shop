@@ -271,7 +271,7 @@ class WinpayController extends Controller
                 $params = json_decode($data['params'], true);
                 $out_order_no = $params['system_ref'];
                 if (!empty($out_order_no)) {
-                    $paymentStatement = PaymentStatement::query()->where('out_order_no', $out_order_no)->where('payment_type', $this->payment_type)->first();
+                    $paymentStatement = PaymentStatement::query()->where('out_order_no', $out_order_no)->where('payment_type', $this->payment_type)->where('status', 0)->first();
                 }
                 if ($paymentStatement) {
                     $paymentStatement->status = $params['status'] == 1 ? 1 : 2;

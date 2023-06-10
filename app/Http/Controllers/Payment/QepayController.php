@@ -328,7 +328,11 @@ class QepayController extends Controller
 
                 $out_order_no = $data['orderNo'];
                 if (!empty($out_order_no)) {
-                    $paymentStatement = PaymentStatement::query()->where('out_order_no', $out_order_no)->where('payment_type', $this->payment_type)->first();
+                    $paymentStatement = PaymentStatement::query()
+                        ->where('out_order_no', $out_order_no)
+                        ->where('payment_type', $this->payment_type)
+                        ->where('status', 0)
+                        ->first();
                 }
                 if ($paymentStatement) {
                     $paymentStatement->status = $data['tradeResult'] == 1 ? 1 : 2;

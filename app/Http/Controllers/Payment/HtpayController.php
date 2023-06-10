@@ -230,11 +230,12 @@ class HtpayController extends Controller
         try {
             if (!empty($data)) {
                 if (!empty($data['transaction_id'])) {
-                    $paymentStatement = PaymentStatement::query()->where('transaction_id', $data['transaction_id'])->where('payment_type', $this->payment_type)->first();
+                    $paymentStatement = PaymentStatement::query()->where('transaction_id', $data['transaction_id'])->where('payment_type', $this->payment_type)->where('status', 0)->first();
                 } elseif (!empty($data['orderid'])) {
-                    $paymentStatement = PaymentStatement::query()->where('out_order_no', $data['orderid'])->where('payment_type', $this->payment_type)->first();
+                    $paymentStatement = PaymentStatement::query()->where('out_order_no', $data['orderid'])->where('payment_type', $this->payment_type)->where('status', 0)->first();
                 }
                 if ($paymentStatement) {
+
                     // 代付的异步通知，以status作为交易是否成功的标识，付收的异步通知以returncode作为标识
                     if (isset($data['status'])) {
                         $paymentStatement->status = $data['status'] === 'success' ? 1 : 2;
