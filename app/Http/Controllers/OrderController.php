@@ -153,6 +153,9 @@ class OrderController extends Controller
             $order->admin_viewed = 1;
             $order->save();
         }
+
+        del_plus("orders_pick_up_tip");
+
         return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'seller_id', 'customer_id'));
     }
 
