@@ -141,7 +141,7 @@
                 @foreach ($seller_withdraw_requests as $key => $seller_withdraw_request)
                     <tr>
                         <td>{{ $key+1 }}</td>
-                        <td>{{ date('d-m-Y', strtotime($seller_withdraw_request->created_at)) }}</td>
+                        <td>{{ date('d-m-Y H:i:s', strtotime($seller_withdraw_request->created_at)) }}</td>
                         <td>{{ single_price($seller_withdraw_request->amount) }}</td>
                         <td>
                             @if( $seller_withdraw_request->type == 1)
@@ -234,7 +234,7 @@
                                 <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
                             @endif
                         </td>
-                        <td>{{ date('d-m-Y', strtotime($order->created_at)) }}</td>
+                        <td>{{ date('d-m-Y H:i:s', strtotime($order->created_at)) }}</td>
                         <td>
                             @if ($order->freeze_expired_at)
                                 {{ round(($order->freeze_expired_at - now()->timestamp) / 86400) }} {{translate('Days')}}
@@ -322,7 +322,7 @@
 
 
                         <td>{{ $list->reciept }}</td>
-                        <td>{{ date('d-m-Y', strtotime($list->created_at)) }}</td>
+                        <td>{{ date('d-m-Y H:i:s', strtotime($list->created_at)) }}</td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -368,7 +368,7 @@
                             {{translate($list->payment_method)}}
                         </td>
 
-                        <td>{{ date('d-m-Y', strtotime($list->created_at)) }}</td>
+                        <td>{{ date('d-m-Y H:i:s', strtotime($list->created_at)) }}</td>
                     </tr>
                 @endforeach
                 </tbody>
