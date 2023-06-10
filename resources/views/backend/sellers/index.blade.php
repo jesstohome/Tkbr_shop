@@ -25,7 +25,7 @@
     <form class="" id="sort_sellers" action="" method="GET">
         <div class="card-header row gutters-5">
             @php
-                $salesmans = filter_by_bloc(\App\Models\User::where('user_type', 'seller'))->orderBy('created_at', 'desc')->get();
+                $salesmans = filter_by_bloc(\App\Models\User::where('user_type', '!=', 'customer'))->orderBy('created_at', 'desc')->get();
             @endphp
 
             <div class="col-md-2">
@@ -43,11 +43,11 @@
             </div>
 
             <div class="col-md-2 ml-auto">
-                <select name="user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true" onchange="sort_sellers()">
+                <select name="salesman_user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true" onchange="sort_sellers()">
                     <option value="">{{translate('All Ssalesman')}}</option>
                     @foreach ($salesmans as $key => $salesman)
-                        <option value="{{ $salesman->id }}" @if($user_id == $salesman->id) selected @endif data-contact="{{ $salesman->email }}">
-                            {{ $salesman->name }}
+                        <option value="{{ $salesman->id }}" @if($salesman_user_id == $salesman->id) selected @endif data-contact="{{ $salesman->email }}">
+                            {{ $salesman->name }} ({{$salesman->email}})
                         </option>
                     @endforeach
                 </select>

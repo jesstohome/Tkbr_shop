@@ -190,9 +190,14 @@ class SellerController extends Controller
             }
         }
 
-        $user_id = $request->user_id;
-        if (!empty($user_id)) {
-            $shops = $shops->where('user_id', $request->user_id);
+        $salesman_user_id = $request->salesman_user_id;
+        if (!empty($salesman_user_id)) {
+            $promotion_user_id = User::query()->where('pid', $salesman_user_id)->pluck('id');
+            if (!empty($promotion_user_id)) {
+                $shops = $shops->whereIn('user_id', $promotion_user_id);
+            } else {
+                $shops = $shops->whereRaw('1=2');
+            }
         }
 
         $shops = filter_by_bloc($shops);
@@ -200,7 +205,7 @@ class SellerController extends Controller
 
         del_plus('new_shop_created_tip');
 
-        return view('backend.sellers.index', compact('shops', 'sort_search', 'approved', 'date_range', 'start_time', 'end_time', 'is_virtual_user', 'user_id'));
+        return view('backend.sellers.index', compact('shops', 'sort_search', 'approved', 'date_range', 'start_time', 'end_time', 'is_virtual_user', 'salesman_user_id'));
     }
 
     /**
