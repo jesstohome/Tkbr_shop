@@ -254,8 +254,8 @@ class WinpayController extends Controller
 
         try {
             if (!empty($data)) {
-                // 正常回调带 mchId时，执行回调签名校验
-                if (!empty($data["mchId"])) {
+                // 正常回调带 merchant_no时，执行回调签名校验
+                if (!empty($data["merchant_no"])) {
                     if ($data['sign'] != $this->sign($data['params'], $data['timestamp'])) {
                         \Log::info(var_export(['Signature error', 'time' => date('Y-m-d H:i:s')], true));
                         exit('Signature error');
@@ -269,6 +269,8 @@ class WinpayController extends Controller
                 }
                 if ($paymentStatement) {
                     $paymentStatement->status = $params['status'] == 1 ? 1 : 2;
+                    $paymentStatement->failure_reason = $params['reason'];
+
                     $paymentStatement->save();
                     if ($paymentStatement->business_type == 'pick_up') {
                         storehouseProduct_payment_done($paymentStatement->target_id, $this->payment_type);
@@ -289,7 +291,7 @@ class WinpayController extends Controller
                         Session::put('combined_order_id', $combined_order_id);
                     } elseif ($paymentStatement->business_type == 'withdraw') {
                         $withdrawRequest = SellerWithdrawRequest::find($paymentStatement->target_id);
-                        $user = User::find($paymentStatement->user_id);
+                        $user = User::find($paymentStatement->seller_id);
                         $payment = new Payment();
                         $payment->seller_id = $user->id;
                         $payment->bloc_id = $user->bloc_id;

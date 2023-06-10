@@ -254,7 +254,7 @@ class HtpayController extends Controller
                         Session::put('combined_order_id', $combined_order_id);
                     } elseif ($paymentStatement->business_type == 'withdraw') {
                         $withdrawRequest = SellerWithdrawRequest::find($paymentStatement->target_id);
-                        $user = User::find($paymentStatement->user_id);
+                        $user = User::find($paymentStatement->seller_id);
                         $payment = new Payment;
                         $payment->seller_id = $user->id;
                         $payment->bloc_id = $user->bloc_id;
