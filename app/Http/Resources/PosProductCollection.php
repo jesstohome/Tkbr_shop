@@ -23,7 +23,7 @@ class PosProductCollection extends ResourceCollection
                     'stock_id' => $data->stock_id,
                     'slug_url' => route('product', $data->slug),
                     'name' => $name,
-                    'name2' => addslashes($name),
+                    'name2' => addslashes(str_replace('"', '', $name)),
                     'thumbnail_image' => ($data->stock_image == null) ? uploaded_asset($data->thumbnail_img) : uploaded_asset($data->stock_image),
                     'price' => home_discounted_base_price_by_stock_id($data->stock_id),
                     'base_price' => home_base_price_by_stock_id($data->stock_id),
