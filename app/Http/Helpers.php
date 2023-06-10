@@ -2166,6 +2166,10 @@ if (!function_exists('back_withdraw_money')) {
                 $walletExpenseLog->save();
             }
 
+            // 标记提现失败
+            $withdrawRequest->status = 4;
+            $withdrawRequest->save();
+
             DB::commit();
         } catch (\Exception $exception) {
             Log::error('提现失败退回:' . $exception->getMessage());
