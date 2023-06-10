@@ -39,23 +39,46 @@
                 </div>
             </div>
 
-            <div class="col-lg-2 ml-auto">
-                <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status">
-                    <option value="">{{translate('Filter by Delivery Status')}}</option>
-                    <option value="pending" @if ($delivery_status == 'pending') selected @endif>{{translate('Pending')}}</option>
-                    <option value="confirmed" @if ($delivery_status == 'confirmed') selected @endif>{{translate('Confirmed')}}</option>
-                    <option value="picked_up" @if ($delivery_status == 'picked_up') selected @endif>{{translate('Picked Up')}}</option>
-                    <option value="on_the_way" @if ($delivery_status == 'on_the_way') selected @endif>{{translate('On The Way')}}</option>
-                    <option value="arrived" @if ($delivery_status == 'arrived') selected @endif>{{ translate('Arrived') }}</option>
-                    <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>{{translate('Delivered')}}</option>
-                    <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>{{translate('Cancel')}}</option>
-                </select>
-            </div>
-            <div class="col-lg-2">
+            <div class="col-md-2">
                 <div class="form-group mb-0">
-                    <input type="text" class="aiz-date-range form-control" value="{{ $date }}" name="date" placeholder="{{ translate('Filter by date') }}" data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true" autocomplete="off">
+                    <input type="text" class="form-control form-control-sm aiz-date-range" data-time-picker="true" data-format="YYYY-MM-DD HH:mm:ss" id="search1" name="order_time_range" @isset($order_time_range) value="{{ $order_time_range }}" @endisset placeholder="{{ translate('Order Time') }}">
                 </div>
             </div>
+            <div class="col-md-2">
+                <div class="form-group mb-0">
+                    <input type="text" class="form-control form-control-sm aiz-date-range" data-time-picker="true" data-format="YYYY-MM-DD HH:mm:ss"  id="search2" name="pickup_time_range" @isset($pickup_time_range) value="{{ $pickup_time_range }}" @endisset placeholder="{{ translate('Pickup Time') }}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group mb-0">
+                    <input type="text" class="form-control form-control-sm aiz-date-range" data-time-picker="true" data-format="YYYY-MM-DD HH:mm:ss"  id="search3" name="freeze_time_range" @isset($freeze_time_range) value="{{ $freeze_time_range }}" @endisset placeholder="{{ translate('Freeze Time') }}">
+                </div>
+            </div>
+
+            <div class="col-lg-2 ml-auto">
+                <select class="form-control aiz-selectpicker" name="product_storehouse_status" id="product_storehouse_status">
+                    <option value="">{{translate('All')}}</option>
+                    <option value="0" @if ($product_storehouse_status != '' && $product_storehouse_status == 0) selected @endif>{{translate('Not picked up')}}</option>
+                    <option value="1" @if ($product_storehouse_status == 1) selected @endif>{{translate('Picked up')}}</option>
+                </select>
+            </div>
+            <div class="col-lg-2 ml-auto">
+                <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status">
+                    <option value="">{{translate('Mailing Status')}}</option>
+                    @foreach(get_express_status()  as $express_status => $express_text)
+                    <option value="{{$express_status}}" @if ($delivery_status == $express_status) selected @endif>{{$express_text}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-lg-2 ml-auto">
+                <select class="form-control aiz-selectpicker" name="freeze_status" id="freeze_status">
+                    <option value="">{{translate('Has the loan been released')}}</option>
+                    <option value="0" @if ($freeze_status != '' && $freeze_status == 0) selected @endif>{{translate('No')}}</option>
+                    <option value="1" @if ($freeze_status == 1) selected @endif>{{translate('Yes')}}</option>
+
+                </select>
+            </div>
+           
             <div class="col-lg-2">
                 <div class="form-group mb-0">
                     <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="seller_id" name="seller_id" data-live-search="true">
@@ -197,7 +220,7 @@
              }
 
              @endphp
-                            {!! $status !!}
+                            {!! translate(str_replace('_', ' ', $status)) !!}
                         </td>
                         <td>
                             @if ($order->payment_status == 'paid')

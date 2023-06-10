@@ -366,6 +366,8 @@ class OrderController extends Controller
         $date = $request->date;
         $seller_id = $request->seller_id;
         $customer_id = $request->customer_id;
+        $product_storehouse_status = $request->product_storehouse_status;
+        $freeze_status = $request->freeze_status;
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
@@ -393,11 +395,48 @@ class OrderController extends Controller
         if ($customer_id) {
             $orders = $orders->where('user_id', $customer_id);
         }
+        if (!is_null($product_storehouse_status) && $product_storehouse_status != '') {
+            $orders = $orders->where('product_storehouse_status', $product_storehouse_status);
+        }
+        if (!is_null($freeze_status) && $freeze_status != '') {
+            if ($freeze_status) {
+                //
+                $orders = $orders->where('product_storehouse_status', 1)->whereNull("freeze_expired_at");
+            } else {
+                $orders = $orders->where("freeze_expired_at", '!=', '');
+            }
+        }
+
+        // 三种时间的区间筛选
+        if ($request->order_time_range) {
+            $order_time_range = $request->order_time_range;
+            $date_var = explode(" / ", $request->order_time_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $orders = $orders->where('created_at', '>=', $start_time);
+            $orders = $orders->where('created_at', '<=', $end_time);
+        }
+        if ($request->pickup_time_range) {
+            $pickup_time_range = $request->pickup_time_range;
+            $date_var = explode(" / ", $request->pickup_time_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $orders = $orders->where('pickup_time', '>=', strtotime($start_time));
+            $orders = $orders->where('pickup_time', '<=', strtotime($end_time));
+        }
+        if ($request->freeze_time_range) {
+            $freeze_time_range = $request->freeze_time_range;
+            $date_var = explode(" / ", $request->freeze_time_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $orders = $orders->where('freeze_expired_at', '>=', strtotime($start_time));
+            $orders = $orders->where('freeze_expired_at', '<=', strtotime($end_time));
+        }
 
         $orders = filter_by_bloc($orders);
         $orders = $orders->paginate(15);
 
-        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'seller_id', 'customer_id'));
+        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'seller_id', 'customer_id', 'product_storehouse_status', 'freeze_status', 'order_time_range', 'pickup_time_range', 'freeze_time_range'));
     }
 
     public function seller_orders_show($id)
