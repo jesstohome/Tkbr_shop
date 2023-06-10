@@ -362,15 +362,11 @@
                         <td>{{ $key+1 }}</td>
                         <td>{{ single_price($list->amount) }}</td>
 
-                        <td>{{ $list->payment_details }}</td>
+                        <td></td>
 
                         <td>
                             {{translate($list->payment_method)}}
                         </td>
-
-
-
-
 
                         <td>{{ date('d-m-Y', strtotime($list->created_at)) }}</td>
                     </tr>
