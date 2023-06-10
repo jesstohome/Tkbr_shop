@@ -138,7 +138,7 @@
                         </td>
                         <td>
                             {{ $order->code }}
-                            @if(hget_plus('new_order_tip', $order->id) || hget_plus('orders_pick_up_tip', $order->id))
+                            @if(hget_plus('orders_pick_up_tip', $order->id))
                                 <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
                             @endif
                         </td>
