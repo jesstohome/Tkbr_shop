@@ -20,6 +20,7 @@ use App\Models\TicketReply;
 use App\Models\Upload;
 use App\Models\Translation;
 use App\Models\City;
+use App\Models\WalletExpenseLog;
 use App\Utility\CategoryUtility;
 use App\Models\Wallet;
 use App\Models\CombinedOrder;
@@ -1326,6 +1327,14 @@ if (!function_exists('product_storehouse_order_free_up')) {
                     }
                 }
             }
+
+            // 记录收入日志
+            $walletExpenseLog = new WalletExpenseLog();
+            $walletExpenseLog->user_id = $shop->user_id;
+            $walletExpenseLog->amount = $grand_total;
+            $walletExpenseLog->target_id = $order->id;
+            $walletExpenseLog->type = 'order_settlement';
+            $walletExpenseLog->save();
 
             $shop->save();
             $user->save();

@@ -58,6 +58,7 @@ class Kernel extends ConsoleKernel
         }
 
         $schedule->call(function () {
+            // 定时释放冻结资金
             $timestamp = now()->timestamp;
             $ok1 = Order::query()->whereNotNull('freeze_expired_at')
                 ->where('freeze_expired_at', '<=', $timestamp)

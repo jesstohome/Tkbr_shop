@@ -31,7 +31,53 @@
         </div>
     </div>
 
+@php
+    $count = DB::table('orders')->where('seller_id', Auth::user()->id)
+        ->count();
+    $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)
+        ->sum('orders.grand_total');
+    $storehouse_order_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('product_storehouse_status', 1)->count();
+    $total_turnover = "$".sprintf('%.2f',$grand_total);
+    $total_profit = "$".sprintf('%.2f',($grand_total - $product_storehouse_total));
+@endphp
+
     <div class="row gutters-0">
+
+        <div class="col-md-2 mb-3 mx-auto">
+            <div class="bg-grad-1 text-white rounded-lg overflow-hidden">
+                  <span class="size-30px rounded-circle mx-auto bg-soft-primary d-flex align-items-center justify-content-center mt-3">
+                      <i class="las la-dollar-sign la-2x" style="color: #007bff"></i>
+                  </span>
+                <div class="px-3 pt-3 pb-3">
+                    <div class="h4 fw-700 text-center">{{ $total_turnover }}</div>
+                    <div class="opacity-50 text-center">{{  translate('Total Turnover') }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3 mx-auto">
+            <div class="bg-grad-1 text-white rounded-lg overflow-hidden">
+                  <span class="size-30px rounded-circle mx-auto bg-soft-primary d-flex align-items-center justify-content-center mt-3">
+                      <i class="las la-upload la-2x" style="color: #007bff"></i>
+                  </span>
+                <div class="px-3 pt-3 pb-3">
+                    <div class="h4 fw-700 text-center">{{ $count }}</div>
+                    <div class="opacity-50 text-center">{{  translate('Total Orders') }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3 mx-auto">
+            <div class="bg-grad-1 text-white rounded-lg overflow-hidden">
+                  <span class="size-30px rounded-circle mx-auto bg-soft-primary d-flex align-items-center justify-content-center mt-3">
+                      <i class="las la-upload la-2x" style="color: #007bff"></i>
+                  </span>
+                <div class="px-3 pt-3 pb-3">
+                    <div class="h4 fw-700 text-center">{{ $storehouse_order_total }}</div>
+                    <div class="opacity-50 text-center">{{  translate('Number of orders paid to the manufacturer') }}</div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="col-md-2 mb-3 mx-auto">
             <div class="bg-grad-3 text-white rounded-lg overflow-hidden">
               <span
@@ -67,22 +113,7 @@
                 <div class="fs-18 text-white">{{ translate('Send Withdraw Request') }}</div>
             </div>
         </div>
-        @if (addon_is_activated('offline_payment'))
 
-              <div class="col-md-2 mb-3 mr-auto">
-                <div
-                    class="bg-grad-4 p-3 rounded mb-3 c-pointer text-center bg-white shadow-sm hov-shadow-lg has-transition"
-                    onclick="show_make_wallet_recharge_modal(2)">
-              <span
-                  class="size-60px rounded-circle mx-auto bg-secondary d-flex align-items-center justify-content-center mb-3">
-                  <i class="las la-plus la-3x text-white"></i>
-              </span>
-                    <div class="fs-18 text-white">{{ translate('Guarantee Recharge') }}</div>
-                </div>
-            </div>
-
-
-        @endif
     </div>
 
     <div class="card">
@@ -363,6 +394,7 @@
             <tr>
                 <th>#</th>
                 <th data-breakpoints="md">{{ translate('Amount') }}</th>
+                <th data-breakpoints="md">{{ translate('Order No') }}</th>
 
                 <th>{{ translate('Type') }}</th>
 
@@ -375,7 +407,8 @@
                     <td>{{ $key+1 }}</td>
                     <td>{{ single_price($list->amount) }}</td>
 
-                    <td>{{ translate($list->type) }}</td>
+                    <td>{{ $list->order ? $list->order->code : '' }}</td>
+                    <td>{{ translate(ucwords(str_replace('_', ' ', $list->type))) }}</td>
 
                     <td>{{ date('d-m-Y', strtotime($list->created_at)) }}</td>
                 </tr>
