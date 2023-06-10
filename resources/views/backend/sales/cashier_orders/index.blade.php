@@ -2,13 +2,18 @@
 
 @section('content')
 
+    <div class="aiz-titlebar text-left mt-2 mb-3">
+        <div class="row align-items-center">
+            <div class="col-md-12">
+                <h1 class="h3">{{translate('All Orders')}} ({{translate('Total')}}: {{$total_seller}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}})</h1>
+            </div>
+            <div class="col text-right"></div>
+        </div>
+    </div>
+
 <div class="card">
     <form class="" action="" id="sort_orders" method="GET">
         <div class="card-header row gutters-5">
-            <div class="col">
-                <h5 class="mb-md-0 h6">{{ translate('All Orders') }}</h5>
-            </div>
-
             <!-- Change Status Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -78,7 +83,7 @@
 
                 </select>
             </div>
-           
+
             <div class="col-lg-2">
                 <div class="form-group mb-0">
                     <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="seller_id" name="seller_id" data-live-search="true">

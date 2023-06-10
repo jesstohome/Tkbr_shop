@@ -434,9 +434,15 @@ class OrderController extends Controller
         }
 
         $orders = filter_by_bloc($orders);
+
+        $list_clone = clone $orders;
+        $total = $list_clone->count();
+        $total_amount = $list_clone->sum('product_storehouse_total');
+        $total_seller = $list_clone->distinct("seller_id")->count();
+
         $orders = $orders->paginate(15);
 
-        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'seller_id', 'customer_id', 'product_storehouse_status', 'freeze_status', 'order_time_range', 'pickup_time_range', 'freeze_time_range'));
+        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'seller_id', 'customer_id', 'product_storehouse_status', 'freeze_status', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'total_amount', 'total', 'total_seller'));
     }
 
     public function seller_orders_show($id)
