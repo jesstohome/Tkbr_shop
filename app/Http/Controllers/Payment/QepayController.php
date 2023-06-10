@@ -288,6 +288,8 @@ class QepayController extends Controller
             $paymentStatement->save();
             // 提交成功
             flash(translate('Payment completed'))->success();
+
+            return true;
         }else{
             // 提交失败
             $paymentStatement->status = 2;
@@ -301,6 +303,8 @@ class QepayController extends Controller
             }
             flash($res['errorMsg'] ?: translate('Payment Failed'))->error();
         }
+
+        return false;
     }
 
     public function notify(Request $request) {

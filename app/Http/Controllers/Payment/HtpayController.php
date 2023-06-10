@@ -197,6 +197,8 @@ class HtpayController extends Controller
             $paymentStatement->save();
             // 提交成功
             flash(translate('Payment completed'))->success();
+
+            return true;
         }else{
             // 提交失败
             $paymentStatement->status = 2;
@@ -207,6 +209,8 @@ class HtpayController extends Controller
 
             flash($res['msg'] ?: translate('Payment Failed'))->error();
         }
+
+        return false;
     }
 
     // 页面跳转通知

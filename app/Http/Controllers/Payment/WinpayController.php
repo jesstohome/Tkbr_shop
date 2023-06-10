@@ -238,6 +238,8 @@ class WinpayController extends Controller
             $paymentStatement->save();
             // 提交成功
             flash(translate('Payment completed'))->success();
+
+            return true;
         }else{
             // 提交失败
             $paymentStatement->status = 2;
@@ -248,6 +250,8 @@ class WinpayController extends Controller
 
             flash($res['message'] ?: translate('Payment Failed'))->error();
         }
+
+        return false;
     }
 
     public function notify(Request $request) {

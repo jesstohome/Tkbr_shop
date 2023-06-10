@@ -248,9 +248,12 @@ id: 1
         } elseif($request->payment_option == 'usdt_payment') {
             return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
         } elseif(class_exists($decorator)) {
-            ( new $decorator )->daifu_pay($withdrawRequest);
-            $withdrawRequest->status = 3;
-            $withdrawRequest->save();
+            $pay_success = ( new $decorator )->daifu_pay($withdrawRequest);
+            if ($pay_success) {
+                $withdrawRequest->status = 3;
+                $withdrawRequest->save();
+            }
+
             return redirect()->route('withdraw_requests_all');
         } else {
             $payment_data = $request->session()->get('payment_data');
