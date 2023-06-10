@@ -312,7 +312,7 @@ class WinpayController extends Controller
                 exit('success');
             }
         } catch (\Exception $exception) {
-            Log::warning('winpay-notify-exception:' . $exception->getMessage());
+            Log::warning(var_export(['winpay-notify-exception:' . $exception->getMessage(), $exception->getTraceAsString()], true));
         }
 
         exit('error') ;
