@@ -202,6 +202,9 @@ class HtpayController extends Controller
             $paymentStatement->status = 2;
             $paymentStatement->failure_reason = $res['msg'] ?? '';
             $paymentStatement->save();
+
+            back_withdraw_money($withdrawRequest);
+
             flash($res['msg'] ?: translate('Payment Failed'))->error();
         }
     }

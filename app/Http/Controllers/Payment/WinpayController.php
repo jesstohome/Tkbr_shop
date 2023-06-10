@@ -244,6 +244,8 @@ class WinpayController extends Controller
             $paymentStatement->failure_reason = $res['message'] ?? '';
             $paymentStatement->save();
 
+            back_withdraw_money($withdrawRequest);
+
             flash($res['message'] ?: translate('Payment Failed'))->error();
         }
     }
