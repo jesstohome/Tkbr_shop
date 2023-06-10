@@ -57,7 +57,7 @@
                         <a href="{{$menu->route ? route($menu->route) : '#'}}" class="aiz-side-nav-link">
                             <i class="las la-{{$menu->icon}} aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{translate($menu->name)}}</span>
-                            <span class="badge badge-danger badge-circle badge-sm badge-dot {{str_replace(',', ' ', $menu->red_dot_keys)}}" style="display: none"></span>
+                            <span class="badge badge-danger badge-circle badge-sm badge-dot" style="display: none"></span>
 
                             @if($menu->children) <span class="aiz-side-nav-arrow"></span> @endif
                         </a>

@@ -175,19 +175,6 @@
                 }
             } );
         }
-
-        setTimeout(function () {
-            // getConversations();
-
-            // get_not_view_count();
-        }, 2000);
-
-        setInterval( function ()
-        {
-            // getConversations();
-
-            // get_not_view_count();
-        }, 10000 )
     </script>
     <script>
 
@@ -209,7 +196,7 @@
                     for (const ck in res.keys) {
                         // console.log(ck, res.keys[ck]);
                         if (res.keys[ck]) {
-                            $("." + ck).show()
+                            $("." + ck).show().parents("ul.level-2").prev("a").find("span.badge-dot").show();
                         }
                     }
                 }
