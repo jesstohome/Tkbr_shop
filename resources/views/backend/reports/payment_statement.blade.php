@@ -63,6 +63,7 @@
                         <button class="btn btn-md btn-primary" type="submit">
                             {{ translate('Filter') }}
                         </button>
+                        <button class="btn btn-md btn-primary" type="reset" onclick="$('.aiz-selectpicker').selectpicker('val', '');">重置</button>
                     </div>
                 </div>
             </form>
