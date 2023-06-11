@@ -47,10 +47,10 @@
                     <div class="col-lg-2 ml-auto">
                         <select class="form-control aiz-selectpicker" name="payment_type" id="payment_type">
                             <option value="">{{translate('Filter by Payment method')}}</option>
-                            <option value="artificial">人工付款</option>
-                            <option value="htpay" @if ($payment_type != '' && $payment_type == 'htpay') selected @endif>Htpay</option>
-                            <option value="india_htpay" @if ($payment_type != '' && $payment_type == 'india_htpay') selected @endif>印度Htpay</option>
-                            <option value="qepay" @if ($payment_type != '' && $payment_type == 'qepay') selected @endif>Qepay</option>
+                            <option value="artificial" @if ($payment_type == 'artificial') selected @endif>人工付款</option>
+                            <option value="htpay" @if ($payment_type == 'htpay') selected @endif>Htpay</option>
+                            <option value="india_htpay" @if ($payment_type == 'india_htpay') selected @endif>印度Htpay</option>
+                            <option value="qepay" @if ($payment_type == 'qepay') selected @endif>Qepay</option>
                         </select>
                     </div>
 
@@ -105,7 +105,7 @@
                                 <td>{{ number_format($value->amount_exchanged, 2) }}</td>
                                 <td>{{ number_format($value->exchange_rate, 2) }}</td>
                                 <td>{{ translate($value->business_type) }}</td>
-                                <td>{{ ucfirst(str_replace('_', ' ', $value ->payment_type)) }}</td>
+                                <td>{{ 'artificial' == $value ->payment_type ? '人工付款' : ucfirst(str_replace('_', ' ', $value ->payment_type)) }}</td>
                                 <td class="text-right">
                                     @if ($value->status == 1)
                                         <span class="badge badge-inline badge-success">{{translate('Success')}}</span>
