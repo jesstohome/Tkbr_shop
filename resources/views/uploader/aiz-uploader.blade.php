@@ -68,7 +68,7 @@
 				<div class="flex-grow-1 overflow-hidden d-flex">
 					<div class="">
 						<div class="aiz-uploader-selected">{{ translate('0 File selected') }}</div>
-						<button type="button" class="btn-link btn btn-sm p-0 aiz-uploader-selected-clear">{{ translate('Clear') }}</button>
+						<button type="button" class="btn-link btn btn-sm p-0 aiz-uploader-selected-clear">{{ translate('Deselection') }}</button>
 					</div>
 					<div class="mb-0 ml-3">
 						<button type="button" class="btn btn-sm btn-primary" id="uploader_prev_btn">{{ translate('Prev') }}</button>
