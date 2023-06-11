@@ -299,6 +299,19 @@
                     });
                 });
             }
+
+            // 底部菜单点击Loading效果
+            var prevMenuA;
+            $(".mobile-footer-menu a").on("click", function () {
+                if (prevMenuA) {
+                    prevMenuA.find(".loading").hide();
+                    prevMenuA.find(".loading").prev().show();
+                }
+
+                prevMenuA = $(this);
+                $(this).find(".loading").show();
+                $(this).find(".loading").prev().hide();
+            });
         });
 
         setInterval(function(){

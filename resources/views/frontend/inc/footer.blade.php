@@ -223,17 +223,20 @@
 </footer>
 
 
-<div class="aiz-mobile-bottom-nav d-xl-none fixed-bottom bg-white shadow-lg border-top rounded-top" style="box-shadow: 0px -1px 10px rgb(0 0 0 / 15%)!important; padding-bottom: constant(safe-area-inset-bottom);padding-bottom: env(safe-area-inset-bottom);">
+<div class="aiz-mobile-bottom-nav d-xl-none fixed-bottom bg-white shadow-lg border-top rounded-top mobile-footer-menu" style="box-shadow: 0px -1px 10px rgb(0 0 0 / 15%)!important; padding-bottom: constant(safe-area-inset-bottom);padding-bottom: env(safe-area-inset-bottom);">
     <div class="row align-items-center gutters-5">
         <div class="col">
             <a href="{{ route('home') }}" class="text-reset d-block text-center pb-2 pt-3">
                 <i class="las la-home fs-20 opacity-60 {{ areActiveRoutes(['home'],'opacity-100 text-primary')}}"></i>
+                <img src="{{ static_asset('assets/img/loading.gif') }}" class="rounded-circle size-20px loading" style="display: none"  alt=""/>
+
                 <span class="d-block fs-10 fw-600 opacity-60 {{ areActiveRoutes(['home'],'opacity-100 fw-600')}}">{{ translate('Home') }}</span>
             </a>
         </div>
         <div class="col">
             <a href="{{ route('categories.all') }}" class="text-reset d-block text-center pb-2 pt-3">
                 <i class="las la-list-ul fs-20 opacity-60 {{ areActiveRoutes(['categories.all'],'opacity-100 text-primary')}}"></i>
+                <img src="{{ static_asset('assets/img/loading.gif') }}" class="rounded-circle size-20px loading" style="display: none"  alt=""/>
                 <span class="d-block fs-10 fw-600 opacity-60 {{ areActiveRoutes(['categories.all'],'opacity-100 fw-600')}}">{{ translate('Categories') }}</span>
             </a>
         </div>
@@ -252,6 +255,7 @@
             <a href="{{ route('cart') }}" class="text-reset d-block text-center pb-2 pt-3">
                 <span class="align-items-center bg-primary border border-white border-width-4 d-flex justify-content-center position-relative rounded-circle size-50px" style="margin-top: -33px;box-shadow: 0px -5px 10px rgb(0 0 0 / 15%);border-color: #fff !important;">
                     <i class="las la-shopping-bag la-2x text-white"></i>
+                    <img src="{{ static_asset('assets/img/loading.gif') }}" class="rounded-circle size-20px loading" style="display: none"  alt=""/>
                 </span>
                 <span class="d-block mt-1 fs-10 fw-600 opacity-60 {{ areActiveRoutes(['cart'],'opacity-100 fw-600')}}">
                     {{ translate('Cart') }}
@@ -269,6 +273,7 @@
                     @if(Auth::check() && count(Auth::user()->unreadNotifications) > 0)
                         <span class="badge badge-sm badge-dot badge-circle badge-primary position-absolute absolute-top-right" style="right: 7px;top: -2px;"></span>
                     @endif
+                    <img src="{{ static_asset('assets/img/loading.gif') }}" class="rounded-circle size-20px loading" style="display: none"  alt=""/>
                 </span>
                 <span class="d-block fs-10 fw-600 opacity-60 {{ areActiveRoutes(['all-notifications'],'opacity-100 fw-600')}}">{{ translate('Notifications') }}</span>
             </a>
@@ -283,6 +288,7 @@
                         @else
                             <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="rounded-circle size-20px">
                         @endif
+                        <img src="{{ static_asset('assets/img/loading.gif') }}" class="rounded-circle size-20px loading" style="display: none"  alt=""/>
                     </span>
                     <span class="d-block fs-10 fw-600 opacity-60">{{ translate('Account') }}</span>
                 </a>
@@ -294,6 +300,7 @@
                         @else
                             <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="rounded-circle size-20px">
                         @endif
+                        <img src="{{ static_asset('assets/img/loading.gif') }}" class="rounded-circle size-20px loading" style="display: none"  alt=""/>
                     </span>
                         <span class="d-block fs-10 fw-600 opacity-60">{{ translate('Account') }}</span>
                     </a>
@@ -305,6 +312,7 @@
                         @else
                             <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="rounded-circle size-20px">
                         @endif
+                        <img src="{{ static_asset('assets/img/loading.gif') }}" class="rounded-circle size-20px loading" style="display: none"  alt=""/>
                     </span>
                     <span class="d-block fs-10 fw-600 opacity-60">{{ translate('Account') }}</span>
                 </a>
@@ -313,6 +321,7 @@
             <a href="{{ route('user.login') }}" class="text-reset d-block text-center pb-2 pt-3">
                 <span class="d-block mx-auto">
                     <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="rounded-circle size-20px">
+                    <img src="{{ static_asset('assets/img/loading.gif') }}" class="rounded-circle size-20px loading" style="display: none"  alt=""/>
                 </span>
                 <span class="d-block fs-10 fw-600 opacity-60">{{ translate('Account') }}</span>
             </a>
