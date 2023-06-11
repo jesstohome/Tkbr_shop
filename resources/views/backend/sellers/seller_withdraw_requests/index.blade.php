@@ -128,7 +128,7 @@
                                 </td>
                                 <td>{{$seller_withdraw_request->remarks}}</td>
                                 <td>{{$seller_withdraw_request->country->name ?? ''}}</td>
-                                <td>{{$seller_withdraw_request->payment_channel ?? ''}}</td>
+                                <td>{{$seller_withdraw_request->payment_channel == 'artificial' ? '人工付款' : $seller_withdraw_request->payment_channel ?? ''}}</td>
                                 <td>
                                     @if ($seller_withdraw_request->status == 1)
                                     <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
