@@ -59,18 +59,17 @@ class PosController extends Controller
 
     public function search(Request $request)
     {
+        \DB::connection()->enableQueryLog();#开启执行日志
         if(Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff'){
             $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')
-                ->whereNotNull('products.original_id')
-                ->orderBy('products.created_at', 'desc');
-            // $products = Product::where('added_by', 'admin')->where('published', '1');
+                ->whereNotNull('products.original_id');
         }elseif (Auth::user()->user_type == 'salesman'){
-            $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')->orderBy('products.created_at', 'desc');
+            $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image');
             $users = User::where('pid', Auth::user()->id)->get()->toArray();
             $products = $products->whereIn('products.user_id', array_column($users, 'id'));
         }
         else {
-            $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->where('user_id', Auth::user()->id)->where('published', '1')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')->orderBy('products.created_at', 'desc');
+            $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->where('user_id', Auth::user()->id)->where('published', '1')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image');
             // $products = Product::where('user_id', Auth::user()->id)->where('published', '1');
         }
 
@@ -94,11 +93,14 @@ class PosController extends Controller
             $products = $products->where('products.name', 'like', '%'.$request->keyword.'%')->orWhere('products.barcode', $request->keyword);
         }
 
-        /*$p = $products->get();
-
-        dd($p);*/
-
         $products = filter_by_bloc($products);
+
+        if (!empty($request->order_by_price)) {
+            $products = $products->orderBy('product_stocks.price', $request->order_by_price);
+        } else {
+            $products = $products->orderBy('products.created_at', 'desc');
+        }
+
         $stocks = new PosProductCollection($products->paginate(16));
         $stocks->appends(['keyword' =>  $request->keyword,'category' => $request->category, 'brand' => $request->brand, 'user_id' => $request->user_id]);
         return $stocks;

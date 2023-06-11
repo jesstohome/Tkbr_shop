@@ -21,7 +21,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3 col-6">
+                    <div class="col-md-2 col-6">
                         <select name="poscategory" class="form-control form-control-lg aiz-selectpicker" data-live-search="true" onchange="filterProducts()">
                             <option value="">{{ translate('All Categories') }}</option>
                             @foreach (\App\Models\Category::all() as $key => $category)
@@ -29,12 +29,19 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3 col-6">
+                    <div class="col-md-2 col-6">
                         <select name="brand"  class="form-control form-control-lg aiz-selectpicker" data-live-search="true" onchange="filterProducts()">
                             <option value="">{{ translate('All Brands') }}</option>
                             @foreach (\App\Models\Brand::all() as $key => $brand)
                                 <option value="{{ $brand->id }}">{{ $brand->getTranslation('name') }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-6">
+                        <select name="order_by_price"  class="form-control form-control-lg aiz-selectpicker" onchange="filterProducts()">
+                            <option value="">价格排序</option>
+                            <option value="ASC">升序(从小到大)</option>
+                            <option value="DESC">降序(从大到小)</option>
                         </select>
                     </div>
                 </div>
@@ -467,7 +474,8 @@
             var category = $('select[name=poscategory]').val();
             var brand = $('select[name=brand]').val();
             var user_id = $('select[name=shop_id]').val();
-            $.get('{{ route('pos.search_product') }}',{keyword:keyword, category:category, brand:brand, user_id:user_id}, function(data){
+            var order_by_price = $('select[name=order_by_price]').val();
+            $.get('{{ route('pos.search_product') }}',{keyword:keyword, category:category, brand:brand, user_id:user_id, order_by_price: order_by_price}, function(data){
                 products = data;
                 $('#product-list').html(null);
                 setProductList(data);
