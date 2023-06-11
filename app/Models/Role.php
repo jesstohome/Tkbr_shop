@@ -18,4 +18,8 @@ class Role extends Model
     public function role_translations(){
       return $this->hasMany(RoleTranslation::class);
     }
+
+    public function creator() {
+        return $this->belongsTo(User::class, 'admin_id');
+    }
 }

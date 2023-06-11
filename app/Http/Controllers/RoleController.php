@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\RoleTranslation;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -15,7 +16,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::paginate(10);
+        $roles = filter_by_bloc(Role::query());
+        $roles = $roles->paginate(10);
         return view('backend.staff.staff_roles.index', compact('roles'));
     }
 
@@ -40,6 +42,8 @@ class RoleController extends Controller
         if($request->has('menu_ids')){
             $role = new Role;
             $role->name = $request->name;
+            $role->bloc_id = Auth::user()->bloc_id;
+            $role->admin_id = Auth::user()->id;
             $role->is_manage = $request->get('is_manage', 0);
             $role->permissions = json_encode(explode(",", $request->menu_ids));
             $role->save();
