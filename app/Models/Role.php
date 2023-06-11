@@ -22,4 +22,8 @@ class Role extends Model
     public function creator() {
         return $this->belongsTo(User::class, 'admin_id');
     }
+
+    public function bloc() {
+        return $this->belongsTo(Bloc::class);
+    }
 }

@@ -26,6 +26,9 @@
                     <th width="10%">#</th>
                     <th>{{translate('Name')}}</th>
                     <th>{{translate('Creator')}}</th>
+                    @if(isSupperAdmin())
+                        <th>{{translate('Bloc')}}</th>
+                    @endif
                     <th>{{translate('Create Time')}}</th>
                     <th width="10%">{{translate('Options')}}</th>
                 </tr>
@@ -36,6 +39,9 @@
                         <td>{{ ($key+1) + ($roles->currentPage() - 1)*$roles->perPage() }}</td>
                         <td>{{ $role->getTranslation('name')}}</td>
                         <td>{{ $role->creator->email}}</td>
+                        @if(isSupperAdmin())
+                            <td>{{ $role->bloc->name}}</td>
+                        @endif
                         <td>{{ $role->created_at}}</td>
                         <td class="text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('roles.edit', ['id'=>$role->id, 'lang'=>env('DEFAULT_LANGUAGE')] )}}" title="{{ translate('Edit') }}">
