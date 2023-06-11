@@ -137,6 +137,8 @@
                 <div class="col-sm-9">
                     <select name="payment_option" id="payment_option" class="form-control demo-select2-placeholder" required>
                         <option value="">{{translate('Select Payment Method')}}</option>
+                        <option value="artificial">人工出款</option>
+
                         @foreach(\App\Models\ManualPaymentMethod::listByBloc($user->id) as $manualPaymentMethod)
                             <option value="{{$manualPaymentMethod->heading}}">{{$manualPaymentMethod->heading}}</option>
                         @endforeach

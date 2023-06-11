@@ -154,7 +154,11 @@
                         </td>
                         <td>
                             @if ($seller_withdraw_request->status == 1)
-                                <span class=" badge badge-inline badge-success">{{ translate('Paid')}}</span>
+                                @if($seller_withdraw_request->payment_channel == 'artificial')
+                                    <span class=" badge badge-inline badge-success">{{ translate('Manual payment')}}</span>
+                                    @else
+                                    <span class=" badge badge-inline badge-success">{{ translate('Paid')}}</span>
+                                    @endif
                              @elseif ($seller_withdraw_request->status == 2)
                                 <span class=" badge badge-inline badge-danger">{{ translate('Refuse')}} </span>
                             @elseif ($seller_withdraw_request->status == 3)

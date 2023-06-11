@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CommissionHistory;
+use App\Models\PaymentStatement;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\SellerWithdrawRequest;
@@ -246,6 +247,26 @@ id: 1
         } elseif ($request->payment_option == 'bank_payment') {
             return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
         } elseif($request->payment_option == 'usdt_payment') {
+            return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
+        } elseif($request->payment_option == 'artificial') {
+            $exchange_rate = getExchangeRate($withdrawRequest->cur_currency_code);
+            $money = $withdrawRequest->amount * $exchange_rate;
+
+            $paymentStatement = new PaymentStatement();
+            $paymentStatement->bloc_id = $withdrawRequest->bloc_id;
+            $paymentStatement->staff_id = $withdrawRequest->staff_id;
+            $paymentStatement->seller_id = $withdrawRequest->user_id;
+            $paymentStatement->customer_id = 0;
+            $paymentStatement->payment_type = $request->payment_option;
+            $paymentStatement->order_no = date('YmdHis') . rand(10000, 99999);
+            $paymentStatement->out_order_no = '';
+            $paymentStatement->amount = $withdrawRequest->amount;
+            $paymentStatement->exchange_rate = $exchange_rate;
+            $paymentStatement->amount_exchanged = $money;
+            $paymentStatement->business_type = 'withdraw';
+            $paymentStatement->target_id = $withdrawRequest->id;
+            $paymentStatement->status = 1;
+            $paymentStatement->save();
             return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
         } elseif(class_exists($decorator)) {
             $pay_success = ( new $decorator )->daifu_pay($withdrawRequest);

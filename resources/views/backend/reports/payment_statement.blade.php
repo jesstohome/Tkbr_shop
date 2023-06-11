@@ -117,9 +117,11 @@
                                 <td class="remark" data-id="{{$value->id}}">{{$value->remark}}</td>
                                 <td class="text-right">{{$value->failure_reason}}</td>
                                 <td class="text-right" style="min-width: 100px">
+                                    @if($value->payment_type != 'artificial')
                                     <a class="btn btn-soft-warning btn-icon btn-circle btn-sm comfirm-link" style="width: auto"  href="javascript:void(0);" onclick="showCallbackModal('{{ $value->out_order_no }}', '{{ $value->transaction_id }}', '{{ $value->amount }}', '{{ $value->payment_type }}')" title="{{ translate('Manual callback') }}">
                                         {{ translate('Manual callback') }}
                                     </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
