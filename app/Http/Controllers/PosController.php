@@ -102,7 +102,7 @@ class PosController extends Controller
         }
 
         $stocks = new PosProductCollection($products->paginate(16));
-        $stocks->appends(['keyword' =>  $request->keyword,'category' => $request->category, 'brand' => $request->brand, 'user_id' => $request->user_id]);
+        $stocks->appends(['keyword' =>  $request->keyword,'category' => $request->category, 'brand' => $request->brand, 'user_id' => $request->user_id, 'order_by_price' => $request->order_by_price]);
         return $stocks;
     }
 
