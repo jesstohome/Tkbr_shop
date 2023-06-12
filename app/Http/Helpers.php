@@ -1983,8 +1983,13 @@ if (!function_exists('ticket_say_hello')) {
         }
 
         $bloc = Bloc::find($ticket->bloc_id);
-//        $staff = Staff::find($ticket->staff_id);
-//        $staff_user = $staff->user;
+        $cache_key = 'welcome_msg_' . $ticket->type . ':' . $seller->id;
+        if (!empty(Redis::get($cache_key))) {
+            // 在间隔时间段内，则不需要再次发送
+            return;
+        }
+
+        $ttl = $ticket->type == 'service' ? $bloc->interval_time : $bloc->work_order_interval_time;
 
         $ticket_reply = new TicketReply;
         $ticket_reply->ticket_id = $ticket->id;
@@ -2014,6 +2019,11 @@ if (!function_exists('ticket_say_hello')) {
             hset_plus('new_ticket_tip', $ticket->id, 1, $ticket->staff_id, $seller->id, $seller, true);
         } else {
             Redis::hset('audio:new_pos_conversation_tip:seller:' . $seller->id, $ticket->id, 1);
+        }
+
+        // 设置间隔时间
+        if (!empty($ttl)) {
+            Redis::setex($cache_key, (int) $ttl, 1);
         }
     }
 }

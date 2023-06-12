@@ -42,6 +42,20 @@
                         </div>
                     </div>
 
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label" for="lang">{{translate('Welcome Message Interval Time')}} </label>
+                        <div class="col-md-9">
+                            <input type="text" placeholder="{{translate('Welcome Message Interval Time')}}" id="interval_time" name="interval_time" class="form-control" value="{{ $bloc->interval_time }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label" for="lang">{{translate('Work Order Welcome Message Interval Time')}} </label>
+                        <div class="col-md-9">
+                            <input type="number" placeholder="{{translate('Work Order Welcome Message Interval Time')}}" id="work_order_interval_time" name="work_order_interval_time" class="form-control" value="{{ $bloc->work_order_interval_time }}" required>
+                        </div>
+                    </div>
+
+
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
                     </div>
