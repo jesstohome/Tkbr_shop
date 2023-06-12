@@ -1,3 +1,13 @@
+<style>
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    img.loading {
+        animation: spin 2s linear infinite;
+    }
+</style>
 <section class="bg-white border-top mt-auto">
     <div class="container">
         <div class="row no-gutters">
