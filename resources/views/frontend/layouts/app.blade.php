@@ -226,6 +226,7 @@
     <!-- SCRIPTS -->
     <script src="{{ static_asset('assets/js/vendors.js') }}"></script>
     <script src="{{ static_asset('assets/js/aiz-core.js') }}"></script>
+    <script src="{{ static_asset('assets/js/jQueryRotate.js') }}"></script>
 
 
 
@@ -303,6 +304,13 @@
             // 底部菜单点击Loading效果
             var prevMenuA;
             $(".mobile-footer-menu a").on("click", function () {
+                var that = $(this);
+                var angle = 0;
+                setInterval(function(){
+                    angle+=3;
+                    that.find(".loading").rotate(angle);
+                },10);
+
                 if (prevMenuA) {
                     prevMenuA.find(".loading").hide();
                     prevMenuA.find(".loading").prev().show();
