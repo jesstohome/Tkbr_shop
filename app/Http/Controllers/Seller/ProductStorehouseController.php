@@ -274,4 +274,9 @@ class ProductStorehouseController extends Controller
 
         return response()->json(['success' => 1, 'products' => $products, 'set_meal_name' => $setMeal->category->getTranslation('name') . '-' . $setMeal->name]);
     }
+
+    public function custom_selection() {
+        $package = SellerPackage::query()->where('is_default', 1)->first();
+        return view('seller.product_storehouse.custom_selection', compact('package'));
+    }
 }

@@ -56,11 +56,27 @@
                     </ul>
                 </li>
                 <li class="aiz-side-nav-item">
-                    <a href="{{ route('seller.product_storehouse.index') }}"
-                       class="aiz-side-nav-link {{ areActiveRoutes(['seller.product_storehouse.index', 'seller.product_storehouse.index']) }}">
+                    <a href="#" class="aiz-side-nav-link">
                         <i class="las la-store aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Product Storehouse') }}</span>
+                        <span class="aiz-side-nav-arrow"></span>
                     </a>
+                    <!--Submenu-->
+                    <ul class="aiz-side-nav-list level-2">
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('seller.product_storehouse.index') }}"
+                               class="aiz-side-nav-link {{ areActiveRoutes(['seller.product_storehouse.index']) }}">
+                                <span class="aiz-side-nav-text">{{ translate('Tiktok hand-picked') }}</span>
+                            </a>
+                        </li>
+
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('seller.custom_selection') }}"
+                               class="aiz-side-nav-link {{ areActiveRoutes(['seller.custom_selection']) }}">
+                                <span class="aiz-side-nav-text">{{ translate('Custom Selection') }}</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                  <!--订单-->
                 <li class="aiz-side-nav-item">

@@ -128,6 +128,14 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">精选商品规则</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="custom_selection_rule">
+                                <textarea name="custom_selection_rule" rows="5" class="form-control">{{get_setting('custom_selection_rule')}}</textarea>
+                            </div>
+                        </div>
+
                         <hr>
                         <div class="form-group row">
                             <label class="col-md-3 col-from-label">{{translate('Automatically Unfrozen')}} ( {{translate('Days')}} )</label>

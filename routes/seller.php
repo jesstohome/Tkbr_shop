@@ -56,6 +56,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
     // Product Storehouse
     Route::controller(ProductStorehouseController::class)->group(function () {
         Route::get('/product/storehouse', 'index')->name('product_storehouse.index');
+        Route::get('/product/custom_selection', 'custom_selection')->name('custom_selection');
         Route::get('/product/storehouse/search', 'searchProduct')->name('product_storehouse.search');
         Route::get('/product/storehouse/search_set_meal', 'searchSetMeal')->name('product_storehouse.search_set_meal');
         Route::post('/product/storehouse/add', 'addProduct')->name('product_storehouse.add');
