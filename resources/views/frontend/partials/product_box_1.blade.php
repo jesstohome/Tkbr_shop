@@ -48,7 +48,7 @@
         <h3 class="fw-600 fs-13 text-truncate-2 lh-1-4 mb-0 h-35px">
             <a href="{{ $product_url }}" class="d-block text-reset">{{  $product->getTranslation('name')  }}</a>
         </h3>
-        @if (addon_is_activated('club_point'))
+        @if (addon_is_activated('club_point') && false)
             <div class="rounded px-2 mt-2 bg-soft-primary border-soft-primary border">
                 {{ translate('Club Point') }}:
                 <span class="fw-700 float-right">{{ $product->earn_point }}</span>
