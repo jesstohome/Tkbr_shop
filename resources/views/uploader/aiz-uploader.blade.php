@@ -4,12 +4,13 @@
 			<div class="modal-header pb-0 bg-light">
 				<div class="uppy-modal-nav">
 					<ul class="nav nav-tabs border-0">
+
 						<li class="nav-item">
-							<a class="nav-link active font-weight-medium text-dark" data-toggle="tab" href="#aiz-select-file">{{ translate('Select File') }}</a>
+							<a class="nav-link active font-weight-medium text-dark" data-toggle="tab" href="#aiz-upload-new">{{ translate('Upload New') }}</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link font-weight-medium text-dark" data-toggle="tab" href="#aiz-upload-new">{{ translate('Upload New') }}</a>
-						</li>
+                        <li class="nav-item">
+                            <a class="nav-link font-weight-medium text-dark" data-toggle="tab" href="#aiz-select-file">{{ translate('Select File') }}</a>
+                        </li>
 					</ul>
 				</div>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -18,7 +19,7 @@
 			</div>
 			<div class="modal-body">
 				<div class="tab-content h-100">
-					<div class="tab-pane active h-100" id="aiz-select-file">
+					<div class="tab-pane h-100" id="aiz-select-file">
 						<div class="aiz-uploader-filter pt-1 pb-3 border-bottom mb-4">
 							<div class="row align-items-center gutters-5 gutters-md-10 position-relative">
 								<div class="col-xl-2 col-md-3 col-5">
@@ -58,7 +59,7 @@
 						</div>
 					</div>
 
-					<div class="tab-pane h-100" id="aiz-upload-new">
+					<div class="tab-pane active h-100" id="aiz-upload-new">
 						<div id="aiz-upload-files" class="h-100">
 						</div>
 					</div>
