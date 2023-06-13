@@ -118,12 +118,28 @@ class ProductStorehouseController extends Controller
         return $list;
     }
 
+    /**
+     * 添加产品，导入产品
+     * author: Sym
+     * time: 2023-06-13 10:22
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function addProduct(Request $request)
     {
         $userId = Auth::user()->id;
         $bloc_id = Auth::user()->bloc_id;
         $staff_id = get_staff_id();
-        if (!$request->all && !$request->product_ids) return response()->json(['success' => 0, 'message' => translate('Please select a product')]);
+        $request->product_names = array_filter($request->product_names);
+
+        if (!$request->all && !$request->product_ids && empty($request->product_names)) {
+            return response()->json(['success' => 0, 'message' => translate('Please select a product')]);
+        }
+
+
+        $shop = Auth::user()->shop;
+        if ($shop->verification_status == 0) return response()->json(['success' => 0, 'message' => translate('Shop under review.')]);
 
         if (!empty($request->set_meal_id)) {
             $setMeal = ProductSetMeal::query()->where('id', $request->set_meal_id)->first();
@@ -140,13 +156,23 @@ class ProductStorehouseController extends Controller
             ->toArray();
 
         if ($request->all) {
+            // 全部导入
             $productIds = Product::query()
                 ->where('added_by', 'admin')
                 ->where('in_storehouse', 1)
                 ->pluck('id')
                 ->toArray();
 
+        } elseif (!empty($request->product_names)) {
+            // 根据产品名称导入
+            $productIds = Product::query()
+                ->where('added_by', 'admin')
+                ->where('in_storehouse', 1)
+                ->whereIn('name', $request->product_names)
+                ->pluck('id')
+                ->toArray();
         } else {
+            // 选择部分产品导入
             $productIds = $request->product_ids;
         }
 
@@ -154,8 +180,10 @@ class ProductStorehouseController extends Controller
         $productIds = array_filter($productIds, function ($v) use ($alreadyCopyIds) {
             return !in_array($v, $alreadyCopyIds);
         }, ARRAY_FILTER_USE_BOTH);
-        $shop = Auth::user()->shop;
-        if ($shop->verification_status==0) return response()->json(['success' => 0, 'message' => translate('Shop under review.')]);
+
+        if (empty($productIds)) {
+            return response()->json(['success' => 0, 'message' => translate('There are no products to import')]);
+        }
 
         $package = SellerPackage::query()->where('is_default', 1)->first();
         if (

@@ -1,10 +1,5 @@
 @extends('seller.layouts.app')
-<style>
-    .no-product {
-        width: 100%;
-        text-align: center;
-    }
-</style>
+
 @section('panel_content')
 
     <section class="gry-bg py-4 profile">
@@ -19,11 +14,11 @@
                             </div>
                             <div class="card-body">
                                 <div id="set_meal_name" style="white-space: pre-line;">
-                                    {{get_setting('custom_selection_rule')}}
+                                    {{translate(get_setting('custom_selection_rule'))}}
                                 </div>
                                 <div class="">
                                     <div class="aiz-pos-cart-list mb-4 mt-3 c-scrollbar-light">
-                                        <textarea name="product_names" rows="15" class="form-control" oninput="checkLines(this)"></textarea>
+                                        <textarea name="product_names" rows="15" class="form-control" placeholder="{{translate('Please add supplier products')}}" oninput="checkLines(this)"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -61,7 +56,37 @@
         }
 
         function addPost() {
+            let addSelectionBtn = $('#add-selection-btn');
 
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{route('seller.product_storehouse.add')}}",
+                type: 'POST',
+                data: {
+                    // product_names: JSON.stringify($("textarea[name=product_names]").val().split("\n"))
+                    product_names: $("textarea[name=product_names]").val().split("\n")
+                },
+                success: function (data) {
+                    if (data.success == 1) {
+                        AIZ.plugins.notify('success', data.message ? data.message : '{{ translate('Product has been updated successfully') }}');
+                        location.reload();
+                    } else if (data.success == 2) {
+                        AIZ.plugins.notify('warning', data.message ? data.message : '{{ translate('Due to restrictions on the number of product merchants, some products were not successfully uploaded') }}');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000)
+                    } else {
+                        AIZ.plugins.notify('danger', data.message ? data.message : '{{ translate('Something went wrong') }}');
+                    }
+                }
+            }).fail(function () {
+                AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+            }).always(function () {
+                addSelectionBtn.prop('disabled', false);
+                addSelectionBtn.find('span.spinner-border').addClass('d-none');
+            });;
         }
     </script>
 @endsection
