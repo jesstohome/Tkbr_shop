@@ -126,6 +126,8 @@ class OrderController extends Controller
             $ticket->status = 'pending';
             $ticket->details = '';
             $ticket->files = '';
+            $ticket->client_ip = get_ip();
+            $ticket->ip_location = getCountryCityByIp($ticket->client_ip);
             $ticket->save();
 
             // 增加一条话术

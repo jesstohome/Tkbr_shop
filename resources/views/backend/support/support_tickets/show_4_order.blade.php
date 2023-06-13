@@ -122,6 +122,9 @@
                         <div class="col-md-2">
                             <p>提货状态: {{$ticket->order->product_storehouse_status ? '已提货' : '未提货'}}</p>
                         </div>
+                        <div class="col-md-2">
+                            <p>IP: {{$ticket->client_ip}} @if ($ticket->ip_location) ({{$ticket->ip_location}}) @endif</p>
+                        </div>
                     </div>
                     <div class="order-opt row">
                         <div class="col-md-8">

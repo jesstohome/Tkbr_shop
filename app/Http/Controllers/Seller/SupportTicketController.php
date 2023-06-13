@@ -55,6 +55,8 @@ class SupportTicketController extends Controller
         $ticket->subject = $request->subject;
         $ticket->details = $request->details;
         $ticket->files = $request->attachments;
+        $ticket->client_ip = get_ip();
+        $ticket->ip_location = getCountryCityByIp($ticket->client_ip);
 
         if($ticket->save()){
 //            $this->send_support_mail_to_admin($ticket); // 工单不用邮件

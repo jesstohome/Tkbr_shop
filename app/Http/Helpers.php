@@ -1968,6 +1968,8 @@ if (!function_exists('ticket_say_hello')) {
         $ticket->status = 'pending';
         $ticket->details = '';
         $ticket->files = '';
+        $ticket->client_ip = get_ip();
+        $ticket->ip_location = getCountryCityByIp($ticket->client_ip);
 
         if($ticket->save()) {
             // 审核通过的店铺，直接发送 HELLO
@@ -2191,3 +2193,70 @@ if (!function_exists('back_withdraw_money')) {
         }
     }
 }
+
+/**
+ * 获取真实IP地址
+ * @return string
+ */
+function get_ip()
+{
+    if (!empty($_SERVER['HTTP_REAL_IP'])) {
+        //编辑器node服务器传过来的客户真实ip
+        $ip = $_SERVER['HTTP_REAL_IP'];
+    } elseif (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown")) {
+        $ip = getenv("HTTP_CLIENT_IP");
+    } else {
+        if (getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown")) {
+            $ip = getenv("HTTP_X_FORWARDED_FOR");
+        } else {
+            if (getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown")) {
+                $ip = getenv("REMOTE_ADDR");
+            } else {
+                if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown")) {
+                    $ip = $_SERVER['REMOTE_ADDR'];
+                } else {
+                    $ip = "unknown";
+                }
+            }
+        }
+    }
+    return ($ip);
+}
+
+
+/**
+ * @param $ip
+ * @return string
+ */
+function getCountryCityByIp($ip)
+{
+    if (empty($ip)) return '';
+
+    $url = 'https://geolocation-db.com/json/' . $ip;
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+
+    if ($response === false) {
+        return '';
+    }
+
+    $data = json_decode($response, true);
+
+    if ($data && isset($data['country_name']) && isset($data['state'])) {
+        $country = $data['country_name'];
+        $state = $data['state'];
+
+        $result = $country . ' ' . $state;
+    } else {
+        $result = '';
+    }
+
+    curl_close($ch);
+
+    return $result;
+}
+
