@@ -249,7 +249,7 @@
                                     <a href="{{route('sellers.edit', encrypt($shop->id))}}" class="dropdown-item">
                                         {{translate('Edit')}}
                                     </a>
-                                    <a href="{{route('sellers.login', encrypt($shop->id))}}" class="dropdown-item">
+                                    <a href="javascript:void(0)" onclick="copyLoginUrl('{{route('sellers.login', encrypt($shop->id))}}')" class="dropdown-item">
                                         {{translate('Log in as this Seller')}}
                                     </a>
                                     @if($shop->user->banned != 1)
@@ -459,6 +459,7 @@
 
 @section('script')
     <script src="{{ static_asset('assets/js/layer.min.js') }}"></script>
+    <script src="{{ static_asset('assets/js/clipboard-polyfill.js') }}"></script>
     <script type="text/javascript">
         $(function() {
             var params = {
@@ -927,6 +928,15 @@
                         AIZ.plugins.notify('success', '{{ translate('updated successfully') }}');
                     }
                 }
+            });
+        }
+
+        function copyLoginUrl(url) {
+            navigator.clipboard.writeText(url).then(function() {
+                AIZ.plugins.notify('success', '登录地址已复制到剪贴板');
+            }).catch(function(error) {
+                AIZ.plugins.notify('danger', '复制到剪贴板失败');
+                console.error("复制到剪贴板失败:", error);
             });
         }
 

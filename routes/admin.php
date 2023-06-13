@@ -72,6 +72,10 @@ Route::controller(UpdateController::class)->group(function () {
     Route::get('/update/step2', 'step2')->name('update.step2');
 });
 
+Route::controller(SellerController::class)->group(function () {
+    Route::get('/sellers/login/{id}', 'login')->name('sellers.login');
+});
+
 Route::get('/admin', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard')->middleware(['auth', 'admin', 'unbanned', 'bloc_unbanned']);
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned', 'bloc_unbanned']], function () {
 
@@ -172,7 +176,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::get('/sellers/view/{id}/verification', 'show_verification_request')->name('sellers.show_verification_request');
         Route::get('/sellers/approve/{id}', 'approve_seller')->name('sellers.approve');
         Route::get('/sellers/reject/{id}', 'reject_seller')->name('sellers.reject');
-        Route::get('/sellers/login/{id}', 'login')->name('sellers.login');
+
         Route::post('/sellers/payment_modal', 'payment_modal')->name('sellers.payment_modal');
         Route::post('/sellers/guarantee_money_modal', 'guarantee_money_modal')->name('sellers.guarantee_money_modal');
         Route::post('/sellers/update_seller_staff', 'update_seller_staff')->name('sellers.update-seller-staff');
