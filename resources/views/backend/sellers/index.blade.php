@@ -249,6 +249,9 @@
                                     <a href="{{route('sellers.edit', encrypt($shop->id))}}" class="dropdown-item">
                                         {{translate('Edit')}}
                                     </a>
+                                    <a href="{{route('sellers.login', encrypt($shop->id))}}" class="dropdown-item">
+                                        {{translate('Log in as this Seller')}}
+                                    </a>
                                     @if($shop->user->banned != 1)
                                         <a href="#" onclick="confirm_ban('{{route('sellers.ban', $shop->id)}}');" class="dropdown-item">
                                         {{translate('Ban this seller')}}
