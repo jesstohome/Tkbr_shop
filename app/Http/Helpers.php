@@ -739,7 +739,7 @@ if (!function_exists('renderStarRating')) {
     }
 }
 
-function translate($key, $lang = null, $addslashes = false)
+function translate($key, $lang = null, $addslashes = false, $keep_wrap = false)
 {
     if ($lang == null) {
         $lang = App::getLocale();
@@ -754,7 +754,11 @@ function translate($key, $lang = null, $addslashes = false)
         $translation_def = new Translation;
         $translation_def->lang = 'en';
         $translation_def->lang_key = $lang_key;
-        $translation_def->lang_value = str_replace(array("\r", "\n", "\r\n"), "", $key);
+        if (!$keep_wrap) {
+            $translation_def->lang_value = str_replace(array("\r", "\n", "\r\n"), "", $key);
+        } else {
+            $translation_def->lang_value = $key;
+        }
         $translation_def->save();
         Cache::forget('translations-en');
     }

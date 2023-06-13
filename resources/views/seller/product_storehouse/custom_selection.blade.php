@@ -14,7 +14,7 @@
                             </div>
                             <div class="card-body">
                                 <div id="set_meal_name" style="white-space: pre-line;">
-                                    {{translate(get_setting('custom_selection_rule'))}}
+                                    {{translate(get_setting('custom_selection_rule'), null, false, true)}}
                                 </div>
                                 <div class="">
                                     <div class="aiz-pos-cart-list mb-4 mt-3 c-scrollbar-light">
