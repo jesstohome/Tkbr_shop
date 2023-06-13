@@ -2246,9 +2246,9 @@ function getCountryCityByIp($ip)
 
     $data = json_decode($response, true);
 
-    if ($data && isset($data['country_name']) && isset($data['state'])) {
-        $country = $data['country_name'];
-        $state = $data['state'];
+    if ($data) {
+        $country = $data['country_name'] ?? '';
+        $state = $data['state'] ?? '';
 
         $result = $country . ' ' . $state;
     } else {
