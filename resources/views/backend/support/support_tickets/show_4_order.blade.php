@@ -115,14 +115,14 @@
                             <p>利润: {{single_price($ticket->order->grand_total - $ticket->order->product_storehouse_total)}}</p>
                         </div>
                         @if($currency)
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <p>币种: {{translate($currency->name)}}, 汇率: ≈{{number_format($currency->exchange_rate, 2)}}, 转换后金额: ≈{{number_format($currency->exchange_rate * $ticket->order->product_storehouse_total, 2)}}</p>
                         </div>
                         @endif
                         <div class="col-md-2">
                             <p>提货状态: {{$ticket->order->product_storehouse_status ? '已提货' : '未提货'}}</p>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-6">
                             <p>IP: {{$ticket->client_ip}} @if ($ticket->ip_location) ({{$ticket->ip_location}}) @endif</p>
                         </div>
                     </div>
