@@ -127,7 +127,7 @@ class Translate extends Command
                 $translation_def = new Translation;
                 $translation_def->lang = $lang['code'];
                 $translation_def->lang_key = $lang_key;
-                $translation_def->lang_value = str_replace(array("\r", "\n", "\r\n"), "", $translatedText);
+                $translation_def->lang_value = $translatedText;
                 $translation_def->save();
             }
 
