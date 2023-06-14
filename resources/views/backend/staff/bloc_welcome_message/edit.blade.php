@@ -24,34 +24,34 @@
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label" for="lang">{{translate('Examine Welcome Message')}} </label>
                         <div class="col-md-9">
-                            <input type="text" placeholder="{{translate('Examine Welcome Message')}}" id="examine_welcome_message" name="examine_welcome_message" class="form-control" value="{{ $bloc->examine_welcome_message }}" required>
+                            <input type="text" placeholder="{{translate('Examine Welcome Message')}}" id="examine_welcome_message" name="examine_welcome_message" class="form-control" value="{{ $bloc->examine_welcome_message }}">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label" for="lang">{{translate('Welcome Message')}} </label>
                         <div class="col-md-9">
-                            <input type="text" placeholder="{{translate('Welcome Message')}}" id="welcome_message" name="welcome_message" class="form-control" value="{{ $bloc->welcome_message }}" required>
+                            <input type="text" placeholder="{{translate('Welcome Message')}}" id="welcome_message" name="welcome_message" class="form-control" value="{{ $bloc->welcome_message }}">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label" for="lang">{{translate('Work Order Welcome Message')}} </label>
                         <div class="col-md-9">
-                            <input type="text" placeholder="{{translate('Work Order Welcome Message')}}" id="work_order_welcome_message" name="work_order_welcome_message" class="form-control" value="{{ $bloc->work_order_welcome_message }}" required>
+                            <input type="text" placeholder="{{translate('Work Order Welcome Message')}}" id="work_order_welcome_message" name="work_order_welcome_message" class="form-control" value="{{ $bloc->work_order_welcome_message }}">
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label" for="lang">{{translate('Welcome Message Interval Time')}} </label>
                         <div class="col-md-9">
-                            <input type="text" placeholder="{{translate('Welcome Message Interval Time')}}" id="interval_time" name="interval_time" class="form-control" value="{{ $bloc->interval_time }}" required>
+                            <input type="text" placeholder="{{translate('Welcome Message Interval Time')}}" id="interval_time" name="interval_time" class="form-control" value="{{ $bloc->interval_time }}">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-md-3 col-from-label" for="lang">{{translate('Work Order Welcome Message Interval Time')}} </label>
                         <div class="col-md-9">
-                            <input type="number" placeholder="{{translate('Work Order Welcome Message Interval Time')}}" id="work_order_interval_time" name="work_order_interval_time" class="form-control" value="{{ $bloc->work_order_interval_time }}" required>
+                            <input type="number" placeholder="{{translate('Work Order Welcome Message Interval Time')}}" id="work_order_interval_time" name="work_order_interval_time" class="form-control" value="{{ $bloc->work_order_interval_time }}">
                         </div>
                     </div>
 
