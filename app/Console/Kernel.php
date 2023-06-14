@@ -109,6 +109,11 @@ class Kernel extends ConsoleKernel
                 \Log::debug('定时增加访问量 ' . count($shops));
                 foreach ($shops as $shop) {
                     try {
+                        $productTotal = Product::query()->where("user_id", $shop->user_id)->count();
+                        if (empty($productTotal)) {
+                            continue;
+                        }
+                        
                         $cache_key = sprintf('shop:add_views:%s', $shop->id);
                         if (empty(\Cache::get($cache_key))) {
                             $shop->views += 1;
