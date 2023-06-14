@@ -111,7 +111,7 @@ class PageController extends Controller
     {
         $page = Page::findOrFail($id);
         if (Page::where('id','!=', $id)->where('slug', preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug)))->first() == null) {
-            if($page->type == 'custom_page'){
+            if($page->type == 'custom_page' && !empty($request->slug)){
               $page->slug           = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug));
             }
             if($request->lang == env("DEFAULT_LANGUAGE")){
