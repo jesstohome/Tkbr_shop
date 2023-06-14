@@ -102,7 +102,7 @@ class ProductStorehouseController extends Controller
     }
 
     public function searchSetMeal(Request $request) {
-        $list = ProductSetMeal::query()->join("categories", 'categories.id', '=', 'product_set_meals.category_id')->whereRaw('stock > added_times')->orderBy('product_set_meals.id', 'desc');
+        $list = ProductSetMeal::query()->join("categories", 'categories.id', '=', 'product_set_meals.category_id')->whereRaw('stock > added_times')->select("product_set_meals.*")->orderBy('product_set_meals.id', 'desc');
 
         if ($request->category != null) {
             $arr = explode('-', $request->category);
