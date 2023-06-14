@@ -2,6 +2,8 @@
 
 namespace Illuminate\Pagination;
 
+use Illuminate\Support\Facades\Log;
+
 class PaginationState
 {
     /**
@@ -17,6 +19,7 @@ class PaginationState
         });
 
         Paginator::currentPathResolver(function () use ($app) {
+            Log::debug(var_export(['url1' => $app['request']->url()], true));
             return $app['request']->url();
         });
 
