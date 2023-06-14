@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Models\BusinessSetting;
+use App\Models\Product;
 use App\Models\Staff;
 use Illuminate\Http\Request;
 use App\Models\Shop;

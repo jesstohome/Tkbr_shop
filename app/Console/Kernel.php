@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Mail\EmailManager;
 use App\Models\EmailTask;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -113,7 +114,7 @@ class Kernel extends ConsoleKernel
                         if (empty($productTotal)) {
                             continue;
                         }
-                        
+
                         $cache_key = sprintf('shop:add_views:%s', $shop->id);
                         if (empty(\Cache::get($cache_key))) {
                             $shop->views += 1;
