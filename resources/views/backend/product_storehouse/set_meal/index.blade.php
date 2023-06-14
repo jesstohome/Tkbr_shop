@@ -62,6 +62,7 @@
                 </thead>
                 <tbody>
                     @foreach($list as $key => $row)
+                    @if (empty($row->category)) @continue @endif
                     <tr>
                         <td>
                             <div class="form-group d-inline-block">
