@@ -182,7 +182,7 @@ class ProductStorehouseController extends Controller
         }, ARRAY_FILTER_USE_BOTH);
 
         if (empty($productIds)) {
-            return response()->json(['success' => 0, 'message' => translate('There are no products to import')]);
+            return response()->json(['success' => 0, 'message' => translate('Some products have already been listed in the store and cannot be repeatedly listed')]);
         }
 
         $package = SellerPackage::query()->where('is_default', 1)->first();
