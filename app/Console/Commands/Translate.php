@@ -102,7 +102,7 @@ class Translate extends Command
 
                 $target_code = $lang['code'] == 'hk' ? 'zh-TW' : $lang['app_lang_code'];
                 $post_data = array(
-                    "q" => str_replace(['\n', '\r', '\r\n', '\n\r'], '<br1>', $value['lang_value']),
+                    "q" => str_replace(["\n", "\r", "\r\n", "\n\r"], '<br1>', $value['lang_value']),
                     "source" => 'en',
                     "target" => $target_code,
                     'format' => 'html'
@@ -127,7 +127,7 @@ class Translate extends Command
                 $translation_def = new Translation;
                 $translation_def->lang = $lang['code'];
                 $translation_def->lang_key = $lang_key;
-                $translation_def->lang_value = str_replace("<br1>", "\r\n", $translatedText);
+                $translation_def->lang_value = str_replace("<br1>", "\n", $translatedText);
                 $translation_def->save();
             }
 
