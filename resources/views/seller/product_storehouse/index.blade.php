@@ -4,6 +4,10 @@
         width: 100%;
         text-align: center;
     }
+    .text-truncate {
+        text-overflow: inherit !important;
+        white-space: break-spaces !important;
+    }
 </style>
 @section('panel_content')
 
