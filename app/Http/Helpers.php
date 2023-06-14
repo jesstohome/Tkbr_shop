@@ -2003,18 +2003,23 @@ if (!function_exists('ticket_say_hello')) {
         if ($ticket->type == 'service') {
             if ($from_shop_approved) {
                 // 店铺审核消息
-                $ticket_reply->reply = $bloc->examine_welcome_message ?: 'Hello';
+                $ticket_reply->reply = $bloc->examine_welcome_message ?: '';
             } else {
                 // 客服欢迎语
-                $ticket_reply->reply = $bloc->welcome_message ?: 'Hello';
+                $ticket_reply->reply = $bloc->welcome_message ?: '';
             }
         } else {
             // 工单欢迎
-            $ticket_reply->reply = $bloc->work_order_welcome_message ?: 'Hello';
+            $ticket_reply->reply = $bloc->work_order_welcome_message ?: '';
         }
         // 打招呼话术(审核消息除外)，默认为已读
         if (!$from_shop_approved) {
             $ticket_reply->read = 1;
+        }
+
+        // 为空不发送
+        if (empty($ticket_reply->reply)) {
+            return;
         }
 
         $ticket_reply->files = '';
