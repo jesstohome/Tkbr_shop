@@ -280,17 +280,6 @@ class ProductStorehouseController extends Controller
         $userId = Auth::user()->id;
 
         $product_ids = is_string($setMeal->product_ids) ? json_decode($setMeal->product_ids, true) : $setMeal->product_ids;
-        // 排除已复制产品
-        $alreadyCopyIds = Product::query()
-            ->where('user_id', $userId)
-            ->whereNotNull('original_id')
-            ->pluck('original_id')
-            ->toArray();
-
-        // 排除已复制产品ID
-        $product_ids = array_filter($product_ids, function ($v) use ($alreadyCopyIds) {
-            return !in_array($v, $alreadyCopyIds);
-        }, ARRAY_FILTER_USE_BOTH);
         if (empty($product_ids)) {
             return response()->json(['success' => 1, 'products' => [], 'msg' => translate('All products in the current package have been added')]);
         }
