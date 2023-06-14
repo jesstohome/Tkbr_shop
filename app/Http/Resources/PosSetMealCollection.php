@@ -22,9 +22,9 @@ class PosSetMealCollection extends ResourceCollection
                     'added_times' => $data->added_times,
                     'min_price' => empty($prices) ? 0 : single_price(min($prices)),
                     'max_price' => empty($prices) ? 0 : single_price(max($prices)),
-                    'name' => $data->category->getTranslation('name') . '-' . $data->name,
+                    'name' => $data->category ? $data->category->getTranslation('name') . '-' . $data->name : '',
                     'name2' => addslashes($name),
-                    'thumbnail_image' => ($data->category->icon == null) ? '' : uploaded_asset($data->category->icon),
+                    'thumbnail_image' => (empty($data->category) || $data->category->icon == null) ? '' : uploaded_asset($data->category->icon),
                 ];
             })->shuffle()
         ];
