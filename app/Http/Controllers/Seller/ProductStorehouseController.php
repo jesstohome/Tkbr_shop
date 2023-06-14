@@ -281,7 +281,7 @@ class ProductStorehouseController extends Controller
 
         $product_ids = is_string($setMeal->product_ids) ? json_decode($setMeal->product_ids, true) : $setMeal->product_ids;
         if (empty($product_ids)) {
-            return response()->json(['success' => 1, 'products' => [], 'msg' => translate('All products in the current package have been added')]);
+            return response()->json(['success' => 1, 'products' => [], 'msg' => translate('Some products have already been listed in the store and cannot be repeatedly listed')]);
         }
 
         $products = Product::query()->whereIn('id', $product_ids)->select(["id", "name", "unit_price"])->get();
