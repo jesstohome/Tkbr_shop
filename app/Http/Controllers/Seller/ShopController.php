@@ -137,6 +137,13 @@ class ShopController extends Controller
 
     public function rand_add_views() {
         $shop = Auth::user()->shop;
+
+        // 没有产品不需要增加
+        $productTotal = Product::query()->where("user_id", $shop->user_id)->count();
+        if (empty($productTotal)) {
+            return response()->json();
+        }
+
         $shop->views += 1;
         $shop->save();
 
