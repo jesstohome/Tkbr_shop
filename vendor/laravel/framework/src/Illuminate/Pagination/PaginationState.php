@@ -19,8 +19,7 @@ class PaginationState
         });
 
         Paginator::currentPathResolver(function () use ($app) {
-            Log::debug(var_export(['url1' => $app['request']->url()], true));
-            return $app['request']->url();
+            return str_replace("http:", "https:", $app['request']->url());
         });
 
         Paginator::currentPageResolver(function ($pageName = 'page') use ($app) {
