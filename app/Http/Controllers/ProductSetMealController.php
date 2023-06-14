@@ -16,7 +16,7 @@ class ProductSetMealController extends Controller
     public function index(Request $request)
     {
         $category_id = $request->get('category_id');
-        $list = ProductSetMeal::query();
+        $list = ProductSetMeal::query()->join("categories c", "product_set_meal.category_id", "=", "c.id");
         if (!empty($category_id)) {
             $list = $list->where('category_id', $category_id);
         }
