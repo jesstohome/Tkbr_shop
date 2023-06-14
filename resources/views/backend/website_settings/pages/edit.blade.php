@@ -45,7 +45,7 @@
 								<div class="input-group-prepend"><span class="input-group-text flex-grow-1">{{ route('home') }}/</span></div>
 								<input type="text" class="form-control w-100 w-md-auto" placeholder="{{ translate('Slug') }}" name="slug" value="{{ $page->slug }}">
 							@else
-								<input class="form-control w-100 w-md-auto" value="{{ route('home') }}/{{ $page->slug }}" disabled>
+								<input class="form-control w-100 w-md-auto" name="slug" value="{{ route('home') }}/{{ $page->slug }}" readonly>
 							@endif
 						</div>
 						<small class="form-text text-muted">{{ translate('Use character, number, hypen only') }}</small>

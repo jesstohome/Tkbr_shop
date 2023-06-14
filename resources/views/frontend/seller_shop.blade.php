@@ -52,9 +52,13 @@
                                 {{ renderStarRating($shop->rating) }}
                             </div>
                             <div class="location opacity-60">{{ $shop->address }}</div>
+                            <div class="location opacity-60">{{ $shop->meta_title }}</div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="location opacity-60" style="margin:auto">{{ $shop->meta_description }}</div>
             </div>
             <div class="border-bottom mt-5"></div>
             <div class="row align-items-center">

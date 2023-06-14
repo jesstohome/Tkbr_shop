@@ -272,13 +272,14 @@
                 </div>
 
                 <div class="modal-body gry-bg px-3 pt-3">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-12 text-center">
                             {{translate('After successful registration, visit the APP download page immediately.')}}
                         </div>
                     </div>
                     <div class="form-group text-right">
                         <button type="button" class="btn btn-sm btn-primary transition-3d-hover mr-1" onclick="gotoDownload()">{{translate('Confirm')}}</button>
+                        <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal">{{translate('Cancel')}}</button>
                     </div>
                 </div>
             </div>
