@@ -2,7 +2,7 @@
 
 
 Route::group(['prefix' => 'v2/auth', 'middleware' => ['app_language']], function() {
-    
+
     Route::post('login', 'App\Http\Controllers\Api\V2\AuthController@login');
     Route::post('timedquery', 'App\Http\Controllers\Api\V2\AuthController@timedquery');
     Route::post('signup', 'App\Http\Controllers\Api\V2\AuthController@signup');
@@ -184,7 +184,7 @@ Route::group(['prefix' => 'v2', 'middleware' => ['app_language']], function() {
     Route::any('paypal/payment/cancel', 'App\Http\Controllers\Api\V2\PaypalController@getCancel')->name('api.paypal.cancel');
 
     Route::any('razorpay/pay-with-razorpay', 'App\Http\Controllers\Api\V2\RazorpayController@payWithRazorpay')->name('api.razorpay.payment');
-    Route::any('razorpay/payment', 'App\Http\Controllers\Api\V2\RazorpayController@payment')->name('api.razorpay.payment');
+    Route::any('razorpay/payment', 'App\Http\Controllers\Api\V2\RazorpayController@payment')->name('api.razorpay.payment2');
     Route::post('razorpay/success', 'App\Http\Controllers\Api\V2\RazorpayController@success')->name('api.razorpay.success');
 
     Route::any('paystack/init', 'App\Http\Controllers\Api\V2\PaystackController@init')->name('api.paystack.init');
@@ -225,7 +225,7 @@ Route::group(['prefix' => 'v2', 'middleware' => ['app_language']], function() {
 
     Route::post('order/store', 'App\Http\Controllers\Api\V2\OrderController@store')->middleware('auth:sanctum');
     Route::post('order/timedquery', 'App\Http\Controllers\Api\V2\OrderController@timedquery')->middleware('auth:sanctum');
-    
+
     Route::get('profile/counters', 'App\Http\Controllers\Api\V2\ProfileController@counters')->middleware('auth:sanctum');
     Route::post('profile/update', 'App\Http\Controllers\Api\V2\ProfileController@update')->middleware('auth:sanctum');
     Route::post('profile/update-device-token', 'App\Http\Controllers\Api\V2\ProfileController@update_device_token')->middleware('auth:sanctum');
@@ -246,7 +246,7 @@ Route::group(['prefix' => 'v2', 'middleware' => ['app_language']], function() {
     Route::get('addon-list', 'App\Http\Controllers\Api\V2\ConfigController@addon_list');
     //Activated social login list
     Route::get('activated-social-login', 'App\Http\Controllers\Api\V2\ConfigController@activated_social_login');
-    
+
     //Business Sttings list
     Route::post('business-settings', 'App\Http\Controllers\Api\V2\ConfigController@business_settings');
     //Pickup Point list
