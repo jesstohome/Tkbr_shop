@@ -76,6 +76,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // FORCE_HTTPS
+    'https' => env('FORCE_HTTPS', true),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
