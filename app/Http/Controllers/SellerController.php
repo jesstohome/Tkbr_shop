@@ -420,6 +420,7 @@ class SellerController extends Controller
         $shop->staff_id = $staff->id;
         $shop->user->bloc_id = $staff->bloc_id;
         $shop->user->staff_id = $staff->id;
+        $shop->disable_change = 1;
         if ($shop->save()) {
             hdel_plus('new_shop_created_tip', $shop->id);
             Cache::forget('verified_sellers_id');
