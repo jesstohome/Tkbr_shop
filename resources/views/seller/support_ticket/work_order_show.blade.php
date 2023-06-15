@@ -142,9 +142,14 @@
                </div>
                 <div class="">
                     <span> {{ translate('Order No') }}: {{$ticket->order->code}} </span>
-                    <span> {{ translate('Order Amount') }}: {{single_price($ticket->order->grand_total)}} </span>
-                    <span> {{ translate('Pickup amount') }}: {{single_price($ticket->order->product_storehouse_total)}} </span>
+                    <span> {{ translate('Order Amount') }}: {{single_price($ticket->order->grand_total)}} @if($currency) ≈ {{number_format($currency->exchange_rate * $ticket->order->grand_total, 2)}} @endif</span>
+                    <span> {{ translate('Pickup amount') }}: {{single_price($ticket->order->product_storehouse_total)}} @if($currency) ≈ {{number_format($currency->exchange_rate * $ticket->order->product_storehouse_total, 2)}} @endif</span>
                 </div>
+                @if($currency)
+                <div class="">
+                    <p>{{translate('Currency')}}: {{translate($currency->name)}}, {{translate('exchange rate')}}: ≈{{number_format($currency->exchange_rate, 2)}}</p>
+                </div>
+                @endif
             </div>
         </div>
         <div class="card-body msg-box" style="padding: 0!important;">
