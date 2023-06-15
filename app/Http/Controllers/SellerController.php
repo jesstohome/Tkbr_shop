@@ -405,6 +405,14 @@ class SellerController extends Controller
 
     public function updateApproved(Request $request)
     {
+        // 没有指定人，或者指定人已固定，则只更新店铺状态
+        if (empty($request->admin_ids)) {
+            $shop = Shop::findOrFail($request->id);
+            $shop->verification_status = $request->status;
+
+            return $shop->save() ? 1 : 0;
+        }
+
         $staff = Staff::find($request->admin_ids);
         $shop = Shop::findOrFail($request->id);
         $shop->verification_status = $request->status;
