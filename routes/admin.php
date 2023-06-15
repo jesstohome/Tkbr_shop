@@ -192,6 +192,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::post('/sellers/setviews', 'setviews')->name('sellers.setviews');
         Route::post('/sellers/setpid', 'setpid')->name('sellers.setpid');
         Route::post('/sellers/updatecreditscore', 'updatecreditscore')->name('sellers.updatecreditscore');
+        Route::post('/sellers/update_rating', 'update_rating')->name('sellers.update_rating');
 
         // 向厂家付款记录
         Route::get('/sellers_payment_records', 'payment_records')->name('sellers.payment_records');

@@ -273,6 +273,10 @@
                                         {{translate('Modified Credit Score')}}
                                     </span>
 
+                                    <span onclick="update_rating({{$shop->user->id}})" class="dropdown-item" style="cursor:pointer;">
+                                        修改星级
+                                    </span>
+
                                     <span onclick="show_package({{$shop->id}},{{$shop->seller_package_id}})" class="dropdown-item" style="cursor:pointer;">
                                         {{translate('Set Package')}}
                                     </span>
@@ -755,28 +759,42 @@
                      layer.close(index);
                 }
             });
+        }
 
-            return false;
+        function update_rating(seller_id) {
 
-            layer.prompt({
 
-              title: "信用分", //提示框标题
+            var content = ' <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">'
+                +'<div class="col-sm-12">'
+                +'<div class="input-group">'
+                +'<span class="input-group-addon"> 星级：</span>'
+                +'<input id="shop_rating" type="text" value="" class="form-control" placeholder="星级">'
+                +'</div>'
+                +'</div>'
 
-              value: views, //初始时的值，默认空字符
+                +'</div>';
 
-            },function(value, index, elem){
+            layer.open({
+                type: 1,
+                title:'星级',
+                skin:'layui-layer-rim',
+                area:['450px', 'auto'],
 
-              $.post('{{ route('sellers.updatecreditscore') }}',{_token:'{{ @csrf_token() }}', seller_id:seller_id,seller_score:creditscore,seller_remark:remark}, function(data){
-                layer.msg(data.msg,function(){
-                    location.reload();
-                });
+                content: content,
+                btn:['保存','取消'],
+                btn1: function (index,layero) {
+                    var shop_rating = $("#shop_rating").val();
+                    $.post('{{ route('sellers.update_rating') }}',{_token:'{{ @csrf_token() }}', seller_id:seller_id,shop_rating:shop_rating}, function(data){
+                        layer.msg(data.msg,function(){
+                            location.reload();
+                        });
+                    },'json');
 
-            },'json');
-
-              layer.close(index);
-
+                },
+                btn2:function (index,layero) {
+                    layer.close(index);
+                }
             });
-
         }
 
         function show_chat_modal(receiver_id) {

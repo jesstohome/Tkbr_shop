@@ -148,6 +148,19 @@ class SellerController extends Controller
         echo json_encode(['msg'=>translate("Success")]);
     }
 
+    // 修改星级
+    public function update_rating(Request $request)
+    {
+        $seller_id = $request->seller_id;
+        $shop_rating = $request->shop_rating;
+        $shop = Shop::query()->where('user_id', $seller_id)->first();
+
+        $shop->rating = (float) $shop_rating;
+        $shop->save();
+
+        echo json_encode(['msg'=>translate("Success")]);
+    }
+
     public function index(Request $request)
     {
         $sort_search = null;
