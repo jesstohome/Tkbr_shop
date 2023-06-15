@@ -238,6 +238,7 @@ class ShopController extends Controller
             $user->identity_card_back = $request->identity_card_back ?? 0;
             $user->certtype = $request->certtype;
             $shop->seller_package_id = $package_id;
+            $shop->rating = 5; // 默认5星
 
             // 先判断是否是由内部员工邀请码申请的
             $staff_user_id = Auth::check() ? Auth::user()->id : 0;
