@@ -36,7 +36,7 @@
                                   @endif
                                   <br>
                                   <span class="opacity-50">
-                                      {{ date('h:i:m d-m-Y', strtotime($conversation->messages->last()->created_at)) }}
+                                      {{ date('h:i:m d-m-Y', strtotime($conversation->updated_at)) }}
                                   </span>
                               </p>
                           </div>
