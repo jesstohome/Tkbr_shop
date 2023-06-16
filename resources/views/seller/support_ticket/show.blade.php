@@ -143,7 +143,7 @@
                                             @php echo empty($ticketreply->user_id) || -1 == $ticketreply->user_id ? translate($ticketreply->reply) : $ticketreply->reply; @endphp
                                             @if($ticketreply->files)
                                                 <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
-                                                    @if (strpos($ticketreply->files, "base64") !== false)
+                                                    @if (strpos($ticketreply->files, "base64") === false)
                                                     @foreach ((explode(",",$ticketreply->files)) as $key => $file)
 
                                                         @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
@@ -154,7 +154,7 @@
                                                     @else
                                                         <img src="{{$ticketreply->files}}" data-src="{{$ticketreply->files}}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
                                                     @endif
-                                            </div>
+                                                </div>
                                             @endif
                                             <p class="text-muted text-sm fs-11 time">{{date('m-d H:i', strtotime($ticketreply->created_at))}}</p>
                                         </span>

@@ -175,7 +175,7 @@
                             </div>
                         </div>
                         <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
-                            @if (strpos($ticketreply->files, "base64") !== false)
+                            @if (strpos($ticketreply->files, "base64") === false)
                             @foreach ((explode(",",$ticketreply->files)) as $key => $file)
                                 @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
                                 @if($file_detail != null)
