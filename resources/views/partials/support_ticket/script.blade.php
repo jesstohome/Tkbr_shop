@@ -6,6 +6,37 @@
     var user_id = "{{Auth::user()->id}}";
     var isAdmin = parseInt("{{isAdmin() ? 1 : 0}}");
 
+    function convertImageToBase64(file, callback) {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            callback(reader.result);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function uploadImage(base64Data) {
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': AIZ.data.csrf
+            },
+            url: AIZ.data.appUrl + "/aiz-uploader/upload",
+            type: 'POST',
+            data: {
+                aiz_file: base64Data
+            },
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                // 处理上传成功的响应
+                console.log(response)
+            },
+            error: function (xhr, status, error) {
+                // 处理上传失败的响应
+                console.log(error)
+            }
+        });
+    }
+
     $(document).ready(function () {
         $( '#ticket-reply-form' ).on("submit", function (){
             return false;
@@ -33,27 +64,6 @@
                                     reader.onload = function(e) {
                                         var imageData = e.target.result;
                                         console.log('读取到的图片数据:', imageData);
-
-                                        var form_data = new FormData();
-                                        form_data.aiz_file = imageData;
-                                        $.ajax({
-                                            headers: {
-                                                'X-CSRF-TOKEN': AIZ.data.csrf
-                                            },
-                                            method: "POST",
-                                            url: AIZ.data.appUrl + "/aiz-uploader/upload",
-                                            data: form_data,
-                                            cache: false,
-                                            contentType: false,
-                                            processData: false,
-                                            success: function (data, textStatus, jqXHR) {
-                                                console.log(data, textStatus);
-                                            },
-                                            error: function (er) {          //失败，回调函数
-                                                console.log(er);
-                                            }
-                                        });
-
                                         // 在这里处理读取到的图片数据
                                         $(".ticket").append(`
                                         <li class="list-group-item px-0 mine">
