@@ -23,12 +23,17 @@ class CategoryController extends Controller
         $categories = Category::orderBy('order_level', 'desc');
         if ($request->has('search')){
             $sort_search = $request->search;
-            $category_trans = CategoryTranslation::query()->where('name', 'LIKE', '%'.$sort_search.'%')->first();
-            if ($category_trans) {
-                $categories = $categories->where('id', $category_trans->category_id);
+            if (is_numeric($sort_search)) {
+                $categories = $categories->where('id', $sort_search);
             } else {
-                $categories = $categories->whereRaw("1=2");
+                $category_trans = CategoryTranslation::query()->where('name', 'LIKE', '%'.$sort_search.'%')->first();
+                if ($category_trans) {
+                    $categories = $categories->where('id', $category_trans->category_id);
+                } else {
+                    $categories = $categories->whereRaw("1=2");
+                }
             }
+
         }
         $categories = $categories->paginate(15);
         return view('backend.product.categories.index', compact('categories', 'sort_search'));
