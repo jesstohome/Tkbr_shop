@@ -17,6 +17,7 @@
                 // 按下 V 键
                 if (event.key === 'v' || event.keyCode === 86) {
                     console.log('Ctrl + V 被按下');
+
                     // 创建 ClipboardJS 实例
                     const clipboard = navigator.clipboard;
 
@@ -32,6 +33,27 @@
                                     reader.onload = function(e) {
                                         var imageData = e.target.result;
                                         console.log('读取到的图片数据:', imageData);
+
+                                        var form_data = new FormData();
+                                        form_data.aiz_file = imageData;
+                                        $.ajax({
+                                            headers: {
+                                                'X-CSRF-TOKEN': AIZ.data.csrf
+                                            },
+                                            method: "POST",
+                                            url: "{{route('upload')}}",
+                                            data: form_data,
+                                            cache: false,
+                                            contentType: false,
+                                            processData: false,
+                                            success: function (data, textStatus, jqXHR) {
+                                                console.log(data, textStatus);
+                                            },
+                                            error: function (er) {          //失败，回调函数
+                                                console.log(er);
+                                            }
+                                        });
+
                                         // 在这里处理读取到的图片数据
                                         $(".ticket").append(`
                                         <li class="list-group-item px-0 mine">
