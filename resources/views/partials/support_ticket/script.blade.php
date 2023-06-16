@@ -88,13 +88,15 @@
                                 <div class="media-body">
                                     <div class="comment-header">
                                         <span class="text-bold h6 text-muted title">
-<div class="images mine"><img src="` + imageData + `" class="mr-3 lazyload size-100px img-fit rounded" alt="Image"/></div>
+<div class="images mine"><img src="` + imageData + `" data-src="` + imageData + `" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image"/></div>
                                         </span>
                                     </div>
                                 </div>
                             </div>
 </li>
-                                        `)
+                                        `);
+
+                                        $("ul.ticket").scrollTop(999990);
                                     };
                                     reader.readAsDataURL(blob);
                                 });
