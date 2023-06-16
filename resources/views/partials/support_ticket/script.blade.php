@@ -9,34 +9,7 @@
     $(document).ready(function () {
         $( '#ticket-reply-form' ).on("submit", function (){
             return false;
-        })
-
-        try {
-            var clipboard = new ClipboardJS('#btn-parse-image');
-            console.log(clipboard);
-            clipboard.on('paste', function(event) {
-                var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-                console.log(items);
-                for (var i = 0; i < items.length; i++) {
-                    var item = items[i];
-
-                    if (item.type.indexOf('image') === 0) {
-                        var blob = item.getAsFile();
-                        var reader = new FileReader();
-
-                        reader.onload = function(e) {
-                            var imageData = e.target.result;
-                            console.log('读取到的图片数据:', imageData);
-                            // 在这里处理读取到的图片数据
-                        };
-
-                        reader.readAsDataURL(blob);
-                    }
-                }
-            });
-        } catch (e) {
-
-        }
+        });
 
         $(document).keydown(function(event) {
             // 按下 Ctrl 键
@@ -49,7 +22,35 @@
 
                     // 读取剪贴板内容
                     clipboard.read().then(function(data) {
-                        console.log('剪贴板内容:', data);
+                        // 遍历剪贴板中的每个项
+                        data.forEach(function(item) {
+                            // 检查是否是图片类型
+                            if (item.types.includes('image/png') || item.types.includes('image/jpeg')) {
+                                // 从剪贴板中读取图片数据
+                                item.getType('image/png').then(function(blob) {
+                                    var reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        var imageData = e.target.result;
+                                        console.log('读取到的图片数据:', imageData);
+                                        // 在这里处理读取到的图片数据
+                                        $(".ticket").append(`
+                                        <li class="list-group-item px-0 mine">
+<div class="media">
+                                <div class="media-body">
+                                    <div class="comment-header">
+                                        <span class="text-bold h6 text-muted title">
+<div class="images mine"><img src="` + imageData + `" class="mr-3 lazyload size-100px img-fit rounded" alt="Image"/></div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+</li>
+                                        `)
+                                    };
+                                    reader.readAsDataURL(blob);
+                                });
+                            }
+                        });
                     }).catch(function(error) {
                         console.error('读取剪贴板失败:', error);
                     });
