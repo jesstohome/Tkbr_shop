@@ -183,7 +183,7 @@
                                 @endif
                             @endforeach
                             @else
-                                <img src="{{$file}}" data-src="{{$file}}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
+                                <img src="{{$ticketreply->files}}" data-src="{{$ticketreply->files}}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
                             @endif
                         </div>
                     </li>
