@@ -1,5 +1,7 @@
 <script src="{{ static_asset('assets/js/layui.js') }}"></script>
 <script src="{{ static_asset('assets/js/layer.min.js') }}"></script>
+<script src="{{ static_asset('assets/js/clipboard-polyfill.js') }}"></script>
+
 <script type="text/javascript">
     var user_id = "{{Auth::user()->id}}";
     var isAdmin = parseInt("{{isAdmin() ? 1 : 0}}");
@@ -8,6 +10,52 @@
         $( '#ticket-reply-form' ).on("submit", function (){
             return false;
         })
+
+        try {
+            var clipboard = new ClipboardJS('#btn-parse-image');
+            console.log(clipboard);
+            clipboard.on('paste', function(event) {
+                var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                console.log(items);
+                for (var i = 0; i < items.length; i++) {
+                    var item = items[i];
+
+                    if (item.type.indexOf('image') === 0) {
+                        var blob = item.getAsFile();
+                        var reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            var imageData = e.target.result;
+                            console.log('读取到的图片数据:', imageData);
+                            // 在这里处理读取到的图片数据
+                        };
+
+                        reader.readAsDataURL(blob);
+                    }
+                }
+            });
+        } catch (e) {
+
+        }
+
+        $(document).keydown(function(event) {
+            // 按下 Ctrl 键
+            if (event.ctrlKey) {
+                // 按下 V 键
+                if (event.key === 'v' || event.keyCode === 86) {
+                    console.log('Ctrl + V 被按下');
+                    // 创建 ClipboardJS 实例
+                    const clipboard = navigator.clipboard;
+
+                    // 读取剪贴板内容
+                    clipboard.read().then(function(data) {
+                        console.log('剪贴板内容:', data);
+                    }).catch(function(error) {
+                        console.error('读取剪贴板失败:', error);
+                    });
+                }
+            }
+        });
 
         $(document).on("mousewheel DOMMouseScroll", ".layui-layer-phimg img", function (e) {
             var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || // chrome & ie

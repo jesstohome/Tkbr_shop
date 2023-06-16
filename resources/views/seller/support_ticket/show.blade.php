@@ -180,7 +180,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-md-10">
-                            <input class="form-control" type="text" name="reply" value="" />
+                            <input id="reply-input" class="form-control" type="text" name="reply" value="" />
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-sm btn-primary" onclick="submit_reply('pending')">{{ translate('Send Reply') }}</button>
