@@ -144,9 +144,13 @@
                                             @if($ticketreply->files)
                                                 <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
                                                 @foreach ((explode(",",$ticketreply->files)) as $key => $file)
-                                                    @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
-                                                    @if($file_detail != null)
-                                                        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
+                                                    @if (is_numeric($file))
+                                                        @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
+                                                        @if($file_detail != null)
+                                                            <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
+                                                        @endif
+                                                    @else
+                                                        <img src="data:image/png;base64,{{$file}}" data-src="data:image/png;base64,{{$file}}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
                                                     @endif
                                                 @endforeach
                                             </div>

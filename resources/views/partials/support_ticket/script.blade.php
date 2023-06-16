@@ -14,25 +14,38 @@
         reader.readAsDataURL(file);
     }
 
+    function convertBase64ToBinary(base64Data) {
+        var binaryString = atob(base64Data);
+        var length = binaryString.length;
+        var bytes = new Uint8Array(length);
+
+        for (var i = 0; i < length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        return bytes;
+    }
+
     function uploadImage(base64Data) {
+        $("input[name=attachments]").val(base64Data);
+        var form_data = new FormData($( '#ticket-reply-form' )[0]);
+        // console.log(form_data)
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': AIZ.data.csrf
             },
-            url: AIZ.data.appUrl + "/aiz-uploader/upload",
+            url: "{{Auth::user()->user_type != 'seller' ? route('support_ticket.admin_store') : route('seller.support_ticket.reply_store')}}",
             type: 'POST',
-            data: {
-                aiz_file: base64Data
-            },
+            data: form_data,
             processData: false,
             contentType: false,
             success: function (response) {
                 // 处理上传成功的响应
-                console.log(response)
+                console.log("处理上传成功的响应", response)
             },
             error: function (xhr, status, error) {
                 // 处理上传失败的响应
-                console.log(error)
+                console.log("处理上传失败的响应", xhr, status, error)
             }
         });
     }
@@ -65,6 +78,7 @@
                                         var imageData = e.target.result;
                                         console.log('读取到的图片数据:', imageData);
 
+                                        // 上传图片
                                         uploadImage(imageData);
 
                                         // 在这里处理读取到的图片数据
