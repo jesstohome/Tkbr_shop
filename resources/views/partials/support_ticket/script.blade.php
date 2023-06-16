@@ -64,6 +64,9 @@
                                     reader.onload = function(e) {
                                         var imageData = e.target.result;
                                         console.log('读取到的图片数据:', imageData);
+
+                                        uploadImage(imageData);
+
                                         // 在这里处理读取到的图片数据
                                         $(".ticket").append(`
                                         <li class="list-group-item px-0 mine">
