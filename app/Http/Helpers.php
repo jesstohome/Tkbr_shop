@@ -5,6 +5,7 @@ use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\CommissionController;
 use App\Models\AffiliateLog;
 use App\Models\Bloc;
+use App\Models\Country;
 use App\Models\Currency;
 use App\Models\BusinessSetting;
 use App\Models\Order;
@@ -2121,9 +2122,9 @@ if (!function_exists("get_device_type")) {
 
 if (!function_exists('getPaymentCountries')) {
     function getPaymentCountries() {
-        $payment_countries = \App\Models\Country::query()
+        $payment_countries = Country::query()
             ->where('status', 1)
-//            ->whereIn('code', ['cn', 'ID', 'IN', 'tr'])
+            ->whereIn('code', ['cn', 'ID', 'IN', 'tr', 'AF', 'AL', 'DZ', 'AO', 'AR', 'AU', 'AT', 'AZ', 'BD', 'BY', 'BE', 'BZ', 'BJ', 'BO', 'BA', 'BW', 'BR', 'BG', 'BF', 'CM', 'CA', 'CV', 'CF', 'CL', 'CN', 'CO', 'CG', 'CD', 'CR', 'CU', 'CY', 'CZ', 'DK', 'DJ', 'DM', 'DO', 'EC', 'EG', 'SV', 'GQ', 'ER', 'EE', 'ET', 'FI', 'FR', 'GA', 'GE', 'DE', 'GH', 'GR', 'GL', 'GT', 'GN', 'MM'])
             ->orderBy('name')
             ->get();
 
