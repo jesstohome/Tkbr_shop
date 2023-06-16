@@ -41,7 +41,7 @@
                                                 'X-CSRF-TOKEN': AIZ.data.csrf
                                             },
                                             method: "POST",
-                                            url: "{{route('upload')}}",
+                                            url: AIZ.data.appUrl + "/aiz-uploader/upload",
                                             data: form_data,
                                             cache: false,
                                             contentType: false,
