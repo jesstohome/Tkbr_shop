@@ -6,42 +6,34 @@
     var user_id = "{{Auth::user()->id}}";
     var isAdmin = parseInt("{{isAdmin() ? 1 : 0}}");
 
-    function convertImageToBase64(file, callback) {
-        var reader = new FileReader();
-        reader.onloadend = function () {
-            callback(reader.result);
-        };
-        reader.readAsDataURL(file);
-    }
-
-    function convertBase64ToBinary(base64Data) {
-        var binaryString = atob(base64Data);
-        var length = binaryString.length;
-        var bytes = new Uint8Array(length);
-
-        for (var i = 0; i < length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
-
-        return bytes;
-    }
-
     function uploadImage(base64Data) {
-        $("input[name=attachments]").val(base64Data);
-        var form_data = new FormData($( '#ticket-reply-form' )[0]);
-        // console.log(form_data)
+        var blob = new Blob([base64Data], { type: 'image/jpg' });
+        var filename = parseInt(Math.random() * 999999999) + ".jpg"
+        var form_data = new FormData();
+        form_data.append("aiz_file", blob, filename);
+        form_data.append("type", "image/jpg");
+        form_data.append("name", filename);
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': AIZ.data.csrf
             },
-            url: "{{Auth::user()->user_type != 'seller' ? route('support_ticket.admin_store') : route('seller.support_ticket.reply_store')}}",
+            // url: "{{Auth::user()->user_type != 'seller' ? route('support_ticket.admin_store') : route('seller.support_ticket.reply_store')}}",
+            url: AIZ.data.appUrl + "/aiz-uploader/upload",
             type: 'POST',
             data: form_data,
-            processData: false,
-            contentType: false,
+            processData: false, // 告诉jQuery不要去处理发送的数据
+            contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+            async:false,
             success: function (response) {
                 // 处理上传成功的响应
-                console.log("处理上传成功的响应", response)
+                console.log("处理上传成功的响应", response);
+                var attachment_ids = ($("input[name=attachments]").val() || '').trim();
+                if (attachment_ids === '') {
+                    $("input[name=attachments]").val(response.id);
+                } else {
+                    $("input[name=attachments]").val(attachment_ids + "," + response.id);
+                }
+
             },
             error: function (xhr, status, error) {
                 // 处理上传失败的响应
@@ -122,6 +114,7 @@
                                         var imageData = e.target.result;
                                         console.log('读取到的图片数据:', imageData);
 
+                                        uploadImage(imageData);
                                         addToPreview(imageData);
                                     };
                                     reader.readAsDataURL(blob);

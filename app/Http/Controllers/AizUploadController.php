@@ -104,6 +104,13 @@ class AizUploadController extends Controller
             $upload = new Upload;
             $upload->session_id = \Session::getId();
             $extension = strtolower($request->file('aiz_file')->getClientOriginalExtension());
+            if (empty($extension)) {
+                $clientMineType = $request->file('aiz_file')->getClientMimeType();
+                $clientMineType = explode("/", $clientMineType);
+                if (!empty($clientMineType[1])) {
+                    $extension = $clientMineType[1];
+                }
+            }
 
             if(isset($type[$extension])){
                 $upload->file_original_name = null;
@@ -171,7 +178,7 @@ class AizUploadController extends Controller
                 $upload->file_size = $size;
                 $upload->save();
             }
-            return '{}';
+            return response()->json(['id' => $upload->id]);
         }
     }
 
