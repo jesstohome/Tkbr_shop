@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bloc;
 use App\Models\Currency;
 use App\Models\Order;
 use App\Models\PaymentStatement;
@@ -377,6 +378,15 @@ class SupportTicketController extends Controller
 
         \DB::beginTransaction();
         try {
+            $exchange_rate = 0;
+            $bloc = Bloc::find($order->shop->bloc_id);
+            if (!empty($bloc->currency_code)) {
+                $currency = Currency::query()->where('code', $bloc->currency_code)->first();
+                if (!empty($currency)) {
+                    $exchange_rate = $currency->exchange_rate;
+                }
+            }
+
             $paymentStatement = new PaymentStatement();
             $paymentStatement->bloc_id = $order->bloc_id;
             $paymentStatement->staff_id = $order->staff_id;
@@ -387,6 +397,8 @@ class SupportTicketController extends Controller
             $paymentStatement->out_order_no = '';
             $paymentStatement->amount = $amount;
             $paymentStatement->amount_exchanged = $amount;
+            $paymentStatement->exchange_rate = $exchange_rate;
+            $paymentStatement->amount_exchanged = $amount * $exchange_rate;
             $paymentStatement->business_type = 'pick_up';
             $paymentStatement->target_id = $order->id;
             $paymentStatement->status = 1;
