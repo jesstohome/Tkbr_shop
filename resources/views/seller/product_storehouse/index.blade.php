@@ -169,6 +169,9 @@
             });
 
             $(evt).parent().remove();
+
+            //  重新计算已添加产品数量
+            $("#product-num").html("{{translate('Product Number')}}:" + $('#product-selection li').length);
         }
 
         function updateSelection(product_id, product_name, product_price, set_meal_id) {
