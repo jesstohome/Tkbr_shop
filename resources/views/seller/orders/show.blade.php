@@ -192,7 +192,7 @@
                         </tr>
                         <tr>
                             <td class="text-main text-bold">{{ translate('Order Date') }}</td>
-                            <td class="text-right">{{ date('d-m-Y h:i A', $order->date) }}</td>
+                            <td class="text-right">{{ date('d-m-Y H:i', $order->date) }}</td>
                         </tr>
                         <tr>
                             <td class="text-main text-bold">{{ translate('Total amount') }}</td>
