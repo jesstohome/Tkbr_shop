@@ -8,6 +8,12 @@
         text-overflow: inherit !important;
         white-space: break-spaces !important;
     }
+
+    .set_meal_name .badge {
+        width: auto;
+        margin-left: 3px;
+        margin-top: 3px;
+    }
 </style>
 @section('panel_content')
 
@@ -56,7 +62,7 @@
                     <div class="col-md-auto w-md-350px w-lg-400px w-xl-500px">
                         <div class="card mb-3">
                             <div class="card-body">
-                                <div id="set_meal_name"></div>
+                                <div id="set_meal_name" class="set_meal_name"></div>
                                 <div class="">
                                     <div class="aiz-pos-cart-list mb-4 mt-3 c-scrollbar-light">
                                         <ul class="list-group list-group-flush" id="product-selection">
@@ -125,10 +131,23 @@
                         if (response.msg) {
                             AIZ.plugins.notify('warning', response.msg);
                         }
+
+                        var product_ids = '';
+                        if (response.products) {
+                            product_ids = response.products.map(item => item.id);
+                            product_ids = product_ids.join(",")
+                        }
+
+                        var meal_item = '<span class="badge badge-primary">\n' +
+                            response.set_meal_name +
+                            '  <button type="button" class="close" aria-label="Close" onclick="removeMeal(this)" data-ids="' + product_ids + '">\n' +
+                            '    <span aria-hidden="true">&times;</span>\n' +
+                            '  </button>\n' +
+                            '</span>';
                         if ($("#set_meal_name").html().trim() === '') {
-                            $("#set_meal_name").html(response.set_meal_name || '');
+                            $("#set_meal_name").html(meal_item);
                         } else if ($("#set_meal_name").html().indexOf(response.set_meal_name || '') === -1) {
-                            $("#set_meal_name").html($("#set_meal_name").html() + ','+ response.set_meal_name || '');
+                            $("#set_meal_name").html($("#set_meal_name").html() + meal_item);
                         }
                         if (response.products) {
                             response.products.forEach((product) => {
@@ -138,6 +157,18 @@
                     }
                 }
             } );
+        }
+
+        function removeMeal(evt) {
+            var ids = ($(evt).data("ids") + '').split(",");
+            $('#product-selection li').each((k, it) => {
+                let product_id = $(it).data("product-id");
+                if (ids.includes(product_id + '')) {
+                    $(it).remove();
+                }
+            });
+
+            $(evt).parent().remove();
         }
 
         function updateSelection(product_id, product_name, product_price, set_meal_id) {
