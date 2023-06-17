@@ -39,17 +39,6 @@
                     </div>
                 </div>
 
-                @if($bloc->discount)
-                    <div class="row mt-3">
-                        <div class="col-md-3">
-                            <label>{{ translate('Discount')}}</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input type="number" lang="en" class="form-control mb-3" placeholder="{{ translate('Discount') }}" value="{{$bloc->discount}}" readonly>
-                        </div>
-                    </div>
-                @endif
-
                 <div class="row">
                     <div class="col-md-3">
                         <label>{{ translate('Transaction ID')}} <span class="text-danger">*</span></label>

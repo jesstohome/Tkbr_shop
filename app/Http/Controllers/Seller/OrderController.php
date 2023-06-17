@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\Models\Bloc;
 use App\Models\Currency;
 use App\Models\Order;
 use App\Models\ProductStock;
@@ -181,6 +182,11 @@ class OrderController extends Controller
 //        dd($order);
         if (!$order || $order->product_storehouse_total <= 0) return response()->json(['success' => 0, 'message' => translate('Something went wrong!')]);
         if ($order->product_storehouse_status == 1) return response()->json(['success' => 0, 'message' => translate('Payment completed')]);
+
+        $bloc = Bloc::find($order->shop->bloc_id);
+        if (!empty($bloc->discount)) {
+            $order->product_storehouse_total = $order->product_storehouse_total * $bloc->discount / 10;
+        }
 
         DB::beginTransaction();
         $shop = $order->shop;

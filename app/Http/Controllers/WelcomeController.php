@@ -34,6 +34,7 @@ class WelcomeController extends Controller
             $bloc->work_order_welcome_message = $request->work_order_welcome_message;
             $bloc->interval_time = $request->interval_time;
             $bloc->work_order_interval_time = $request->work_order_interval_time;
+            $bloc->discount = $request->discount;
             $bloc->save();
 
             flash(translate('Welcome has been updated successfully'))->success();

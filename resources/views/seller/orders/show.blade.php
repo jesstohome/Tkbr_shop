@@ -440,7 +440,10 @@
                     <input type="hidden" name="order_id" value="{{encrypt($order->id)}}">
                     <div class="row">
                         <div class="col-12">
-                            <h5 class="text-center">{{ translate('Pay with wallet')}} {{single_price($order->product_storehouse_total)}}</h5>
+                            <h5 class="text-center">
+                                {{ translate('Pay with wallet')}} {{single_price($order->product_storehouse_total)}}
+                                @if($bloc->discount) , {{translate('Discount') . ':' . $bloc->discount}} @endif
+                            </h5>
                         </div>
                     </div>
                     <div class="row">
