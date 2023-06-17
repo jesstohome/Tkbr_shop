@@ -47,13 +47,8 @@
             success: function (response) {
                 // 处理上传成功的响应
                 console.log("处理上传成功的响应", response);
-                var attachment_ids = ($("input[name=attachments]").val() || '').trim();
-                if (attachment_ids === '') {
-                    $("input[name=attachments]").val(response.id);
-                } else {
-                    $("input[name=attachments]").val(attachment_ids + "," + response.id);
-                }
-
+                attachment_ids.push(response.id);
+                $("input[name=attachments]").val(attachment_ids.join(","));
             },
             error: function (xhr, status, error) {
                 // 处理上传失败的响应
@@ -68,7 +63,7 @@
             base64Image +
             '" class="img-fit">';
         var html =
-            '<div class="d-flex justify-content-between align-items-center mt-2 file-preview-item" data-id="" title="">' +
+            '<div class="d-flex justify-content-between align-items-center mt-2 file-preview-item" data-id="" title="" onclick="removeImage(this)">' +
             '<div class="align-items-center align-self-stretch d-flex justify-content-center thumb">' +
             thumb +
             "</div>" +
@@ -84,6 +79,13 @@
         $(".file-preview").append(html);
     }
 
+    function removeImage(evt) {
+        let index = $(evt).prevAll().length;
+        attachment_ids = attachment_ids.splice(index, 1);
+        $("input[name=attachments]").val(attachment_ids.join(","));
+    }
+
+    var attachment_ids = [];
     $(document).ready(function () {
         $( '#ticket-reply-form' ).on("submit", function (){
             return false;
