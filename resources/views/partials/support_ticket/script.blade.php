@@ -6,8 +6,28 @@
     var user_id = "{{Auth::user()->id}}";
     var isAdmin = parseInt("{{isAdmin() ? 1 : 0}}");
 
-    function uploadImage(base64Data) {
-        var blob = new Blob([base64Data], { type: 'image/jpg' });
+    function convertImageToBase64(file, callback) {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            callback(reader.result);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function convertBase64ToBinary(base64Data) {
+        var binaryString = atob(base64Data);
+        var length = binaryString.length;
+        var bytes = new Uint8Array(length);
+
+        for (var i = 0; i < length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        return bytes;
+    }
+
+    function uploadImage(blob) {
+        // var blob = new Blob([convertBase64ToBinary(base64Data)], { type: 'image/jpg' });
         var filename = parseInt(Math.random() * 999999999) + ".jpg"
         var form_data = new FormData();
         form_data.append("aiz_file", blob, filename);
@@ -64,28 +84,6 @@
         $(".file-preview").append(html);
     }
 
-    function sendOnlyBase64Image(imageData) {
-        // 上传图片
-        uploadImage(imageData);
-
-        // 在这里处理读取到的图片数据
-        $(".ticket").append(`
-                                        <li class="list-group-item px-0 mine">
-<div class="media">
-                                <div class="media-body">
-                                    <div class="comment-header">
-                                        <span class="text-bold h6 text-muted title">
-<div class="images mine"><img src="` + imageData + `" data-src="` + imageData + `" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image"/></div>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-</li>
-                                        `);
-
-        $("ul.ticket").scrollTop(999990);
-    }
-
     $(document).ready(function () {
         $( '#ticket-reply-form' ).on("submit", function (){
             return false;
@@ -114,7 +112,7 @@
                                         var imageData = e.target.result;
                                         console.log('读取到的图片数据:', imageData);
 
-                                        uploadImage(imageData);
+                                        uploadImage(blob);
                                         addToPreview(imageData);
                                     };
                                     reader.readAsDataURL(blob);
