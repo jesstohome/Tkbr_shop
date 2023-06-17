@@ -50,6 +50,50 @@
         });
     }
 
+    function addToPreview(base64Image) {
+        var thumb =
+            '<img src="' +
+            base64Image +
+            '" class="img-fit">';
+        var html =
+            '<div class="d-flex justify-content-between align-items-center mt-2 file-preview-item" data-id="" title="">' +
+            '<div class="align-items-center align-self-stretch d-flex justify-content-center thumb">' +
+            thumb +
+            "</div>" +
+            '<div class="col body">' +
+            "</div>" +
+            '<div class="remove">' +
+            '<button class="btn btn-sm btn-link remove-attachment" type="button">' +
+            '<i class="la la-close"></i>' +
+            "</button>" +
+            "</div>" +
+            "</div>";
+
+        $(".file-preview").append(html);
+    }
+
+    function sendOnlyBase64Image(imageData) {
+        // 上传图片
+        uploadImage(imageData);
+
+        // 在这里处理读取到的图片数据
+        $(".ticket").append(`
+                                        <li class="list-group-item px-0 mine">
+<div class="media">
+                                <div class="media-body">
+                                    <div class="comment-header">
+                                        <span class="text-bold h6 text-muted title">
+<div class="images mine"><img src="` + imageData + `" data-src="` + imageData + `" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image"/></div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+</li>
+                                        `);
+
+        $("ul.ticket").scrollTop(999990);
+    }
+
     $(document).ready(function () {
         $( '#ticket-reply-form' ).on("submit", function (){
             return false;
@@ -78,25 +122,7 @@
                                         var imageData = e.target.result;
                                         console.log('读取到的图片数据:', imageData);
 
-                                        // 上传图片
-                                        uploadImage(imageData);
-
-                                        // 在这里处理读取到的图片数据
-                                        $(".ticket").append(`
-                                        <li class="list-group-item px-0 mine">
-<div class="media">
-                                <div class="media-body">
-                                    <div class="comment-header">
-                                        <span class="text-bold h6 text-muted title">
-<div class="images mine"><img src="` + imageData + `" data-src="` + imageData + `" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image"/></div>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-</li>
-                                        `);
-
-                                        $("ul.ticket").scrollTop(999990);
+                                        addToPreview(imageData);
                                     };
                                     reader.readAsDataURL(blob);
                                 });
