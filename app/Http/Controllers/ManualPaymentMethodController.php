@@ -241,7 +241,9 @@ class ManualPaymentMethodController extends Controller
         $type = $request->type ?? 1;
         $order_id = $request->order_id ?? 0;
         $order = Order::find($order_id);
-        return view('frontend.user.wallet.offline_recharge_modal', compact('type', 'order_id', 'order'));
+
+        $bloc = Bloc::query()->where("bloc_id", $order->bloc_id)->get();
+        return view('frontend.user.wallet.offline_recharge_modal', compact('type', 'order_id', 'order', 'bloc'));
     }
 
     public function admin_recharge_modal( Request $request ) {
