@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Combinations;
 use Artisan;
 use Auth;
+use Illuminate\Support\Facades\Redis;
 use Str;
 
 use App\Services\ProductService;
@@ -290,6 +291,20 @@ class ProductController extends Controller
 
     public function updatePublished(Request $request)
     {
+        $max_off_shelf_num = (int) get_setting('max_off_shelf_num');
+        if (empty($request->status) && !empty($max_off_shelf_num)) {
+            $cache_key = "today_off_shelf_products:" . Auth::user()->id;
+            $product_ids = Redis::lrange($cache_key, 0, -1);
+            if (!empty($product_ids)) {
+                $product_ids = array_unique($product_ids);
+                if (count($product_ids) >= $max_off_shelf_num) {
+                    return 3;
+                }
+            }
+            // 记录下架产品ID
+            Redis::rpush($cache_key, $request->id);
+        }
+
         $product = Product::findOrFail($request->id);
         $product->published = $request->status;
         if (addon_is_activated('seller_subscription') && $request->status == 1) {

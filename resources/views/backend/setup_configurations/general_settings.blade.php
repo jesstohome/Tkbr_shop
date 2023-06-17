@@ -163,6 +163,14 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">{{translate('Maximum number of shelves removed per day')}}</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="max_off_shelf_num">
+                                <input type="number" class="form-control" value="{{ get_setting('max_off_shelf_num') }}" name="max_off_shelf_num" />
+                            </div>
+                        </div>
+
                         <div class="text-right">
     						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
     					</div>

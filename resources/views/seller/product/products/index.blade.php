@@ -226,8 +226,9 @@
             $.post('{{ route('seller.products.published') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
                 if(data == 1){
                     AIZ.plugins.notify('success', '{{ translate('Published products updated successfully') }}');
-                }
-                else{
+                } else if (data == 3) {
+                    AIZ.plugins.notify('success', '{{ sprintf(translate('Up to %s items can be removed from shelves in a single day'), get_setting('max_off_shelf_num')) }}');
+                } else{
                     AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
                     location.reload();
                 }
