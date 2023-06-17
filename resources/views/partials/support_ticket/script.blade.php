@@ -81,7 +81,7 @@
 
     function removeImage(evt) {
         let index = $(evt).prevAll().length;
-        attachment_ids = attachment_ids.splice(index, 1);
+        attachment_ids.splice(index, 1);
         $("input[name=attachments]").val(attachment_ids.join(","));
     }
 
