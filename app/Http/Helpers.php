@@ -1860,13 +1860,18 @@ if (!function_exists('appendTicketFiles')) {
             $list[$key]->created_time = date('m-d H:i', strtotime($value->created_at));
 
             // files
-            $file_ids = $value->files ? explode(',', $value->files) : [];
             $file_list = [];
-            if ($file_ids) {
-                foreach (Upload::query()->whereIn('id', $file_ids)->get() as $asset) {
-                    $file_list[] = $asset->external_link == null ? my_asset($asset->file_name) : $asset->external_link;
+            if (strpos($value->files, 'base64') !== false) {
+                $file_list[] = $value->files;
+            } else {
+                $file_ids = $value->files ? explode(',', $value->files) : [];
+                if ($file_ids) {
+                    foreach (Upload::query()->whereIn('id', $file_ids)->get() as $asset) {
+                        $file_list[] = $asset->external_link == null ? my_asset($asset->file_name) : $asset->external_link;
+                    }
                 }
             }
+
             $list[$key]->file_list = $file_list;
         }
 
