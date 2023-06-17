@@ -227,7 +227,8 @@
                 if(data == 1){
                     AIZ.plugins.notify('success', '{{ translate('Published products updated successfully') }}');
                 } else if (data == 3) {
-                    AIZ.plugins.notify('success', '{{ sprintf(translate('Up to %s items can be removed from shelves in a single day'), get_setting('max_off_shelf_num')) }}');
+                    AIZ.plugins.notify('warning', '{{ sprintf(translate('Up to %s items can be removed from shelves in a single day'), get_setting('max_off_shelf_num')) }}');
+                    el.checked = 1;
                 } else{
                     AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
                     location.reload();

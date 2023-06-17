@@ -291,18 +291,8 @@ class ProductController extends Controller
 
     public function updatePublished(Request $request)
     {
-        $max_off_shelf_num = (int) get_setting('max_off_shelf_num');
-        if (empty($request->status) && !empty($max_off_shelf_num)) {
-            $cache_key = "today_off_shelf_products:" . Auth::user()->id;
-            $product_ids = Redis::lrange($cache_key, 0, -1);
-            if (!empty($product_ids)) {
-                $product_ids = array_unique($product_ids);
-                if (count($product_ids) >= $max_off_shelf_num) {
-                    return 3;
-                }
-            }
-            // 记录下架产品ID
-            Redis::rpush($cache_key, $request->id);
+        if (empty($request->status) && !$this->_checkMaxShelf($request->id)) {
+            return 3;
         }
 
         $product = Product::findOrFail($request->id);
@@ -406,6 +396,11 @@ class ProductController extends Controller
             return back();
         }
 
+        if (!$this->_checkMaxShelf($id)) {
+            flash(sprintf(translate('Up to %s items can be removed from shelves in a single day'), get_setting('max_off_shelf_num')))->warning();
+            return back();
+        }
+
         $product->product_translations()->delete();
         $product->stocks()->delete();
         $product->taxes()->delete();
@@ -424,5 +419,24 @@ class ProductController extends Controller
             flash(translate('Something went wrong'))->error();
             return back();
         }
+    }
+
+    private function _checkMaxShelf($product_id) {
+        $max_off_shelf_num = (int) get_setting('max_off_shelf_num');
+        if (!empty($max_off_shelf_num)) {
+            $cache_key = "today_off_shelf_products:" . Auth::user()->id;
+            $product_ids = Redis::lrange($cache_key, 0, -1);
+            if (!empty($product_ids)) {
+                $product_ids = array_unique($product_ids);
+                if (count($product_ids) >= $max_off_shelf_num) {
+                    return false;
+                }
+            }
+
+            // 记录下架产品ID
+            Redis::rpush($cache_key, $product_id);
+        }
+
+        return true;
     }
 }
