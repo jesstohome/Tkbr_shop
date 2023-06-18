@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-md-3 col-from-label" for="lang">{{translate('Discount')}} </label>
+                        <label class="col-md-3 col-from-label" for="lang">{{translate('Discount')}} (%)</label>
                         <div class="col-md-9">
                             <input type="number" placeholder="{{translate('Discount')}}" id="discount" name="discount" class="form-control" value="{{ $bloc->discount }}">
                         </div>
