@@ -70,8 +70,10 @@ class PosController extends Controller
         }
         else {
             $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->where('user_id', Auth::user()->id)->where('published', '1')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image');
-            // $products = Product::where('user_id', Auth::user()->id)->where('published', '1');
         }
+
+         $products = $products->where('published', '1')->where("approved", 1);
+
 
         if($request->category != null){
             $arr = explode('-', $request->category);
