@@ -276,6 +276,9 @@
                                     <span onclick="update_rating({{$shop->user->id}})" class="dropdown-item" style="cursor:pointer;">
                                         修改星级
                                     </span>
+                                    <span onclick="update_max_off_shelf_num({{$shop->user->id}}, {{(int) $shop->max_off_shelf_num}})" class="dropdown-item" style="cursor:pointer;">
+                                        修改每日可下架产品数量
+                                    </span>
 
                                     <span onclick="show_package({{$shop->id}},{{$shop->seller_package_id}})" class="dropdown-item" style="cursor:pointer;">
                                         {{translate('Set Package')}}
@@ -796,6 +799,41 @@
                 }
             });
         }
+
+        function update_max_off_shelf_num(seller_id, val) {
+            var content = ' <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">'
+                +'<div class="col-sm-12">'
+                +'<div class="input-group">'
+                +'<span class="input-group-addon"> 每日可下架数量：</span>'
+                +'<input id="max_off_shelf_num" type="text" value="' + val + '" class="form-control" placeholder="每日可下架数量">'
+                +'</div>'
+                +'</div>'
+
+                +'</div>';
+
+            layer.open({
+                type: 1,
+                title:'每日可下架数量',
+                skin:'layui-layer-rim',
+                area:['450px', 'auto'],
+
+                content: content,
+                btn:['保存','取消'],
+                btn1: function (index,layero) {
+                    var max_off_shelf_num = $("#max_off_shelf_num").val();
+                    $.post('{{ route('sellers.update_rating') }}',{_token:'{{ @csrf_token() }}', seller_id:seller_id,max_off_shelf_num:max_off_shelf_num}, function(data){
+                        layer.msg(data.msg,function(){
+                            location.reload();
+                        });
+                    },'json');
+
+                },
+                btn2:function (index,layero) {
+                    layer.close(index);
+                }
+            });
+        }
+
 
         function show_chat_modal(receiver_id) {
             $('#receiver_id').val(receiver_id);

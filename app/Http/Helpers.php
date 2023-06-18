@@ -2273,6 +2273,14 @@ function getCountryCityByIp($ip)
 
 // 获取卖家每日可下架产品的数量
 function get_max_off_shelf_num() {
+    // 优先取卖家的设置
+    $shop = Auth::user()->shop;
+    if (!empty((int) $shop->max_off_shelf_num)) return (int) $shop->max_off_shelf_num;
+
+    // 取集团的设置
     $bloc = Auth::user()->bloc;
-    return (int) !empty($bloc->max_off_shelf_num) ? $bloc->max_off_shelf_num : get_setting('max_off_shelf_num');
+    if (!empty((int) $bloc->max_off_shelf_num)) return (int) $bloc->max_off_shelf_num;
+
+    // 取系统的
+    return (int) get_setting('max_off_shelf_num');
 }

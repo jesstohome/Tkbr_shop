@@ -148,7 +148,7 @@ class SellerController extends Controller
         echo json_encode(['msg'=>translate("Success")]);
     }
 
-    // 修改星级
+    // 修改星级、每日可下架产品数量
     public function update_rating(Request $request)
     {
         $seller_id = $request->seller_id;
@@ -156,6 +156,11 @@ class SellerController extends Controller
         $shop = Shop::query()->where('user_id', $seller_id)->first();
 
         $shop->rating = (float) $shop_rating;
+
+        if ($request->has('max_off_shelf_num')) {
+            $shop->max_off_shelf_num = (int) $request->max_off_shelf_num;
+        }
+
         $shop->save();
 
         echo json_encode(['msg'=>translate("Success")]);
