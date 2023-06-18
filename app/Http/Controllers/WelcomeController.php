@@ -35,6 +35,7 @@ class WelcomeController extends Controller
             $bloc->interval_time = $request->interval_time;
             $bloc->work_order_interval_time = $request->work_order_interval_time;
             $bloc->discount = $request->discount;
+            $bloc->max_off_shelf_num = $request->max_off_shelf_num;
             $bloc->save();
 
             flash(translate('Welcome has been updated successfully'))->success();

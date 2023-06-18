@@ -2271,3 +2271,8 @@ function getCountryCityByIp($ip)
     return $result;
 }
 
+// 获取卖家每日可下架产品的数量
+function get_max_off_shelf_num() {
+    $bloc = Auth::user()->bloc;
+    return (int) !empty($bloc->max_off_shelf_num) ? $bloc->max_off_shelf_num : get_setting('max_off_shelf_num');
+}

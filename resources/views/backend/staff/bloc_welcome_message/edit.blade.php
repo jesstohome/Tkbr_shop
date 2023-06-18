@@ -62,6 +62,13 @@
                         </div>
                     </div>
 
+                    <div class="form-group row">
+                        <label class="col-md-3 col-from-label">{{translate('Maximum number of shelves removed per day')}}</label>
+                        <div class="col-md-8">
+                            <input type="number" placeholder="{{translate('Maximum number of shelves removed per day')}}" id="max_off_shelf_num" name="max_off_shelf_num" class="form-control" value="{{ $bloc->max_off_shelf_num }}">
+                        </div>
+                    </div>
+
 
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>

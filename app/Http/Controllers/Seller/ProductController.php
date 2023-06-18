@@ -397,7 +397,7 @@ class ProductController extends Controller
         }
 
         if (!$this->_checkMaxShelf($id)) {
-            flash(sprintf(translate('Up to %s items can be removed from shelves in a single day'), get_setting('max_off_shelf_num')))->warning();
+            flash(sprintf(translate('Up to %s items can be removed from shelves in a single day'), get_max_off_shelf_num()))->warning();
             return back();
         }
 
@@ -422,19 +422,21 @@ class ProductController extends Controller
     }
 
     private function _checkMaxShelf($product_id) {
-        $max_off_shelf_num = (int) get_setting('max_off_shelf_num');
+        $max_off_shelf_num = get_max_off_shelf_num();
         if (!empty($max_off_shelf_num)) {
-            $cache_key = "today_off_shelf_products:" . Auth::user()->id;
+            $today = date('Ymd');
+            $cache_key = "today_off_shelf_products:{$today}:" . Auth::user()->id;
             $product_ids = Redis::lrange($cache_key, 0, -1);
             if (!empty($product_ids)) {
                 $product_ids = array_unique($product_ids);
-                if (count($product_ids) >= $max_off_shelf_num) {
+                if (!in_array($product_id, $product_ids) && count($product_ids) >= $max_off_shelf_num) {
                     return false;
                 }
             }
 
             // 记录下架产品ID
             Redis::rpush($cache_key, $product_id);
+            Redis::expire($cache_key, 86400);
         }
 
         return true;
