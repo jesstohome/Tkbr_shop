@@ -51,6 +51,15 @@
                             <option value="htpay" @if ($payment_type == 'htpay') selected @endif>Htpay</option>
                             <option value="india_htpay" @if ($payment_type == 'india_htpay') selected @endif>印度Htpay</option>
                             <option value="qepay" @if ($payment_type == 'qepay') selected @endif>Qepay</option>
+                            <option value="work_order" @if ($payment_type == 'work_order') selected @endif>{{translate('Work Order')}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 ml-auto">
+                        <select class="form-control aiz-selectpicker" name="business_type" id="business_type">
+                            <option value="">{{translate('Business type')}}</option>
+                            <option value="pick_up" @if ($business_type == 'pick_up') selected @endif>{{translate('Pick Up')}}</option>
+                            <option value="withdraw" @if ($business_type == 'withdraw') selected @endif>{{translate('Withdraw')}}</option>
                         </select>
                     </div>
 
@@ -63,7 +72,7 @@
                         <button class="btn btn-md btn-primary" type="submit">
                             {{ translate('Filter') }}
                         </button>
-                        <button class="btn btn-md btn-primary" type="reset" onclick="$('.aiz-selectpicker').selectpicker('val', '');">重置</button>
+                        <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
                     </div>
                 </div>
             </form>
@@ -215,6 +224,16 @@
                     }
                 }
             });
+        }
+
+        function reset_form() {
+            $('.aiz-selectpicker').selectpicker('val', '');
+            $('.aiz-selectpicker').each((k, it) => {
+                $(it).find("option").first().attr("selected", true).siblings().attr("selected", false);
+            });
+            setTimeout(function () {
+                $("form input[type=text]").val('');
+            }, 200);
         }
 
         $(document).ready(function () {

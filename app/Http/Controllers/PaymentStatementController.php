@@ -20,9 +20,9 @@ class PaymentStatementController extends Controller
         $payment_statements = PaymentStatement::orderBy('id', 'desc');
         if ($request->date_range) {
             $date_range = $request->date_range;
-            $date_range1 = explode(" / ", $request->date_range);
-            $payment_statements = $payment_statements->where('created_at', '>=', $date_range1[0]);
-            $payment_statements = $payment_statements->where('created_at', '<=', $date_range1[1] . " 23:59:59");
+            $date_range1 = explode("/", $request->date_range);
+            $payment_statements = $payment_statements->where('created_at', '>=', trim($date_range1[0]));
+            $payment_statements = $payment_statements->where('created_at', '<=', trim($date_range1[1]) . " 23:59:59");
         }
 
         if ($request->order_code) {
@@ -46,6 +46,10 @@ class PaymentStatementController extends Controller
             $payment_type = $request->payment_type;
             $payment_statements = $payment_statements->where('payment_type', $request->payment_type);
         }
+        if ($request->business_type) {
+            $business_type = $request->business_type;
+            $payment_statements = $payment_statements->where('business_type', $business_type);
+        }
 
         $seller_id = $request->seller_id;
         if (!empty($seller_id)) {
@@ -61,7 +65,7 @@ class PaymentStatementController extends Controller
         $total_seller = $payment_statements_clone->distinct('seller_id')->count();
 
         $payment_statements = $payment_statements->paginate(15);
-        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type', 'seller_id'));
+        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type', 'seller_id', 'business_type'));
     }
 
     /**
