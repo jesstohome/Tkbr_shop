@@ -176,14 +176,8 @@
                          <td  >
                             {{single_price($shop->bzj_money)}}
                         </td>
-
-                          <td  >
-                          {{translate('base num')}}：{{$shop->view_base_num}}
-                            <br>
-                           {{translate('inc num')}}：{{$shop->view_inc_num}}
-                        </td>
-
-
+                        <td>{{$shop->views}}</td>
+                        
                         <td>
                             <label class="aiz-switch aiz-switch-success mb-0">
                                 <input onchange="update_comment_permission(this)" value="{{ $shop->id }}" type="checkbox" <?php if($shop->comment_permission == 1) echo "checked";?> >
