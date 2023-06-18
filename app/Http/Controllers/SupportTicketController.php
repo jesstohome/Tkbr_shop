@@ -215,6 +215,12 @@ class SupportTicketController extends Controller
         if($ticket_reply->save()) {
             Redis::set('loop_load_new_reply_audio_frontend', 1);
 
+
+            // 保存下，更新下最新时间
+            $ticket = $ticket_reply->ticket;
+            $ticket->updated_at = time();
+            $ticket->save();
+
             if ($request->ajax()) {
                 $list = appendTicketFiles([$ticket_reply]);
                 return response()->json(['success' => 1, 'list' => $list]);
