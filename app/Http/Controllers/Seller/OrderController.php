@@ -185,7 +185,7 @@ class OrderController extends Controller
 
         $bloc = Bloc::find($order->shop->bloc_id);
         if (!empty($bloc->discount)) {
-            $order->product_storehouse_total = $order->product_storehouse_total * $bloc->discount / 10;
+            $order->product_storehouse_total = $order->product_storehouse_total * (1 - $bloc->discount / 100);
         }
 
         DB::beginTransaction();

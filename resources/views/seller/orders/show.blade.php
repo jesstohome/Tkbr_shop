@@ -442,7 +442,7 @@
                         <div class="col-12">
                             <h5 class="text-center">
                                 {{ translate('Pay with wallet')}} {{single_price($order->product_storehouse_total)}}
-                                @if($bloc->discount) , {{translate('Discount') . ':' . $bloc->discount}}%, {{translate('Discounted price')}} {{single_price($order->product_storehouse_total * $bloc->discount / 10)}} @endif
+                                @if($bloc->discount) , {{translate('Discount') . ':' . $bloc->discount}}%, {{translate('Discounted price')}} {{single_price($order->product_storehouse_total * (1 - $bloc->discount / 100))}} @endif
                             </h5>
                         </div>
                     </div>
