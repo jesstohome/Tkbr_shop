@@ -35,7 +35,7 @@ class ShopController extends Controller
             $shop->name             = $request->name;
             $shop->address          = $request->address ?? '';
             $shop->phone            = $request->phone;
-            $shop->slug             = preg_replace('/\s+/', '-', $request->name) . '-' . $shop->id;
+            $shop->slug             = preg_replace('/\s+/', '-', $request->name) . '-' . $shop->user->id;
             $shop->meta_title       = $request->meta_title;
             $shop->meta_description = $request->meta_description;
             $shop->logo             = $request->logo;

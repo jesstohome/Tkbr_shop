@@ -233,7 +233,7 @@ class ShopController extends Controller
             $shop->user_id = $user->id;
             $shop->name = $request->shop_name ?? $request->name;
             $shop->address = $request->address;
-            $shop->slug = preg_replace('/\s+/', '-', $request->name);
+            $shop->slug = preg_replace('/\s+/', '-', $request->name) . '-' . $user->id;
             $user->identity_card_front = $request->identity_card_front ?? 0;
             $user->identity_card_back = $request->identity_card_back ?? 0;
             $user->certtype = $request->certtype;
@@ -419,7 +419,7 @@ class ShopController extends Controller
                 $shop->user_id = $user->id;
                 $shop->name = $user->name . " Shop";
                 $shop->address = '';
-                $shop->slug = preg_replace('/\s+/', '-', $user->name);
+                $shop->slug = preg_replace('/\s+/', '-', $user->name) . '-' . $user->id;
                 $shop->seller_package_id = $package_id;
                 $shop->verification_status = 1;
                 $shop->save();

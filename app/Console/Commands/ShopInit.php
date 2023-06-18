@@ -90,7 +90,7 @@ class ShopInit extends Command
                 $shop->user_id = $user->id;
                 $shop->name = $user->name . " Shop";
                 $shop->address = '';
-                $shop->slug = preg_replace('/\s+/', '-', $user->name);
+                $shop->slug = preg_replace('/\s+/', '-', $user->name) . '-' . $user->id;
                 $shop->seller_package_id = $package_id;
                 $shop->verification_status = 1;
                 $shop->save();
