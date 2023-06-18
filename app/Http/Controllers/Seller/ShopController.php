@@ -32,6 +32,15 @@ class ShopController extends Controller
                 $shop->shipping_cost = $request->shipping_cost;
             }
 
+            $shop_name = $request->name;
+            if (!empty($shop_name)) {
+                $has_name = Shop::query()->where('name', $shop_name)->where('id', '!=', $shop->id)->count();
+                if ($has_name) {
+                    flash(translate('Shop Name already exists!'))->error();
+                    return back();
+                }
+            }
+
             $shop->name             = $request->name;
             $shop->address          = $request->address ?? '';
             $shop->phone            = $request->phone;

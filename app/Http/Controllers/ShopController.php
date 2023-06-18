@@ -143,6 +143,31 @@ class ShopController extends Controller
                 flash(translate('Email already exists!'))->error();
                 return back();
             }
+
+            // 检测用户名是否已经存在
+            if (!empty($request->name)) {
+                $has_name = User::query()->where('name', $request->name)->count();
+                if ($has_name) {
+
+                    if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Name already exists!')]);
+
+                    flash(translate('Name already exists!'))->error();
+                    return back();
+                }
+            }
+
+            // 检测店铺名是否已经存在
+            $shop_name = $request->shop_name ?: $request->name;
+            if (!empty($shop_name)) {
+                $has_name = Shop::query()->where('name', $shop_name)->count();
+                if ($has_name) {
+                    if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Shop Name already exists!')]);
+
+                    flash(translate('Shop Name already exists!'))->error();
+                    return back();
+                }
+            }
+
             if ( $request->password == $request->password_confirmation )
             {
                 $user = new User;
@@ -233,7 +258,7 @@ class ShopController extends Controller
             $shop->user_id = $user->id;
             $shop->name = $request->shop_name ?? $request->name;
             $shop->address = $request->address;
-            $shop->slug = preg_replace('/\s+/', '-', $request->name) . '-' . $user->id;
+            $shop->slug = preg_replace('/\s+/', '-', $shop->name) . '-' . $user->id;
             $user->identity_card_front = $request->identity_card_front ?? 0;
             $user->identity_card_back = $request->identity_card_back ?? 0;
             $user->certtype = $request->certtype;
