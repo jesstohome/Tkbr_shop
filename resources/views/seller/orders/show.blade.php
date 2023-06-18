@@ -439,11 +439,12 @@
                 <div class="modal-body">
                     <input type="hidden" name="order_id" value="{{encrypt($order->id)}}">
                     <div class="row">
-                        <div class="col-12">
-                            <h5 class="text-center">
-                                {{ translate('Pay with wallet')}} {{single_price($order->product_storehouse_total)}}
-                                @if($bloc->discount) , {{translate('Discount') . ':' . $bloc->discount}}%, {{translate('Discounted price')}} {{single_price($order->product_storehouse_total * (1 - $bloc->discount / 100))}} @endif
-                            </h5>
+                        <div class="col-6 text-left" style="font-weight: 600">
+                            <p>{{ translate('Pay with wallet')}}: {{single_price($order->product_storehouse_total)}}</p>
+                            @if($bloc->discount)
+                            <p>{{translate('Discount')}}: {{$bloc->discount}}%</p>
+                            <p>{{translate('Actual payment amount')}}: {{single_price($order->product_storehouse_total * (1 - $bloc->discount / 100))}}</p>
+                            @endif
                         </div>
                     </div>
                     <div class="row">
