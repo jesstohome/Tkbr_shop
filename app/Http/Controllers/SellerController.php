@@ -188,6 +188,10 @@ class SellerController extends Controller
             $approved = $request->approved_status;
             $shops = $shops->where('verification_status', $approved);
         }
+        if (!empty($request->bloc_id)) {
+            $bloc_id = $request->bloc_id;
+            $shops = $shops->where('bloc_id', $bloc_id);
+        }
 
         if ($request->date_range) {
             $date_range = $request->date_range;
@@ -223,7 +227,7 @@ class SellerController extends Controller
 
         del_plus('new_shop_created_tip');
 
-        return view('backend.sellers.index', compact('shops', 'sort_search', 'approved', 'date_range', 'start_time', 'end_time', 'is_virtual_user', 'salesman_user_id'));
+        return view('backend.sellers.index', compact('shops', 'sort_search', 'approved', 'date_range', 'start_time', 'end_time', 'is_virtual_user', 'salesman_user_id', 'bloc_id'));
     }
 
     /**

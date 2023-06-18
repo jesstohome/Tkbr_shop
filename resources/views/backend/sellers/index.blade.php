@@ -60,6 +60,18 @@
                     <option value="0"  @isset($approved) @if($approved == 'unpaid') selected @endif @endisset>{{translate('Non-Approved')}}</option>
                 </select>
             </div>
+
+            @if (isSupperAdmin())
+            <div class="col-md-2 ml-auto">
+                <select class="form-control aiz-selectpicker" name="bloc_id" id="bloc_id" onchange="sort_sellers()">
+                    <option value="">{{translate('Filter by Bloc')}}</option>
+                    @foreach(\App\Models\Bloc::all() as $bloc)
+                    <option value="{{$bloc->id}}"  @isset($bloc_id) @if($bloc_id == $bloc->id) selected @endif @endisset>{{$bloc->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            @endif
+
             <div class="col-md-2">
                 <div class="form-group mb-0">
                   <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type name or email & Enter') }}">
@@ -85,6 +97,7 @@
                     <th>{{translate('Name')}}</th>
                     <th data-breakpoints="lg">{{translate('Phone')}}</th>
                     <th data-breakpoints="lg">{{translate('Email Address')}}</th>
+                    @if (isSupperAdmin()) <th data-breakpoints="lg">{{translate('Bloc')}}</th> @endif
                     <th data-breakpoints="lg">{{translate('Verification Info')}}</th>
                     <th data-breakpoints="lg">{{translate('Approval')}}</th>
                     <th data-breakpoints="lg">{{translate('Responsible sub account')}}</th>
@@ -125,6 +138,7 @@
                         <td>@if($shop->user->banned == 1) <i class="fa fa-ban text-danger" aria-hidden="true"></i> @endif {{$shop->name}} @if($shop->user->is_virtual == 1) (<font color="red">{{translate('Virtual')}}</font>) @endif</td>
                         <td>{{$shop->user->phone}}</td>
                         <td>{{$shop->user->email}}</td>
+                        @if (isSupperAdmin()) <td>{{$shop->bloc->name}}</td> @endif
                         <td>
                             @if ($shop->verification_info != null)
                                 <a href="{{ route('sellers.show_verification_request', $shop->id) }}">
@@ -177,7 +191,7 @@
                             {{single_price($shop->bzj_money)}}
                         </td>
                         <td>{{$shop->views}}</td>
-                        
+
                         <td>
                             <label class="aiz-switch aiz-switch-success mb-0">
                                 <input onchange="update_comment_permission(this)" value="{{ $shop->id }}" type="checkbox" <?php if($shop->comment_permission == 1) echo "checked";?> >

@@ -13,6 +13,10 @@ class Shop extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function bloc() {
+        return $this->belongsTo(Bloc::class);
+    }
+
     public function staff() {
         return $this->belongsTo(Staff::class);
     }
