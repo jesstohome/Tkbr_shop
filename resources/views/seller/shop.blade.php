@@ -279,7 +279,7 @@
                     </div>
                     <div class="form-group text-right">
                         <button type="button" class="btn btn-sm btn-primary transition-3d-hover mr-1" onclick="gotoDownload()">{{translate('Confirm')}}</button>
-                        <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal">{{translate('Cancel')}}</button>
+                        <button type="button" class="btn btn-sm btn-dark" data-dismiss="modal" style="background-color: #ADD8E6;">{{translate('Cancel')}}</button>
                     </div>
                 </div>
             </div>
