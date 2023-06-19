@@ -158,7 +158,7 @@
                                                 @endif
                                             </p>
                                         </span>
-
+                                        <i class="la la-close" style="display: none"></i>
                                     </div>
                                 </div>
                             </div>
