@@ -16,7 +16,7 @@
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="name">{{translate('Name')}}</label>
                         <div class="col-sm-9">
-                            <input type="text" placeholder="{{translate('Name')}}" id="name" name="name" value="{{ $staff->user->name }}" class="form-control" required readonly>
+                            <input type="text" placeholder="{{translate('Name')}}" id="name" name="name" value="{{ $staff->user->name }}" class="form-control" required @if(!(isSupperAdmin() || isBlocManage())) readonly @endif>
                         </div>
                     </div>
                     <div class="form-group row">

@@ -1011,6 +1011,14 @@ if (!function_exists('isAdmin')) {
         }
         return false;
     }
+
+    function isBlocManage() {
+        if (Auth::check() && (Auth::user()->user_type == 'staff')) {
+            $role = Auth::user()->staffInfo->role;
+            return $role->is_manage;
+        }
+        return false;
+    }
 }
 
 if (!function_exists('isSeller')) {
