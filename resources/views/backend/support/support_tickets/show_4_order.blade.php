@@ -72,6 +72,16 @@
         padding: 20px 10px;
         padding-bottom: 5px;
     }
+
+    li.mine .la-close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 99;
+        border: 1px solid;
+        border-radius: 10px;
+        cursor: pointer;
+    }
 </style>
 @section('content')
 
