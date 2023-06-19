@@ -614,4 +614,22 @@ class PosController extends Controller
 
         return back();
     }
+
+    /**
+     * 删除对话消息
+     * @param Request $request
+     * @return int
+     */
+    public function message_destroy(Request $request) {
+        $message_id = $request->id;
+        if ($message_id) {
+            $message = Message::find($message_id);
+            Message::destroy($message_id);
+            flash(translate('Message has been deleted successfully'))->success();
+            return redirect()->route('poin-of-sales.conversation-show', encrypt($message->conversation_id));
+        }
+
+        flash(translate('Something went wrong'))->error();
+        return back();
+    }
 }

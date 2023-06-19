@@ -41,6 +41,11 @@
                         <p>
                             {{ $message->message }}
                         </p>
+                        <p>
+                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('pos-conversation.message_destroy', ['id' => $message->id])}}" title="{{ translate('Delete') }}">
+                                <i class="las la-trash"></i>
+                            </a>
+                        </p>
                     </li>
                 @endforeach
             </ul>
@@ -56,4 +61,8 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('modal')
+    @include('modals.delete_modal')
 @endsection

@@ -36,6 +36,7 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function()
 		Route::get('/pos-conversation', 'pos_conversation')->name('poin-of-sales.conversation');
 		Route::get('/pos-conversation-show/{id}', 'pos_conversation_show')->name('poin-of-sales.conversation-show');
         Route::post('pos-conversation/message/store', 'pos_conversation_message_store')->name('pos-conversation.message_store');
+        Route::get('pos-conversation/message/destroy', 'message_destroy')->name('pos-conversation.message_destroy');
 	});
 });
 
