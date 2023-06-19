@@ -618,13 +618,21 @@ class PosController extends Controller
     /**
      * 删除对话消息
      * @param Request $request
-     * @return int
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function message_destroy(Request $request) {
         $message_id = $request->id;
         if ($message_id) {
             $message = Message::find($message_id);
             Message::destroy($message_id);
+
+            // 消息全部删除完了，则删除对话
+            if (Message::query()->where('conversation_id', $message->conversation_id)->count() == 0) {
+                Conversation::destroy($message->conversation_id);
+                flash(translate('Message has been deleted successfully'))->success();
+                return redirect()->route('poin-of-sales.conversation');
+            }
+
             flash(translate('Message has been deleted successfully'))->success();
             return redirect()->route('poin-of-sales.conversation-show', encrypt($message->conversation_id));
         }
