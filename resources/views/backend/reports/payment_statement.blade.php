@@ -74,7 +74,7 @@
                         </div>
                     @endif
 
-                    @if(!(isSupperAdmin() || isBlocManage()))
+                    @if(isSupperAdmin() || isBlocManage())
                     <div class="col-md-2 ml-auto">
                         <select class="form-control aiz-selectpicker" name="staff_id" id="staff_id" data-live-search="true">
                             <option value="">{{translate('Filter by Staff')}}</option>
