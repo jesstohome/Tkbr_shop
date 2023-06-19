@@ -133,7 +133,7 @@
                     </div>
                 </div>
                 <ul class="list-group list-group-flush ticket">
-                    @foreach($ticket_replies->ticketreplies as $ticketreply)
+                    @foreach($ticketreplies as $ticketreply)
                         @if(empty($ticketreply->user_id)) @continue @endif
                         <li class="list-group-item px-0 {{-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id() ? 'mine' : ''}} {{$ticketreply->read ? 'is-read' : 'un-read'}}" data-id="{{$ticketreply->id}}">
                             <div class="media">
