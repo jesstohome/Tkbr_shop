@@ -551,15 +551,20 @@ class PosController extends Controller
      * time: 2023-04-08 12:31
      * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|mixed
      */
-    public function pos_conversation() {
+    public function pos_conversation(Request $request) {
         if (BusinessSetting::where('type', 'conversation_system')->first()->value == 1) {
             $conversations = Conversation::where('add_by_admin', 1)->orderBy('updated_at', 'desc');
             $conversations = filter_by_bloc($conversations);
-            $conversations = $conversations->paginate(5);
+
+            $seller_id = $request->seller_id;
+            if ($seller_id) {
+                $conversations = $conversations->where("receiver_id", $seller_id);
+            }
+            $conversations = $conversations->paginate(5)->appends(request()->query());
 
             del_plus('new_pos_conversation_tip');
 
-            return view('pos.conversations.index', compact('conversations'));
+            return view('pos.conversations.index', compact('conversations', 'seller_id'));
         } else {
             flash(translate('Conversation is disabled at this moment'))->warning();
             return back();

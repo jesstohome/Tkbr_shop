@@ -10,6 +10,19 @@
     </div>
 
     <div class="card">
+        <form>
+            <div class="card-header row gutters-5">
+                <div class="col-md-2 ml-auto">
+                    <select class="form-control aiz-selectpicker" name="seller_id" id="seller_id" data-live-search="true">
+                        <option value="">{{translate('Filter by Shop')}}</option>
+                        @foreach(filter_by_bloc(\App\Models\User::query()->where('user_type', 'seller'))->get() as $seller)
+                            <option value="{{$seller->id}}"  @isset($seller_id) @if($seller_id == $seller->id) selected @endif @endisset>{{$seller->shop->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
+            </div>
+        </form>
       <div class="card-body">
         <ul class="list-group list-group-flush">
           @foreach ($conversations as $key => $conversation)
@@ -39,6 +52,9 @@
                                       {{ date('H:i:m d-m-Y', strtotime($conversation->updated_at)) }}
                                   </span>
                               </p>
+                          </div>
+                          <div class="col-auto col-lg-1">
+                              {{$conversation->receiver->shop ? $conversation->receiver->shop->name : ''}}
                           </div>
                           <div class="col-12 col-lg">
                               <div class="block-body">
