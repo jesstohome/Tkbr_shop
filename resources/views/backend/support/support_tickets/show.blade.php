@@ -70,6 +70,16 @@
         padding: 20px 10px;
         padding-bottom: 5px;
     }
+
+    li.mine .la-close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 99;
+        border: 1px solid;
+        border-radius: 10px;
+        cursor: pointer;
+    }
 </style>
 @section('content')
 
@@ -87,8 +97,8 @@
         <div class="card-body">
             <div class="pad-top">
                 <ul class="list-group list-group-flush ticket">
-                    @foreach($ticket->ticketreplies as $ticketreply)
-                        <li class="list-group-item px-0 {{-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id() ? 'mine' : ''}}">
+                    @foreach($ticket_replies as $ticketreply)
+                        <li class="list-group-item px-0 {{-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id() ? 'mine' : ''}} {{$ticketreply->read ? 'is-read' : 'un-read'}}" data-id="{{$ticketreply->id}}">
                             @if(!empty($ticketreply->reply) || $ticketreply->files)
                             <div class="media">
                                 <div class="media-body">
@@ -109,14 +119,18 @@
                                                 @endif
                                             </div>
                                             @endif
-                                            <p class="text-muted text-sm fs-11 time">{{date('m-d H:i', strtotime($ticketreply->created_at))}}</p>
+                                            <p class="text-muted text-sm fs-11 time">
+                                                {{date('m-d H:i', strtotime($ticketreply->created_at))}}
+                                                @if($ticketreply->read && (-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id()))
+                                                    <span style='padding-left:3px;'>已读</span>
+                                                @endif
+                                            </p>
                                         </span>
-
+                                        <i class="la la-close" style="display: none"></i>
                                     </div>
                                 </div>
                             </div>
                             @endif
-
                         </li>
                     @endforeach
                 </ul>

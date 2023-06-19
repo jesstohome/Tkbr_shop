@@ -95,7 +95,7 @@ class SupportTicketController extends Controller
         $ticket = Ticket::findOrFail(decrypt($id));
         $ticket->client_viewed = 1;
         $ticket->save();
-        $ticket_replies = $ticket->ticketreplies;
+        $ticket_replies = $ticket->ticketreplies->where('recall', 0);
         foreach ($ticket_replies as $ticket_reply) {
             $ticket_reply->read = 1;
             $ticket_reply->save();

@@ -154,8 +154,8 @@
         </div>
         <div class="card-body msg-box" style="padding: 0!important;">
             <ul class="list-group list-group-flush ticket">
-                @foreach($ticket->ticketreplies as $ticketreply)
-                    <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}} {{$ticketreply->user_id == 0 ? 'system' : ''}}">
+                @foreach($ticket_replies as $ticketreply)
+                    <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}} {{$ticketreply->user_id == 0 ? 'system' : ''}}" data-id="{{$ticketreply->id}}">
                         <div class="media">
                             <div class="media-body">
                                 <div class="comment-header">

@@ -133,8 +133,8 @@
         <div class="card-body msg-box" style="padding: 0!important;">
             <div class="pad-top">
                 <ul class="list-group list-group-flush ticket">
-                    @foreach($ticket->ticketreplies as $ticketreply)
-                        <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
+                    @foreach($ticket_replies as $ticketreply)
+                        <li class="list-group-item px-0 {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}" data-id="{{$ticketreply->id}}">
                             @if(!empty($ticketreply->reply) || $ticketreply->files)
                             <div class="media">
                                 <div class="media-body">

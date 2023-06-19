@@ -1890,8 +1890,34 @@ if (!function_exists('load_new_reply')) {
             $ticket = Ticket::query()->where('user_id', $user_id)->where("type", 'service')->latest('id')->first();
             $ticket_id = $ticket->id;
         }
+
+        // 若传过来ticket_id，且是行政后台，则获取当前消息，卖家的已读未读状态,否则取撤回消息的状态
+        $readIds = [];
+        $recallIds = [];
+        if (!empty($request->ticket_id)) {
+            // 只取前30条的状态
+            if (isAdmin()) {
+                $readIds = TicketReply::query()->select(['id'])
+                    ->where('ticket_id', $request->ticket_id)
+                    ->where('read', 1)
+                    ->where('user_id', $user_id)
+                    ->orderBy('id', 'DESC')
+                    ->limit(30)
+                    ->pluck('id')->toArray();
+            } else {
+                $recallIds = TicketReply::query()->select(['id'])
+                    ->where('ticket_id', $request->ticket_id)
+                    ->where('recall', 1)
+                    ->where('user_id', '!=', $user_id)
+                    ->orderBy('id', 'DESC')
+                    ->limit(30)
+                    ->pluck('id')->toArray();
+            }
+        }
+
         $list = TicketReply::query()
-            ->where('user_id', '!=', $user_id);
+            ->where('user_id', '!=', $user_id)
+            ->where('recall', 0);
 
         if ($request->last_reply_id) {
             $list = $list->where('id', '>', $request->last_reply_id);
@@ -1902,7 +1928,7 @@ if (!function_exists('load_new_reply')) {
         // 只检测有多少未读
         if ($check) {
             if (Session::get('reply_notice') && $check != 2) {
-                return response()->json(['success' => 1, 'count' => 0, 'session_val' => Session::get('reply_notice')]);
+                return response()->json(['success' => 1, 'count' => 0, 'session_val' => Session::get('reply_notice'), 'readIds' => $readIds, 'recallIds' => $recallIds]);
             }
 
             if (Auth::user()->user_type == 'seller' || Auth::user()->user_type == 'customer') {
@@ -1911,7 +1937,7 @@ if (!function_exists('load_new_reply')) {
 
             $tips_key = Auth::user()->user_type == 'seller' || Auth::user()->user_type == 'customer' ? 'loop_load_new_reply_audio_frontend' : 'loop_load_new_reply_audio_backend';
             if (empty(get_plus($tips_key)) && $check == 2){
-                return response()->json(['success' => 2, 'count' => 0, 'k' => $tips_key]);
+                return response()->json(['success' => 2, 'count' => 0, 'k' => $tips_key, 'readIds' => $readIds, 'recallIds' => $recallIds]);
             }
 
             $tag_names = '';
@@ -1931,7 +1957,7 @@ if (!function_exists('load_new_reply')) {
                 del_plus($tips_key);
             }
 
-            return response()->json(['success' => 1, 'count' => $count, 'k' => $tips_key, 'tag_names' => $tag_names]);
+            return response()->json(['success' => 1, 'count' => $count, 'k' => $tips_key, 'tag_names' => $tag_names, 'readIds' => $readIds, 'recallIds' => $recallIds]);
         }
 
         $list = $list->where('ticket_id', $ticket_id);
@@ -1951,7 +1977,7 @@ if (!function_exists('load_new_reply')) {
             del_plus('new_work_order_ticket_tip');
         }
 
-        return response()->json(['success' => 1, 'list' => $list]);
+        return response()->json(['success' => 1, 'list' => $list, 'readIds' => $readIds, 'recallIds' => $recallIds]);
     }
 }
 

@@ -133,15 +133,20 @@
                     </div>
                 </div>
                 <ul class="list-group list-group-flush ticket">
-                    @foreach($ticket->ticketreplies as $ticketreply)
+                    @foreach($ticket_replies->ticketreplies as $ticketreply)
                         @if(empty($ticketreply->user_id)) @continue @endif
-                        <li class="list-group-item px-0 {{-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id() ? 'mine' : ''}}">
+                        <li class="list-group-item px-0 {{-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id() ? 'mine' : ''}} {{$ticketreply->read ? 'is-read' : 'un-read'}}" data-id="{{$ticketreply->id}}">
                             <div class="media">
                                 <div class="media-body">
                                     <div class="comment-header">
                                         <span class="text-bold h6 text-muted title">
                                             @php echo $ticketreply->reply; @endphp
-                                            <p class="text-muted text-sm fs-11 time">{{date('m-d H:i', strtotime($ticketreply->created_at))}}</p>
+                                            <p class="text-muted text-sm fs-11 time">
+                                                {{date('m-d H:i', strtotime($ticketreply->created_at))}}
+                                                @if($ticketreply->read && (-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id()))
+                                                    <span style='padding-left:3px;'>已读</span>
+                                                @endif
+                                            </p>
                                         </span>
 
                                     </div>

@@ -91,6 +91,36 @@
             return false;
         });
 
+        @if(isSupperAdmin())
+        // 消息操作
+        $("ul.ticket").on("mouseenter", ".mine", function () {
+            $(this).find(".la-close").show();
+            $(this).siblings().find(".la-close").hide();
+        });
+        $("ul.ticket").on("mouseleave", ".mine", function () {
+            $(this).find(".la-close").hide();
+        });
+        $("ul.ticket").on("click", ".la.la-close", function () {
+            let that = $(this);
+            let message_id = $(this).parents("li").data("id");
+            layer.confirm("确认撤回吗?", function(index){
+                that.parents("li").remove();
+                layer.close(index);
+                // 向服务端发送删除指令
+                $.ajax( {
+                    url: "{{route('support_ticket.remove_message')}}",
+                    data: {
+                        id: message_id,
+                    },
+                    type: 'POST',
+                    success: function (response) {
+
+                    }
+                } );
+            });
+        });
+        @endif
+
         $(document).keydown(function(event) {
             // 按下 Ctrl 键
             if (event.ctrlKey) {
@@ -248,7 +278,9 @@
             success: function (response)
             {
                 var list = response.list || [];
-                render_reply(list);
+                var readIds = response.readIds || [];
+                var recallIds = response.recallIds || [];
+                render_reply(list, readIds, recallIds);
                 if (list.length > 0) {
                     audioPlay && audioPlay(true);
                 }
@@ -256,8 +288,10 @@
         } );
     }
 
-    function render_reply(list) {
-        if (!list) list = [];
+    function render_reply(list, readIds, recallIds) {
+        if (!list) list = []; // 回复的消息
+        if (!readIds) readIds = []; // 已读消息标识
+        if (!recallIds) recallIds = []; // 已撤回消息标识
 
         if (list.length) {
             list.forEach((item) => {
@@ -266,7 +300,7 @@
                 (item.file_list || []).forEach((img) => {
                     images += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">`
                 })
-                $("ul.ticket").append(`<li class="list-group-item px-0 ${-1 == item.user_id && isAdmin || item.user_id == user_id ? 'mine' : ''}">
+                $("ul.ticket").append(`<li class="list-group-item px-0 ${-1 == item.user_id && isAdmin || item.user_id == user_id ? 'mine' : ''} ${item.read ? 'is-read' : 'un-read'}" data-id="${item.id}">
                             ${item.reply || images ? `<div class="media">
                                 <div class="media-body">
                                     <div class="comment-header">
@@ -275,7 +309,7 @@
                                             <div class="images ${item.user_id == user_id ? 'mine' : ''}">${images}</div>
                                             <p class="text-muted text-sm fs-11 time">${item.created_time}</p>
                                         </span>
-
+                                        <i class="la la-close" style="display: none"></i>
                                     </div>
                                 </div>
                             </div>` : ''}
@@ -284,6 +318,34 @@
                 $("ul.ticket").scrollTop(999990);
             })
         }
+
+        @if(isAdmin())
+        // 已读标识
+        if (readIds.length) {
+            readIds.forEach((id) => {
+                $("ul.ticket").find("li.un-read.mine").each((k, messageLi) => {
+                    let message_id = $(messageLi).data("id");
+                    if (message_id == id) {
+                        $(messageLi).addClass("is-read").removeClass("un-read").find(".time").append("<span style='padding-left:3px;'>已读</span>");
+                    }
+                })
+            });
+        }
+        @endif
+
+        @if(isSeller())
+        // 撤回标识
+        if (recallIds.length) {
+            recallIds.forEach((id) => {
+                $("ul.ticket").find("li:not(.mine)").each((k, messageLi) => {
+                    let message_id = $(messageLi).data("id");
+                    if (message_id == id) {
+                        $(messageLi).remove();
+                    }
+                })
+            });
+        }
+        @endif
     }
     setInterval(loop_load_new_reply, 5e3);
 
@@ -292,5 +354,9 @@
             $('#fast-reply-modal-content').html(data);
             $('#fast_reply_modal').modal('show', {backdrop: 'static'});
         });
+    }
+
+    function recall() {
+
     }
 </script>

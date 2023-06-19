@@ -269,7 +269,7 @@ class SupportTicketController extends Controller
         $ticket->client_viewed = 1;
         $ticket->save();
 
-        $ticket_replies = $ticket->ticketreplies;
+        $ticket_replies = $ticket->ticketreplies->where('recall', 0);
         TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
 
         $view = 'backend.support.support_tickets.show';
@@ -285,7 +285,7 @@ class SupportTicketController extends Controller
         $ticket->viewed = 1;
         $ticket->save();
 
-        $ticket_replies = $ticket->ticketreplies;
+        $ticket_replies = $ticket->ticketreplies->where('recall', 0);
         TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
 
         $order = $ticket->order;
@@ -452,5 +452,20 @@ class SupportTicketController extends Controller
         $seller->remark = $request->remark;
         $seller->save();
         return response()->json(['success' => 1, 'msg' => '保存成功']);
+    }
+
+    /**
+     * 撤回消息
+     * @param Request $request
+     * @return int
+     */
+    public function remove_message(Request $request) {
+        if ($request->id) {
+            TicketReply::query()->where('id', $request->id)->update(['recall' => 1]);
+
+            return 1;
+        }
+
+        return 0;
     }
 }
