@@ -91,7 +91,7 @@
             return false;
         });
 
-        @if(isSupperAdmin())
+        @if(isAdmin())
         // 消息操作
         $("ul.ticket").on("mouseenter", ".mine", function () {
             $(this).find(".la-close").show();
@@ -297,6 +297,11 @@
             list.forEach((item) => {
                 last_reply_id = item.id;
                 var images = '';
+                var isReadHtml = '';
+                @if(isAdmin())
+                isReadHtml = "<span style='padding-left:3px;'>未读</span>";
+                @endif
+
                 (item.file_list || []).forEach((img) => {
                     images += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">`
                 })
@@ -307,7 +312,7 @@
                                         <span class="text-bold h6 text-muted title">
                                             ${item.reply}
                                             <div class="images ${item.user_id == user_id ? 'mine' : ''}">${images}</div>
-                                            <p class="text-muted text-sm fs-11 time">${item.created_time}</p>
+                                            <p class="text-muted text-sm fs-11 time">${item.created_time} ${isReadHtml}</p>
                                         </span>
                                         <i class="la la-close" style="display: none"></i>
                                     </div>
@@ -326,7 +331,9 @@
                 $("ul.ticket").find("li.un-read.mine").each((k, messageLi) => {
                     let message_id = $(messageLi).data("id");
                     if (message_id == id) {
-                        $(messageLi).addClass("is-read").removeClass("un-read").find(".time").append("<span style='padding-left:3px;'>已读</span>");
+                        let timeP = $(messageLi).addClass("is-read").removeClass("un-read").find(".time");
+                        timeP.find("span").remove();
+                        timeP.append("<span style='padding-left:3px;'>已读</span>");
                     }
                 })
             });
