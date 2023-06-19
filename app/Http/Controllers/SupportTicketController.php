@@ -6,6 +6,7 @@ use App\Models\Bloc;
 use App\Models\Currency;
 use App\Models\Order;
 use App\Models\PaymentStatement;
+use App\Models\Shop;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
@@ -73,7 +74,16 @@ class SupportTicketController extends Controller
         $tickets = Ticket::orderBy('viewed')->orderBy('updated_at', 'desc');
         if ($request->has('search')){
             $sort_search = $request->search;
-            $tickets = $tickets->where('code', 'like', '%'.$sort_search.'%');
+            if (!empty($sort_search)) {
+                $userIds = User::query()->where("email", 'like', "%{$sort_search}%")->pluck("id")->toArray();
+                $shopUserIds = Shop::query()->where("name", 'like', "%{$sort_search}%")->pluck("user_id")->toArray();
+                $userIds = array_merge($userIds, $shopUserIds);
+                if (!empty($userIds)) {
+                    $tickets = $tickets->whereIn('user_id', $userIds);
+                } else {
+                    $tickets = $tickets->whereRaw("1=2");
+                }
+            }
         }
 
         $group = $request->group;
