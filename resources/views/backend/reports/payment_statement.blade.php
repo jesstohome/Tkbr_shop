@@ -63,6 +63,26 @@
                         </select>
                     </div>
 
+                    @if (isSupperAdmin())
+                        <div class="col-md-2 ml-auto">
+                            <select class="form-control aiz-selectpicker" name="bloc_id" id="bloc_id" data-live-search="true">
+                                <option value="">{{translate('Filter by Bloc')}}</option>
+                                @foreach(\App\Models\Bloc::all() as $bloc)
+                                    <option value="{{$bloc->id}}"  @isset($bloc_id) @if($bloc_id == $bloc->id) selected @endif @endisset>{{$bloc->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+
+                    <div class="col-md-2 ml-auto">
+                        <select class="form-control aiz-selectpicker" name="staff_id" id="staff_id" data-live-search="true">
+                            <option value="">{{translate('Filter by Staff')}}</option>
+                            @foreach(filter_by_bloc(\App\Models\Staff::query())->get() as $staff)
+                                <option value="{{$staff->id}}"  @isset($staff_id) @if($staff_id == $staff->id) selected @endif @endisset>{{$staff->user->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="col-md-2">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}">
@@ -84,6 +104,8 @@
                             <th>#</th>
                             <th>{{ translate('Seller')}}</th>
                             <th data-breakpoints="lg">{{  translate('Date') }}</th>
+                            @if (isSupperAdmin())<th>{{ translate('Bloc')}}</th> @endif
+                            <th>{{ translate('Person Responsible')}}</th>
                             <th>{{ translate('Order No')}}</th>
                             <th>{{ translate('Inner Order No')}}</th>
                             <th>{{ translate('Outer Order No')}}</th>
@@ -108,6 +130,8 @@
                                     <td>{{ translate('User Not found') }}</td>
                                 @endif
                                 <td>{{ $value->created_at }}</td>
+                                @if (isSupperAdmin()) <td>{{ $value->bloc->name }}</td> @endif
+                                <td>{{ $value->staff->user->name }}</td>
                                 <td>{{ $value->order ? $value->order->code : '' }}</td>
                                 <td>{{ $value->order_no }}</td>
                                 <td>{{ $value->out_order_no ?: $value->transaction_id}}</td>

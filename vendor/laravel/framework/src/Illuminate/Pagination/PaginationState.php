@@ -19,6 +19,9 @@ class PaginationState
         });
 
         Paginator::currentPathResolver(function () use ($app) {
+            if (env('APP_ENV', 'production') == 'local') {
+                return $app['request']->url();
+            }
             return str_replace("http:", "https:", $app['request']->url());
         });
 

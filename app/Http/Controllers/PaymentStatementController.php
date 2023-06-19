@@ -56,6 +56,16 @@ class PaymentStatementController extends Controller
             $payment_statements = $payment_statements->where('seller_id', $seller_id);
         }
 
+        $bloc_id = $request->bloc_id;
+        if (!empty($bloc_id)) {
+            $payment_statements = $payment_statements->where('bloc_id', $bloc_id);
+        }
+
+        $staff_id = $request->staff_id;
+        if (!empty($staff_id)) {
+            $payment_statements = $payment_statements->where('staff_id', $staff_id);
+        }
+
         $payment_statements = filter_by_bloc($payment_statements);
 
         // 统计
@@ -64,8 +74,8 @@ class PaymentStatementController extends Controller
         $total_amount = $payment_statements_clone->sum('amount');
         $total_seller = $payment_statements_clone->distinct('seller_id')->count();
 
-        $payment_statements = $payment_statements->paginate(15);
-        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type', 'seller_id', 'business_type'));
+        $payment_statements = $payment_statements->paginate(15)->appends(request()->query());
+        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type', 'seller_id', 'business_type', 'bloc_id', 'staff_id'));
     }
 
     /**

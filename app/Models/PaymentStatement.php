@@ -14,4 +14,12 @@ class PaymentStatement extends Model
     public function order() {
         return $this->belongsTo(Order::class, 'target_id');
     }
+
+    public function bloc() {
+        return $this->belongsTo(Bloc::class);
+    }
+
+    public function staff() {
+        return $this->belongsTo(Staff::class);
+    }
 }
