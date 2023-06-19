@@ -286,7 +286,7 @@ class SupportTicketController extends Controller
         $ticket->save();
 
         $ticket_replies = $ticket->ticketreplies->where('recall', 0);
-        TicketReply::query()->whereIn('id', $ticket_replies->where("read", 0)->pluck("id"))->update(['read' => 1]);
+        TicketReply::query()->whereIn('id', $ticket_replies->where("user_id", '!=', Auth::user()->id)->where("read", 0)->pluck("id"))->update(['read' => 1]);
 
         $order = $ticket->order;
         if ($order) {
