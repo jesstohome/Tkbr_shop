@@ -197,6 +197,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         // 向厂家付款记录
         Route::get('/sellers_payment_records', 'payment_records')->name('sellers.payment_records');
 
+        // 余额充值，扣除
+        Route::post('/sellers/balance_recharge', 'balance_recharge')->name('sellers.balance_recharge');
+
     });
 
     // Seller Payment

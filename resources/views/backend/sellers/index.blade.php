@@ -288,6 +288,10 @@
                                         修改每日可下架产品数量
                                     </span>
 
+                                    <span onclick="balance_recharge({{$shop->user->id}})" class="dropdown-item" style="cursor:pointer;">
+                                        余额充值
+                                    </span>
+
                                     <span onclick="show_package({{$shop->id}},{{$shop->seller_package_id}})" class="dropdown-item" style="cursor:pointer;">
                                         {{translate('Set Package')}}
                                     </span>
@@ -842,6 +846,51 @@
             });
         }
 
+        function balance_recharge(seller_id) {
+
+
+            var content = ' <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">'
+                +'<div class="col-sm-12">'
+                +'<div class="input-group">'
+                +'<span class="input-group-addon"> 金额：</span>'
+                +'<input id="recharge_amount" type="text" value="" class="form-control" placeholder="金额">'
+                +'</div>'
+                +'</div>'
+
+                +'<div class="col-sm-12" style="margin-top:3px;">'
+                +'<div class="input-group">'
+                +'<span class="input-group-addon"> 类 型：</span>'
+                +'增加:<input id="recharge_type1" type="radio" name="recharge_type" value="add" class="magic-radio" checked>'
+                + '<span style="width:50px;"></span>'
+                +'扣除:<input id="recharge_type2" type="radio" name="recharge_type" value="reduce" class="magic-radio">'
+                +'</div>'
+                +'</div>'
+
+                +'</div>';
+
+            layer.open({
+                type: 1,
+                title:'余额充值',
+                skin:'layui-layer-rim',
+                area:['450px', 'auto'],
+
+                content: content,
+                btn:['保存','取消'],
+                btn1: function (index,layero) {
+                    var recharge_amount = $("#recharge_amount").val();
+                    var recharge_type = $("input[name=recharge_type]:checked").val();
+                    $.post('{{ route('sellers.balance_recharge') }}',{_token:'{{ @csrf_token() }}', seller_id:seller_id,recharge_amount:recharge_amount,recharge_type:recharge_type}, function(data){
+                        layer.msg(data.msg,function(){
+                            location.reload();
+                        });
+                    },'json');
+
+                },
+                btn2:function (index,layero) {
+                    layer.close(index);
+                }
+            });
+        }
 
         function show_chat_modal(receiver_id) {
             $('#receiver_id').val(receiver_id);

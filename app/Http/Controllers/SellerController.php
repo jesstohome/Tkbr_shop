@@ -639,4 +639,30 @@ class SellerController extends Controller
 
         return response()->json(['success' => 1, 'msg' => '保存成功']);
     }
+
+    /**
+     * 余额充值，扣除
+     */
+    public function balance_recharge(Request $request) {
+        Log::debug(var_export([$request->query()], true));
+
+        $seller = User::find($request->seller_id);
+        if (empty($seller)) {
+            return response()->json(['success' => 0, 'msg' => '卖家不存在']);
+        }
+        $recharge_type = $request->recharge_type;
+        $recharge_amount = abs((float) $request->recharge_amount);
+        if (empty($recharge_amount)) {
+            return response()->json(['success' => 0, 'msg' => '金额错误']);
+        }
+
+        if ($recharge_type == 'add') {
+            $seller->balance += $recharge_amount;
+        } else if ($recharge_type == 'reduce') {
+            $seller->balance -= $recharge_amount;
+        }
+        $seller->save();
+
+        return response()->json(['success' => 1, 'msg' => '保存成功']);
+    }
 }
