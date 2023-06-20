@@ -69,7 +69,10 @@
 </head>
 <body class="">
     <audio id='tip-audio'><source src="/public/new2.mp3" type="audio/mpeg"></audio>
-	<div class="aiz-main-wrapper">
+    <audio id='tip-audio-chat'><source src="/public/chat.mp3" type="audio/mpeg"></audio>
+    <audio id='tip-audio-work-chat'><source src="/public/work-chat.mp3" type="audio/mpeg"></audio>
+
+    <div class="aiz-main-wrapper">
         @if(env('APP_ENV') === 'local' && false)
             @include('backend.inc.admin_sidenav')
         @else
@@ -180,19 +183,36 @@
 
 
         let played = 0;
-        function audioPlay(force) {
+        function audioPlay(type) {
             @if(get_admin_setting('msg_tip_mute'))
                 return false;
             @endif
 
-            $("#tip-audio")[0].play();
+            console.log("type=", type)
+            if (!type) {
+                $("#tip-audio")[0].play();
+            } else if (type === 'chat') {
+                $("#tip-audio-chat")[0].play();
+            } else if (type === 'work-chat') {
+                $("#tip-audio-work-chat")[0].play();
+            } else {
+                $("#tip-audio")[0].play();
+            }
         }
 
         function check_new_msg() {
             $.get( '{{route('admin.check_new_msg')}}', {}, function (res)
             {
                 if ( res.code == 1 ) {
-                    res.hasNewAudio && audioPlay(true);
+                    if (res.hasNewAudio) {
+                        if (res.chatAudio) {
+                            audioPlay('chat');
+                        } else if (res.workOrderChatAudio) {
+                            audioPlay('work-chat');
+                        } else {
+                            audioPlay();
+                        }
+                    }
                     for (const ck in res.keys) {
                         // console.log(ck, res.keys[ck]);
                         if (res.keys[ck]) {

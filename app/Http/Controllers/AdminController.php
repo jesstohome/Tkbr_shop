@@ -99,7 +99,9 @@ class AdminController extends Controller
         echo json_encode( [
             'code'=> $hasNew ,
             'hasNew'=> $hasNew ,
-            'hasNewAudio'=> $hasNewAudio ,
+            'hasNewAudio'=> $hasNewAudio,
+            'chatAudio' => get_plus("loop_load_new_reply_audio_backend") > 0,
+            'workOrderChatAudio' => get_plus("work_order_loop_load_new_reply_audio_backend") > 0,
             'msg'=> 'Yes',
             'keys' => [
                 'new_shop_created_tip' => hlen_plus("new_shop_created_tip") > 0,
