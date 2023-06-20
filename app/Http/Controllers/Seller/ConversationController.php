@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Conversation;
 use App\Models\BusinessSetting;
@@ -50,7 +51,13 @@ class ConversationController extends Controller
             $conversation->receiver_viewed = 1;
         }
         $conversation->save();
-        return view('seller.conversations.show', compact('conversation'));
+
+        if (!empty($conversation->product_id)) {
+            $product = Product::find($conversation->product_id);
+            $product_url = route('product', $product->slug);
+        }
+
+        return view('seller.conversations.show', compact('conversation', 'product_url'));
     }
 
     /**

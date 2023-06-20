@@ -142,6 +142,7 @@ class ConversationController extends Controller
         $conversation->staff_id = $product->staff_id;
         $conversation->sender_id = $sender_id;
         $conversation->receiver_id = $product->user_id;
+        $conversation->product_id = $product->id;
         $conversation->title = $request->title;
         $conversation->add_by_admin = $add_by_admin;
 

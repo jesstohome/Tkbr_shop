@@ -21,10 +21,15 @@
             )
             </h5>
         </div>
+        <div class="m-auto" style="margin-top: 10px !important;">
+            @if($product_url)
+                <button type="button" class="btn btn-primary" onclick="window.location.href='{{$product_url}}'">{{translate('View conversation products')}}</button>
+            @endif
+        </div>
 
         <div class="card-body">
             <ul class="list-group list-group-flush">
-                @foreach($conversation->messages as $message)
+                @foreach($conversation->messages as $key => $message)
                     <li class="list-group-item px-0">
                         <div class="media mb-2">
                           <img class="avatar avatar-xs mr-3" @if($message->user != null) src="{{ uploaded_asset($message->user->avatar_original) }}" @endif onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">

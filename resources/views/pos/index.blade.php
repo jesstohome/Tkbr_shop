@@ -629,7 +629,6 @@
             $("#chat_modal input[name=user_id]").val(user_id);
             $("#chat_modal input[name=product_id]").val(product_id);
             $("#chat_modal input[name=title]").val(product_name);
-            $("#chat_modal textarea[name=message]").val(slug);
 
             // 加载对话内容
 
