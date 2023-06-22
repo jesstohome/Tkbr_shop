@@ -530,11 +530,14 @@
                                     <a class="btn btn-soft-warning btn-icon btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_reply('${data.data[i].id}', '${data.data[i].name2}', '${data.data[i].slug_url}')" title="{{ translate('Reply') }}">
                                     {{ translate('Reply') }}
                                     </a>
-                                </div>
-            </div>
+                                    <a class="btn btn-soft-warning btn-icon btn-sm" style="width: auto" href="${data.data[i].slug_url}" target="_blank" title="查看">
+                                    查看
+                    </a>
+                </div>
+</div>
 
-                        </div>
-                    </div>`
+        </div>
+    </div>`
                 );
             }
             if (data.links.next != null) {
