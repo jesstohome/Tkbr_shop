@@ -1,5 +1,9 @@
 @extends('backend.layouts.app')
-
+<style type="text/css">
+    .card-body {
+        min-height: 600px !important;
+    }
+</style>
 @section('content')
 
 <div class="aiz-titlebar text-left mt-2 mb-3">
@@ -846,9 +850,8 @@
             });
         }
 
+        var recharging = false;
         function balance_recharge(seller_id) {
-
-
             var content = ' <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">'
                 +'<div class="col-sm-12">'
                 +'<div class="input-group">'
@@ -877,10 +880,17 @@
                 content: content,
                 btn:['保存','取消'],
                 btn1: function (index,layero) {
+                    if (recharging) return;
+                    recharging = true;
                     var recharge_amount = $("#recharge_amount").val();
                     var recharge_type = $("input[name=recharge_type]:checked").val();
-                    $.post('{{ route('sellers.balance_recharge') }}',{_token:'{{ @csrf_token() }}', seller_id:seller_id,recharge_amount:recharge_amount,recharge_type:recharge_type}, function(data){
-                        layer.msg(data.msg,function(){
+                    $.post('{{ route('sellers.balance_recharge') }}',{_token:'{{ @csrf_token() }}', seller_id:seller_id,recharge_amount:recharge_amount,recharge_type:recharge_type}, function(data) {
+                        if (!data.success) {
+                            layer.msg(data.msg);
+                            recharging = false;
+                            return;
+                        }
+                        layer.msg(data.msg,function() {
                             location.reload();
                         });
                     },'json');
