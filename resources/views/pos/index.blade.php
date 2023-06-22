@@ -10,7 +10,7 @@
                 <div class="row gutters-5 mb-3">
                     <div class="col-md-3 mb-2 mb-md-0">
                         <div class="form-group mb-0">
-                            <input class="form-control form-control-lg" type="text" name="keyword" placeholder="{{ translate('Search by Product Name/Barcode') }}" onkeyup="filterProducts()">
+                            <input class="form-control form-control-lg" type="text" name="keyword" value="{{$product->name}}" placeholder="{{ translate('Search by Product Name/Barcode') }}" onkeyup="filterProducts()">
                         </div>
                     </div>
                     <div class="col-md-3 col-6">
@@ -62,7 +62,7 @@
                                 <select name="user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true" onchange="getShippingAddress()">
                                     <option value="">{{translate('Walk In Customer')}}</option>
                                     @foreach ($customers as $key => $customer)
-										<option value="{{ $customer->id }}" data-contact="{{ $customer->email }}">
+										<option value="{{ $customer->id }}" data-contact="{{ $customer->email }}" {{$customer->id == $customer_id ? 'selected' : ''}}>
 
 
 										    @if ($customer->is_virtual_user == 1)   (<font color="red">{{translate('Virtual')}}</font>)@endif

@@ -23,6 +23,13 @@
             </h5>
         </div>
 
+        <div class="m-auto" style="margin-top: 10px !important;">
+            @if($product_url)
+                <a class="btn btn-primary btn-md" href="{{ $product_url }}" target="_blank">{{ translate('View conversation products') }}</a>
+                <a class="btn btn-primary btn-md" href="{{ route('poin-of-sales.index', ['seller_id' => $seller_id, 'product_id' => $product_id, 'customer_id' => $customer_id]) }}">{{ translate('Place an order') }}</a>
+            @endif
+        </div>
+
         <div class="card-body">
             <ul class="list-group list-group-flush">
                 @foreach($conversation->messages as $message)

@@ -28,14 +28,17 @@ use function get_setting;
 
 class PosController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $seller_id = Session::get('seller_id', 0);
+        $product_id = $request->product_id;
+        $customer_id = $request->customer_id;
+        $seller_id = $request->get('seller_id', Session::get('seller_id', 0));
         $customers = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->where('bloc_id', '>', 0)->orderBy('created_at', 'desc');
         $customers = filter_by_bloc($customers);
         $customers = $customers->get();
+        $product = Product::find($product_id);
         if (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff') {
-            return view('pos.index', compact('customers', 'seller_id'));
+            return view('pos.index', compact('customers', 'seller_id', 'product', 'customer_id'));
         }elseif (Auth::user()->user_type == 'salesman'){
 
             $customers = User::where('user_type', 'customer')->where('referred_by', '=', Auth::user()->id )->orderBy('created_at', 'desc');
@@ -73,7 +76,6 @@ class PosController extends Controller
         }
 
          $products = $products->where('published', '1')->where("approved", 1);
-
 
         if($request->category != null){
             $arr = explode('-', $request->category);
@@ -583,7 +585,17 @@ class PosController extends Controller
         $conversation->sender_viewed = 1;
         $conversation->admin_viewed = 1;
         $conversation->save();
-        return view('pos.conversations.show', compact('conversation'));
+
+        $seller_id = 0;
+        if (!empty($conversation->product_id)) {
+            $product = Product::find($conversation->product_id);
+            $product_url = route('product', $product->slug);
+            $seller_id = $product->user_id;
+        }
+
+        $customer_id = $conversation->sender_id;
+        $product_id = $conversation->product_id;
+        return view('pos.conversations.show', compact('conversation', 'product_url', 'seller_id', 'product_id', 'customer_id'));
     }
 
     /**
