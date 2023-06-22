@@ -58,7 +58,7 @@
                 <div class="row">
                     @if(is_android())
                         <div class="col-md-12">
-                            <a href="javascript:void(0);" id="wallet-link" onclick="$('#payment_for_storehouse_modal').modal('show')" class="btn btn-primary mt-2">{{translate('Wallet')}}</a>
+                            <a href="javascript:void(0);" id="wallet-link" onclick="show_wallet_pay()" class="btn btn-primary mt-2">{{translate('Wallet')}}</a>
 
                             @if(count(\App\Models\ManualPaymentMethod::listByBloc(0, $order->shop->bloc_id)))
                             <a href="javascript:void(0);" id="Manual-link" onclick="show_make_wallet_recharge_modal(3)" class="btn btn-primary mt-2">{{translate('Manual transfer')}}</a>
@@ -90,7 +90,7 @@
                         </div>
                         @else
                         <div class="col-md-12">
-                            <a href="javascript:void(0);" id="wallet-link" onclick="$('#payment_for_storehouse_modal').modal('show')" class="btn btn-primary mt-2">{{translate('Wallet')}}</a>
+                            <a href="javascript:void(0);" id="wallet-link" onclick="show_wallet_pay()" class="btn btn-primary mt-2">{{translate('Wallet')}}</a>
 
                             @if(count(\App\Models\ManualPaymentMethod::listByBloc(0, $order->shop->bloc_id)))
                                 <a href="javascript:void(0);" id="Manual-link" onclick="show_make_wallet_recharge_modal(3)" class="btn btn-primary mt-2">{{translate('Manual transfer')}}</a>
@@ -192,5 +192,13 @@
 
     function create_work_order() {
         location.href = "{{route('seller.orders.create_work_order', ['order_id' => $order->id])}}&currency=" + $("#currency").val();
+    }
+
+    function show_wallet_pay() {
+        @if(empty(Auth::user()->shop->wallet_pay))
+            AIZ.plugins.notify('warning', '{{ translate("Due to your store's violation of Article 19 of the 'Store Opening and Admission Policy', you have been restricted from using the wallet payment function. If you have any questions, please contact TikTok online customer service") }}');
+            return;
+        @endif
+        $('#payment_for_storehouse_modal').modal('show');
     }
 </script>

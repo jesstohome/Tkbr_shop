@@ -107,7 +107,7 @@
                     <th data-breakpoints="lg">{{ translate('Wallet Money') }}</th>
                     <th data-breakpoints="lg">{{ translate('Guarantee Money') }}</th>
                     <th data-breakpoints="lg" style="width:20%;">{{ translate('Views') }}</th>
-                    <th data-breakpoints="lg">{{ translate('Comment Permission') }}</th>
+                    <th data-breakpoints="lg">{{ translate('Wallet Pay') }}</th>
                     <th data-breakpoints="lg">{{ translate('Home Display') }}</th>
                     <th data-breakpoints="lg">{{ translate('Created Time') }}</th>
                     <th data-breakpoints="lg">{{ translate('Total recharge') }}</th>
@@ -194,7 +194,7 @@
 
                         <td>
                             <label class="aiz-switch aiz-switch-success mb-0">
-                                <input onchange="update_comment_permission(this)" value="{{ $shop->id }}" type="checkbox" <?php if($shop->comment_permission == 1) echo "checked";?> >
+                                <input onchange="update_wallet_pay(this)" value="{{ $shop->id }}" type="checkbox" <?php if($shop->wallet_pay == 1) echo "checked";?> >
                                 <span class="slider round"></span>
                             </label>
                         </td>
@@ -948,6 +948,23 @@
                     AIZ.plugins.notify('success', '{{ translate('Approved sellers updated successfully') }}');
                     $(el).parents("td").next().find("select.admin_ids").attr("disabled", true);
                     // $(el).attr("disabled", true);
+                }
+                else{
+                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+                }
+            });
+        }
+
+        function update_wallet_pay(el){
+            if(el.checked){
+                var status = 1;
+            }
+            else{
+                var status = 0;
+            }
+            $.post('{{ route('sellers.update_wallet_pay') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+                if(data == 1){
+                    AIZ.plugins.notify('success', '{{ translate('Wallet Pay updated successfully') }}');
                 }
                 else{
                     AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');

@@ -665,4 +665,16 @@ class SellerController extends Controller
 
         return response()->json(['success' => 1, 'msg' => '保存成功']);
     }
+
+    /**
+     * 是否启用钱包支付
+     * @param Request $request
+     */
+    public function updateWalletPay(Request $request) {
+        $shop = Shop::findOrFail($request->id);
+
+        $shop->wallet_pay = (int) !empty($request->get('status'));
+        $shop->save();
+        echo 1;
+    }
 }

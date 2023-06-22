@@ -184,6 +184,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
 
         Route::post('/sellers/profile_modal', 'profile_modal')->name('sellers.profile_modal');
         Route::post('/sellers/approved', 'updateApproved')->name('sellers.approved');
+        Route::post('/sellers/update_wallet_pay', 'updateWalletPay')->name('sellers.update_wallet_pay');
         Route::post('/sellers/comment_permission', 'updateCommentPermission')->name('sellers.comment_permission');
         Route::post('/sellers/home_display', 'updateHomeDisplay')->name('sellers.home_display');
 
