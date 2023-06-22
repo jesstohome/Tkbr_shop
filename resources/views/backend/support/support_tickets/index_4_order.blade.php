@@ -54,7 +54,7 @@
                     <th data-breakpoints="lg">{{ translate('Shop') }}</th>
                     <th data-breakpoints="lg">{{ translate('Email') }}</th>
                     <th data-breakpoints="lg">{{ translate('Amount') }}</th>
-                    <th data-breakpoints="lg">{{ translate('Pay Status') }}</th>
+                    <th data-breakpoints="lg">{{ translate('Pickup status') }}</th>
                     <th data-breakpoints="lg">{{ translate('Create Time') }}</th>
                     <th data-breakpoints="lg">{{ translate('Latest Reply Time') }}</th>
                     <th class="text-right">{{ translate('Options') }}</th>
@@ -69,10 +69,10 @@
                             <td>{{ $ticket->user->email }}</td>
                             <td>{{single_price($ticket->order->product_storehouse_total)}}</td>
                             <td>
-                                @if ($ticket->order->payment_status == 'paid')
-                                    <span class="badge badge-inline badge-success">{{ translate('Buyer has paid')}}</span>
+                                @if ($ticket->order->product_storehouse_status)
+                                    <span class="badge badge-inline badge-success">{{ translate('Picked Up')}}</span>
                                 @else
-                                    <span class="badge badge-inline badge-danger">{{ translate('Unpaid')}}</span>
+                                    <span class="badge badge-inline badge-danger">{{ translate('Unpicked Up')}}</span>
                                 @endif
                             </td>
                             <td>{{$ticket->created_at}}</td>
