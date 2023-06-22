@@ -21,12 +21,13 @@
   <p><a href="{{ route('shop.visit', $shop->slug) }}" class="btn-link"><i class="demo-pli-internet icon-lg icon-fw mr-1"></i>{{ $shop->name }}</a></p>
   <p><i class="demo-pli-old-telephone icon-lg icon-fw mr-1"></i>{{ $shop->user->phone }}</p>
 
+    @php
+    $paymentConfig = \App\Models\ShopPaymentConfig::query()->where("shop_id", $shop->id)->where("country_code", $shop->cur_payment_country_code)->first();
+    @endphp
   <h6 class="mb-4">{{translate('Payout Info')}}</h6>
-  <p>{{translate('Bank Name')}} : {{ $shop->bank_name }}</p>
-  <p>{{translate('Bank Acc Name')}} : {{ $shop->bank_acc_name }}</p>
-  <p>{{translate('Bank Acc Number')}} : {{ $shop->bank_acc_no }}</p>
-  <p>{{translate('Bank Routing Number')}} : {{ $shop->bank_routing_no }}</p>
-
+  <p>{{translate('Bank Name')}} : {{ $paymentConfig->bank_name }}</p>
+  <p>{{translate('Bank Acc Name')}} : {{ $paymentConfig->bank_account_name }}</p>
+  <p>{{translate('Bank Acc Number')}} : {{ $paymentConfig->bank_account_no }}</p>
   <br>
 
   <div class="table-responsive">
