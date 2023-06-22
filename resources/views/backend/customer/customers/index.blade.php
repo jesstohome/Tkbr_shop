@@ -78,7 +78,7 @@
 
                                     @if($user->banned == 1) <i class="fa fa-ban text-danger" aria-hidden="true"></i> @endif {{$user->name}} @if($user->is_virtual_user == 1) (<font color="red">{{translate('Virtual')}}</font>) @endif</td>
                                 <td>{{$user->email}}</td>
-                                <td>{{$user->phone}}</td>
+                                <td>{{json_decode($user->addresses) ? json_decode($user->addresses, true)[0]['phone'] ?: $user->phone : ''}}</td>
                                 <td>
                                     @if ($user->staff != null)
                                     {{$user->staff->user->name}}

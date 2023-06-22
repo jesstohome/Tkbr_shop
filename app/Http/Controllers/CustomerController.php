@@ -25,7 +25,7 @@ class CustomerController extends Controller
     public function index( Request $request ) {
         $sort_search = NULL;
 
-        $users = User::where('user_type', 'customer')->where('email_verified_at', '!=', NULL)->where('is_virtual', 0)->orderBy('created_at', 'desc');
+        $users = User::query()->where('user_type', 'customer')->where('email_verified_at', '!=', NULL)->where('is_virtual', 0)->orderBy('users.id', 'desc');
         if ( $request->has('search') )
         {
             $sort_search = $request->search;
@@ -35,8 +35,11 @@ class CustomerController extends Controller
             });
         }
 
+        $users->with('addresses'); // 预加载关联表数据
+
         $users = filter_by_bloc($users);
         $users = $users->paginate(15);
+
         return view('backend.customer.customers.index', compact('users', 'sort_search'));
     }
 
