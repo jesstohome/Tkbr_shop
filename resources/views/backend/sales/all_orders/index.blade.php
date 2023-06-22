@@ -1,5 +1,9 @@
 @extends('backend.layouts.app')
-
+<style type="text/css">
+    .card-body {
+        overflow-x: auto;
+    }
+</style>
 @section('content')
 
 <div class="card">
