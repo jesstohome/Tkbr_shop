@@ -1995,7 +1995,11 @@ if (!function_exists('load_new_reply')) {
             del_plus('new_work_order_ticket_tip');
         }
 
-        return response()->json(['success' => 1, 'list' => $list, 'readIds' => $readIds, 'recallIds' => $recallIds]);
+        if ($ticket_id) {
+            $ticket = Ticket::find($ticket_id);
+        }
+
+        return response()->json(['success' => 1, 'list' => $list, 'readIds' => $readIds, 'recallIds' => $recallIds, 'ticket_type' => $ticket->type ?? '']);
     }
 }
 
