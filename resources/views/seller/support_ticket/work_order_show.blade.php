@@ -402,11 +402,11 @@
      */
     .file-preview {
         position: absolute;
-        top: -80px;
-        left: 0;
+        top: -100px;
+        right: 0;
     }
     .file-preview img {
-        width:100px;
+        height:80px;
 
     }
     .file-preview .remove {
