@@ -84,6 +84,8 @@
         attachment_ids.splice(index, 1);
         console.log(attachment_ids);
         $("input[name=attachments]").val(attachment_ids.join(","));
+        $("div.message.send").hide();
+        $("div.message.fujian").show();
         evt.remove();
     }
 
@@ -217,20 +219,28 @@
 
             // 检查是否是图片类型
             if (selectedFile && selectedFile.type.indexOf('image') === 0) {
-                var reader = new FileReader();
+                // var reader = new FileReader();
 
-                // 将文件内容读取为DataURL
+                var imageURL = URL.createObjectURL(selectedFile);
+                addToPreview(imageURL, 'remove-attachment-mobile');
+                $("div.message.send").show();
+                $("div.message.fujian").hide();
+
+                // 上传到服务器
+                uploadImage(selectedFile);
+
+                /*// 将文件内容读取为DataURL
                 reader.readAsDataURL(selectedFile);
 
                 // 当读取完成时，将DataURL赋值给预览图片的src属性
                 reader.onload = function(event) {
+                    console.log("当读取完成时");
                     var imageData = event.target.result;
-                    addToPreview(imageData, 'remove-attachment-mobile');
-                    uploadImage(selectedFile);
+                    addToPreview(imageURL, 'remove-attachment-mobile');
 
                     $("div.message.send").show();
                     $("div.message.fujian").hide();
-                };
+                };*/
             }
         });
     });
