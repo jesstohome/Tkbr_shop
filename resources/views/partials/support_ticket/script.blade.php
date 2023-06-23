@@ -345,7 +345,7 @@
                 render_reply(list, readIds, recallIds);
                 if (list.length > 0) {
                     if (response.ticket_type && response.ticket_type == 'order') {
-                        // 这里不做提醒，其他地方在提醒了
+                        audioPlay && audioPlay('work-chat');
                     } else {
                         audioPlay && audioPlay(true);
                     }
