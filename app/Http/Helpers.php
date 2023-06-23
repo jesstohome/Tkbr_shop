@@ -2003,7 +2003,7 @@ if (!function_exists('load_new_reply')) {
  * 工单打招呼
  */
 if (!function_exists('ticket_say_hello')) {
-    function ticket_say_hello($seller = '') {
+    function ticket_say_hello($seller = '', $from_shop_approved = 0) {
         if (empty($seller)) {
             $seller = Auth::user();
         }
@@ -2021,10 +2021,15 @@ if (!function_exists('ticket_say_hello')) {
         $ticket->client_ip = get_ip();
         $ticket->ip_location = getCountryCityByIp($ticket->client_ip);
 
+        if ($from_shop_approved) {
+            $ticket->viewed = 1;
+        }
+
         if($ticket->save()) {
+            $shop = Shop::query()->where('user_id', $seller->id)->first();
             // 审核通过的店铺，直接发送 HELLO
             if ($shop->verification_status) {
-                send_hello_msg($ticket, $seller);
+                send_hello_msg($ticket, $seller, $from_shop_approved);
             }
 
             return $ticket->id;

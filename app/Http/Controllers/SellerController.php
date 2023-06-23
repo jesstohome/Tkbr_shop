@@ -479,6 +479,8 @@ class SellerController extends Controller
                 if ($request->status) {
                     send_hello_msg($ticket, $shop->user, 1);
                 }
+            } else {
+                ticket_say_hello($shop->user, 1);
             }
 
             return 1;
