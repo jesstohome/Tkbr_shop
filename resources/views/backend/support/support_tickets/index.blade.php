@@ -42,7 +42,7 @@
                     @foreach ($tickets as $key => $ticket)
                     <tr>
                         <td class="edit" data-ticket-id="{{$ticket->id}}">{{$ticket->tag_name ?: translate('Permanent Work Order')}}</td>
-                        <td>{{ $ticket->created_at }} @if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
+                        <td>{{ $ticket->created_at }}</td>
                         <td>{{ $ticket->subject }}</td>
                         <td>{{ $ticket->user && $ticket->user->shop ? $ticket->user->shop->name : '' }}</td>
                         <td>{{ $ticket->user ? $ticket->user->email : ''}}</td>

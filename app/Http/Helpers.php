@@ -2068,7 +2068,7 @@ if (!function_exists('ticket_say_hello')) {
         }
 
         // 为空不发送
-        if (empty($ticket_reply->reply)) {
+        if (empty(trim($ticket_reply->reply))) {
             return;
         }
 
