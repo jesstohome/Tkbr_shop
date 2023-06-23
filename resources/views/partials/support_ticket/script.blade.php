@@ -26,7 +26,7 @@
         return bytes;
     }
 
-    function uploadImage(blob) {
+    function uploadImage(blob, doSubmit) {
         // var blob = new Blob([convertBase64ToBinary(base64Data)], { type: 'image/jpg' });
         var filename = parseInt(Math.random() * 999999999) + ".jpg"
         var form_data = new FormData();
@@ -49,6 +49,12 @@
                 console.log("处理上传成功的响应", response);
                 attachment_ids.push(response.id);
                 $("input[name=attachments]").val(attachment_ids.join(","));
+
+                console.log("doSubmit", doSubmit)
+                if (doSubmit) {
+                    console.log('submit_reply')
+                    submit_reply('pending');
+                }
             },
             error: function (xhr, status, error) {
                 // 处理上传失败的响应
@@ -199,10 +205,73 @@
         });
 
         setTimeout(function () {
-            $("ul.ticket").scrollTop(999990);
+            if ($("ul.ticket").length) {
+                $("ul.ticket").scrollTop(999990);
+            }
+            if ($(".chatlist").length) {
+                $("body").scrollTop(999990);
+            }
         }, 500)
+
+        // 文件选择完成后的回调事件
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            var selectedFile = event.target.files[0];
+            // 在这里执行您希望在文件选择完成后进行的操作
+            console.log('已选择文件:', selectedFile);
+
+            // 检查是否是图片类型
+            if (selectedFile && selectedFile.type.indexOf('image') === 0) {
+                var reader = new FileReader();
+
+                // 将文件内容读取为DataURL
+                reader.readAsDataURL(selectedFile);
+
+                // 当读取完成时，将DataURL赋值给预览图片的src属性
+                reader.onload = function(event) {
+                    var imageData = event.target.result;
+                    uploadImage(selectedFile, true);
+
+                    $(".chatlist").append(`<div class="chat"><div class="btext">
+                    <img class="chatImg lazyload" src="` + imageData + `" data-src="` + imageData + `" onclick="previewImg(this)" />
+<img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head2.png') }}" class="head" style="margin-left: 8px;" />
+                    </div></div>`);
+
+                    $("body").scrollTop(999990);
+                };
+            }
+        });
     });
 
+    // 按键盘发送按钮的事件
+    function submitReply() {
+        if (event.keyCode == 13) {
+            submit_reply('pending');
+        }
+    }
+
+    // 切换附件按钮和发送按钮
+    function toggleSendBtn(evt) {
+        if ($(evt).val().trim() === '') {
+            $("div.message.send").hide();
+            $("div.message.fujian").show();
+        } else {
+            $("div.message.send").show();
+            $("div.message.fujian").hide();
+        }
+    }
+
+    // 打开文件选择对话框
+    function openFileSelection() {
+        // 触发点击事件打开文件选择对话框
+        document.getElementById('fileInput').click();
+    }
+
+    // 退出聊天
+    function chat_back() {
+        window.location.href = "{{route('dashboard')}}"
+    }
+
+    // 提交聊天表单
     var replying = 0;
     function submit_reply(status) {
         if (replying) {
@@ -210,7 +279,7 @@
         }
 
         $('input[name=status]').val(status);
-        if($('input[name=reply]').val().length > 0 || $(".file-preview").html().trim() != '') {
+        if($('input[name=reply]').val().length > 0 || $("input[name=attachments]").val() != '') {
             var data = new FormData( $( '#ticket-reply-form' )[0] );
 
             replying = 1;
@@ -305,7 +374,9 @@
                 (item.file_list || []).forEach((img) => {
                     images += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">`
                 })
-                $("ul.ticket").append(`<li class="list-group-item px-0 ${-1 == item.user_id && isAdmin || item.user_id == user_id ? 'mine' : ''} ${item.read ? 'is-read' : 'un-read'}" data-id="${item.id}">
+
+                if ($("ul.ticket").length) {
+                    $("ul.ticket").append(`<li class="list-group-item px-0 ${-1 == item.user_id && isAdmin || item.user_id == user_id ? 'mine' : ''} ${item.read ? 'is-read' : 'un-read'}" data-id="${item.id}">
                             ${item.reply || images ? `<div class="media">
                                 <div class="media-body">
                                     <div class="comment-header">
@@ -320,7 +391,20 @@
                             </div>` : ''}
                         </li>
                         `);
-                $("ul.ticket").scrollTop(999990);
+                    $("ul.ticket").scrollTop(999990);
+                } else if ($(".chatlist").length) {
+                    if ((item.reply || '').trim() !== '') {
+                        $(".chatlist").append(`<div class="chat"><div class="btext">
+                    <span class="bspan">${item.reply}</span>
+<img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head2.png') }}" class="head" style="margin-left: 8px;" />
+                    </div></div>`);
+                    }
+
+                    $("body").scrollTop(999990);
+
+                    $("div.message.send").hide();
+                    $("div.message.fujian").show();
+                }
             })
         }
 
