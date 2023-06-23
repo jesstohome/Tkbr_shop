@@ -26,7 +26,7 @@
         return bytes;
     }
 
-    function uploadImage(blob, doSubmit) {
+    function uploadImage(blob) {
         // var blob = new Blob([convertBase64ToBinary(base64Data)], { type: 'image/jpg' });
         var filename = parseInt(Math.random() * 999999999) + ".jpg"
         var form_data = new FormData();
@@ -49,12 +49,6 @@
                 console.log("处理上传成功的响应", response);
                 attachment_ids.push(response.id);
                 $("input[name=attachments]").val(attachment_ids.join(","));
-
-                console.log("doSubmit", doSubmit)
-                if (doSubmit) {
-                    console.log('submit_reply')
-                    submit_reply('pending');
-                }
             },
             error: function (xhr, status, error) {
                 // 处理上传失败的响应
@@ -63,7 +57,7 @@
         });
     }
 
-    function addToPreview(base64Image) {
+    function addToPreview(base64Image, className = 'remove-attachment') {
         var thumb =
             '<img src="' +
             base64Image +
@@ -76,7 +70,7 @@
             '<div class="col body">' +
             "</div>" +
             '<div class="remove">' +
-            '<button class="btn btn-sm btn-link remove-attachment" type="button">' +
+            '<button class="btn btn-sm btn-link ' +  className + '" type="button">' +
             '<i class="la la-close"></i>' +
             "</button>" +
             "</div>" +
@@ -88,7 +82,9 @@
     function removeImage(evt) {
         let index = $(evt).prevAll().length;
         attachment_ids.splice(index, 1);
+        console.log(attachment_ids);
         $("input[name=attachments]").val(attachment_ids.join(","));
+        evt.remove();
     }
 
     var attachment_ids = [];
@@ -229,14 +225,11 @@
                 // 当读取完成时，将DataURL赋值给预览图片的src属性
                 reader.onload = function(event) {
                     var imageData = event.target.result;
-                    uploadImage(selectedFile, true);
+                    addToPreview(imageData, 'remove-attachment-mobile');
+                    uploadImage(selectedFile);
 
-                    $(".chatlist").append(`<div class="chat"><div class="btext">
-                    <img class="chatImg lazyload" src="` + imageData + `" data-src="` + imageData + `" onclick="previewImg(this)" />
-<img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head2.png') }}" class="head" style="margin-left: 8px;" />
-                    </div></div>`);
-
-                    $("body").scrollTop(999990);
+                    $("div.message.send").show();
+                    $("div.message.fujian").hide();
                 };
             }
         });
@@ -366,6 +359,7 @@
             list.forEach((item) => {
                 last_reply_id = item.id;
                 var images = '';
+                var images2 = '';
                 var isReadHtml = '';
                 @if(isAdmin())
                 isReadHtml = "<span style='padding-left:3px;'>未读</span>";
@@ -373,6 +367,7 @@
 
                 (item.file_list || []).forEach((img) => {
                     images += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">`
+                    images2 += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="chatImg lazyload" alt="Image2">`
                 })
 
                 if ($("ul.ticket").length) {
@@ -400,7 +395,15 @@
                     </div></div>`);
                     }
 
+                    if (images2 !== '') {
+                        $(".chatlist").append(`<div class="chat"><div class="btext">
+                    ${images2}
+<img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head2.png') }}" class="head" style="margin-left: 8px;" />
+                    </div></div>`);
+                    }
+
                     $("body").scrollTop(999990);
+                    $(".file-preview").html('');
 
                     $("div.message.send").hide();
                     $("div.message.fujian").show();
