@@ -46,19 +46,16 @@
         </div>
         <div class="order-info">
             <h5 class="mb-md-0 h5" style="height: 25px;overflow: hidden;">{{$ticket->order->details[0]->product ? $ticket->order->details[0]->product->getTranslation('name') : ''}}</h5>
-            <div class="">
+            <div class="info-item">
                 <span> {{ translate("The manufacturer has paid a security deposit") }} </span>
             </div>
-            <div class="">
-                <span> {{ translate('Order No') }}: {{$ticket->order->code}} </span>
-                <span> {{ translate('Order Amount') }}: {{single_price($ticket->order->grand_total)}} @if($currency) ≈ {{number_format($currency->exchange_rate * $ticket->order->grand_total, 2)}} @endif</span>
-                <span> {{ translate('Pickup amount') }}: {{single_price($ticket->order->product_storehouse_total)}} @if($currency) ≈ {{number_format($currency->exchange_rate * $ticket->order->product_storehouse_total, 2)}} @endif</span>
+            <div class="info-item">
+                <p> {{ translate('Order No') }}: {{$ticket->order->code}} </p>
+                @if($currency) <p> {{ translate('Currency') }}: {{$currency->name}} </p> @endif
+                <p> {{ translate('Order Amount') }}: {{single_price($ticket->order->grand_total)}} @if($currency) ≈ {{number_format($currency->exchange_rate * $ticket->order->grand_total, 2)}} @endif</p>
+                @if($currency) <p> {{ translate('exchange rate') }}:  ≈{{number_format($currency->exchange_rate, 2)}} </p> @endif
+                <p> {{ translate('Pickup amount') }}: {{single_price($ticket->order->product_storehouse_total)}} @if($currency) ≈ {{number_format($currency->exchange_rate * $ticket->order->product_storehouse_total, 2)}} @endif</p>
             </div>
-            @if($currency)
-                <div class="">
-                    <p>{{translate('Currency')}}: {{translate($currency->name)}}, {{translate('exchange rate')}}: ≈{{number_format($currency->exchange_rate, 2)}}</p>
-                </div>
-            @endif
         </div>
         <div>
             <div class="chatlist">
@@ -424,6 +421,16 @@
         background-color: #C1D1FF;
         padding-top: 5px;
         padding-bottom: 5px;
+    }
+
+    .order-info .info-item {
+        width: 60%;
+        margin: auto;
+        text-align: left;
+    }
+
+    .order-info .info-item p:last-child {
+        font-weight: 600;
     }
 </style>
 <script>
