@@ -440,7 +440,8 @@
                     <input type="hidden" name="order_id" value="{{encrypt($order->id)}}">
                     <div class="row">
                         <div class="col-6 text-left" style="font-weight: 600">
-                            <p>{{ translate('Pay with wallet')}}: {{single_price($order->product_storehouse_total)}}</p>
+                            <p>{{ translate('Wallet Balance')}}: {{single_price(Auth::user()->balance)}}</p>
+                            <p>{{ translate('Wallet Pay')}}: {{single_price($order->product_storehouse_total)}}</p>
                             @if($bloc->discount)
                             <p>{{translate('Discount')}}: {{$bloc->discount}}%</p>
                             <p>{{translate('Actual payment amount')}}: {{single_price($order->product_storehouse_total * (1 - $bloc->discount / 100))}}</p>
