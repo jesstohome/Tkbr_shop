@@ -1080,6 +1080,35 @@
             });
         }
 
+        function previewImg(obj) {
+            var curTop = document.body.scrollTop;
+            //弹出层
+            layer.photos({
+                scrollbar: false,
+                photos: { // 图片层的数据源
+                    "title": "images", // 相册标题
+                    "start": 0, // 初始显示的图片序号，默认 0
+                    "data": [   // 相册包含的图片，数组格式
+                        {
+                            "alt": "image",
+                            "pid": 666, // 图片id
+                            "src": obj.src, // 原图地址
+                            "thumb": obj.src // 缩略图地址
+                        }
+                    ]
+                },
+                hideFooter: true,
+                tab: function(data, layero){ // 图片层切换后的回调
+                    console.log(data); // 当前图片数据信息
+                    console.log(layero); // 图片层的容器对象
+                },
+                end: function(){
+                    console.log('弹层已被移除');
+                    document.body.scrollTop = curTop
+                },
+            });
+        }
+
         $(document).ready(function () {
         });
 
