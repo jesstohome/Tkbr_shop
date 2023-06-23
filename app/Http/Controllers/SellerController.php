@@ -472,6 +472,7 @@ class SellerController extends Controller
             if (!empty($ticket)) {
                 $ticket->bloc_id = $staff->bloc_id;
                 $ticket->staff_id = $staff->id;
+                $ticket->viewed = 1;
                 $ticket->save();
 
                 // 通过后，发送打招呼
