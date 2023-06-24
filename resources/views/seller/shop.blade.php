@@ -33,9 +33,9 @@
                                 <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                             </div>
                             <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                            <input type="file" id="fileInput" class="fileInput" name="file" style="display: none;" accept="image/*" />
                             <input type="hidden" name="logo" value="{{ $shop->logo }}" class="selected-files">
                         </div>
+                        <input type="file" id="fileInput" class="fileInput" name="file" style="display: none;" accept="image/*" />
                         <div class="file-preview box sm">
                         </div>
                     </div>
@@ -194,9 +194,9 @@
                                 <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                             </div>
                             <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                            <input type="file" id="fileInput2" class="fileInput" name="file" style="display: none;" accept="image/*" />
                             <input type="hidden" name="sliders" value="{{ $shop->sliders }}" class="selected-files">
                         </div>
+                        <input type="file" id="fileInput2" class="fileInput" name="file" style="display: none;" accept="image/*" />
                         <div class="file-preview box sm">
                         </div>
                         <small class="text-muted">{{ translate('We had to limit height to maintian consistancy. In some device both side of the banner might be cropped for height limitation.') }}</small>

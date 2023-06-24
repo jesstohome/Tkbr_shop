@@ -760,12 +760,15 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
         },
         initForMobileInput: function () {
             $(document).on("click",'[data-toggle="aizuploader-mobile"]', function (e) {
-                $(this).find("input[type=file]").click();
+                console.log("aizuploader-mobile clicked");
+                $(this).parent().find("input[type=file]").trigger('click');
             });
 
-            $(".fileInput").on("click", function (event) {
+            /*$(".fileInput").on("click", function (event) {
+                console.log("fileInput Clicked");
                 event.stopPropagation();
-            });
+                event.preventDefault();
+            });*/
 
             $(".fileInput").on("change", function (event) {
                 let self = $(this);
@@ -780,7 +783,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                     // 上传到服务器
                     AIZ.uploader.uploadImage(selectedFile, function (res) {
                         console.log("上传结果", res);
-                        self.next(".selected-files").val(res.id);
+                        self.prev('div[data-toggle="aizuploader-mobile"]').find(".selected-files").val(res.id);
                     });
 
                     // 当读取完成时，将DataURL赋值给预览图片的src属性
@@ -788,7 +791,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                         console.log("当读取完成时");
 
                         var imageData = event.target.result;
-                        AIZ.uploader.addToPreview(imageData, self.parent().next(".file-preview"));
+                        AIZ.uploader.addToPreview(imageData, self.parent().find(".file-preview"));
                     };
 
                     reader.onprogress = function(e) {

@@ -86,9 +86,9 @@
                                         <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                                     </div>
                                     <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                    <input type="file" id="fileInput1" class="fileInput" name="file" style="display: none;" accept="image/*" />
                                     <input type="hidden" name="identity_card_front" value="" class="selected-files">
                                 </div>
+                                <input type="file" id="fileInput1" class="fileInput" name="file" style="display: none;" accept="image/*" />
                                 <div class="file-preview box sm">
                                 </div>
                             </div>
@@ -100,9 +100,9 @@
                                         <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                                     </div>
                                     <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                    <input type="file" id="fileInput2" class="fileInput" name="file" style="display: none;" accept="image/*" />
                                     <input type="hidden" name="identity_card_back" value="" class="selected-files">
                                 </div>
+                                <input type="file" id="fileInput2" class="fileInput" name="file" style="display: none;" accept="image/*" />
                                 <div class="file-preview box sm">
                                 </div>
                             </div>
