@@ -326,6 +326,9 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td>{{single_price($total_recharge)}}</td>
                         <td>{{single_price($total_withdraw_money)}}</td>
                         <td>{{single_price($total_difference)}}</td>

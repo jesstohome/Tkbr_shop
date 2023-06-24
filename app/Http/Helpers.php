@@ -130,11 +130,17 @@ if (!function_exists('get_cached_products')) {
         }
 
         if ($category_id != null) {
-            return Cache::remember('products-category-' . $category_id, 86400, function () use ($category_id, $products) {
+            $category_ids = CategoryUtility::children_ids($category_id);
+            $category_ids[] = $category_id;
+            $productIds = $products->whereIn('category_id', $category_ids)->pluck("id")->toArray();
+            shuffle($productIds);
+
+            return $products->whereIn('id', array_slice($productIds, 0, 12))->get()->shuffle();
+            /*return Cache::remember('products-category-' . $category_id, 86400, function () use ($category_id, $products) {
                 $category_ids = CategoryUtility::children_ids($category_id);
                 $category_ids[] = $category_id;
                 return $products->whereIn('category_id', $category_ids)->latest()->take(12)->get();
-            });
+            });*/
         } else {
             return Cache::remember('products', 86400, function () use ($products) {
                 return $products->latest()->take(12)->get();
