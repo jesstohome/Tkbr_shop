@@ -240,11 +240,19 @@
                         </td>
                         <td>{{ date('d-m-Y H:i:s', strtotime($order->created_at)) }}</td>
                         <td>
+
                             @if ($order->freeze_expired_at)
-                                {{ round(($order->freeze_expired_at - now()->timestamp) / 86400) }} {{translate('Days')}}
+                                @if ($order->delivery_status == 'delivered')
+                                @if ($order->freeze_expired_at <= now()->timestamp)
+                                    0
+                                @else
+                                    {{countDown($order->freeze_expired_at)}}
+                                @endif
+                                @endif
                             @else
                                 {{translate('Unpicked Up')}}
                             @endif
+
                         </td>
                     </tr>
                 @endforeach
