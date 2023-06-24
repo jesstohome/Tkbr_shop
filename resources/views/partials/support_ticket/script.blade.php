@@ -90,6 +90,7 @@
         evt.remove();
     }
 
+    var imageLoading = false;
     var attachment_ids = [];
     $(document).ready(function () {
         $( '#ticket-reply-form' ).on("submit", function (){
@@ -220,6 +221,7 @@
 
             // 检查是否是图片类型
             if (selectedFile && selectedFile.type.indexOf('image') === 0) {
+                imageLoading = true;
                 var reader = new FileReader();
 
                 /*var imageURL = URL.createObjectURL(selectedFile);
@@ -239,6 +241,8 @@
 
                     $("div.message.send").show();
                     $("div.message.fujian").hide();
+
+                    imageLoading = false;
                 };
 
                 reader.onprogress = function(e) {
@@ -271,6 +275,8 @@
 
     // 打开文件选择对话框
     function openFileSelection() {
+        if (imageLoading) return;
+
         // 触发点击事件打开文件选择对话框
         document.getElementById('fileInput').click();
     }
