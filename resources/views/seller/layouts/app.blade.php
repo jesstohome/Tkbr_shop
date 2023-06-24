@@ -110,7 +110,7 @@
 
 
 	<script src="{{ static_asset('assets/js/vendors.js') }}" ></script>
-	<script src="{{ static_asset('assets/js/aiz-core.js?v=1') }}" ></script>
+	<script src="{{ static_asset('assets/js/aiz-core.js?v=1.1') }}" ></script>
     <script src="{{ static_asset('assets/js/layui.js') }}"></script>
 
     @yield('script')

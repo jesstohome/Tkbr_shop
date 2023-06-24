@@ -836,7 +836,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 base64Image +
                 '" class="img-fit">';
             var html =
-                '<div class="d-flex justify-content-between align-items-center mt-2 file-preview-item" data-id="" title="" onclick="removeImage(this)">' +
+                '<div class="d-flex justify-content-between align-items-center mt-2 file-preview-item" data-id="" title="" onclick="AIZ.uploader.removeImage(this)">' +
                 '<div class="align-items-center align-self-stretch d-flex justify-content-center thumb">' +
                 thumb +
                 "</div>" +
@@ -857,6 +857,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
         },
         removeImage: function (evt) {
             evt.remove();
+            $(evt).parent().parent().find(".selected-files").val('');
         },
         previewGenerate: function(){
             $('[data-toggle="aizuploader"]').each(function () {
