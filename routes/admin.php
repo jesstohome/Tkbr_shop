@@ -462,6 +462,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::post('/orders/delivery-boy-assign', 'assign_delivery_boy')->name('orders.delivery-boy-assign');
 
         Route::post('/orders/get_not_view_count', 'get_not_view_count')->name('orders.get_not_view_count');
+
+        Route::get('/orders_cancel', 'cancel')->name('orders.cancel');
+
     });
 
     Route::post('/pay_to_seller', [CommissionController::class, 'pay_to_seller'])->name('commissions.pay_to_seller');

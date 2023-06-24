@@ -841,6 +841,19 @@ class OrderController extends Controller
         return view('seller.order_details_seller', compact('order'));
     }
 
+    // 取消订单
+    public function cancel(Request $request) {
+        $request->status = 'cancelled';
+
+        if ($this->update_delivery_status($request)) {
+            flash(translate('Order has been cancel successfully'))->success();
+        } else {
+            flash(translate('Something went wrong'))->error();
+        }
+
+        return back();
+    }
+
     public function update_delivery_status(Request $request)
     {
         $order = Order::findOrFail($request->order_id);

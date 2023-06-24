@@ -249,10 +249,10 @@
                                     <i class="las la-tint"></i>
                                 </a>
                                 @else
-                                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('orders.destroy', $order->id)}}}}" title="{{ translate('Delete') }}">
+                                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('orders.destroy', $order->id)}}" title="{{ translate('Delete') }}">
                                     <i class="las la-trash"></i>
                                 </a>
-                                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-cancel" data-href="{{route('orders.cancel', $order->id)}}}}" title="{{ translate('Delete') }}">
+                                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-cancel" data-href="{{route('orders.cancel', ['order_id' => $order->id])}}" title="{{ translate('Cancel') }}">
                                     <i class="las la-tint"></i>
                                 </a>
                             @endif
