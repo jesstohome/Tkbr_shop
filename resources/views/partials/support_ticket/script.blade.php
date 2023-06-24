@@ -436,13 +436,13 @@
                         if ((item.reply || '').trim() !== '') {
                             $(".chatlist").append(`<div class="chat" data-id="${item.id}"><div class="atext">
 
-<img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" /><span class="aspan">${item.reply}</span>
+<img src="{{ static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" /><span class="aspan">${item.reply}</span>
                     </div></div>`);
                         }
 
                         if (images2 !== '') {
                             $(".chatlist").append(`<div class="chat" data-id="${item.id}"><div class="atext">
-<img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" />${images2}
+<img src="{{ static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" />${images2}
                     </div></div>`);
                         }
                     }
