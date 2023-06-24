@@ -189,11 +189,12 @@
                 <div class="row mb-3">
                     <label class="col-md-2 col-form-label">{{ translate('Banners') }} (1500x450)</label>
                     <div class="col-md-10">
-                        <div class="input-group" data-toggle="aizuploader" data-type="image" data-multiple="true">
+                        <div class="input-group" data-toggle="aizuploader-mobile" data-type="image" data-multiple="true">
                             <div class="input-group-prepend">
                                 <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                             </div>
                             <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                            <input type="file" id="fileInput2" class="fileInput" name="file" style="display: none;" accept="image/*" />
                             <input type="hidden" name="sliders" value="{{ $shop->sliders }}" class="selected-files">
                         </div>
                         <div class="file-preview box sm">
