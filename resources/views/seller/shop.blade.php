@@ -28,11 +28,12 @@
                 <div class="row mb-3">
                     <label class="col-md-2 col-form-label">{{ translate('Shop Logo') }}</label>
                     <div class="col-md-10">
-                        <div class="input-group" data-toggle="aizuploader" data-type="image">
+                        <div class="input-group" data-toggle="aizuploader-mobile" data-type="image">
                             <div class="input-group-prepend">
                                 <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                             </div>
                             <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                            <input type="file" id="fileInput" class="fileInput" name="file" style="display: none;" accept="image/*" />
                             <input type="hidden" name="logo" value="{{ $shop->logo }}" class="selected-files">
                         </div>
                         <div class="file-preview box sm">
