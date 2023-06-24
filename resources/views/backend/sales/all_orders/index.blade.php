@@ -5,7 +5,9 @@
     }
 </style>
 @section('content')
-
+    <div class="row">
+        <div class="col-12"><h5 class="mb-md-0 h6">({{translate('Total')}}: {{$total_customers}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}})</h5></div>
+    </div>
 <div class="card">
     <form class="" action="" id="sort_orders" method="GET">
         <div class="card-header row gutters-5">
@@ -241,22 +243,8 @@
                             <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
                                 <i class="las la-download"></i>
                             </a>
-                            @if ($order->product_storehouse_status)
-                                <a href="javascript:void(0);" class="btn btn-soft-danger btn-icon btn-circle btn-sm" onclick="AIZ.plugins.notify('danger', '{{translate('The order has been picked up and cannot be deleted')}}');return false;" title="{{ translate('Delete') }}">
-                                    <i class="las la-trash"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="btn btn-soft-danger btn-icon btn-circle btn-sm" onclick="AIZ.plugins.notify('danger', '{{translate('The order has been picked up and cannot be cancel')}}');return false;" title="{{ translate('Cancel') }}">
-                                    <i class="las la-tint"></i>
-                                </a>
-                                @else
-                                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('orders.destroy', $order->id)}}" title="{{ translate('Delete') }}">
-                                    <i class="las la-trash"></i>
-                                </a>
-                                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-cancel" data-href="{{route('orders.cancel', ['order_id' => $order->id])}}" title="{{ translate('Cancel') }}">
-                                    <i class="las la-tint"></i>
-                                </a>
-                            @endif
 
+                            @include('backend.sales.btns')
                         </td>
                     </tr>
                     @endforeach

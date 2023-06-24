@@ -17,13 +17,19 @@
                 @endphp
                 @if (get_setting('product_manage_by_admin') == 0)
                     @if ($order->product_storehouse_total > 0)
-                        @if (!$order->product_storehouse_status)
-                            <div class="col-md-4 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
-                                <button id="payment_for_storehouse" type="button" class="btn btn-primary">{{ translate('Pay the manufacturer and notify the shipment') }}</button>
-                            </div>
+                        @if($delivery_status == 'canceled')
+                            @if (!$order->product_storehouse_status)
+                                <div class="col-md-4 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
+                                    <button id="payment_for_storehouse" type="button" class="btn btn-primary">{{ translate('Pay the manufacturer and notify the shipment') }}</button>
+                                </div>
+                            @else
+                                <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
+                                    <button type="button" class="btn btn-primary" disabled>{{ translate('Picked up') }}</button>
+                                </div>
+                            @endif
                         @else
                             <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
-                                <button type="button" class="btn btn-primary" disabled>{{ translate('Picked up') }}</button>
+                                <button type="button" class="btn btn-primary" disabled>{{ translate('Order cancelled') }}</button>
                             </div>
                         @endif
                     @endif

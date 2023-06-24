@@ -1,7 +1,9 @@
 @extends('backend.layouts.app')
 
 @section('content')
-
+    <div class="row">
+        <div class="col-12"><h5 class="mb-md-0 h6">({{translate('Total')}}: {{$total_customers}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}})</h5></div>
+    </div>
 <div class="card">
     <form class="" action="" id="sort_orders" method="GET">
         <div class="card-header row gutters-5">
@@ -43,6 +45,7 @@
                     <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
             </div>
+            @include('backend.sales.filter')
             <div class="col-auto">
                 <div class="form-group mb-0">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
@@ -66,6 +69,8 @@
                             </div>
                         </th>
                         <th>{{ translate('Order Code') }}</th>
+                        @if (isSupperAdmin())<th>{{ translate('Bloc') }}</th>@endif
+                        <th>{{ translate('Staffs') }}</th>
                         <th>{{ translate('Shop') }}</th>
                         <th data-breakpoints="md">{{ translate('Num. of Products') }}</th>
                         <th data-breakpoints="md">{{ translate('Customer') }}</th>
@@ -99,7 +104,8 @@
                         <td>
                             {{ $order->code }}
                         </td>
-
+        @if (isSupperAdmin())<td>{{$order->shop->bloc ? $order->shop->bloc->name : ''}}</td>@endif
+        <td>{{$order->shop->staff ? $order->shop->staff->user->email : ''}}</td>
                         <td>
                             @php
              $shop = App\Models\User::where('id',$order->seller_id)->first();
@@ -168,6 +174,8 @@
                             <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
                                 <i class="las la-download"></i>
                             </a>
+
+                            @include('backend.sales.btns')
                         </td>
                     </tr>
                     @endforeach

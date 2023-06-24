@@ -5,7 +5,7 @@
     <div class="aiz-titlebar text-left mt-2 mb-3">
         <div class="row align-items-center">
             <div class="col-md-12">
-                <h1 class="h3">{{translate('All Orders')}} ({{translate('Total')}}: {{$total_seller}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}})</h1>
+                <h1 class="h3">{{translate('All Orders')}} ({{translate('Total')}}: {{$total_customers}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}})</h1>
             </div>
             <div class="col text-right"></div>
         </div>
@@ -59,14 +59,6 @@
                     <input type="text" class="form-control form-control-sm aiz-date-range" data-time-picker="true" data-format="YYYY-MM-DD HH:mm:ss"  id="search3" name="freeze_time_range" @isset($freeze_time_range) value="{{ $freeze_time_range }}" @endisset placeholder="{{ translate('Freeze Time') }}">
                 </div>
             </div>
-
-            <div class="col-lg-2 ml-auto">
-                <select class="form-control aiz-selectpicker" name="product_storehouse_status" id="product_storehouse_status">
-                    <option value="">{{translate('All')}}</option>
-                    <option value="0" @if ($product_storehouse_status != '' && $product_storehouse_status == 0) selected @endif>{{translate('Not picked up')}}</option>
-                    <option value="1" @if ($product_storehouse_status == 1) selected @endif>{{translate('Picked up')}}</option>
-                </select>
-            </div>
             <div class="col-lg-2 ml-auto">
                 <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status">
                     <option value="">{{translate('Mailing Status')}}</option>
@@ -75,15 +67,6 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-2 ml-auto">
-                <select class="form-control aiz-selectpicker" name="freeze_status" id="freeze_status">
-                    <option value="">{{translate('Has the loan been released')}}</option>
-                    <option value="0" @if ($freeze_status != '' && $freeze_status == 0) selected @endif>{{translate('No')}}</option>
-                    <option value="1" @if ($freeze_status == 1) selected @endif>{{translate('Yes')}}</option>
-
-                </select>
-            </div>
-
             <div class="col-lg-2">
                 <div class="form-group mb-0">
                     <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="seller_id" name="seller_id" data-live-search="true">
@@ -113,6 +96,8 @@
                     <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
             </div>
+            @include('backend.sales.filter')
+
             <div class="col-auto">
                 <div class="form-group mb-0">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
@@ -136,6 +121,8 @@
                             </div>
                         </th>
                         <th>{{ translate('Order Code') }}</th>
+                        @if (isSupperAdmin())<th>{{ translate('Bloc') }}</th>@endif
+                        <th>{{ translate('Staffs') }}</th>
                         <th>{{ translate('Shop') }}</th>
                         <th data-breakpoints="md">{{ translate('Num. of Products') }}</th>
                         <th data-breakpoints="md">{{ translate('Customer') }}</th>
@@ -173,7 +160,8 @@
                         <td>
                             {{ $order->code }}
                         </td>
-
+        @if (isSupperAdmin())<td>{{$order->shop->bloc ? $order->shop->bloc->name : ''}}</td>@endif
+        <td>{{$order->shop->staff ? $order->shop->staff->user->email : ''}}</td>
                         <td>
                             @php
              $shop = App\Models\User::where('id',$order->seller_id)->first();
@@ -270,6 +258,8 @@
                             <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
                                 <i class="las la-download"></i>
                             </a>
+
+                            @include('backend.sales.btns')
 
                         </td>
                     </tr>
