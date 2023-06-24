@@ -33,9 +33,10 @@
                                 <td>{{ ($key+1) + ($lang_keys->currentPage() - 1)*$lang_keys->perPage() }}</td>
                                 <td class="key">{{ $translation->lang_value }}</td>
                                 <td>
-                                    <input type="text" class="form-control value" style="width:100%" name="values[{{ $translation->lang_key }}]" @if (($traslate_lang = \App\Models\Translation::where('lang', $language->code)->where('lang_key', $translation->lang_key)->latest()->first()) != null)
-                                        value="{{ $traslate_lang->lang_value }}"
-                                    @endif>
+                                    <textarea  rows="1" class="form-control value" style="width:100%" name="values[{{ $translation->lang_key }}]" >
+                                        @if (($traslate_lang = \App\Models\Translation::where('lang', $language->code)->where('lang_key', $translation->lang_key)->latest()->first()) != null) {{ $traslate_lang->lang_value }} @endif
+                                    </textarea>
+
                                 </td>
                             </tr>
                         @endforeach
