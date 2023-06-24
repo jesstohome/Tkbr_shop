@@ -758,6 +758,61 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 }
             });
         },
+        uploadImage: function (blob, cb) {
+            var filename = parseInt(Math.random() * 999999999) + ".jpg";
+            var form_data = new FormData();
+            form_data.append("aiz_file", blob, filename);
+            form_data.append("type", "image/jpg");
+            form_data.append("name", filename);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': AIZ.data.csrf
+                },
+                url: AIZ.data.appUrl + "/aiz-uploader/upload",
+                type: 'POST',
+                data: form_data,
+                processData: false, // 告诉jQuery不要去处理发送的数据
+                contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+                async:false,
+                success: function (response) {
+                    // 处理上传成功的响应
+                    console.log("处理上传成功的响应", response);
+                    if (cb) cb(response);
+                },
+                error: function (xhr, status, error) {
+                    // 处理上传失败的响应
+                    console.log("处理上传失败的响应", xhr, status, error)
+                }
+            });
+        },
+        addToPreview: function (base64Image, target) {
+            var thumb =
+                '<img src="' +
+                base64Image +
+                '" class="img-fit">';
+            var html =
+                '<div class="d-flex justify-content-between align-items-center mt-2 file-preview-item" data-id="" title="" onclick="removeImage(this)">' +
+                '<div class="align-items-center align-self-stretch d-flex justify-content-center thumb">' +
+                thumb +
+                "</div>" +
+                '<div class="col body">' +
+                "</div>" +
+                '<div class="remove">' +
+                '<button class="btn btn-sm btn-link remove-attachment-mobile" type="button">' +
+                '<i class="la la-close"></i>' +
+                "</button>" +
+                "</div>" +
+                "</div>";
+
+            if (target) {
+                target.append(html);
+            } else {
+                $(".file-preview").append(html);
+            }
+        },
+        removeImage: function (evt) {
+            evt.remove();
+        },
         previewGenerate: function(){
             $('[data-toggle="aizuploader"]').each(function () {
                 var $this = $(this);

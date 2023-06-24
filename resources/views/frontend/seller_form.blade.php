@@ -81,11 +81,12 @@
                             </div>
                             <div class="form-group">
                                 <label>{{ translate('Certificates Front')}} <span class="text-primary">*</span></label>
-                                <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                <div class="input-group" data-toggle="aizuploader-mobile" data-type="image">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                                     </div>
                                     <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                    <input type="file" id="fileInput1" class="fileInput" name="file" style="display: none;" accept="image/*" />
                                     <input type="hidden" name="identity_card_front" value="" class="selected-files">
                                 </div>
                                 <div class="file-preview box sm">
@@ -94,11 +95,12 @@
                             <div class="form-group">
                                 <label>{{ translate('Certificates Back')}} <span class="text-primary">*</span></label>
 
-                                <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                <div class="input-group" data-toggle="aizuploader-mobile" data-type="image">
                                     <div class="input-group-prepend">
                                         <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
                                     </div>
                                     <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                    <input type="file" id="fileInput2" class="fileInput" name="file" style="display: none;" accept="image/*" />
                                     <input type="hidden" name="identity_card_back" value="" class="selected-files">
                                 </div>
                                 <div class="file-preview box sm">
@@ -132,7 +134,49 @@
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script type="text/javascript">
     // making the CAPTCHA  a required field for form submission
-    $(document).ready(function(){
+    $(document).ready(function() {
+
+        $(document).on("click",'[data-toggle="aizuploader-mobile"]', function (e) {
+            $(this).find("input[type=file]").click();
+        });
+
+        $(".fileInput").on("click", function (event) {
+            event.stopPropagation();
+        });
+
+        $(".fileInput").on("change", function (event) {
+            let self = $(this);
+            var selectedFile = event.target.files[0];
+            // 在这里执行您希望在文件选择完成后进行的操作
+            console.log('已选择文件:', selectedFile);
+
+            // 检查是否是图片类型
+            if (selectedFile && selectedFile.type.indexOf('image') === 0) {
+                var reader = new FileReader();
+
+                // 上传到服务器
+                AIZ.uploader.uploadImage(selectedFile, function (res) {
+                    console.log("上传结果", res);
+                    self.next(".selected-files").val(res.id);
+                });
+
+                // 当读取完成时，将DataURL赋值给预览图片的src属性
+                reader.onload = function(event) {
+                    console.log("当读取完成时");
+
+                    var imageData = event.target.result;
+                    AIZ.uploader.addToPreview(imageData, self.parent().next(".file-preview"));
+                };
+
+                reader.onprogress = function(e) {
+                    console.log(e.lengthComputable, e.loaded, e.total);
+                };
+
+                // 将文件内容读取为DataURL
+                reader.readAsDataURL(selectedFile);
+            }
+        });
+
         $("#shop").on("submit", function(evt)
         {
             try {
