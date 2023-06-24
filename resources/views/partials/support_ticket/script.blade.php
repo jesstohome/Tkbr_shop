@@ -84,6 +84,7 @@
         attachment_ids.splice(index, 1);
         console.log(attachment_ids);
         $("input[name=attachments]").val(attachment_ids.join(","));
+        $("#fileInput").val('');
         $("div.message.send").hide();
         $("div.message.fujian").show();
         evt.remove();
@@ -303,6 +304,7 @@
                     attachment_ids = [];
                     $("input[name=attachments]").val('');
                     $("input[name=reply]").val('');
+                    $("#fileInput").val('');
                     $(".remove-attachment").click();
                     if (!response.success) {
                         AIZ.plugins.notify('danger', res.msg || 'Error');
