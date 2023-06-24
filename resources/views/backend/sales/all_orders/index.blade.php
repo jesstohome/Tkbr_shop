@@ -86,6 +86,7 @@
             <div class="col-auto">
                 <div class="form-group mb-0">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                    <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
                 </div>
             </div>
         </div>
@@ -107,6 +108,8 @@
                         </th>
                         <th>{{ translate('Order Code') }}</th>
                         <th>{{ translate('Order Type') }}</th>
+                        @if (isSupperAdmin())<th>{{ translate('Bloc') }}</th>@endif
+                        <th>{{ translate('Staffs') }}</th>
                         <th>{{ translate('Shop') }}</th>
                         <th data-breakpoints="md">{{ translate('Num. of Products') }}</th>
                         <th data-breakpoints="md">{{ translate('Customer') }}</th>
@@ -156,13 +159,13 @@
                               {{ translate('ordinary') }}
                              @endif
                         </td>
+                        @if (isSupperAdmin())<td>{{$order->shop->bloc ? $order->shop->bloc->name : ''}}</td>@endif
+                        <td>{{$order->shop->staff ? $order->shop->staff->user->email : ''}}</td>
                         <td>
                             @php
                             $shop = App\Models\User::where('id',$order->seller_id)->first();
                             echo $shop['email'];
                             @endphp
-
-
                         </td>
                         <td>
                             {{ count($order->orderDetails) }}
@@ -238,6 +241,15 @@
                             <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
                                 <i class="las la-download"></i>
                             </a>
+                            @if ($order->product_storehouse_status)
+                                <a href="javascript:void(0);" class="btn btn-soft-danger btn-icon btn-circle btn-sm" onclick="AIZ.plugins.notify('danger', '{{translate('The order has been picked up and cannot be deleted')}}');return false;" title="{{ translate('Delete') }}">
+                                    <i class="las la-trash"></i>
+                                </a>
+                                @else
+                                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('orders.destroy', $order->id)}}}}" title="{{ translate('Delete') }}">
+                                    <i class="las la-trash"></i>
+                                </a>
+                            @endif
 
                         </td>
                     </tr>
