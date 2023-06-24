@@ -419,7 +419,7 @@
                     if (-1 == item.user_id && isAdmin || item.user_id == user_id) {
                         // 自己发送的，在右边
                         if ((item.reply || '').trim() !== '') {
-                            $(".chatlist").append(`<div class="chat"><div class="btext">
+                            $(".chatlist").append(`<div class="chat mine"><div class="btext">
                     <span class="bspan">${item.reply}</span>
 <img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head2.png') }}" class="head" style="margin-left: 8px;" />
                     </div></div>`);
@@ -432,16 +432,16 @@
                     </div></div>`);
                         }
                     } else {
-                        // 收到的消息，在左边
+                        // 收到的消息,非自己的，在左边
                         if ((item.reply || '').trim() !== '') {
-                            $(".chatlist").append(`<div class="chat"><div class="atext">
+                            $(".chatlist").append(`<div class="chat" data-id="${item.id}"><div class="atext">
 
 <img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" /><span class="aspan">${item.reply}</span>
                     </div></div>`);
                         }
 
                         if (images2 !== '') {
-                            $(".chatlist").append(`<div class="chat"><div class="atext">
+                            $(".chatlist").append(`<div class="chat" data-id="${item.id}"><div class="atext">
 <img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" />${images2}
                     </div></div>`);
                         }
@@ -476,14 +476,28 @@
         @if(isSeller())
         // 撤回标识
         if (recallIds.length) {
-            recallIds.forEach((id) => {
-                $("ul.ticket").find("li:not(.mine)").each((k, messageLi) => {
-                    let message_id = $(messageLi).data("id");
-                    if (message_id == id) {
-                        $(messageLi).remove();
-                    }
-                })
-            });
+            if ($("ul.ticket").length) {
+                recallIds.forEach((id) => {
+                    $("ul.ticket").find("li:not(.mine)").each((k, messageLi) => {
+                        let message_id = $(messageLi).data("id");
+                        if (message_id == id) {
+                            $(messageLi).remove();
+                        }
+                    });
+                });
+            }
+
+            if ($(".chatlist").length) {
+                recallIds.forEach((id) => {
+                    $(".chatlist").find(".chat:not(.mine)").each((k, messageLi) => {
+                        let message_id = $(messageLi).data("id");
+                        if (message_id == id) {
+                            $(messageLi).remove();
+                        }
+                    });
+                });
+            }
+
         }
         @endif
     }
