@@ -31,6 +31,10 @@
             files: '{{ translate('Files') }}',
             no_files_found: '{{ translate('No files found') }}',
         }
+
+        function audioPlay() {
+            $("#tip-audio")[0].play();
+        }
     </script>
     <script src="{{ static_asset('assets/js/vendors.js') }}" ></script>
     <script src="{{ static_asset('assets/js/aiz-core.js') }}" ></script>

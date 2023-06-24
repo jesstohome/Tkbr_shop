@@ -416,19 +416,37 @@
                         `);
                     $("ul.ticket").scrollTop(999990);
                 } else if ($(".chatlist").length) {
-                    if ((item.reply || '').trim() !== '') {
-                        $(".chatlist").append(`<div class="chat"><div class="btext">
+                    if (-1 == item.user_id && isAdmin || item.user_id == user_id) {
+                        // 自己发送的，在右边
+                        if ((item.reply || '').trim() !== '') {
+                            $(".chatlist").append(`<div class="chat"><div class="btext">
                     <span class="bspan">${item.reply}</span>
 <img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head2.png') }}" class="head" style="margin-left: 8px;" />
                     </div></div>`);
-                    }
+                        }
 
-                    if (images2 !== '') {
-                        $(".chatlist").append(`<div class="chat"><div class="btext">
+                        if (images2 !== '') {
+                            $(".chatlist").append(`<div class="chat"><div class="btext">
                     ${images2}
 <img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head2.png') }}" class="head" style="margin-left: 8px;" />
                     </div></div>`);
+                        }
+                    } else {
+                        // 收到的消息，在左边
+                        if ((item.reply || '').trim() !== '') {
+                            $(".chatlist").append(`<div class="chat"><div class="atext">
+
+<img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" /><span class="aspan">${item.reply}</span>
+                    </div></div>`);
+                        }
+
+                        if (images2 !== '') {
+                            $(".chatlist").append(`<div class="chat"><div class="atext">
+<img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" />${images2}
+                    </div></div>`);
+                        }
                     }
+
 
                     $("body").scrollTop(999990);
                     $(".file-preview").html('');
