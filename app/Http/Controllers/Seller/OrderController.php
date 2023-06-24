@@ -169,7 +169,12 @@ class OrderController extends Controller
             $currency = Currency::query()->where("code", $ticket->order->pickup_currency)->first();
         }
 
-        return view('seller.support_ticket.work_order_show', compact('order', 'ticket', 'ticket_replies', 'product', 'currency'));
+        $view = 'seller.support_ticket.work_order_show';
+        if (is_mobile()) {
+            $view = 'seller.support_ticket.work_order_show_mobile';
+        }
+
+        return view($view, compact('order', 'ticket', 'ticket_replies', 'product', 'currency'));
     }
 
     // 钱包余额支付货款
