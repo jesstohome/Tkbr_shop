@@ -83,7 +83,7 @@
                             </div>
                         @else
                             <div class="atext">
-                                <img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" />
+                                <img src="{{ static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" />
 
                                 @if($ticketreply->reply)
                                     <span class="aspan">@php echo empty($ticketreply->user_id) || -1 == $ticketreply->user_id ? translate($ticketreply->reply) : $ticketreply->reply; @endphp</span>@endif
