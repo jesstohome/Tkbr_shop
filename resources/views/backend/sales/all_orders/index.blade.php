@@ -82,6 +82,7 @@
                     <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
             </div>
+            @include('backend.sales.filter')
             <div class="col-auto">
                 <div class="form-group mb-0">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
@@ -93,7 +94,7 @@
             <table class="table aiz-table mb-0">
                 <thead>
                     <tr>
-                        <!--<th>#</th>-->
+                        <th>#</th>
                         <th>
                             <div class="form-group">
                                 <div class="aiz-checkbox-inline">
@@ -127,9 +128,9 @@
                 <tbody>
                     @foreach ($orders as $key => $order)
                     <tr>
-    <!--                    <td>
+                        <td>
                             {{ ($key+1) + ($orders->currentPage() - 1)*$orders->perPage() }}
-                        </td>-->
+                        </td>
                         <td>
                             <div class="form-group">
                                 <div class="aiz-checkbox-inline">

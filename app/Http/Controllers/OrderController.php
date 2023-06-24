@@ -147,6 +147,36 @@ class OrderController extends Controller
             $orders = $orders->where('user_id', $customer_id);
         }
 
+        if ($request->bloc_id) {
+            $bloc_id = $request->bloc_id;
+            $orders = $orders->where('bloc_id', $bloc_id);
+        }
+        if ($request->staff_id) {
+            $staff_id = $request->staff_id;
+            $orders = $orders->where('staff_id', $staff_id);
+        }
+        if ($request->min_price) {
+            $min_price = $request->min_price;
+            $orders = $orders->where('grand_total', '>=', $min_price);
+        }
+        if ($request->max_price) {
+            $max_price = $request->max_price;
+            $orders = $orders->where('grand_total', '<=', $max_price);
+        }
+        $product_storehouse_status = $request->product_storehouse_status;
+        if (!is_null($product_storehouse_status) && $product_storehouse_status != '') {
+            $orders = $orders->where('product_storehouse_status', $product_storehouse_status);
+        }
+        $freeze_status = $request->freeze_status;
+        if (!is_null($freeze_status) && $freeze_status != '') {
+            if ($freeze_status) {
+                //
+                $orders = $orders->where('product_storehouse_status', 1)->whereNull("freeze_expired_at");
+            } else {
+                $orders = $orders->where("freeze_expired_at", '!=', '');
+            }
+        }
+
         $orders = filter_by_bloc($orders);
         $orders = $orders->paginate(15);
         foreach ($orders as $order) {
@@ -156,7 +186,7 @@ class OrderController extends Controller
 
         del_plus("orders_pick_up_tip");
 
-        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'seller_id', 'customer_id'));
+        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status'));
     }
 
     // Storehouse Orders
