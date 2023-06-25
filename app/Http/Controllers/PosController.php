@@ -62,7 +62,6 @@ class PosController extends Controller
 
     public function search(Request $request)
     {
-        \DB::connection()->enableQueryLog();#开启执行日志
         if(Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'staff'){
             $products = ProductStock::join('products','product_stocks.product_id', '=', 'products.id')->select('products.*','product_stocks.id as stock_id','product_stocks.variant','product_stocks.price as stock_price', 'product_stocks.qty as stock_qty', 'product_stocks.image as stock_image')
                 ->whereNotNull('products.original_id');
@@ -105,9 +104,12 @@ class PosController extends Controller
             $products = $products->orderBy('products.created_at', 'desc');
         }
 
-        $stocks = new PosProductCollection($products->paginate(16));
+        $products = $products->paginate(16);
+        $page_links = $products->appends(request()->query())->links()->render();
+
+        $stocks = new PosProductCollection($products);
         $stocks->appends(['keyword' =>  $request->keyword,'category' => $request->category, 'brand' => $request->brand, 'user_id' => $request->user_id, 'order_by_price' => $request->order_by_price]);
-        return $stocks;
+        return ['page_links' => $page_links, 'products' => $stocks];
     }
 
     public function addToCart(Request $request)

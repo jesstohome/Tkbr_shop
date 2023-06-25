@@ -50,7 +50,7 @@
 
                     </div>
                     <div id="load-more" class="text-center">
-                        <div class="fs-14 d-inline-block fw-600 btn btn-soft-primary c-pointer" onclick="loadMoreProduct()">{{ translate('Loading..') }}</div>
+
                     </div>
                 </div>
             </div>
@@ -429,7 +429,7 @@
 
         var products = null;
 
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('body').addClass('side-menu-closed');
             $('#product-list').on('click','.add-plus:not(.c-not-allowed)',function(){
                 var stock_id = $(this).data('stock-id');
@@ -444,6 +444,16 @@
             });
             filterProducts();
             getShippingAddress();
+
+            $("#load-more").on("click", ".pagination a", function () {
+                console.log($(this).attr("href"));
+                $.get($(this).attr("href"),{}, function(data){
+                    products = data.products || [];
+                    $('#product-list').html(null);
+                    setProductList(data);
+                });
+                return false;
+            });
         });
 
         $("#confirm-address").click(function (){
@@ -476,26 +486,15 @@
             var user_id = $('select[name=shop_id]').val();
             var order_by_price = $('select[name=order_by_price]').val();
             $.get('{{ route('pos.search_product') }}',{keyword:keyword, category:category, brand:brand, user_id:user_id, order_by_price: order_by_price}, function(data){
-                products = data;
+                products = data.products || [];
                 $('#product-list').html(null);
                 setProductList(data);
             });
         }
 
-        function loadMoreProduct(){
-            if(products != null && products.links.next != null){
-                $('#load-more').find('.btn').html('{{ translate('Loading..') }}');
-                @if(env('APP_ENV') != 'local')
-                    products.links.next = products.links.next.replace("http:", "https:");
-                @endif
-                $.get(products.links.next,{}, function(data){
-                    products = data;
-                    setProductList(data);
-                });
-            }
-        }
-
-        function setProductList(data){
+        function setProductList(data) {
+            var page_links = data.page_links || '';
+            data = data.products || [];
             for (var i = 0; i < data.data.length; i++) {
                 $('#product-list').append(
                     `<div class="w-140px w-xl-180px w-xxl-210px mx-2">
@@ -540,12 +539,14 @@
     </div>`
                 );
             }
-            if (data.links.next != null) {
+            /*if (data.links.next != null) {
                 $('#load-more').find('.btn').html('{{ translate('Load More.') }}');
             }
             else {
                 $('#load-more').find('.btn').html('{{ translate('Nothing more found.') }}');
-            }
+            }*/
+
+            $('#load-more').html(page_links);
         }
 
         function removeFromCart(key){
