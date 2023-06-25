@@ -38,7 +38,6 @@
     ul.ticket li .time {
         right: 1rem;
         position: absolute;
-        bottom: 0.2rem;
         text-align: right;
         padding: 0;
         margin: 0;
