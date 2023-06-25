@@ -273,6 +273,10 @@ class ProductController extends Controller
         }
 
         $combinations = Combinations::makeCombinations($options);
+        if (count($combinations) > 300) {
+            return -1;
+        }
+
         return view('backend.product.products.sku_combinations_edit', compact('combinations', 'unit_price', 'colors_active', 'product_name', 'product'));
     }
 

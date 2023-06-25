@@ -745,15 +745,15 @@
             $('#colors').prop('disabled', false);
             AIZ.plugins.bootstrapSelect('refresh');
         }
-        update_sku();
+        // update_sku();
     });
 
     $(document).on("change", ".attribute_choice",function() {
-        update_sku();
+        // update_sku();
     });
 
     $('#colors').on('change', function() {
-        update_sku();
+        // update_sku();
     });
 
     function delete_row(em){
@@ -772,6 +772,11 @@
            data:$('#choice_form').serialize(),
            success: function(data){
                $('#sku_combination').html(data);
+               if (data == -1) {
+                   AIZ.plugins.notify('danger', '{{ translate('Up to 300 variant products') }}');
+                   return;
+               }
+
                AIZ.uploader.previewGenerate();
                 AIZ.plugins.fooTable();
                if (data.length > 1) {
