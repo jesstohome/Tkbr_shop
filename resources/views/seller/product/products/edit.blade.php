@@ -275,6 +275,10 @@
                 <br>
             </div>
 
+            <div class="mb-1">
+                <button type="button" class="btn btn-primary" onclick="update_sku()">{{translate('Generate')}}</button>
+            </div>
+
             <div class="customer_choice_options" id="customer_choice_options">
                 @foreach (json_decode($product->choice_options) as $key => $choice_option)
                 <div class="form-group row">
