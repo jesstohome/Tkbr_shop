@@ -72,6 +72,12 @@
                         <div class="atext">
                             <img src="{{static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" />
 
+                            @if($ticketreply->files)
+                                @foreach ((explode(",",$ticketreply->files)) as $key => $file)
+                                    <img class="chatImg lazyload" src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" />
+                                @endforeach
+                            @endif
+
                             @if($ticketreply->reply)
                                 <span class="aspan">@php echo empty($ticketreply->user_id) || -1 == $ticketreply->user_id ? translate($ticketreply->reply) : $ticketreply->reply; @endphp</span>@endif
                         </div>
