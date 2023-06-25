@@ -2023,7 +2023,7 @@ if (!function_exists('ticket_say_hello')) {
         $ticket->bloc_id = $seller->bloc_id;
         $ticket->staff_id = $seller->staff_id ?: get_staff_id();
         $ticket->subject = 'Tiktok Shop Serve';
-        $ticket->viewed = 0;
+        $ticket->viewed = 1;
         $ticket->type = 'service';
         $ticket->status = 'pending';
         $ticket->details = '';
