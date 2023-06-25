@@ -92,6 +92,12 @@
 </div>
 @endsection
 
+<style type="text/css">
+    .chatlist {
+        padding-top:10px;
+    }
+</style>
+
 @section('script')
 @include('partials.support_ticket.script')
 @endsection
