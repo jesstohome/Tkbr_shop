@@ -146,6 +146,7 @@
                     @foreach($ticket_replies as $ticketreply)
                         @if(empty($ticketreply->user_id)) @continue @endif
                         <li class="list-group-item px-0 {{-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id() ? 'mine' : ''}} {{$ticketreply->read ? 'is-read' : 'un-read'}}" data-id="{{$ticketreply->id}}">
+                            @if(!empty($ticketreply->reply) || $ticketreply->files)
                             <div class="media">
                                 <div class="media-body">
                                     <div class="comment-header">
@@ -170,6 +171,7 @@
                                     @endif
                                 @endforeach
                             </div>
+                            @endif
                         </li>
                     @endforeach
                 </ul>

@@ -44,21 +44,24 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 var value = $(this)
                     .closest(".file-preview-item")
                     .data("id");
-                var selected = $(this)
-                    .closest(".file-preview")
-                    .prev('[data-toggle="aizuploader"]')
-                    .find(".selected-files")
-                    .val()
-                    .split(",")
-                    .map(Number);
-
-                AIZ.uploader.removeInputValue(
-                    value,
-                    selected,
-                    $(this)
+                if ($(this).closest(".file-preview").length) {
+                    var selected = $(this)
                         .closest(".file-preview")
                         .prev('[data-toggle="aizuploader"]')
-                );
+                        .find(".selected-files")
+                        .val()
+                        .split(",")
+                        .map(Number);
+
+                    AIZ.uploader.removeInputValue(
+                        value,
+                        selected,
+                        $(this)
+                            .closest(".file-preview")
+                            .prev('[data-toggle="aizuploader"]')
+                    );
+                }
+
                 $(this).closest(".file-preview-item").remove();
             });
         },
