@@ -167,24 +167,26 @@
                                             <svg t="1685791561209" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3147" width="16" height="16"><path d="M809.6 416.64h-53.76V308.48c0-135.68-108.096-243.84-243.2-243.84-135.04 0-243.2 108.16-243.2 243.84v108.16h-53.76c-29.44 0-53.76 24.32-53.76 53.76v433.28c0 29.44 24.32 53.76 53.76 53.76h593.92c30.08 0 54.4-24.32 54.4-53.76V470.4c0-29.44-24.32-53.76-54.4-53.76z m-135.04 0H350.72V308.48c0-89.6 72.96-162.56 161.92-162.56a162.56 162.56 0 0 1 161.92 162.56v108.16z" fill="#040000" p-id="3148"></path></svg>
                                         @endif
                                         @php echo $ticketreply->user_id && $ticketreply->user_id != -1 ? $ticketreply->reply : translate($ticketreply->reply); @endphp
+                                                @if($ticketreply->files)
+                                                    <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
+                                                    @if (strpos($ticketreply->files, "base64") === false)
+                                                        @foreach ((explode(",",$ticketreply->files)) as $key => $file)
+                                                            @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
+                                                            @if($file_detail != null)
+                                                                <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
+                                                            @endif
+                                                        @endforeach
+                                                    @else
+                                                        <img src="{{$ticketreply->files}}" data-src="{{$ticketreply->files}}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
+                                                    @endif
+                                                </div>
+                                                @endif
                                         @if($ticketreply->user_id)
                                             <p class="text-muted text-sm fs-11 time">{{date('m-d H:i', strtotime($ticketreply->created_at))}}</p>
                                         @endif
                                         </span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
-                            @if (strpos($ticketreply->files, "base64") === false)
-                                @foreach ((explode(",",$ticketreply->files)) as $key => $file)
-                                    @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
-                                    @if($file_detail != null)
-                                        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
-                                    @endif
-                                @endforeach
-                            @else
-                                <img src="{{$ticketreply->files}}" data-src="{{$ticketreply->files}}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
-                            @endif
                         </div>
                     </li>
                 @endforeach
