@@ -30,11 +30,14 @@ class SellerWithdrawRequestController extends Controller
         $seller_id = $request->get('seller_id');
         $status = $request->get('status');
         $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',1)->latest();
-        if (!empty($start_time)) {
-            $seller_withdraw_requests = $seller_withdraw_requests->where("created_at", ">=", date('Y-m-d H:i:s', strtotime($start_time)));
-        }
-        if (!empty($end_time)) {
-            $seller_withdraw_requests = $seller_withdraw_requests->where("created_at", "<=", date('Y-m-d H:i:s', strtotime($end_time)));
+
+        if ($request->date_range) {
+            $date_range = $request->date_range;
+            $date_var = explode("/", $request->date_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $seller_withdraw_requests = $seller_withdraw_requests->where('created_at', '>=', trim($start_time));
+            $seller_withdraw_requests = $seller_withdraw_requests->where('created_at', '<=', trim($end_time) . " 23:59:59");
         }
 
         if (!is_null($status) && $status !== '') {
@@ -56,7 +59,7 @@ class SellerWithdrawRequestController extends Controller
 
         del_plus("new_withdraw_tip");
 
-        return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests', 'start_time', 'end_time', 'status', 'total', 'total_seller', 'total_amount', 'seller_id'));
+        return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests', 'date_range', 'status', 'total', 'total_seller', 'total_amount', 'seller_id'));
     }
 
     /**

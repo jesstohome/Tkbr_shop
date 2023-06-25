@@ -14,18 +14,11 @@
         <form class="" id="sort_withdraw_request" action="" method="GET">
 
         <div class="card-header">
-                <div class="col-md-3 ml-auto">
-                    <div class="form-group mb-0">
-                        <input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" type="text" class="form-control" placeholder="{{translate('Start Time')}}" value="{{$start_time ?? ''}}" name="start_time" />
-
-                    </div>
+            <div class="col-md-4">
+                <div class="form-group mb-0">
+                    <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}">
                 </div>
-                <div class="col-md-3 ml-auto">
-                    <div class="form-group mb-0">
-
-                        <input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" type="text" class="form-control" placeholder="{{translate('End Time')}}" value="{{$end_time ?? ''}}" name="end_time" />
-                    </div>
-                </div>
+            </div>
                 <div class="col-md-2 ml-auto">
                     <select class="form-control aiz-selectpicker" data-live-search="true" name="seller_id" id="seller_id">
                         <option value="">{{translate('All')}}</option>
