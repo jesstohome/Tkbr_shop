@@ -225,13 +225,15 @@
                 // var reader = new FileReader();
 
                 var imageURL = URL.createObjectURL(selectedFile);
-                addToPreview(imageURL, 'remove-attachment-mobile');
-                $("div.message.send").show();
-                $("div.message.fujian").hide();
-                imageLoading = false;
+                if (imageURL) {
+                    addToPreview(imageURL, 'remove-attachment-mobile');
+                    $("div.message.send").show();
+                    $("div.message.fujian").hide();
+                    imageLoading = false;
 
-                // 上传到服务器
-                uploadImage(selectedFile);
+                    // 上传到服务器
+                    uploadImage(selectedFile);
+                }
 
                 // 当读取完成时，将DataURL赋值给预览图片的src属性
                 /*reader.onload = function(event) {
