@@ -225,7 +225,7 @@
                 // var reader = new FileReader();
 
                 var imageURL = URL.createObjectURL(selectedFile);
-                alert(imageURL);
+                // alert(imageURL);
                 if (imageURL) {
                     addToPreview(imageURL, 'remove-attachment-mobile');
                     $("div.message.send").show();
