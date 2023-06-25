@@ -152,6 +152,16 @@
                                     <div class="comment-header">
                                         <span class="text-bold h6 text-muted title">
                                             @php echo $ticketreply->reply; @endphp
+                                            @if($ticketreply->files)
+                                            <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
+                                            @foreach ((explode(",",$ticketreply->files)) as $key => $file)
+                                                    @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
+                                                    @if($file_detail != null)
+                                                        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                            @endif
                                             <p class="text-muted text-sm fs-11 time">
                                                 {{date('m-d H:i', strtotime($ticketreply->created_at))}}
                                                 @if((-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id()))
@@ -162,14 +172,6 @@
                                         <i class="la la-close" style="display: none"></i>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
-                                @foreach ((explode(",",$ticketreply->files)) as $key => $file)
-                                    @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
-                                    @if($file_detail != null)
-                                        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
-                                    @endif
-                                @endforeach
                             </div>
                             @endif
                         </li>
