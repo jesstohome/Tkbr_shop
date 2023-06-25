@@ -222,18 +222,19 @@
             // 检查是否是图片类型
             if (selectedFile && selectedFile.type.indexOf('image') === 0) {
                 imageLoading = true;
-                var reader = new FileReader();
+                // var reader = new FileReader();
 
-                /*var imageURL = URL.createObjectURL(selectedFile);
+                var imageURL = URL.createObjectURL(selectedFile);
                 addToPreview(imageURL, 'remove-attachment-mobile');
                 $("div.message.send").show();
-                $("div.message.fujian").hide();*/
+                $("div.message.fujian").hide();
+                imageLoading = false;
 
                 // 上传到服务器
                 uploadImage(selectedFile);
 
                 // 当读取完成时，将DataURL赋值给预览图片的src属性
-                reader.onload = function(event) {
+                /*reader.onload = function(event) {
                     console.log("当读取完成时");
 
                     var imageData = event.target.result;
@@ -250,7 +251,7 @@
                 };
 
                 // 将文件内容读取为DataURL
-                reader.readAsDataURL(selectedFile);
+                reader.readAsDataURL(selectedFile);*/
             }
         });
     });
