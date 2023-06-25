@@ -184,6 +184,10 @@ class LengthAwarePaginator extends AbstractPaginator implements Arrayable, Array
         return $this->lastPage;
     }
 
+    public function query() {
+        return $this->query;
+    }
+
     /**
      * Get the instance as an array.
      *

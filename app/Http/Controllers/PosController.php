@@ -105,7 +105,7 @@ class PosController extends Controller
         }
 
         $products = $products->paginate(16);
-        $page_links = $products->appends(request()->query())->links()->render();
+        $page_links = $products->appends(request()->query())->links('partials.paginate')->render();
 
         $stocks = new PosProductCollection($products);
         $stocks->appends(['keyword' =>  $request->keyword,'category' => $request->category, 'brand' => $request->brand, 'user_id' => $request->user_id, 'order_by_price' => $request->order_by_price]);

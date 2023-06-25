@@ -446,8 +446,17 @@
             getShippingAddress();
 
             $("#load-more").on("click", ".pagination a", function () {
-                console.log($(this).attr("href"));
                 $.get($(this).attr("href"),{}, function(data){
+                    products = data.products || [];
+                    $('#product-list').html(null);
+                    setProductList(data);
+                });
+                return false;
+            });
+
+            $("#load-more").on("click", "#btn-jump-page", function () {
+                let page_num = $(this).prev('input[name=page]').val() || 1;
+                $.get($(this).data("url") + "&page=" + page_num, {}, function(data){
                     products = data.products || [];
                     $('#product-list').html(null);
                     setProductList(data);
