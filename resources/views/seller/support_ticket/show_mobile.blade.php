@@ -56,7 +56,7 @@
                 <input type="hidden" name="ticket_id" value="{{$ticket->id}}" required>
                 <input type="hidden" name="user_id" value="{{$ticket->user_id}}">
                 <input type="hidden" name="attachments" class="selected-files">
-                <input type="file" id="fileInput" name="file" style="display: none;" accept="image/*" multiple />
+                <input type="file" id="fileInput" name="file" style="display: none;" accept="image/*" />
 
                 <input class="input" placeholder="{{translate('Please enter your question')}}" name="reply" onkeyup="toggleSendBtn(this)" onkeydown="submitReply()" enterkeyhint="send" />
             </form>
