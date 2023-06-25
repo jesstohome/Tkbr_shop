@@ -455,6 +455,7 @@ class SellerController extends Controller
                 $sm->save();
             }
 
+            // 通过后
             if ($request->status) {
                 $array['view'] = 'emails.approve_seller';
                 $array['subject'] = 'Shop Approve Notice';
@@ -466,21 +467,21 @@ class SellerController extends Controller
                 $task->email = $shop->user->email;
                 $task->array = json_encode($array, JSON_UNESCAPED_UNICODE);
                 $task->save();
-            }
 
-            $ticket = Ticket::where('user_id', $shop->user_id)->where("type", 'service')->first();
-            if (!empty($ticket)) {
-                $ticket->bloc_id = $staff->bloc_id;
-                $ticket->staff_id = $staff->id;
-                $ticket->viewed = 1;
-                $ticket->save();
+                // 发送通过的欢迎语
+                $bloc = $shop->bloc;
+                if (!empty(trim($bloc->examine_welcome_message))) {
+                    $ticket = Ticket::where('user_id', $shop->user_id)->where("type", 'service')->first();
+                    if (!empty($ticket)) {
+                        $ticket->bloc_id = $staff->bloc_id;
+                        $ticket->staff_id = $staff->id;
+                        $ticket->save();
 
-                // 通过后，发送打招呼
-                if ($request->status) {
-                    send_hello_msg($ticket, $shop->user, 1);
+                        send_hello_msg($ticket, $shop->user, 1);
+                    } else {
+                        ticket_say_hello($shop->user, 1);
+                    }
                 }
-            } else {
-                ticket_say_hello($shop->user, 1);
             }
 
             return 1;

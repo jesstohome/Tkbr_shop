@@ -351,7 +351,8 @@ class ShopController extends Controller
 
                     \Cache::set(sprintf('show_ad_js:%s', $shop->id), 1);
 
-                    ticket_say_hello();
+                    // 这里不需要了，店铺审核的时候再发送
+                    // ticket_say_hello();
                 }
                 if ( BusinessSetting::where('type', 'email_verification')->first()->value != 1 )
                 {
