@@ -1881,7 +1881,7 @@ if (!function_exists("getExchangeRate")) {
 if (!function_exists('appendTicketFiles')) {
     function appendTicketFiles($list) {
         foreach ($list as $key => $value) {
-            $list[$key]->created_time = date('m-d H:i', strtotime($value->created_at));
+            $list[$key]->created_time = substr($value->created_at, 5, -3);
 
             // files
             $file_list = [];
