@@ -8,9 +8,10 @@
             <div class="col text-center text-md-left">
                 <h5 class="mb-md-0 h6">{{ translate('Support Desk') }}</h5>
             </div>
+            @include('backend.partials.filters.bloc_staff')
             <div class="col-md-2 ml-auto">
                 <select class="form-control aiz-selectpicker" name="seller_id" id="seller_id" data-live-search="true" onchange="sort_support()">
-                    <option value="">{{translate('All')}}</option>
+                    <option value="">{{translate('Filter By Shop')}}</option>
                     @foreach(filter_by_bloc(\App\Models\User::query()->where('user_type', 'seller'))->get() as $seller)
                     <option value="{{$seller->id}}"  @if($seller_id == $seller->id) selected @endif>{{$seller->email}} ({{$seller->shop->name}})</option>
                     @endforeach
@@ -41,6 +42,7 @@
             <div class="col-auto">
                 <div class="form-group mb-0">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                    <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
                 </div>
             </div>
         </div>

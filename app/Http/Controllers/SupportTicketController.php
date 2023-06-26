@@ -115,6 +115,14 @@ class SupportTicketController extends Controller
             $tickets = $tickets->where('updated_at', '>=', $reply_time[0]);
             $tickets = $tickets->where('updated_at', '<=', $reply_time[1]);
         }
+        $bloc_id = $request->bloc_id;
+        if ($bloc_id) {
+            $tickets = $tickets->where("bloc_id", $bloc_id);
+        }
+        $staff_id = $request->staff_id;
+        if ($staff_id) {
+            $tickets = $tickets->where("staff_id", $staff_id);
+        }
 
         $type = $request->type ? $request->type : 'service';
         $tickets = $tickets->where('type', $type);
@@ -132,7 +140,7 @@ class SupportTicketController extends Controller
         if ($type == 'order') {
             $view = 'backend.support.support_tickets.index_4_order';
         }
-        return view($view, compact('tickets', 'sort_search', 'groups', 'group', 'seller_id', 'order_no', 'pay_status', 'created_times', 'reply_time'));
+        return view($view, compact('tickets', 'sort_search', 'groups', 'group', 'seller_id', 'order_no', 'pay_status', 'created_times', 'reply_time', 'bloc_id', 'staff_id'));
     }
 
     /**
