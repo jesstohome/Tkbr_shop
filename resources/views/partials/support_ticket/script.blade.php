@@ -226,7 +226,6 @@
 
                 var imageURL = URL.createObjectURL(selectedFile);
                 AIZ.extra.log({type:selectedFile.type, name: selectedFile.name, imageURL:imageURL});
-                alert(imageURL);
                 if (imageURL) {
                     addToPreview(imageURL, 'remove-attachment-mobile');
                     $("div.message.send").show();

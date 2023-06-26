@@ -107,7 +107,8 @@ function xhprof_generate_image_by_dot($dot_script, $type) {
        2 => array("pipe", "w")
        );
 
-  $cmd = " dot -T".$type;
+    // $cmd = " dot -T".$type;
+    $cmd = '"D:\Program Files\Graphviz\bin\dot.exe" -T' . $type;
 
   $process = proc_open( $cmd, $descriptorspec, $pipes, sys_get_temp_dir(), array( 'PATH' => getenv( 'PATH' ) ) );
   if (is_resource($process)) {
