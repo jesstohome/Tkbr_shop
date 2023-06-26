@@ -14,7 +14,7 @@
             @foreach($ticket_replies as $index => $ticketreply)
             <div class="chat {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}" data-id="{{$ticketreply->id}}">
                 @if($index % 4 === 0)
-                <div class="timeIndex">{{date('m-d H:i', strtotime($ticketreply->created_at))}}</div>
+                <div class="timeIndex">{{substr($ticketreply->created_at, 5, -3)}}</div>
                 @endif
 
                 @if($ticketreply->user->id == Auth::id())
