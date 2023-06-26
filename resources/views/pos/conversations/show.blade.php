@@ -63,7 +63,7 @@
                     <textarea class="form-control" rows="4" name="message" placeholder="{{ translate('Type your reply') }}" required></textarea>
                 </div>
                 <div class="form-group mb-0 text-right">
-                    <button type="submit" class="btn btn-primary">{{ translate('Send') }}</button>
+                    <button type="submit" class="btn btn-primary" onclick="$(this).attr('disabled', true)">{{ translate('Send') }}</button>
                 </div>
             </form>
         </div>

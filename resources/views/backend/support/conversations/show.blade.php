@@ -40,7 +40,7 @@
                     </div>
                     <br>
                     <div class="text-right">
-                        <button type="submit" class="btn btn-info">{{translate('Send')}}</button>
+                        <button type="submit" class="btn btn-info" onclick="$(this).attr('disabled', true)">{{translate('Send')}}</button>
                     </div>
                 </form>
             @endif
