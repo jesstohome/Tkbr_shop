@@ -74,5 +74,11 @@
     setInterval(function(){
         refresh_messages() // this will run after every 5 seconds
     }, 4000);
+
+    var submitting = false;
+    $("form").on("submit", function () {
+        if (submitting) return false;
+        submitting = true;
+    });
     </script>
 @endsection

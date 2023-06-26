@@ -40,7 +40,7 @@
                     </div>
                     <br>
                     <div class="text-right">
-                        <button type="submit" class="btn btn-info" onclick="$(this).attr('disabled', true)">{{translate('Send')}}</button>
+                        <button type="submit" class="btn btn-info">{{translate('Send')}}</button>
                     </div>
                 </form>
             @endif
@@ -48,4 +48,14 @@
     </div>
 </div>
 
+@endsection
+
+@section('script')
+    <script>
+        var submitting = false;
+        $("form").on("submit", function () {
+            if (submitting) return false;
+            submitting = true;
+        });
+    </script>
 @endsection
