@@ -195,8 +195,8 @@
                                 class="form-control aiz-selectpicker" data-live-search="true"
                                 data-selected-text-format="count" multiple
                                 data-placeholder="{{ translate('Choose Attributes') }}">
-                                @foreach (range(1, 10) as $key => $index)
-                                <option value="{{ $index }}">{{ translate('Attributes') }}({{$index}})</option>
+                                @foreach (\App\Models\Attribute::all() as $key => $attribute)
+                                    <option value="{{ $attribute->id }}">{{ $attribute->getTranslation('name') }}</option>
                                 @endforeach
                             </select>
                         </div>
