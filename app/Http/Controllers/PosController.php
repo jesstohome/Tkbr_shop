@@ -553,7 +553,7 @@ class PosController extends Controller
      * 对话
      * author: Sym
      * time: 2023-04-08 12:31
-     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|mixed
+     * @return mixed
      */
     public function pos_conversation(Request $request) {
         if (BusinessSetting::where('type', 'conversation_system')->first()->value == 1) {

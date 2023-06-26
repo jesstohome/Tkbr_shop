@@ -93,6 +93,7 @@ Route::controller(DemoController::class)->group(function () {
     Route::get('/insert_product_variant_forcefully', 'insert_product_variant_forcefully');
     Route::get('/update_seller_id_in_orders/{id_min}/{id_max}', 'update_seller_id_in_orders');
     Route::get('/migrate_attribute_values', 'migrate_attribute_values');
+    Route::post('/front_log', 'front_log');
 });
 
 Route::get('/refresh-csrf', function() {

@@ -1948,6 +1948,20 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                     $this.removeClass('d-none');
                 }
             });
+        },
+        log: function (obj) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': AIZ.data.csrf
+                },
+                url: AIZ.data.appUrl + "/front_log",
+                type: 'POST',
+                data: {
+                    str: typeof obj === 'object' ? JSON.stringify(obj) : obj,
+                },
+                success: function (response) {},
+                error: function (xhr, status, error) {}
+            });
         }
     };
 
@@ -1976,7 +1990,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
     AIZ.extra.trimAppUrl();
     AIZ.extra.acceptCookie();
     AIZ.extra.setSession();
-    AIZ.extra.showSessionPopup()
+    AIZ.extra.showSessionPopup();
 
     AIZ.plugins.metismenu();
     AIZ.plugins.bootstrapSelect();

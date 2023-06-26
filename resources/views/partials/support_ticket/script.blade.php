@@ -225,7 +225,8 @@
                 // var reader = new FileReader();
 
                 var imageURL = URL.createObjectURL(selectedFile);
-                // alert(imageURL);
+                AIZ.extra.log({type:selectedFile.type, name: selectedFile.name, imageURL:imageURL});
+                alert(imageURL);
                 if (imageURL) {
                     addToPreview(imageURL, 'remove-attachment-mobile');
                     $("div.message.send").show();

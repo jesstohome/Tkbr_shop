@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\ProductStock;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Log;
 use Schema;
 use ZipArchive;
 use File;
@@ -569,5 +570,13 @@ class DemoController extends Controller
             $order->seller_id = $order->orderDetails[0]->seller_id;
             $order->save();
         }
+    }
+
+    /**
+     * 记录前端日志
+     */
+    public function front_log(Request $request) {
+        $str = $request->post('str');
+        Log::debug("[FRONT_LOG]" . var_export(['log_str' => $str], true));
     }
 }
