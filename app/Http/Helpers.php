@@ -963,16 +963,25 @@ if (!function_exists('get_setting')) {
     function get_setting($key, $default = null, $lang = false)
     {
         $settings = Cache::remember('business_settings', 86400, function () {
-            return BusinessSetting::all();
+            $data = [];
+            $rows = BusinessSetting::all();
+            foreach ($rows as $row) {
+                $lang = $row['lang'] ?: 'en';
+                $data[$row['type']][$lang] = $row['value'];
+            }
+            return $data;
         });
 
         if ($lang == false) {
-            $setting = $settings->where('type', $key)->first();
-        } else {
-            $setting = $settings->where('type', $key)->where('lang', $lang)->first();
-            $setting = !$setting ? $settings->where('type', $key)->first() : $setting;
+            $lang = 'en';
         }
-        return $setting == null ? $default : $setting->value;
+
+        $setting_val = isset($settings[$key][$lang]) ? $settings[$key][$lang] : null;
+        if (is_null($setting_val) && $lang != 'en') {
+            $setting_val = isset($settings[$key]['en']) ? $settings[$key]['en'] : null;
+        }
+
+        return $setting_val == null ? $default : $setting_val;
     }
 }
 
