@@ -12,6 +12,12 @@
     <div class="card">
         <form>
             <div class="card-header row gutters-5">
+                @include('backend.partials.filters.bloc_staff')
+                <div class="col-md-2">
+                    <div class="form-group mb-0">
+                        <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}" autocomplete="off">
+                    </div>
+                </div>
                 <div class="col-md-2 ml-auto">
                     <select class="form-control aiz-selectpicker" name="seller_id" id="seller_id" data-live-search="true">
                         <option value="">{{translate('Filter by Shop')}}</option>
@@ -21,6 +27,7 @@
                     </select>
                 </div>
                 <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
+                <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
             </div>
         </form>
       <div class="card-body">
@@ -55,6 +62,14 @@
                           </div>
                           <div class="col-auto col-lg-1">
                               {{$conversation->receiver->shop ? $conversation->receiver->shop->name : ''}}
+                          </div>
+                          @if(isSupperAdmin())
+                          <div class="col-auto col-lg-1">
+                              {{$conversation->bloc->name ?: ''}}
+                          </div>
+                          @endif
+                          <div class="col-auto col-lg-1">
+                              {{$conversation->staff->user->name ?: ''}}
                           </div>
                           <div class="col-12 col-lg">
                               <div class="block-body">

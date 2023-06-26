@@ -230,6 +230,16 @@
             setInterval(check_new_msg, 10e3 );
             @endif
         }
+
+        function reset_form() {
+            $('.aiz-selectpicker').selectpicker('val', '');
+            $('.aiz-selectpicker').each((k, it) => {
+                $(it).find("option").first().attr("selected", true).siblings().attr("selected", false);
+            });
+            setTimeout(function () {
+                $("form input[type=text]").val('');
+            }, 200);
+        }
     </script>
 
     @include('partials.support_ticket.notice')

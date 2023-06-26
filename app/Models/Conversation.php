@@ -17,4 +17,12 @@ class Conversation extends Model
     public function receiver(){
         return $this->belongsTo(User::class, 'receiver_id');
     }
+
+    public function bloc() {
+        return $this->belongsTo(Bloc::class);
+    }
+
+    public function staff() {
+        return $this->belongsTo(Staff::class);
+    }
 }

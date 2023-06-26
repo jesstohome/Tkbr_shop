@@ -564,11 +564,26 @@ class PosController extends Controller
             if ($seller_id) {
                 $conversations = $conversations->where("receiver_id", $seller_id);
             }
+            $bloc_id = $request->bloc_id;
+            if ($bloc_id) {
+                $conversations = $conversations->where("bloc_id", $bloc_id);
+            }
+            $staff_id = $request->staff_id;
+            if ($staff_id) {
+                $conversations = $conversations->where("staff_id", $staff_id);
+            }
+            if ($request->date_range) {
+                $date_range = $request->date_range;
+                $date_range1 = explode("/", $request->date_range);
+                $conversations = $conversations->where('updated_at', '>=', trim($date_range1[0]));
+                $conversations = $conversations->where('updated_at', '<=', trim($date_range1[1]) . " 23:59:59");
+            }
+
             $conversations = $conversations->paginate(5)->appends(request()->query());
 
             del_plus('new_pos_conversation_tip');
 
-            return view('pos.conversations.index', compact('conversations', 'seller_id'));
+            return view('pos.conversations.index', compact('conversations', 'seller_id', 'bloc_id', 'staff_id', 'date_range'));
         } else {
             flash(translate('Conversation is disabled at this moment'))->warning();
             return back();
