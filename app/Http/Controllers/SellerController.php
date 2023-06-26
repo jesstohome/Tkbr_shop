@@ -152,10 +152,11 @@ class SellerController extends Controller
     public function update_rating(Request $request)
     {
         $seller_id = $request->seller_id;
-        $shop_rating = $request->shop_rating;
         $shop = Shop::query()->where('user_id', $seller_id)->first();
 
-        $shop->rating = (float) $shop_rating;
+        if ($request->has('shop_rating')) {
+            $shop->rating = (float) $request->shop_rating;
+        }
 
         if ($request->has('max_off_shelf_num')) {
             $shop->max_off_shelf_num = (int) $request->max_off_shelf_num;
