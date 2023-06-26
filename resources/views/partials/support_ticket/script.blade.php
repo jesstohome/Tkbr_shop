@@ -28,7 +28,7 @@
 
     function uploadImage(blob) {
         // var blob = new Blob([convertBase64ToBinary(base64Data)], { type: 'image/jpg' });
-        var filename = parseInt(Math.random() * 999999999) + ".jpg"
+        var filename = parseInt(Math.random() * 999999999) + ".jpg";
         var form_data = new FormData();
         form_data.append("aiz_file", blob, filename);
         form_data.append("type", "image/jpg");
@@ -43,7 +43,7 @@
             data: form_data,
             processData: false, // 告诉jQuery不要去处理发送的数据
             contentType: false, // 告诉jQuery不要去设置Content-Type请求头
-            async:false,
+            // async:false,
             success: function (response) {
                 // 处理上传成功的响应
                 console.log("处理上传成功的响应", response);
@@ -211,7 +211,7 @@
             if ($(".chatlist").length) {
                 $("body").scrollTop(999990);
             }
-        }, 500)
+        }, 500);
 
         // 文件选择完成后的回调事件
         document.getElementById('fileInput').addEventListener('change', function(event) {
