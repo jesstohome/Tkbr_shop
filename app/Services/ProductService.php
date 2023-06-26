@@ -101,10 +101,7 @@ class ProductService
                 $str = 'choice_options_' . $no;
                 $item['attribute_id'] = $no;
                 $attribute_data = array();
-                if (is_string($collection[$str]) && (strpos($collection[$str], ",") !== false || strpos($collection[$str], "，") !== false)) {
-                    $collection[$str] = str_replace("，", ",", $collection[$str]);
-                    $collection[$str] = explode(",", $collection[$str]);
-                }
+                // foreach (json_decode($request[$str][0]) as $key => $eachValue) {
                 foreach ($collection[$str] as $key => $eachValue) {
                     // array_push($data, $eachValue->value);
                     array_push($attribute_data, $eachValue);

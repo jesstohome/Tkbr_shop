@@ -219,13 +219,6 @@ class ProductController extends Controller
             foreach ($request->choice_no as $key => $no) {
                 $name = 'choice_options_' . $no;
                 $data = array();
-
-                $item = $request[$name];
-                if (is_string($item) && (strpos($item, ",") !== false || strpos($item, "，") !== false)) {
-                    $item = str_replace("，", ",", $item);
-                    $request[$name] = explode(",", $item);
-                }
-
                 foreach ($request[$name] as $key => $item) {
                     array_push($data, $item);
                 }

@@ -263,7 +263,7 @@
                                             <div class="col-sm-2">
                                                 <div class="opacity-50 my-2">
                                                     @php
-                                                    $attribute = \App\Models\Attribute::query()->where("name", $attrs[$key] ?? 2)->first();
+                                                    $attribute = \App\Models\Attribute::find($choice->attribute_id);
                                                     @endphp
                                                     {{ $attribute ? $attribute->getTranslation('name') : translate('Others')}}:
                                                 </div>
