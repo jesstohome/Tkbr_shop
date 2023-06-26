@@ -18,10 +18,10 @@
                 </select>
             </div>
             <div class="col-md-2 ml-auto">
-                <select class="form-control aiz-selectpicker" name="pay_status" id="pay_status" onchange="sort_support()">
+                <select class="form-control aiz-selectpicker" name="product_storehouse_status" id="product_storehouse_status" onchange="sort_support()">
                     <option value="">{{translate('All')}}</option>
-                    <option value="paid"  @if($pay_status == 'paid') selected @endif>{{translate('Buyer has paid')}}</option>
-                    <option value="unpaid"  @if($pay_status == 'unpaid') selected @endif>{{translate('Unpaid')}}</option>
+                    <option value="0"  @if(!is_null($product_storehouse_status) && $product_storehouse_status == 0) selected @endif>{{translate('Unpicked Up')}}</option>
+                    <option value="1"  @if($product_storehouse_status == 1) selected @endif>{{translate('Picked Up')}}</option>
                 </select>
             </div>
             <div class="col-md-2 ml-auto">
