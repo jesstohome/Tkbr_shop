@@ -75,7 +75,7 @@ class BusinessSettingsController extends Controller
      * author: Sym
      * time: 2023-04-25 14:21
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return mixed
      */
     public function update4admin(Request $request)
     {
@@ -117,6 +117,10 @@ class BusinessSettingsController extends Controller
         }
 
         Artisan::call('cache:clear');
+
+        if ($request->ajax()) {
+            return 1;
+        }
 
         flash(translate("Settings updated successfully"))->success();
         return back();

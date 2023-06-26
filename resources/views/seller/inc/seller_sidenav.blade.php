@@ -528,7 +528,10 @@
 
 
         let played = 0;
-        function audioPlay(force) {
+        function audioPlay() {
+            @if(get_admin_setting('msg_tip_mute'))
+                return false;
+            @endif
             console.log("来消息啦 ，播放声音");
             $("#tip-audio")[0].play();
         }
