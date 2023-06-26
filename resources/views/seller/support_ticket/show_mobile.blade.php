@@ -64,6 +64,8 @@
             <div class="senddiv">
                 <div class="message fujian" onclick="openFileSelection()"></div>
                 <div class="message send"  style="display: none" onclick="submit_reply('pending')"></div>
+                <div class="message loading" style="display: none;"><img src="{{static_asset('assets/img/loading.gif')}}" /> </div>
+
             </div>
         </div>
     </div>

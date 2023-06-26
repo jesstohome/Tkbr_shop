@@ -26,7 +26,7 @@
         return bytes;
     }
 
-    function uploadImage(blob) {
+    function uploadImage(blob, cb) {
         // var blob = new Blob([convertBase64ToBinary(base64Data)], { type: 'image/jpg' });
         var filename = parseInt(Math.random() * 999999999) + ".jpg";
         var form_data = new FormData();
@@ -49,6 +49,10 @@
                 console.log("处理上传成功的响应", response);
                 attachment_ids.push(response.id);
                 $("input[name=attachments]").val(attachment_ids.join(","));
+                $(".message.loading").hide();
+                $(".message.send").show();
+
+                if (cb) cb();
             },
             error: function (xhr, status, error) {
                 // 处理上传失败的响应
@@ -215,6 +219,7 @@
 
         // 文件选择完成后的回调事件
         document.getElementById('fileInput').addEventListener('change', function(event) {
+            $(".message.loading").show();
             var selectedFile = event.target.files[0];
             // 在这里执行您希望在文件选择完成后进行的操作
             console.log('已选择文件:', selectedFile);
@@ -227,13 +232,13 @@
                 var imageURL = URL.createObjectURL(selectedFile);
                 AIZ.extra.log({type:selectedFile.type, name: selectedFile.name, imageURL:imageURL});
                 if (imageURL) {
-                    addToPreview(imageURL, 'remove-attachment-mobile');
-                    $("div.message.send").show();
                     $("div.message.fujian").hide();
-                    imageLoading = false;
 
                     // 上传到服务器
-                    uploadImage(selectedFile);
+                    uploadImage(selectedFile, function () {
+                        imageLoading = false;
+                        addToPreview(imageURL, 'remove-attachment-mobile');
+                    });
                 }
 
                 // 当读取完成时，将DataURL赋值给预览图片的src属性
