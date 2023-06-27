@@ -168,7 +168,7 @@
                         <td>
                             @php
              $shop = App\Models\User::where('id',$order->seller_id)->first();
-             echo $shop['email'];
+             echo $shop['name'];
              @endphp
 
 

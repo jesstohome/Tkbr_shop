@@ -171,7 +171,7 @@
                         <td>{{$order->shop->staff ? $order->shop->staff->user->email : ''}}</td>
 
                         <td>
-                            {{$order->seller_email}}
+                            {{$order->shop_name}}
                         </td>
                         <td>
                             {{ count($order->orderDetails) }}
