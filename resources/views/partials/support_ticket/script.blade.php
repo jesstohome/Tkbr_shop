@@ -224,6 +224,7 @@
                 setTimeout(function () {
                     imageLoading = false;
                     $(".message.loading").hide();
+                    $("div.message.send").hide();
                     $("div.message.fujian").show();
                 }, 10e3);
                 var selectedFile = event.target.files[0];
@@ -285,6 +286,7 @@
             } catch (e) {
                 imageLoading = false;
                 $(".message.loading").hide();
+                $("div.message.send").hide();
                 $("div.message.fujian").show();
                 AIZ.extra.log(e);
             }
