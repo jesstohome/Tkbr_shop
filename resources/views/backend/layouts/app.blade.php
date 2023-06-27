@@ -235,10 +235,8 @@
         }
 
         window.onload = function () {
-            @if(!get_admin_setting('msg_tip_mute'))
             check_new_msg();
             setInterval(check_new_msg, 10e3 );
-            @endif
         }
     </script>
 
