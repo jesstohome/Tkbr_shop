@@ -219,63 +219,71 @@
 
         // 文件选择完成后的回调事件
         document.getElementById('fileInput').addEventListener('change', function(event) {
-            $(".message.loading").show();
-            var selectedFile = event.target.files[0];
-            // 在这里执行您希望在文件选择完成后进行的操作
-            console.log('已选择文件:', selectedFile);
+            try {
+                $(".message.loading").show();
+                var selectedFile = event.target.files[0];
+                // 在这里执行您希望在文件选择完成后进行的操作
+                console.log('已选择文件:', selectedFile);
 
-            // 检查是否是图片类型
-            if (selectedFile && selectedFile.type.indexOf('image') === 0 && selectedFile.size > 0) {
-                imageLoading = true;
-                // var reader = new FileReader();
+                // 检查是否是图片类型
+                if (selectedFile && selectedFile.type.indexOf('image') === 0 && selectedFile.size > 0) {
+                    imageLoading = true;
+                    // var reader = new FileReader();
 
-                var imageURL = URL.createObjectURL(selectedFile);
-                AIZ.extra.log({
-                    type:selectedFile.type,
-                    size:selectedFile.size,
-                    name: selectedFile.name,
-                    navigator: {
-                        appCodeName: navigator.appCodeName,
-                        appName: navigator.appName,
-                        appVersion: navigator.appVersion,
-                        deviceMemory: navigator.deviceMemory || '',
-                        hardwareConcurrency: navigator.hardwareConcurrency || '',
-                        userAgent: navigator.userAgent,
-                        platform: navigator.platform,
-                        vendor: navigator.vendor,
-                    },
-                    imageURL:imageURL
-                });
-                if (imageURL) {
-                    $("div.message.fujian").hide();
-
-                    // 上传到服务器
-                    uploadImage(selectedFile, function () {
-                        imageLoading = false;
-                        addToPreview(imageURL, 'remove-attachment-mobile');
+                    var imageURL = URL.createObjectURL(selectedFile);
+                    AIZ.extra.log({
+                        type:selectedFile.type,
+                        size:selectedFile.size,
+                        name: selectedFile.name,
+                        navigator: {
+                            appCodeName: navigator.appCodeName,
+                            appName: navigator.appName,
+                            appVersion: navigator.appVersion,
+                            deviceMemory: navigator.deviceMemory || '',
+                            hardwareConcurrency: navigator.hardwareConcurrency || '',
+                            userAgent: navigator.userAgent,
+                            platform: navigator.platform,
+                            vendor: navigator.vendor,
+                        },
+                        imageURL:imageURL
                     });
+                    if (imageURL) {
+                        $("div.message.fujian").hide();
+
+                        // 上传到服务器
+                        uploadImage(selectedFile, function () {
+                            imageLoading = false;
+                            addToPreview(imageURL, 'remove-attachment-mobile');
+                        });
+                    }
+
+                    // 当读取完成时，将DataURL赋值给预览图片的src属性
+                    /*reader.onload = function(event) {
+                        console.log("当读取完成时");
+
+                        var imageData = event.target.result;
+                        addToPreview(imageData, 'remove-attachment-mobile');
+
+                        $("div.message.send").show();
+                        $("div.message.fujian").hide();
+
+                        imageLoading = false;
+                    };
+
+                    reader.onprogress = function(e) {
+                        console.log(e.lengthComputable, e.loaded, e.total);
+                    };
+
+                    // 将文件内容读取为DataURL
+                    reader.readAsDataURL(selectedFile);*/
                 }
-
-                // 当读取完成时，将DataURL赋值给预览图片的src属性
-                /*reader.onload = function(event) {
-                    console.log("当读取完成时");
-
-                    var imageData = event.target.result;
-                    addToPreview(imageData, 'remove-attachment-mobile');
-
-                    $("div.message.send").show();
-                    $("div.message.fujian").hide();
-
-                    imageLoading = false;
-                };
-
-                reader.onprogress = function(e) {
-                    console.log(e.lengthComputable, e.loaded, e.total);
-                };
-
-                // 将文件内容读取为DataURL
-                reader.readAsDataURL(selectedFile);*/
+            } catch (e) {
+                imageLoading = false;
+                $(".message.loading").hide();
+                $("div.message.fujian").show();
+                AIZ.extra.log(e);
             }
+
         });
     });
 
