@@ -130,7 +130,7 @@
                                     $orderDetails = \App\Models\OrderDetail::where('seller_id', Auth::user()->id)->get();
                                     $total = 0;
                                     foreach ($orderDetails as $key => $orderDetail) {
-                                        if ($orderDetail->order != null && $orderDetail->order->payment_status == 'paid') {
+                                        if ($orderDetail->order != null && $orderDetail->order->payment_status == 'paid' && $orderDetail->order->delivery_status != 'cancelled') {
                                             $total += $orderDetail->price;
                                         }
                                     }
@@ -182,6 +182,7 @@
 
                     $orderTotal = \App\Models\Order::where('seller_id', Auth::user()->id)
                         ->where('payment_status', 'paid')
+                        ->where('delivery_status', '!=', 'cancelled')
                         ->where('created_at', '>=', $days_ago_30)
                         ->sum('grand_total');
                 @endphp
@@ -198,6 +199,7 @@
                         @php
                             $orderTotal = \App\Models\Order::where('seller_id', Auth::user()->id)
                                 ->where('payment_status', 'paid')
+                                ->where('delivery_status', '!=', 'cancelled')
                                 ->where('created_at', '>=', $days_ago_60)
                                 ->where('created_at', '<=', $days_ago_30)
                                 ->sum('grand_total');

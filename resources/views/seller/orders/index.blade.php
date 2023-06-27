@@ -17,9 +17,9 @@
         @php
             $count = DB::table('orders')->where('seller_id', Auth::user()->id)
                 ->count();
-            $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)
+            $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')
                 ->sum('orders.grand_total');
-            $product_storehouse_total = DB::table('orders')->where('seller_id', Auth::user()->id)
+            $product_storehouse_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')
                 ->sum('orders.product_storehouse_total');
             $total_turnover = "$".sprintf('%.2f',$grand_total);
             $total_profit = "$".sprintf('%.2f',($grand_total - $product_storehouse_total));
@@ -189,7 +189,7 @@
                                     </td>
                                     <td class="text-right">
                                         <div style="display: flex;justify-content: flex-end;">
-                                            <a href="{{ route('seller.orders.show', encrypt($order->id)) }}" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="{{ translate('Order Details') }}">
+                                            <a href="{{ route('seller.orders.show', encrypt($order->id)) }}" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="{{ translate('Order Details') }}" @if($order->delivery_status == 'cancelled') onclick="AIZ.plugins.notify('warning', '{{translate('The order has been cancelled')}}');return false;" @endif>
                                                 <i class="las la-eye"></i>
                                             </a>
                                             <a href="{{ route('seller.invoice.download', $order->id) }}" class="btn btn-soft-warning btn-icon btn-circle btn-sm" title="{{ translate('Download Invoice') }}">

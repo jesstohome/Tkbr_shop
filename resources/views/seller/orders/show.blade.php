@@ -17,7 +17,7 @@
                 @endphp
                 @if (get_setting('product_manage_by_admin') == 0)
                     @if ($order->product_storehouse_total > 0)
-                        @if($delivery_status == 'canceled')
+                        @if($delivery_status != 'cancelled')
                             @if (!$order->product_storehouse_status)
                                 <div class="col-md-4 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
                                     <button id="payment_for_storehouse" type="button" class="btn btn-primary">{{ translate('Pay the manufacturer and notify the shipment') }}</button>

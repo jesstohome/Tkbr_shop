@@ -34,11 +34,10 @@
 @php
     $count = DB::table('orders')->where('seller_id', Auth::user()->id)
         ->count();
-    $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)
+    $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')
         ->sum('orders.grand_total');
     $storehouse_order_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('product_storehouse_status', 1)->count();
     $total_turnover = "$".sprintf('%.2f',$grand_total);
-    $total_profit = "$".sprintf('%.2f',($grand_total - $product_storehouse_total));
 @endphp
 
     <div class="row gutters-0">
