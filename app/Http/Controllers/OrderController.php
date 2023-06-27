@@ -150,13 +150,13 @@ class OrderController extends Controller
             $orders = $orders->where($table_name . '.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where($table_name . '.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
         if ($seller_id) {
-            $orders = $orders->where('seller_id', $seller_id);
+            $orders = $orders->where($table_name.'.seller_id', $seller_id);
         }
         if ($customer_id) {
-            $orders = $orders->where('user_id', $customer_id);
+            $orders = $orders->where($table_name.'.user_id', $customer_id);
         }
 
-        $orders = $this->_filter_orders($orders, $request);
+        $orders = $this->_filter_orders($orders, $request, $table_name);
 
         $orders = filter_by_bloc($orders);
 
@@ -164,7 +164,7 @@ class OrderController extends Controller
         $orders_clone = clone $orders;
         $total = $orders_clone->count();
         $total_amount = $orders_clone->sum('grand_total');
-        $total_customers = $orders_clone->distinct('user_id')->count();
+        $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
         $orders = $orders->join("users", "users.id", "=", $table_name . ".user_id")->join("shops", "shops.user_id", "=", $table_name . ".seller_id")->select($table_name . ".*", "users.name as customer_name", "shops.name as shop_name");
         $orders = $orders->paginate(15)->appends(request()->query());
@@ -188,14 +188,16 @@ class OrderController extends Controller
     }
 
     // 根据条件过滤订单
-    private function _filter_orders($orders, $request) {
+    private function _filter_orders($orders, $request, $table_name = '') {
+        if (empty($table_name)) $table_name = 'orders';
+
         if ($request->bloc_id) {
             $bloc_id = $request->bloc_id;
-            $orders = $orders->where('bloc_id', $bloc_id);
+            $orders = $orders->where($table_name.'.bloc_id', $bloc_id);
         }
         if ($request->staff_id) {
             $staff_id = $request->staff_id;
-            $orders = $orders->where('staff_id', $staff_id);
+            $orders = $orders->where($table_name.'.staff_id', $staff_id);
         }
         if ($request->min_price) {
             $min_price = $request->min_price;
