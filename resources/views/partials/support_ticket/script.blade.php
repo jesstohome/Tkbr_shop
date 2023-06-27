@@ -221,6 +221,11 @@
         document.getElementById('fileInput').addEventListener('change', function(event) {
             try {
                 $(".message.loading").show();
+                setTimeout(function () {
+                    imageLoading = false;
+                    $(".message.loading").hide();
+                    $("div.message.fujian").show();
+                }, 10e3);
                 var selectedFile = event.target.files[0];
                 // 在这里执行您希望在文件选择完成后进行的操作
                 console.log('已选择文件:', selectedFile);
