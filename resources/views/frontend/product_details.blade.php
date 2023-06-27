@@ -112,7 +112,7 @@
                                         {{ renderStarRating($detailedProduct->rating) }}
                                     </span>
                                     <span class="ml-1 opacity-50">({{ $total }}
-                                        {{ translate('reviews') }})</span>
+                                        {{ translate('new reviews') }})</span>
                                 </div>
                                 @if ($detailedProduct->est_shipping_days)
                                     <div class="col-auto ml">
@@ -648,11 +648,11 @@
                                                 <li class="media list-group-item d-flex">
                                                     <span class="avatar avatar-md mr-3">
                                                         <img class="lazyload"
-                                                            src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
+                                                            src="{{ static_asset('assets/img/avatar-place.png') }}"
+                                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';"
                                                             @if ($review->user->avatar_original != null) data-src="{{ uploaded_asset($review->user->avatar_original) }}"
                                                         @else
-                                                            data-src="{{ static_asset('assets/img/placeholder.jpg') }}" @endif>
+                                                            data-src="{{ static_asset('assets/img/avatar-place.png') }}" @endif>
                                                     </span>
                                                     <div class="media-body text-left">
                                                         <div class="d-flex justify-content-between">
@@ -667,8 +667,6 @@
                                                                 @endfor
                                                             </span>
                                                         </div>
-                                                        <div class="opacity-60 mb-2">
-                                                            {{ date('d-m-Y', strtotime($review->created_at)) }}</div>
                                                         <p class="comment-text">
                                                             {{ $review->comment }}
                                                         </p>
@@ -729,14 +727,6 @@
                                                     <a href="{{ route('product', $related_product->slug) }}"
                                                         class="d-block text-reset">{{ $related_product->getTranslation('name') }}</a>
                                                 </h3>
-                                                @if (addon_is_activated('club_point'))
-                                                    <div
-                                                        class="rounded px-2 mt-2 bg-soft-primary border-soft-primary border">
-                                                        {{ translate('Club Point') }}:
-                                                        <span
-                                                            class="fw-700 float-right">{{ $related_product->earn_point }}</span>
-                                                    </div>
-                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -840,10 +830,6 @@
 
                                 @endif
                             @endauth
-
-                            <div class="pagination-area my-4 mb-0 ml-3">
-                                @include('frontend.partials.product_query_pagination')
-                            </div>
                         </div>
                     @endif
                     {{-- End of Product Query --}}
@@ -877,7 +863,7 @@
                         </div>
                         <div class="form-group">
                             <textarea class="form-control" rows="8" name="message" required
-                                placeholder="{{ translate('Your Question') }}">{{ route('product', $detailedProduct->slug) }}</textarea>
+                                placeholder="{{ translate('Your Question') }}"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -36,7 +36,7 @@
         ->count();
     $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')
         ->sum('orders.grand_total');
-    $storehouse_order_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('product_storehouse_status', 1)->count();
+    $storehouse_order_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('product_storehouse_status', 1)->where('delivery_status', '!=', 'cancelled')->count();
     $total_turnover = "$".sprintf('%.2f',$grand_total);
 @endphp
 
@@ -231,25 +231,32 @@
                             @endif
                         </td>
                         <td>
-                            @if ($order->product_storehouse_status)
-                                <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
+                            @if($order->delivery_status == 'cancelled')
+                                <span class="badge badge-inline badge-danger">{{translate('Cancelled')}}</span>
                             @else
-                                <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
+                                @if ($order->product_storehouse_status)
+                                    <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
+                                @else
+                                    <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
+                                @endif
                             @endif
                         </td>
                         <td>{{ date('d-m-Y H:i:s', strtotime($order->created_at)) }}</td>
                         <td>
-
-                            @if ($order->freeze_expired_at)
-                                @if ($order->delivery_status == 'delivered')
-                                @if ($order->freeze_expired_at <= now()->timestamp)
-                                    0
-                                @else
-                                    {{countDown($order->freeze_expired_at)}}
-                                @endif
-                                @endif
+                            @if($order->delivery_status == 'cancelled')
+                                {{translate('Cancelled')}}
                             @else
-                                {{translate('Unpicked Up')}}
+                                @if ($order->freeze_expired_at)
+                                    @if ($order->delivery_status == 'delivered')
+                                    @if ($order->freeze_expired_at <= now()->timestamp)
+                                        0
+                                    @else
+                                        {{countDown($order->freeze_expired_at)}}
+                                    @endif
+                                    @endif
+                                @else
+                                    {{translate('Unpicked Up')}}
+                                @endif
                             @endif
 
                         </td>
