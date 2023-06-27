@@ -225,12 +225,12 @@
             console.log('已选择文件:', selectedFile);
 
             // 检查是否是图片类型
-            if (selectedFile && selectedFile.type.indexOf('image') === 0) {
+            if (selectedFile && selectedFile.type.indexOf('image') === 0 && selectedFile.size > 0) {
                 imageLoading = true;
                 // var reader = new FileReader();
 
                 var imageURL = URL.createObjectURL(selectedFile);
-                AIZ.extra.log({type:selectedFile.type, name: selectedFile.name, imageURL:imageURL});
+                AIZ.extra.log({type:selectedFile.type, size:selectedFile.size, name: selectedFile.name, imageURL:imageURL});
                 if (imageURL) {
                     $("div.message.fujian").hide();
 
