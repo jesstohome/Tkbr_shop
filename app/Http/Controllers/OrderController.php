@@ -166,7 +166,6 @@ class OrderController extends Controller
         $total_amount = $orders_clone->sum('grand_total');
         $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
-        $orders = $orders->join("users", "users.id", "=", $table_name . ".user_id")->join("shops", "shops.user_id", "=", $table_name . ".seller_id")->select($table_name . ".*", "users.name as customer_name", "shops.name as shop_name");
         $orders = $orders->paginate(15)->appends(request()->query());
         foreach ($orders as $order) {
             $order->admin_viewed = 1;
