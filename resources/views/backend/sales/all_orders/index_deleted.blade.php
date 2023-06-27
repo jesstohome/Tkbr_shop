@@ -246,14 +246,9 @@
                         </td>
                         <td>{{$order->unfreeze_time ? date('Y-m-d H:i:s', $order->unfreeze_time) : ''}}</td>
                         <td class="text-right">
-                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
+                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_deleted_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
                             </a>
-                            <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
-                                <i class="las la-download"></i>
-                            </a>
-
-                            @include('backend.sales.btns')
                         </td>
                     </tr>
                     @endforeach

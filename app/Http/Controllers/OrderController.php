@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\OTPVerificationController;
+use App\Models\DeletedOrder;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ClubPointController;
@@ -37,10 +38,6 @@ use function translate;
 
 class OrderController extends Controller
 {
-
-
-
-
      public function update_delivery_info(Request $request)
     {
         parse_str( $_POST['data'] , $arr );
@@ -132,9 +129,15 @@ class OrderController extends Controller
         $sort_search = null;
         $delivery_status = null;
         //echo date('Y-m-d H:i:s');
-        $orders = Order::orderBy('id', 'desc');
+        if ($request->source === 'deleted') {
+            $orders = DeletedOrder::orderBy('id', 'desc');
+            $table_name = "deleted_orders";
+        } else {
+            $orders = Order::orderBy('id', 'desc');
+            $table_name = "orders";
+        }
         //echo date('Y-m-d H:i:s');
-        $orders = $orders->where('orders.created_at', '<=', date('Y-m-d H:i:s'));
+        $orders = $orders->where($table_name . '.created_at', '<=', date('Y-m-d H:i:s'));
         if ($request->has('search')) {
             $sort_search = $request->search;
             $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
@@ -144,7 +147,7 @@ class OrderController extends Controller
             $delivery_status = $request->delivery_status;
         }
         if ($date != null) {
-            $orders = $orders->where('orders.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('orders.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+            $orders = $orders->where($table_name . '.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where($table_name . '.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
         if ($seller_id) {
             $orders = $orders->where('seller_id', $seller_id);
@@ -163,7 +166,7 @@ class OrderController extends Controller
         $total_amount = $orders_clone->sum('grand_total');
         $total_customers = $orders_clone->distinct('user_id')->count();
 
-        $orders = $orders->join("users", "users.id", "=", "orders.user_id")->join("users as seller", "seller.id", "=", "orders.seller_id")->select("orders.*", "users.name as customer_name", "seller.email as seller_email");
+        $orders = $orders->join("users", "users.id", "=", $table_name . ".user_id")->join("users as seller", "seller.id", "=", $table_name . ".seller_id")->select($table_name . ".*", "users.name as customer_name", "seller.email as seller_email");
         $orders = $orders->paginate(15)->appends(request()->query());
         foreach ($orders as $order) {
             $order->admin_viewed = 1;
@@ -172,7 +175,16 @@ class OrderController extends Controller
 
         del_plus("orders_pick_up_tip");
 
-        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
+        $view = 'backend.sales.all_orders.index';
+        if ($request->source === 'deleted') {
+            $view = 'backend.sales.all_orders.index_deleted';
+        }
+        return view($view, compact('orders', 'sort_search', 'delivery_status', 'date', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
+    }
+
+    public function all_deleted_orders(Request $request) {
+        $request->source = 'deleted';
+        return $this->all_orders($request);
     }
 
     // 根据条件过滤订单
@@ -250,9 +262,13 @@ class OrderController extends Controller
         return view('backend.sales.storehouse_orders.show', compact('order', 'delivery_boys'));
     }
 
-    public function all_orders_show($id)
+    public function all_orders_show($id, $source = '')
     {
-        $order = Order::findOrFail(decrypt($id));
+        if ('deleted' === $source) {
+            $order = DeletedOrder::findOrFail(decrypt($id));
+        } else {
+            $order = Order::findOrFail(decrypt($id));
+        }
 
          $express = '';
         if( $order->express_info )
@@ -271,10 +287,20 @@ class OrderController extends Controller
                 ->get();
         }
 
-        hdel_plus('orders_pick_up_tip', $order->id);
-        hdel_plus('new_order_tip', $order->id);
+        if (empty($source)) {
+            hdel_plus('orders_pick_up_tip', $order->id);
+            hdel_plus('new_order_tip', $order->id);
+        }
 
-        return view('backend.sales.all_orders.show', compact('order', 'delivery_boys','express'));
+        $view = 'backend.sales.all_orders.show';
+        if ('deleted' === $source) {
+            $view = 'backend.sales.all_orders.show_deleted';
+        }
+        return view($view, compact('order', 'delivery_boys','express'));
+    }
+
+    public function all_deleted_orders_show($id) {
+        return $this->all_orders_show($id, 'deleted');
     }
 
     // Inhouse Orders
@@ -881,8 +907,11 @@ class OrderController extends Controller
 
                 }
 
-                $orderDetail->delete();
+                // $orderDetail->delete();
             }
+            $orderCopyData = $order->toArray();
+            unset($orderCopyData['order_details']);
+            DeletedOrder::insert($orderCopyData);
             $order->delete();
             flash(translate('Order has been deleted successfully'))->success();
         } else {

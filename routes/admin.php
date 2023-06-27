@@ -419,7 +419,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
     Route::controller(OrderController::class)->group(function () {
         // All Orders
         Route::get('/all_orders', 'all_orders')->name('all_orders.index');
+        Route::get('/all_deleted_orders', 'all_deleted_orders')->name('all_deleted_orders.index');
         Route::get('/all_orders/{id}/show', 'all_orders_show')->name('all_orders.show');
+        Route::get('/all_deleted_orders/{id}/show', 'all_deleted_orders_show')->name('all_deleted_orders.show');
 
         // Storehouse Orders
         Route::get('/storehouse_orders', 'storehouse_orders')->name('storehouse_orders.index');
