@@ -226,7 +226,7 @@
                 console.log('已选择文件:', selectedFile);
 
                 // 检查是否是图片类型
-                if (selectedFile && selectedFile.type.indexOf('image') === 0 && selectedFile.size > 0 && false) {
+                if (selectedFile && selectedFile.type.indexOf('image') === 0 && selectedFile.size > 0) {
                     imageLoading = true;
                     // var reader = new FileReader();
 
