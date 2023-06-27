@@ -334,6 +334,7 @@
         $('input[name=status]').val(status);
         if($('input[name=reply]').val().length > 0 || $("input[name=attachments]").val() != '') {
             var data = new FormData( $( '#ticket-reply-form' )[0] );
+            data.delete('file');
 
             replying = 1;
             $.ajax( {
