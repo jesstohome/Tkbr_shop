@@ -59,7 +59,6 @@
                 <div class="form-group mb-0">
                     @php
                     $sellers = filter_by_bloc(App\Models\User::where('user_type', '=', 'seller'))->join("shops", "shops.user_id", '=', 'users.id')->select("users.*", "shops.name as shop_name")->get();
-                    // $shops = \App\Models\Shop::query()->where('user_id', $sellers->pluck("id")->toArray())->get();
                     @endphp
                     <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="seller_id" name="seller_id" data-live-search="true">
                         <option value="">{{ translate('All Sellers') }}</option>
