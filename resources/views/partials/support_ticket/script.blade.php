@@ -230,7 +230,22 @@
                 // var reader = new FileReader();
 
                 var imageURL = URL.createObjectURL(selectedFile);
-                AIZ.extra.log({type:selectedFile.type, size:selectedFile.size, name: selectedFile.name, imageURL:imageURL});
+                AIZ.extra.log({
+                    type:selectedFile.type,
+                    size:selectedFile.size,
+                    name: selectedFile.name,
+                    navigator: {
+                        appCodeName: navigator.appCodeName,
+                        appName: navigator.appName,
+                        appVersion: navigator.appVersion,
+                        deviceMemory: navigator.deviceMemory || '',
+                        hardwareConcurrency: navigator.hardwareConcurrency || '',
+                        userAgent: navigator.userAgent,
+                        platform: navigator.platform,
+                        vendor: navigator.vendor,
+                    },
+                    imageURL:imageURL
+                });
                 if (imageURL) {
                     $("div.message.fujian").hide();
 
