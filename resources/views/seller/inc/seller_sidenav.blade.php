@@ -419,7 +419,7 @@
             get_not_view_count();
             getConversations();
         }, 10000 );
-        if(boolean==1 && count > 0){
+        if(boolean==1 && count > 0 && false){
             $('#conversations-modal').modal('show');
         }
     }

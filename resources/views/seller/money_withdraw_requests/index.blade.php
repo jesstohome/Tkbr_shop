@@ -224,10 +224,14 @@
                         <td>{{ single_price($order->grand_total) }}</td>
                         <td>{{ single_price($order->grand_total - $order->product_storehouse_total) }}</td>
                         <td>
-                            @if ($order->payment_status == 'paid')
-                                <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
+                            @if($order->delivery_status == 'cancelled')
+                                <span class="badge badge-inline badge-danger">{{translate('Cancelled')}}</span>
                             @else
-                                <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
+                                @if ($order->payment_status == 'paid')
+                                    <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
+                                @else
+                                    <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
+                                @endif
                             @endif
                         </td>
                         <td>
