@@ -223,6 +223,7 @@
             }, 'json' )
         }
 
+        // 表单重置
         function reset_form() {
             $('.aiz-selectpicker').selectpicker('val', '');
             $('.aiz-selectpicker').each((k, it) => {
@@ -233,22 +234,11 @@
             }, 200);
         }
 
-        window.onload = function ()
-        {
+        window.onload = function () {
             @if(!get_admin_setting('msg_tip_mute'))
             check_new_msg();
             setInterval(check_new_msg, 10e3 );
             @endif
-        }
-
-        function reset_form() {
-            $('.aiz-selectpicker').selectpicker('val', '');
-            $('.aiz-selectpicker').each((k, it) => {
-                $(it).find("option").first().attr("selected", true).siblings().attr("selected", false);
-            });
-            setTimeout(function () {
-                $("form input[type=text]").val('');
-            }, 200);
         }
     </script>
 
