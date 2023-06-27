@@ -134,7 +134,7 @@ class OrderController extends Controller
         //echo date('Y-m-d H:i:s');
         $orders = Order::orderBy('id', 'desc');
         //echo date('Y-m-d H:i:s');
-        $orders = $orders->where('created_at', '<=', date('Y-m-d H:i:s'));
+        $orders = $orders->where('orders.created_at', '<=', date('Y-m-d H:i:s'));
         if ($request->has('search')) {
             $sort_search = $request->search;
             $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
@@ -144,7 +144,7 @@ class OrderController extends Controller
             $delivery_status = $request->delivery_status;
         }
         if ($date != null) {
-            $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+            $orders = $orders->where('orders.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('orders.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
         if ($seller_id) {
             $orders = $orders->where('seller_id', $seller_id);
@@ -163,6 +163,7 @@ class OrderController extends Controller
         $total_amount = $orders_clone->sum('grand_total');
         $total_customers = $orders_clone->distinct('user_id')->count();
 
+        $orders = $orders->join("users", "users.id", "=", "orders.user_id")->join("users as seller", "seller.id", "=", "orders.seller_id")->select("orders.*", "users.name as customer_name", "seller.email as seller_email");
         $orders = $orders->paginate(15)->appends(request()->query());
         foreach ($orders as $order) {
             $order->admin_viewed = 1;
@@ -472,7 +473,7 @@ class OrderController extends Controller
         $max_price = $request->max_price;
         $product_storehouse_status = $request->product_storehouse_status;
         $freeze_status = $request->freeze_status;
-        
+
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;

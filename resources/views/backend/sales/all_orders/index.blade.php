@@ -57,11 +57,15 @@
             </div>
             <div class="col-lg-2">
                 <div class="form-group mb-0">
+                    @php
+                    $sellers = filter_by_bloc(App\Models\User::where('user_type', '=', 'seller'))->join("shops", "shops.user_id", '=', 'users.id')->select("users.*", "shops.name as shop_name")->get();
+                    // $shops = \App\Models\Shop::query()->where('user_id', $sellers->pluck("id")->toArray())->get();
+                    @endphp
                     <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="seller_id" name="seller_id" data-live-search="true">
                         <option value="">{{ translate('All Sellers') }}</option>
-                        @foreach (filter_by_bloc(App\Models\User::where('user_type', '=', 'seller'))->get() as $key => $seller)
+                        @foreach ($sellers as $key => $seller)
                             <option value="{{ $seller->id }}" @if ($seller->id == $seller_id) selected @endif>
-                                {{ $seller->shop->name }} ({{ $seller->email }})
+                                {{ $seller->shop_name }} ({{$seller->email}})
                             </option>
                         @endforeach
                     </select>
@@ -131,6 +135,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                @php
+                $isSupperAdmin = isSupperAdmin();
+                @endphp
                     @foreach ($orders as $key => $order)
                     <tr>
                         <td>
@@ -163,18 +170,16 @@
                         </td>
                         @if (isSupperAdmin())<td>{{$order->shop->bloc ? $order->shop->bloc->name : ''}}</td>@endif
                         <td>{{$order->shop->staff ? $order->shop->staff->user->email : ''}}</td>
+
                         <td>
-                            @php
-                            $shop = App\Models\User::where('id',$order->seller_id)->first();
-                            echo $shop['email'];
-                            @endphp
+                            {{$order->seller_email}}
                         </td>
                         <td>
                             {{ count($order->orderDetails) }}
                         </td>
                         <td>
-                            @if ($order->user != null)
-                            {{ $order->user->name }}
+                            @if ($order->customer_name != null)
+                            {{ $order->customer_name }}
                             @else
                             Guest ({{ $order->guest_id }})
                             @endif

@@ -13,8 +13,8 @@
     <div class="col-md-2 ml-auto">
         <select class="form-control aiz-selectpicker" name="staff_id" id="staff_id" data-live-search="true">
             <option value="">{{translate('Filter by Staff')}}</option>
-            @foreach(filter_by_bloc(\App\Models\Staff::query())->get() as $staff)
-                <option value="{{$staff->id}}"  @isset($staff_id) @if($staff_id == $staff->id) selected @endif @endisset>{{$staff->user->name}}</option>
+            @foreach(filter_by_bloc(\App\Models\Staff::query())->join("users", "users.id", "=", "staff.user_id")->select("staff.*", "users.name")->get() as $staff)
+                <option value="{{$staff->id}}"  @isset($staff_id) @if($staff_id == $staff->id) selected @endif @endisset>{{$staff->name}}</option>
             @endforeach
         </select>
     </div>
