@@ -223,6 +223,16 @@
             }, 'json' )
         }
 
+        function reset_form() {
+            $('.aiz-selectpicker').selectpicker('val', '');
+            $('.aiz-selectpicker').each((k, it) => {
+                $(it).find("option").first().attr("selected", true).siblings().attr("selected", false);
+            });
+            setTimeout(function () {
+                $("form input[type=text]").val('');
+            }, 200);
+        }
+
         window.onload = function ()
         {
             @if(!get_admin_setting('msg_tip_mute'))

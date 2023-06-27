@@ -123,6 +123,12 @@ class OrderController extends Controller
         $date = $request->date;
         $seller_id = $request->seller_id;
         $customer_id = $request->customer_id;
+        $bloc_id = $request->bloc_id;
+        $staff_id = $request->staff_id;
+        $min_price = $request->min_price;
+        $max_price = $request->max_price;
+        $product_storehouse_status = $request->product_storehouse_status;
+        $freeze_status = $request->freeze_status;
         $sort_search = null;
         $delivery_status = null;
         //echo date('Y-m-d H:i:s');
@@ -147,8 +153,17 @@ class OrderController extends Controller
             $orders = $orders->where('user_id', $customer_id);
         }
 
+        $orders = $this->_filter_orders($orders, $request);
+
         $orders = filter_by_bloc($orders);
-        $orders = $orders->paginate(15);
+
+        // 统计
+        $orders_clone = clone $orders;
+        $total = $orders_clone->count();
+        $total_amount = $orders_clone->sum('grand_total');
+        $total_customers = $orders_clone->distinct('user_id')->count();
+
+        $orders = $orders->paginate(15)->appends(request()->query());
         foreach ($orders as $order) {
             $order->admin_viewed = 1;
             $order->save();
@@ -156,7 +171,42 @@ class OrderController extends Controller
 
         del_plus("orders_pick_up_tip");
 
-        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'seller_id', 'customer_id'));
+        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
+    }
+
+    // 根据条件过滤订单
+    private function _filter_orders($orders, $request) {
+        if ($request->bloc_id) {
+            $bloc_id = $request->bloc_id;
+            $orders = $orders->where('bloc_id', $bloc_id);
+        }
+        if ($request->staff_id) {
+            $staff_id = $request->staff_id;
+            $orders = $orders->where('staff_id', $staff_id);
+        }
+        if ($request->min_price) {
+            $min_price = $request->min_price;
+            $orders = $orders->where('grand_total', '>=', $min_price);
+        }
+        if ($request->max_price) {
+            $max_price = $request->max_price;
+            $orders = $orders->where('grand_total', '<=', $max_price);
+        }
+        $product_storehouse_status = $request->product_storehouse_status;
+        if (!is_null($product_storehouse_status) && $product_storehouse_status != '') {
+            $orders = $orders->where('product_storehouse_status', $product_storehouse_status);
+        }
+        $freeze_status = $request->freeze_status;
+        if (!is_null($freeze_status) && $freeze_status != '') {
+            if ($freeze_status) {
+                //
+                $orders = $orders->where('product_storehouse_status', 1)->whereNull("freeze_expired_at");
+            } else {
+                $orders = $orders->where("freeze_expired_at", '!=', '');
+            }
+        }
+
+        return $orders;
     }
 
     // Storehouse Orders
@@ -235,6 +285,14 @@ class OrderController extends Controller
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
+
+        $bloc_id = $request->bloc_id;
+        $staff_id = $request->staff_id;
+        $min_price = $request->min_price;
+        $max_price = $request->max_price;
+        $product_storehouse_status = $request->product_storehouse_status;
+        $freeze_status = $request->freeze_status;
+
         $admin_user_id = User::where('user_type', 'admin')->first()->id;
         $orders = Order::orderBy('id', 'desc')
             ->where('seller_id', $admin_user_id);
@@ -255,9 +313,18 @@ class OrderController extends Controller
             $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
 
+        $orders = $this->_filter_orders($orders, $request);
+
         $orders = filter_by_bloc($orders);
-        $orders = $orders->paginate(15);
-        return view('backend.sales.inhouse_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'date'));
+
+        // 统计
+        $orders_clone = clone $orders;
+        $total = $orders_clone->count();
+        $total_amount = $orders_clone->sum('grand_total');
+        $total_customers = $orders_clone->distinct('user_id')->count();
+
+        $orders = $orders->paginate(15)->appends(request()->query());
+        return view('backend.sales.inhouse_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
     }
 
     public function show($id)
@@ -281,6 +348,13 @@ class OrderController extends Controller
         $date = $request->date;
         $seller_id = $request->seller_id;
         $customer_id = $request->customer_id;
+        $bloc_id = $request->bloc_id;
+        $staff_id = $request->staff_id;
+        $min_price = $request->min_price;
+        $max_price = $request->max_price;
+        $product_storehouse_status = $request->product_storehouse_status;
+        $freeze_status = $request->freeze_status;
+
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
@@ -310,9 +384,19 @@ class OrderController extends Controller
             $orders = $orders->where('user_id', $customer_id);
         }
 
+        $orders = $this->_filter_orders($orders, $request);
+
         $orders = filter_by_bloc($orders);
-        $orders = $orders->paginate(15);
-        return view('backend.sales.seller_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'customer_id', 'date'));
+
+        // 统计
+        $orders_clone = clone $orders;
+        $total = $orders_clone->count();
+        $total_amount = $orders_clone->sum('grand_total');
+        $total_customers = $orders_clone->distinct('user_id')->count();
+
+        $orders = $orders->paginate(15)->appends(request()->query());
+
+        return view('backend.sales.seller_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'customer_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
     }
 
      //Clocking Orders
@@ -321,6 +405,13 @@ class OrderController extends Controller
         CoreComponentRepository::instantiateShopRepository();
         $date = $request->date;
         $seller_id = $request->seller_id;
+        $bloc_id = $request->bloc_id;
+        $staff_id = $request->staff_id;
+        $min_price = $request->min_price;
+        $max_price = $request->max_price;
+        $product_storehouse_status = $request->product_storehouse_status;
+        $freeze_status = $request->freeze_status;
+
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
@@ -347,10 +438,19 @@ class OrderController extends Controller
             $orders = $orders->where('seller_id', $seller_id);
         }
 
-        $orders = filter_by_bloc($orders);
-        $orders = $orders->paginate(15);
+        $orders = $this->_filter_orders($orders, $request);
 
-        return view('backend.sales.clocking_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date'));
+        $orders = filter_by_bloc($orders);
+
+        // 统计
+        $orders_clone = clone $orders;
+        $total = $orders_clone->count();
+        $total_amount = $orders_clone->sum('grand_total');
+        $total_customers = $orders_clone->distinct('user_id')->count();
+
+        $orders = $orders->paginate(15)->appends(request()->query());
+
+        return view('backend.sales.clocking_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
     }
 
     /**
@@ -366,8 +466,13 @@ class OrderController extends Controller
         $date = $request->date;
         $seller_id = $request->seller_id;
         $customer_id = $request->customer_id;
+        $bloc_id = $request->bloc_id;
+        $staff_id = $request->staff_id;
+        $min_price = $request->min_price;
+        $max_price = $request->max_price;
         $product_storehouse_status = $request->product_storehouse_status;
         $freeze_status = $request->freeze_status;
+        
         $payment_status = null;
         $delivery_status = null;
         $sort_search = null;
@@ -394,17 +499,6 @@ class OrderController extends Controller
         }
         if ($customer_id) {
             $orders = $orders->where('user_id', $customer_id);
-        }
-        if (!is_null($product_storehouse_status) && $product_storehouse_status != '') {
-            $orders = $orders->where('product_storehouse_status', $product_storehouse_status);
-        }
-        if (!is_null($freeze_status) && $freeze_status != '') {
-            if ($freeze_status) {
-                //
-                $orders = $orders->where('product_storehouse_status', 1)->whereNull("freeze_expired_at");
-            } else {
-                $orders = $orders->where("freeze_expired_at", '!=', '');
-            }
         }
 
         // 三种时间的区间筛选
@@ -433,16 +527,19 @@ class OrderController extends Controller
             $orders = $orders->where('freeze_expired_at', '<=', strtotime($end_time));
         }
 
+        $orders = $this->_filter_orders($orders, $request);
+
         $orders = filter_by_bloc($orders);
 
-        $list_clone = clone $orders;
-        $total = $list_clone->count();
-        $total_amount = $list_clone->sum('product_storehouse_total');
-        $total_seller = $list_clone->distinct("seller_id")->count();
+        // 统计
+        $orders_clone = clone $orders;
+        $total = $orders_clone->count();
+        $total_amount = $orders_clone->sum('grand_total');
+        $total_customers = $orders_clone->distinct('user_id')->count();
 
-        $orders = $orders->paginate(15);
+        $orders = $orders->paginate(15)->appends(request()->query());
 
-        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'seller_id', 'customer_id', 'product_storehouse_status', 'freeze_status', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'total_amount', 'total', 'total_seller'));
+        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'customer_id', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
     }
 
     public function seller_orders_show($id)
@@ -809,6 +906,19 @@ class OrderController extends Controller
         $order = Order::findOrFail($request->order_id);
         $order->save();
         return view('seller.order_details_seller', compact('order'));
+    }
+
+    // 取消订单
+    public function cancel(Request $request) {
+        $request->status = 'cancelled';
+
+        if ($this->update_delivery_status($request)) {
+            flash(translate('Order has been cancel successfully'))->success();
+        } else {
+            flash(translate('Something went wrong'))->error();
+        }
+
+        return back();
     }
 
     public function update_delivery_status(Request $request)
