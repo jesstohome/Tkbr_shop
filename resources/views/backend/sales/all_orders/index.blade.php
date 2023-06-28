@@ -32,6 +32,7 @@
                                 @foreach(get_express_status() as $status_key => $status_text)
                                 <option value="{{$status_key}}">{{$status_text}}</option>
                                 @endforeach
+                                    <option value="cancelled">取消的</option>
                             </select>
                         </div>
                         <div class="modal-footer">
