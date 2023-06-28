@@ -895,7 +895,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
         if ($order != null) {
-            foreach ($order->orderDetails as $key => $orderDetail) {
+            if (!empty($order->orderDetails)) foreach ($order->orderDetails as $key => $orderDetail) {
                 try {
 
                     $product_stock = ProductStock::where('product_id', $orderDetail->product_id)->where('variant', $orderDetail->variation)->first();
