@@ -302,6 +302,9 @@
 
     // 切换附件按钮和发送按钮
     function toggleSendBtn(evt) {
+        // 图片在加载时已经有LOADING按钮了，不显示其他按钮
+        if (imageLoading) return;
+
         if ($(evt).val().trim() === '') {
             $("div.message.send").hide();
             $("div.message.fujian").show();
