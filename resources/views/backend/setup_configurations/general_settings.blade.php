@@ -136,6 +136,15 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">行政后台Ip白名单</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="backend_ip_whitelist">
+                                <textarea name="backend_ip_whitelist" rows="5" class="form-control">{{get_setting('backend_ip_whitelist')}}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- 店铺相关设置 -->
                         <hr>
                         <div class="form-group row">
                             <label class="col-md-3 col-from-label">{{translate('Automatically Unfrozen')}} ( {{translate('Days')}} )</label>
