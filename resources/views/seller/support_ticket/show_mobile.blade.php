@@ -58,7 +58,7 @@
                 <input type="hidden" name="attachments" class="selected-files">
                 <input type="file" id="fileInput" name="file" style="display: none;" accept="image/*" />
 
-                <input class="input" placeholder="{{translate('Please enter your question')}}" name="reply" onkeyup="toggleSendBtn(this)" onkeydown="submitReply()" enterkeyhint="send" />
+                <input class="input" placeholder="{{translate('Please enter your question')}}" name="reply" onkeydown="submitReply()" enterkeyhint="send" />
             </form>
 
             <div class="senddiv">

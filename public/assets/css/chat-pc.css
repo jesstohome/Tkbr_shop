@@ -1,0 +1,456 @@
+.chatroot {}
+
+.titlecol {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.text {
+    height: 40px;
+    font-size: 16px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 500;
+    text-align: left;
+    color: #333333;
+    line-height: 20px;
+}
+
+.orderList {
+    border-left: 1px solid #D1CCCC;
+    height: 100%;
+}
+
+.item1 {
+    display: flex;
+    position: relative;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+    padding-left: 14px;
+    padding-right: 14px;
+
+    align-items: center;
+    justify-content: space-between;
+}
+
+.item1divider {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 2px;
+    border-bottom: 1px dashed #E9E9E9;
+}
+
+.ordreprice {
+    width: 55px;
+    height: 27px;
+    border-radius: 8px;
+    border: 1px solid #C9C9C9;
+    font-weight: 400;
+    color: #333333;
+    line-height: 27px;
+}
+
+.orderImgRight {
+    width: 84px;
+    height: 84px;
+    background: #3393FF;
+}
+
+.pic {
+    margin-left: auto;
+    margin-right: auto;
+    width: 550px;
+    position: relative;
+    background-size: 100% 100%;
+}
+
+.picbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.bar {
+    background: #fff;
+    height: 55px;
+    font-size: 18px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #232222;
+    text-align: center;
+    line-height: 55px;
+    position: relative;
+    border-bottom: 1px solid #D1CCCC;
+}
+
+.barindex {
+    height: 5px;
+    width: 57px;
+    position: absolute;
+    bottom: 0px;
+    left: 43%;
+    border-radius: 4px;
+    background: #5548FB;
+}
+
+.orderbot {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.hotlist {
+    display: flex;
+    height: 40px;
+    margin-top: 20px;
+    padding-left: 24px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.item {
+    font-size: 12px;
+    color: #333333;
+    font-size: 14px;
+    padding-left: 14px;
+    padding-right: 14px;
+    border: 1px solid #5548FB;
+    border-radius: 14px;
+    height: 30px;
+    margin-left: 14px;
+    line-height: 30px;
+
+}
+
+.cbtn {
+    width: 79px;
+    height: 36px;
+    background: #5548FB;
+    color: #fff;
+    line-height: 36px;
+    text-align: center;
+    border-radius: 12px;
+    margin-right: 14px;
+}
+
+.notice {
+    padding-left: 43px;
+    padding-right: 43px;
+    display: flex;
+    height: 54px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #ECEAFF;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.main {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.orderinfoRoot {
+    width: 400px;
+    background: #fff;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.kefuroot {
+    width: 1200px;
+    height: 100%;
+    padding-top: 120px;
+    position: relative;
+}
+
+.back {}
+
+.chatlist {
+    height: 100%;
+    padding-bottom: 160px;
+    overflow: auto;
+}
+
+.timeIndex {
+    display: flex;
+    margin: auto;
+    width: 90px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    height: 15px;
+    background: rgba(122, 133, 177, 0.27);
+    border-radius: 6px;
+    font-size: 11px;
+
+}
+
+.orderInfo {
+    display: flex;
+    background-image: url('../img/chat/orderBg.png');
+    background-size: 100% 100%;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 275px;
+    margin: auto;
+    height: 109px;
+
+}
+
+.orderTitle {
+    color: #333333;
+    white-space: nowrap;
+    /*强制span不换行*/
+    overflow: hidden;
+    /*超出宽度部分隐藏*/
+    text-overflow: ellipsis;
+    /*超出部分以点号代替*/
+    font-size: 13px;
+}
+
+.chat {
+    padding-top: 10px;
+    margin-left: 14px;
+    margin-right: 14px;
+}
+
+.orderNum {
+    color: #F0A925;
+    font-size: 11px;
+    white-space: nowrap;
+    /*强制span不换行*/
+    overflow: hidden;
+    /*超出宽度部分隐藏*/
+    text-overflow: ellipsis;
+    /*超出部分以点号代替*/
+}
+
+.ordername {
+    font-size: 18px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #DD2121;
+    line-height: 25px;
+}
+
+.orderPrice {
+    color: #DF1B1B;
+    font-size: 16px;
+    white-space: nowrap;
+    /*强制span不换行*/
+    overflow: hidden;
+    /*超出宽度部分隐藏*/
+    text-overflow: ellipsis;
+    /*超出部分以点号代替*/
+
+}
+
+.orderImg {
+    width: 70px;
+    height: 70px;
+    background: #0A0625;
+}
+
+.info {
+    display: flex;
+    flex-grow: 1;
+    padding-left: 24px;
+    padding-right: 24px;
+    height: 70px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.head {
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    background-image: ulr('/static/image');
+}
+
+.atext {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 14px;
+    margin-right: 10px;
+}
+
+.aspan {
+    background: #F4F5FF;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 12px;
+    margin-right: 4px;
+    padding-bottom: 12px;
+    border-radius: 0px 14px 14px 14px;
+    color: #0A0625;
+    max-width: 810px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.chatImg {
+    background-image: url('../img/chat/demo.png');
+    background-size: 100% 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 12px;
+    margin-left: 4px;
+    max-width: 210px;
+    padding-bottom: 12px;
+    border-radius: 14px 0px 14px 14px;
+    color: #ffffff;
+    height: 110px;
+    width: 140px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.bspan {
+    background: #3393FF;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 12px;
+    margin-left: 4px;
+    max-width: 810px;
+    padding-bottom: 12px;
+    border-radius: 14px 0px 14px 14px;
+    color: #ffffff;
+    font-size: 14px;
+    text-align: left;
+}
+
+.btext {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    margin-top: 14px;
+    margin-left: 10px;
+}
+
+.titlebar {
+    display: flex;
+    background: #FAFAFC;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 30px;
+    font-size: 18px;
+    color: #000;
+    height: 57px;
+    position: fixed;
+    left: 0;
+    z-index: 999;
+    right: 0;
+    top: 0;
+    font-weight: bold;
+}
+
+.botRoot {
+    position: absolute;
+    bottom: 0;
+    height: 60px;
+    left: 0;
+    right: 0;
+
+    background: rgba(239, 239, 239, 0.5);
+    backdrop-filter: blur(20px);
+}
+
+.bot {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: flex-end;
+    height: 46px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-left: 14px;
+    padding-right: 14px;
+
+}
+
+.input {
+    background: #FFFFFF;
+    margin-right: 14px;
+    flex: 1;
+    color: #333333;
+    padding-left: 14px;
+    height: 37px;
+    border-radius: 14px;
+}
+
+.senddiv {
+    display: flex;
+    height: 100%;
+    width: 74px;
+    right: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.send {
+    width: 94px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    color: #fff;
+    background: #5548FB;
+    border-radius: 15px;
+    background-size: 100% 100%;
+    text-align: center;
+
+}
+
+.fujian {
+    line-height: 32px;
+    width: 40px;
+    height: 32px;
+}
+
+input:focus {
+    border: 0px;
+    outline: 0px;
+}
+
+input {
+    border: 0px;
+    outline: 0px;
+}
+
+/* * * * * * * * * 自己加的样式 * * * * * * * * * * * * * * */
+
+div.file-preview {
+    position: fixed;
+    bottom: 10vh;
+    width: 80vw;
+    z-index: 9999;
+    display: block;
+    background-color: white;
+    border-radius: 3px;
+}
