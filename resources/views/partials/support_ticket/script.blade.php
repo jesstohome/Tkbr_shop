@@ -89,8 +89,6 @@
         console.log(attachment_ids);
         $("input[name=attachments]").val(attachment_ids.join(","));
         $("#fileInput").val('');
-        $("div.message.send").hide();
-        $("div.message.fujian").show();
         evt.remove();
     }
 
@@ -221,6 +219,7 @@
         document.getElementById('fileInput').addEventListener('change', function(event) {
             try {
                 $(".message.loading").show();
+                $("div.message.send").hide();
                 var selectedFile = event.target.files[0];
                 // 在这里执行您希望在文件选择完成后进行的操作
                 console.log('已选择文件:', selectedFile);
@@ -248,8 +247,6 @@
                         imageURL:imageURL
                     });
                     if (imageURL) {
-                        $("div.message.fujian").hide();
-
                         // 上传到服务器
                         uploadImage(selectedFile, function () {
                             imageLoading = false;
@@ -279,14 +276,12 @@
                 } else {
                     imageLoading = false;
                     $(".message.loading").hide();
-                    $("div.message.send").hide();
-                    $("div.message.fujian").show();
+                    $("div.message.send").show();
                 }
             } catch (e) {
                 imageLoading = false;
                 $(".message.loading").hide();
-                $("div.message.send").hide();
-                $("div.message.fujian").show();
+                $("div.message.send").show();
                 AIZ.extra.log(e);
             }
 
@@ -297,20 +292,6 @@
     function submitReply() {
         if (event.keyCode == 13) {
             submit_reply('pending');
-        }
-    }
-
-    // 切换附件按钮和发送按钮
-    function toggleSendBtn(evt) {
-        // 图片在加载时已经有LOADING按钮了，不显示其他按钮
-        if (imageLoading) return;
-
-        if ($(evt).val().trim() === '') {
-            $("div.message.send").hide();
-            $("div.message.fujian").show();
-        } else {
-            $("div.message.send").show();
-            $("div.message.fujian").hide();
         }
     }
 
@@ -492,9 +473,6 @@
 
                     $("body").scrollTop(999990);
                     $(".file-preview").html('');
-
-                    $("div.message.send").hide();
-                    $("div.message.fujian").show();
                 }
             })
         }

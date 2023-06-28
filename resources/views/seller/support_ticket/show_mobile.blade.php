@@ -51,6 +51,10 @@
     <div class="botRoot">
         <div class="file-preview box sm"></div>
         <div class="bot">
+            <div class="message fujian" onclick="openFileSelection()">
+                <img src="{{static_asset('assets/img/chat/fujian.jpeg')}}" width="30" />
+            </div>
+
             <form id="ticket-reply-form" action="{{route('seller.support_ticket.reply_store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="ticket_id" value="{{$ticket->id}}" required>
@@ -58,14 +62,12 @@
                 <input type="hidden" name="attachments" class="selected-files">
                 <input type="file" id="fileInput" name="file" style="display: none;" accept="image/*" />
 
-                <input class="input" placeholder="{{translate('Please enter your question')}}" name="reply" onkeyup="toggleSendBtn(this)" onkeydown="submitReply()" enterkeyhint="send" />
+                <input class="input" placeholder="{{translate('Please enter your question')}}" name="reply" onkeydown="submitReply()" enterkeyhint="send" />
             </form>
 
             <div class="senddiv">
-                <div class="message fujian" onclick="openFileSelection()"></div>
-                <div class="message send"  style="display: none" onclick="submit_reply('pending')"></div>
+                <div class="message send" onclick="submit_reply('pending')"></div>
                 <div class="message loading" style="display: none;"><img src="{{static_asset('assets/img/loading.gif')}}" /> </div>
-
             </div>
         </div>
     </div>

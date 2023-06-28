@@ -275,12 +275,8 @@ body {
 }
 
 .fujian {
-    width: 54px;
+    width: 40px;
     height: 32px;
-    background-size: 100% 100%;
-    /*background-image: url("{{static_asset('assets/img/chat/fujian.png')");*/
-    background-image: url("../img/chat/fujian.png");
-
 }
 
 input:focus {
