@@ -32,7 +32,6 @@
                                 @foreach(get_express_status() as $status_key => $status_text)
                                 <option value="{{$status_key}}">{{$status_text}}</option>
                                 @endforeach
-                                    <option value="cancelled">取消的</option>
                             </select>
                         </div>
                         <div class="modal-footer">
@@ -49,6 +48,7 @@
                     @foreach(get_express_status() as $status_key => $status_text)
                         <option value="{{$status_key}}" @isset($delivery_status) @if($delivery_status == $status_key) selected @endif @endisset>{{ $status_text}}</option>
                     @endforeach
+                    <option value="cancelled" @isset($delivery_status) @if($delivery_status == 'cancelled') selected @endif @endisset>取消的</option>
                 </select>
             </div>
             <div class="col-lg-2">
