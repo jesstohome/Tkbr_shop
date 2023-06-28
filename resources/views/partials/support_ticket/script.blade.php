@@ -188,24 +188,6 @@
             imagep.width(w);
         });
 
-        const winHeight = window.innerHeight;
-        $(window).resize(function(evt) {
-            var thisHeight = window.innerHeight;
-            // $(window).scrollTop(9999);
-
-            if (winHeight - thisHeight > 50) {
-                //当软键盘弹出，在这里面操作
-                // $(".footer-site-name").hide();
-                $("#ticket-reply-form").css("position", 'static');
-                $("ul.ticket").scrollTop(999990);
-
-            } else {
-                //当软键盘收起，在此处操作
-                $("#ticket-reply-form").css("position", 'absolute');
-                // $(".footer-site-name").show();
-            }
-        });
-
         setTimeout(function () {
             if ($("ul.ticket").length) {
                 $("ul.ticket").scrollTop(999990);
