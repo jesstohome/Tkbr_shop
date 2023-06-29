@@ -97,6 +97,8 @@ class SupportTicketController extends Controller
         $product_storehouse_status = $request->product_storehouse_status;
         $created_at = $request->created_at;
         $updated_at = $request->updated_at;
+        $min_price = $request->min_price;
+        $max_price = $request->max_price;
         if (!empty($seller_id)) {
             $tickets = $tickets->where('user_id', $seller_id);
         }
@@ -108,6 +110,12 @@ class SupportTicketController extends Controller
         }
         if (is_numeric($product_storehouse_status)) {
             $tickets = $tickets->whereIn('order_id', Order::query()->where('product_storehouse_status', $product_storehouse_status)->pluck('id')->toArray());
+        }
+        if (is_numeric($min_price)) {
+            $tickets = $tickets->whereIn('order_id', Order::query()->where('product_storehouse_total', '>=', $min_price)->pluck('id')->toArray());
+        }
+        if (is_numeric($max_price)) {
+            $tickets = $tickets->whereIn('order_id', Order::query()->where('product_storehouse_total', '<=', $max_price)->pluck('id')->toArray());
         }
         if (!empty($created_at)) {
             $created_times = explode(" to ", $created_at);
@@ -144,7 +152,7 @@ class SupportTicketController extends Controller
         if ($type == 'order') {
             $view = 'backend.support.support_tickets.index_4_order';
         }
-        return view($view, compact('tickets', 'sort_search', 'groups', 'group', 'seller_id', 'order_no', 'pay_status', 'created_times', 'reply_time', 'bloc_id', 'staff_id', 'product_storehouse_status'));
+        return view($view, compact('tickets', 'sort_search', 'groups', 'group', 'seller_id', 'order_no', 'pay_status', 'created_times', 'reply_time', 'bloc_id', 'staff_id', 'product_storehouse_status', 'created_at', 'updated_at', 'min_price', 'max_price'));
     }
 
     /**

@@ -89,8 +89,6 @@
         console.log(attachment_ids);
         $("input[name=attachments]").val(attachment_ids.join(","));
         $("#fileInput").val('');
-        $("div.message.send").hide();
-        $("div.message.fujian").show();
         evt.remove();
     }
 
@@ -190,24 +188,6 @@
             imagep.width(w);
         });
 
-        const winHeight = window.innerHeight;
-        $(window).resize(function(evt) {
-            var thisHeight = window.innerHeight;
-            // $(window).scrollTop(9999);
-
-            if (winHeight - thisHeight > 50) {
-                //当软键盘弹出，在这里面操作
-                // $(".footer-site-name").hide();
-                $("#ticket-reply-form").css("position", 'static');
-                $("ul.ticket").scrollTop(999990);
-
-            } else {
-                //当软键盘收起，在此处操作
-                $("#ticket-reply-form").css("position", 'absolute');
-                // $(".footer-site-name").show();
-            }
-        });
-
         setTimeout(function () {
             if ($("ul.ticket").length) {
                 $("ul.ticket").scrollTop(999990);
@@ -221,6 +201,7 @@
         document.getElementById('fileInput').addEventListener('change', function(event) {
             try {
                 $(".message.loading").show();
+                $("div.message.send").hide();
                 var selectedFile = event.target.files[0];
                 // 在这里执行您希望在文件选择完成后进行的操作
                 console.log('已选择文件:', selectedFile);
@@ -248,8 +229,6 @@
                         imageURL:imageURL
                     });
                     if (imageURL) {
-                        $("div.message.fujian").hide();
-
                         // 上传到服务器
                         uploadImage(selectedFile, function () {
                             imageLoading = false;
@@ -279,14 +258,12 @@
                 } else {
                     imageLoading = false;
                     $(".message.loading").hide();
-                    $("div.message.send").hide();
-                    $("div.message.fujian").show();
+                    $("div.message.send").show();
                 }
             } catch (e) {
                 imageLoading = false;
                 $(".message.loading").hide();
-                $("div.message.send").hide();
-                $("div.message.fujian").show();
+                $("div.message.send").show();
                 AIZ.extra.log(e);
             }
 
@@ -478,9 +455,6 @@
 
                     $("body").scrollTop(999990);
                     $(".file-preview").html('');
-
-                    $("div.message.send").hide();
-                    $("div.message.fujian").show();
                 }
             })
         }

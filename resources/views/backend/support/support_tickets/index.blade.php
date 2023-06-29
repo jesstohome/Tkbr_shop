@@ -8,7 +8,8 @@
             <div class="col text-center text-md-left">
                 <h5 class="mb-md-0 h6">{{ translate('Support Desk') }}</h5>
             </div>
-            <div class="col-md-4 ml-auto">
+            @include('backend.partials.filters.bloc_staff')
+            <div class="col-md-2 ml-auto">
                 <select class="form-control aiz-selectpicker" name="group" id="group" onchange="sort_support()">
                     <option value="">{{translate('All')}}</option>
                     @foreach($groups as $group_val => $_group)
@@ -16,9 +17,25 @@
                     @endforeach
                 </select>
             </div>
+            <div class="col-md-2 ml-auto">
+                <div class="col-sm-12">
+                    <input type="text" class="form-control aiz-date-range" name="created_at" value="{{$created_at}}" placeholder="创建时间" data-time-picker="true" data-format="Y-MM-DD HH:mm:ss" data-separator=" to " autocomplete="off">
+                </div>
+            </div>
+            <div class="col-md-2 ml-auto">
+                <div class="col-sm-12">
+                    <input type="text" class="form-control aiz-date-range" name="updated_at" value="{{$updated_at}}" placeholder="回复时间" data-time-picker="true" data-format="Y-MM-DD HH:mm:ss" data-separator=" to " autocomplete="off">
+                </div>
+            </div>
             <div class="col-md-2">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type ticket code & Enter') }}">
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="form-group mb-0">
+                    <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                    <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
                 </div>
             </div>
         </div>
@@ -31,10 +48,15 @@
                     <th data-breakpoints="lg">{{ translate('Ticket ID') }}</th>
                     <th data-breakpoints="lg">{{ translate('Sending Date') }}</th>
                     <th>{{ translate('Subject') }}</th>
+                    @if (isSupperAdmin())<th>{{ translate('Bloc') }}</th>@endif
+                    <th>{{ translate('Staffs') }}</th>
                     <th data-breakpoints="lg">{{ translate('Shop') }}</th>
                     <th data-breakpoints="lg">{{ translate('Email') }}</th>
                     <th data-breakpoints="lg">{{ translate('Group') }}</th>
                     <th data-breakpoints="lg">{{ translate('Last reply') }}</th>
+                    @if (isSupperAdmin() || isBlocManage())
+                    <th data-breakpoints="lg">{{ translate('Salesman') }}</th>
+                    @endif
                     <th class="text-right">{{ translate('Options') }}</th>
                 </tr>
             </thead>
@@ -44,6 +66,8 @@
                         <td class="edit" data-ticket-id="{{$ticket->id}}">{{$ticket->tag_name ?: translate('Permanent Work Order')}}</td>
                         <td>{{ $ticket->created_at }} @if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
                         <td>{{ $ticket->subject }}</td>
+                        @if (isSupperAdmin())<td>{{$ticket->bloc ? $ticket->bloc->name : ''}}</td>@endif
+                        <td>{{$ticket->staff ? $ticket->staff->user->email : ''}}</td>
                         <td>{{ $ticket->user && $ticket->user->shop ? $ticket->user->shop->name : '' }}</td>
                         <td>{{ $ticket->user ? $ticket->user->email : ''}}</td>
                         <td>
@@ -60,6 +84,23 @@
                                 {{ $ticket->created_at }}
                             @endif
                         </td>
+                        @if (isSupperAdmin() || isBlocManage())
+                        <td>
+                            @php
+                                $uid = $ticket->user->pid;
+                                if( $uid == '')
+                                {
+                                   echo '---';
+                                }
+                                else
+                                {
+                                  $r =  \App\Models\User::where('id',$uid)->first() ;
+                                 echo $r['name'];
+
+                                }
+                            @endphp
+                        </td>
+                        @endif
                         <td class="text-right">
                             <a href="{{route('support_ticket.admin_show', encrypt($ticket->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('View Details') }}">
                                 <i class="las la-eye"></i>
