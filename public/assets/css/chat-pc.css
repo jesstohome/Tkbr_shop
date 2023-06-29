@@ -17,6 +17,18 @@
     line-height: 20px;
 }
 
+.welcome-msg {
+    width:550px;
+    height:65px;
+    background-image: url('../img/chat/picbar.jpg');
+    background-size: 100% 100%;
+    color: #5548FB;
+    font-size: 20px;
+    line-height: 80px;
+    margin-top: 60px;
+    text-align: center;
+}
+
 .orderList {
     border-left: 1px solid #D1CCCC;
     height: 100%;
@@ -276,18 +288,20 @@
     flex-grow: 1;
     padding-left: 24px;
     padding-right: 24px;
-    height: 70px;
+    /*height: 70px;*/
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+}
 
+.info p {
+    width: 100%;
 }
 
 .head {
     width: 32px;
     height: 32px;
     border-radius: 16px;
-    background-image: ulr('/static/image');
 }
 
 .atext {

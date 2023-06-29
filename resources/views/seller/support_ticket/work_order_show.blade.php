@@ -6,14 +6,7 @@
             <div class="kefuroot">
                 <div>
                     <div class="chatlist">
-                        <div class="pic">
-                            <div
-                                style="width:550px;height:65px;background-image: url('{{static_asset('assets/img/chat/picbar.jpg')}}');background-size: 100% 100%;color: #5548FB; font-size: 20px;line-height: 80px;margin-top: 60px;">
-                                您好，BEI智能客服助理为您服务！</div>
-                            <img src="{{static_asset('assets/img/chat/jingling.png')}}"
-                                 style="width: 140px; height: 140px;position: absolute;top: -80px;left:205px ">
-                        </div>
-                        @foreach($ticket_replies as $ticketreply)
+                        @foreach($ticket_replies as $index => $ticketreply)
                         <div class="chat {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}" data-id="{{$ticketreply->id}}">
                             @if($index % 4 === 0)
                                 <div class="timeIndex">{{substr($ticketreply->created_at, 5, -3)}}</div>
@@ -32,6 +25,13 @@
                                         <img src="{{Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/chat/head2.png')}}" class="head" style="margin-left: 8px;" />
                                     </div>
                             @else
+                                @if(empty($ticketreply->user_id))
+                                        <div class="pic">
+                                            <div class="welcome-msg">
+                                                {{translate($ticketreply->reply)}}！</div>
+                                            <img src="{{static_asset('assets/img/chat/jingling.png')}}" style="width: 140px; height: 140px;position: absolute;top: -80px;left:205px ">
+                                        </div>
+                                @else
                                     <div class="atext">
                                         <img src="{{static_asset('assets/img/chat/head1.png')}}" class="head" style="margin-right: 8px;" />
                                         @if($ticketreply->files)
@@ -43,6 +43,7 @@
                                             <span class="aspan">@php echo empty($ticketreply->user_id) || -1 == $ticketreply->user_id ? translate($ticketreply->reply) : $ticketreply->reply; @endphp</span>
                                         @endif
                                     </div>
+                                @endif
                             @endif
                         </div>
                         @endforeach
@@ -50,6 +51,7 @@
 
                 </div>
                 <div class="botRoot">
+                    <div class="file-preview box sm"></div>
                     <div class="bot">
                         <div class="message fujian" onclick="openFileSelection()"><img src="{{static_asset('assets/img/chat/fujian.jpeg')}}" width="30"/></div>
 
@@ -72,48 +74,38 @@
                 </div>
                 <div class="notice">
                     <img src="{{static_asset('assets/img/chat/icon_laba.png')}}" style="width: 16px; height: 16px;" alt="" />
-                    <span style="color: #5548FB; flex: 1; text-align: left;padding-left: 12px;">谨防诈骗，AI客服防诈小提醒！</span>
-                    <div class="cbtn">官方</div>
-                    <img src="{{static_asset('assets/img/chat/guanbi.png')}}" style="width: 16px; height: 16px;" alt="" />
+                    <span style="color: #5548FB; flex: 1; text-align: left;padding-left: 12px;">{{translate($remind_tips)}}！</span>
                 </div>
             </div>
             <div class="orderinfoRoot">
-                <div class="bar">我的订单
+                <div class="bar">{{translate('Order Info')}}
                     <div class="barindex"></div>
                 </div>
                 <div class="orderList">
                     <div class="item1">
-                        <img class="orderImgRight" />
                         <div class="info">
-                            <div class="text">共享充电宝20000毫安超大容量自带线</div>
-                            <div class="orderbot">
-                                <span class="ordername">¥1399.00</span>
-                                <span class="ordreprice">发送</span>
-                            </div>
-                        </div>
-                        <div class="item1divider"></div>
-                    </div>
-
-                    <div class="item1">
-                        <img class="orderImgRight" />
-                        <div class="info">
-                            <div class="text">共享充电宝20000毫安超大容量自带线</div>
-                            <div class="orderbot">
-                                <span class="ordername">¥1399.00</span>
-                                <span class="ordreprice">发送</span>
-                            </div>
+                            <div class="text"><span> {{ translate("The manufacturer has paid a security deposit") }} </span></div>
                         </div>
                         <div class="item1divider"></div>
                     </div>
                     <div class="item1">
-                        <img class="orderImgRight" />
+                        <img class="orderImgRight" @if($ticket->order->details[0]->product) style="background-image: url('{{uploaded_asset($ticket->order->details[0]->product->image)}}')" @endif/>
                         <div class="info">
-                            <div class="text">共享充电宝20000毫安超大容量自带线</div>
+                            <div class="text">{{$ticket->order->details[0]->product ? $ticket->order->details[0]->product->getTranslation('name') : ''}}</div>
                             <div class="orderbot">
-                                <span class="ordername">¥1399.00</span>
-                                <span class="ordreprice">发送</span>
+                                <span class="ordername">{{single_price($ticket->order->product_storehouse_total)}}</span>
                             </div>
 
+                        </div>
+                        <div class="item1divider"></div>
+                    </div>
+                    <div class="item1">
+                        <div class="info" style="text-align: left">
+                            <p> {{ translate('Order No') }}: {{$ticket->order->code}} </p>
+                            @if($currency) <p> {{ translate('Currency') }}: {{translate($currency->name)}} </p> @endif
+                            <p> {{ translate('Order Amount') }}: {{single_price($ticket->order->grand_total)}} @if($currency) ≈ {{number_format($currency->exchange_rate * $ticket->order->grand_total, 2)}} @endif</p>
+                            @if($currency) <p> {{ translate('exchange rate') }}:  ≈{{number_format($currency->exchange_rate, 2)}} </p> @endif
+                            <p> {{ translate('Pickup amount') }}: {{single_price($ticket->order->product_storehouse_total)}} @if($currency) ≈ {{number_format($currency->exchange_rate * $ticket->order->product_storehouse_total, 2)}} @endif</p>
                         </div>
                         <div class="item1divider"></div>
                     </div>

@@ -198,7 +198,7 @@
         }, 500);
 
         // 文件选择完成后的回调事件
-        document.getElementById('fileInput').addEventListener('change', function(event) {
+        document.getElementById('fileInput') && document.getElementById('fileInput').addEventListener('change', function(event) {
             try {
                 $(".message.loading").show();
                 $("div.message.send").hide();

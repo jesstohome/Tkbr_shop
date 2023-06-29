@@ -95,10 +95,16 @@ class SupportTicketController extends Controller
         $ticket = Ticket::findOrFail(decrypt($id));
         $ticket->client_viewed = 1;
         $ticket->save();
+
+        $remind_tips = '';
         $ticket_replies = $ticket->ticketreplies->where('recall', 0);
         foreach ($ticket_replies as $ticket_reply) {
             $ticket_reply->read = 1;
             $ticket_reply->save();
+
+            if (empty($ticket_reply->user_id)) {
+                $remind_tips = $ticket_reply->reply;
+            }
         }
 
         $fullscreen = true;
@@ -114,7 +120,7 @@ class SupportTicketController extends Controller
             $last_reply_id = max($ticket_replies->pluck('id')->toArray());
         }
 
-        return view($view, compact('ticket','ticket_replies', 'fullscreen', 'in_chat_page', 'last_reply_id'));
+        return view($view, compact('ticket','ticket_replies', 'fullscreen', 'in_chat_page', 'last_reply_id', 'remind_tips'));
     }
 
     public function ticket_reply_store(Request $request)
