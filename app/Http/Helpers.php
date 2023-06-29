@@ -1588,10 +1588,10 @@ if (!function_exists('gen_rand_no')) {
 if (!function_exists('filter_by_bloc')) {
     function filter_by_bloc($build) {
         $model = $build->getModel();
-        $table_name = $model->getTable() . '.';
+        $table_name = $model->getTable();
         if (\Auth::user()->user_type != 'admin') {
             // 按集团过滤
-            if (!is_null($model->bloc_id)) {
+            if (Schema::hasColumn($table_name, 'bloc_id')) {
                 $build = $build->where($table_name . ".bloc_id", \Auth::user()->bloc_id);
             } else {
                 $build = $build->where("bloc_id", \Auth::user()->bloc_id);
@@ -1601,7 +1601,7 @@ if (!function_exists('filter_by_bloc')) {
                 // 按员工过滤
                 $staff = Staff::query()->where("user_id", \Auth::user()->id)->first();
                 if (!empty($staff) && $staff->role && !$staff->role->is_manage && !($model instanceof Staff)) {
-                    if (!is_null($model->staff_id)) {
+                    if (Schema::hasColumn($table_name, 'staff_id')) {
                         $build = $build->where($table_name . ".staff_id", $staff->id);
                     } else {
                         $build = $build->where("staff_id", $staff->id);
