@@ -15,33 +15,6 @@
                 <h5 class="mb-md-0 h6">{{ translate('All Orders') }}</h5>
             </div>
 
-            <!-- Change Status Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">
-                                {{translate('Choose an order status')}}
-                            </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <select class="form-control aiz-selectpicker" onchange="change_status()" data-minimum-results-for-search="Infinity" id="update_delivery_status">
-                                @foreach(get_express_status() as $status_key => $status_text)
-                                <option value="{{$status_key}}">{{$status_text}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="col-lg-2 ml-auto">
                 <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status">
                     <option value="">{{translate('Filter by Delivery Status')}}</option>
@@ -51,9 +24,9 @@
                     <option value="cancelled" @isset($delivery_status) @if($delivery_status == 'cancelled') selected @endif @endisset>取消的</option>
                 </select>
             </div>
-            <div class="col-lg-2">
+            <div class="col-md-2">
                 <div class="form-group mb-0">
-                    <input type="text" class="aiz-date-range form-control" value="{{ $date }}" name="date" placeholder="{{ translate('Filter by date') }}" data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true" autocomplete="off">
+                    <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}">
                 </div>
             </div>
             @include('backend.partials.filters.seller')
@@ -108,6 +81,7 @@
                         <th data-breakpoints="md">{{ translate('Amount') }}</th>
                         <th data-breakpoints="md">{{ translate('Profit') }}</th>
                         <th data-breakpoints="md">{{ translate('Pick Up Status') }}</th>
+                        <th>{{ translate('Order Time') }}</th>
                         <th>{{ translate('Pickup Time') }}</th>
                         <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
                         <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
@@ -199,6 +173,7 @@
                             @endif
                             @endif
                         </td>
+                        <td>{{$order->created_at}}</td>
                         <td>{{$order->pickup_time ? date('Y-m-d H:i:s', $order->pickup_time) : ''}}</td>
                         <td>
                             @php

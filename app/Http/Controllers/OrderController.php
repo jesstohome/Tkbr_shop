@@ -136,8 +136,6 @@ class OrderController extends Controller
             $orders = Order::orderBy('id', 'desc');
             $table_name = "orders";
         }
-        //echo date('Y-m-d H:i:s');
-        $orders = $orders->where($table_name . '.created_at', '<=', date('Y-m-d H:i:s'));
         if ($request->has('search')) {
             $sort_search = $request->search;
             $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
@@ -146,8 +144,13 @@ class OrderController extends Controller
             $orders = $orders->where('delivery_status', $request->delivery_status);
             $delivery_status = $request->delivery_status;
         }
-        if ($date != null) {
-            $orders = $orders->where($table_name . '.created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where($table_name . '.created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+        if ($request->date_range) {
+            $date_range = $request->date_range;
+            $date_var = explode("/", $request->date_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $orders = $orders->where($table_name . '.created_at', '>=', trim($start_time));
+            $orders = $orders->where($table_name . '.created_at', '<=', trim($end_time) . " 23:59:59");
         }
         if ($seller_id) {
             $orders = $orders->where($table_name.'.seller_id', $seller_id);
@@ -178,7 +181,7 @@ class OrderController extends Controller
         if ($request->source === 'deleted') {
             $view = 'backend.sales.all_orders.index_deleted';
         }
-        return view($view, compact('orders', 'sort_search', 'delivery_status', 'date', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
+        return view($view, compact('orders', 'sort_search', 'delivery_status', 'date_range', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
     }
 
     public function all_deleted_orders(Request $request) {
