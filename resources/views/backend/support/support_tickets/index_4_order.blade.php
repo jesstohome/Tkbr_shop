@@ -26,13 +26,18 @@
             </div>
             <div class="col-md-2 ml-auto">
                 <div class="col-sm-12">
-                    <input type="text" class="form-control aiz-date-range" name="created_at" placeholder="创建时间" data-time-picker="true" data-format="Y-MM-DD HH:mm:ss" data-separator=" to " autocomplete="off">
+                    <input type="text" class="form-control aiz-date-range" name="created_at" value="{{$created_at}}" placeholder="创建时间" data-time-picker="true" data-format="Y-MM-DD HH:mm:ss" data-separator=" to " autocomplete="off">
                 </div>
             </div>
             <div class="col-md-2 ml-auto">
                 <div class="col-sm-12">
-                    <input type="text" class="form-control aiz-date-range" name="updated_at" placeholder="回复时间" data-time-picker="true" data-format="Y-MM-DD HH:mm:ss" data-separator=" to " autocomplete="off">
+                    <input type="text" class="form-control aiz-date-range" name="updated_at" value="{{$updated_at}}" placeholder="回复时间" data-time-picker="true" data-format="Y-MM-DD HH:mm:ss" data-separator=" to " autocomplete="off">
                 </div>
+            </div>
+            <div class="col-lg-2 ml-auto">
+                <input type="text" class="form-control" id="min-price" name="min_price" value="{{ $min_price ?: '' }}" placeholder="最小价格">
+                ~
+                <input type="text" class="form-control" id="max-price" name="max_price" value="{{ $max_price ?: ''}}" placeholder="最大价格">
             </div>
             <div class="col-md-2">
                 <div class="input-group input-group-sm">
@@ -53,6 +58,7 @@
             <thead>
                 <tr>
                     <th data-breakpoints="lg">{{ translate('Order No') }}</th>
+                    <th>{{ translate('Staffs') }}</th>
                     <th data-breakpoints="lg">{{ translate('Shop') }}</th>
                     <th data-breakpoints="lg">{{ translate('Email') }}</th>
                     <th data-breakpoints="lg">{{ translate('Amount') }}</th>
@@ -67,6 +73,7 @@
                     @if ($ticket->user != null)
                         <tr>
                             <td>{{$ticket->order->code ?? ''}}</td>
+                            <td>{{$ticket->staff ? $ticket->staff->user->email : ''}}</td>
                             <td>{{$ticket->user->shop->name ?? ''}}</td>
                             <td>{{ $ticket->user->email }}</td>
                             <td>{{single_price($ticket->order->product_storehouse_total)}}</td>

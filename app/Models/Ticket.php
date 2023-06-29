@@ -15,6 +15,14 @@ class Ticket extends Model
         return $this->hasMany(TicketReply::class)->orderBy('id', 'ASC');
     }
 
+    public function bloc() {
+        return $this->belongsTo(Bloc::class);
+    }
+
+    public function staff() {
+        return $this->belongsTo(Staff::class);
+    }
+
     public function order() {
         return $this->belongsTo(Order::class);
     }
