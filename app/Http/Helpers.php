@@ -1533,7 +1533,7 @@ if (!function_exists('addon_is_activated')) {
                 $rows = Addon::all();
                 $arr = [];
                 foreach ($rows as $row) {
-                    $arr[$row['unique_identifier']] = $row['activated'];
+                    $arr[$row->unique_identifier] = $row->activated;
                 }
 
                 return $arr;
