@@ -161,9 +161,14 @@ if (!function_exists('verified_sellers_id')) {
 if (!function_exists('get_system_default_currency')) {
     function get_system_default_currency()
     {
-        return Cache::remember('system_default_currency', 86400, function () {
-            return Currency::findOrFail(get_setting('system_default_currency'));
-        });
+        static $system_default_currency;
+        if (is_null($system_default_currency)) {
+            $system_default_currency = Cache::remember('system_default_currency', 86400, function () {
+                return Currency::findOrFail(get_setting('system_default_currency'));
+            });
+        }
+
+        return $system_default_currency;
     }
 }
 
@@ -753,9 +758,12 @@ function translate($key, $lang = null, $addslashes = false, $keep_wrap = false)
     }
     $lang_key = preg_replace('/[^A-Za-z0-9\_]/', '', str_replace(' ', '_', strtolower($key)));
 
-    $translations_en = Cache::rememberForever('translations-en', function () {
-        return Translation::where('lang', 'en')->pluck('lang_value', 'lang_key')->toArray();
-    });
+    static $translations_en;
+    if (is_null($translations_en)) {
+        $translations_en = Cache::rememberForever('translations-en', function () {
+            return Translation::where('lang', 'en')->pluck('lang_value', 'lang_key')->toArray();
+        });
+    }
 
     if (!isset($translations_en[$lang_key])) {
         $translation_def = new Translation;
@@ -771,9 +779,13 @@ function translate($key, $lang = null, $addslashes = false, $keep_wrap = false)
     }
 
     // return user session lang
-    $translation_locale = Cache::rememberForever("translations-{$lang}", function () use ($lang) {
-        return Translation::where('lang', $lang)->pluck('lang_value', 'lang_key')->toArray();
-    });
+    static $translation_locale;
+    if (is_null($translation_locale)) {
+        $translation_locale = Cache::rememberForever("translations-{$lang}", function () use ($lang) {
+            return Translation::where('lang', $lang)->pluck('lang_value', 'lang_key')->toArray();
+        });
+    }
+
     if (isset($translation_locale[$lang_key])) {
         return $addslashes ? addslashes(trim($translation_locale[$lang_key])) : trim($translation_locale[$lang_key]);
     }
@@ -962,7 +974,21 @@ if (!function_exists('isUnique')) {
 if (!function_exists('get_setting')) {
     function get_setting($key, $default = null, $lang = false)
     {
-        $settings = Cache::remember('business_settings', 86400, function () {
+        static $settings;
+        Log::debug('business_settings is null:' . (int) is_null($settings));
+        if (is_null($settings)) {
+            $settings = Cache::remember('business_settings', 86400, function () {
+                $data = [];
+                $rows = BusinessSetting::all();
+                foreach ($rows as $row) {
+                    $lang = $row['lang'] ?: 'en';
+                    $data[$row['type']][$lang] = $row['value'];
+                }
+                return $data;
+            });
+        }
+
+        /*$settings = Cache::remember('business_settings', 86400, function () {
             $data = [];
             $rows = BusinessSetting::all();
             foreach ($rows as $row) {
@@ -970,7 +996,7 @@ if (!function_exists('get_setting')) {
                 $data[$row['type']][$lang] = $row['value'];
             }
             return $data;
-        });
+        });*/
 
         if ($lang == false) {
             $lang = 'en';
@@ -1501,12 +1527,20 @@ if (!function_exists('scheduled_update_delivery_status')) {
 if (!function_exists('addon_is_activated')) {
     function addon_is_activated($identifier, $default = null)
     {
-        $addons = Cache::remember('addons', 86400, function () {
-            return Addon::all();
-        });
+        static $addons;
+        if (is_null($addons)) {
+            $addons = Cache::remember('addons', 86400, function () {
+                $rows = Addon::all();
+                $arr = [];
+                foreach ($rows as $row) {
+                    $arr[$row['unique_identifier']] = $row['activated'];
+                }
 
-        $activation = $addons->where('unique_identifier', $identifier)->where('activated', 1)->first();
-        return $activation == null ? false : true;
+                return $arr;
+            });
+        }
+        
+        return !empty($addons[$identifier]);
     }
 }
 
