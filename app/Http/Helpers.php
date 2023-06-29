@@ -975,7 +975,6 @@ if (!function_exists('get_setting')) {
     function get_setting($key, $default = null, $lang = false)
     {
         static $settings;
-        Log::debug('business_settings is null:' . (int) is_null($settings));
         if (is_null($settings)) {
             $settings = Cache::remember('business_settings', 86400, function () {
                 $data = [];
@@ -987,16 +986,6 @@ if (!function_exists('get_setting')) {
                 return $data;
             });
         }
-
-        /*$settings = Cache::remember('business_settings', 86400, function () {
-            $data = [];
-            $rows = BusinessSetting::all();
-            foreach ($rows as $row) {
-                $lang = $row['lang'] ?: 'en';
-                $data[$row['type']][$lang] = $row['value'];
-            }
-            return $data;
-        });*/
 
         if ($lang == false) {
             $lang = 'en';
@@ -1539,7 +1528,7 @@ if (!function_exists('addon_is_activated')) {
                 return $arr;
             });
         }
-        
+
         return !empty($addons[$identifier]);
     }
 }
