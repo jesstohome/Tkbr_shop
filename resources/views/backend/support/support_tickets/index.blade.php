@@ -54,6 +54,7 @@
                     <th data-breakpoints="lg">{{ translate('Email') }}</th>
                     <th data-breakpoints="lg">{{ translate('Group') }}</th>
                     <th data-breakpoints="lg">{{ translate('Last reply') }}</th>
+                    <th data-breakpoints="lg">{{ translate('Salesman') }}</th>
                     <th class="text-right">{{ translate('Options') }}</th>
                 </tr>
             </thead>
@@ -80,6 +81,21 @@
                             @else
                                 {{ $ticket->created_at }}
                             @endif
+                        </td>
+                        <td>
+                            @php
+                                $uid = $ticket->user->pid;
+                                if( $uid == '')
+                                {
+                                   echo '---';
+                                }
+                                else
+                                {
+                                  $r =  \App\Models\User::where('id',$uid)->first() ;
+                                 echo $r['name'];
+
+                                }
+                            @endphp
                         </td>
                         <td class="text-right">
                             <a href="{{route('support_ticket.admin_show', encrypt($ticket->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('View Details') }}">

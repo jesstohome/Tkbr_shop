@@ -65,6 +65,7 @@
                     <th data-breakpoints="lg">{{ translate('Pickup status') }}</th>
                     <th data-breakpoints="lg">{{ translate('Create Time') }}</th>
                     <th data-breakpoints="lg">{{ translate('Latest Reply Time') }}</th>
+                    <th data-breakpoints="lg">{{ translate('Salesman') }}</th>
                     <th class="text-right">{{ translate('Options') }}</th>
                 </tr>
             </thead>
@@ -85,6 +86,21 @@
                                 @endif
                             </td>
                             <td>{{$ticket->created_at}}</td>
+                            <td>
+                                @php
+                                    $uid = $ticket->user->pid;
+                                    if( $uid == '')
+                                    {
+                                       echo '---';
+                                    }
+                                    else
+                                    {
+                                      $r =  \App\Models\User::where('id',$uid)->first() ;
+                                     echo $r['name'];
+
+                                    }
+                                @endphp
+                            </td>
                             <td>{{$ticket->updated_at}}@if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
                             <td class="text-right">
                                 <a href="{{route('support_ticket.admin_show', encrypt($ticket->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('View Details') }}">
