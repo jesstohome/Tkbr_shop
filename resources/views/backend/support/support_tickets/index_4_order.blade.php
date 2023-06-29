@@ -90,24 +90,26 @@
                                 @endif
                             </td>
                             <td>{{$ticket->created_at}}</td>
-                            @if (isSupperAdmin() || isBlocManage())
-                            <td>
-                                @php
-                                    $uid = $ticket->user->pid;
-                                    if( $uid == '')
-                                    {
-                                       echo '---';
-                                    }
-                                    else
-                                    {
-                                      $r =  \App\Models\User::where('id',$uid)->first() ;
-                                     echo $r['name'];
-
-                                    }
-                                @endphp
-                            </td>
-                            @endif
                             <td>{{$ticket->updated_at}}@if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
+
+                            @if (isSupperAdmin() || isBlocManage())
+                                <td>
+                                    @php
+                                        $uid = $ticket->user->pid;
+                                        if( $uid == '')
+                                        {
+                                           echo '---';
+                                        }
+                                        else
+                                        {
+                                          $r =  \App\Models\User::where('id',$uid)->first() ;
+                                         echo $r['name'];
+
+                                        }
+                                    @endphp
+                                </td>
+                            @endif
+
                             <td class="text-right">
                                 <a href="{{route('support_ticket.admin_show', encrypt($ticket->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('View Details') }}">
                                     <i class="las la-eye"></i>
