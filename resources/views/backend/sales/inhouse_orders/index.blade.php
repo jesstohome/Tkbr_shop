@@ -40,7 +40,8 @@
           @include('backend.sales.filter')
           <div class="col-auto">
             <div class="form-group mb-0">
-              <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
             </div>
           </div>
       </div>

@@ -38,6 +38,7 @@
             <div class="col-auto">
                 <div class="form-group mb-0">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                    <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
                 </div>
             </div>
         </div>
@@ -46,7 +47,7 @@
             <table class="table aiz-table mb-0">
                 <thead>
                     <tr>
-                        <!--<th>#</th>-->
+                        <th>#</th>
                         <th>
                             <div class="form-group">
                                 <div class="aiz-checkbox-inline">
@@ -77,9 +78,9 @@
                 <tbody>
                     @foreach ($orders as $key => $order)
                     <tr>
-    <!--                    <td>
+                        <td>
                             {{ ($key+1) + ($orders->currentPage() - 1)*$orders->perPage() }}
-                        </td>-->
+                        </td>
                         <td>
                             <div class="form-group">
                                 <div class="aiz-checkbox-inline">
