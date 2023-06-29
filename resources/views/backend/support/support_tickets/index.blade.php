@@ -54,7 +54,9 @@
                     <th data-breakpoints="lg">{{ translate('Email') }}</th>
                     <th data-breakpoints="lg">{{ translate('Group') }}</th>
                     <th data-breakpoints="lg">{{ translate('Last reply') }}</th>
+                    @if (isSupperAdmin() || isBlocManage())
                     <th data-breakpoints="lg">{{ translate('Salesman') }}</th>
+                    @endif
                     <th class="text-right">{{ translate('Options') }}</th>
                 </tr>
             </thead>
@@ -82,6 +84,7 @@
                                 {{ $ticket->created_at }}
                             @endif
                         </td>
+                        @if (isSupperAdmin() || isBlocManage())
                         <td>
                             @php
                                 $uid = $ticket->user->pid;
@@ -97,6 +100,7 @@
                                 }
                             @endphp
                         </td>
+                        @endif
                         <td class="text-right">
                             <a href="{{route('support_ticket.admin_show', encrypt($ticket->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('View Details') }}">
                                 <i class="las la-eye"></i>
