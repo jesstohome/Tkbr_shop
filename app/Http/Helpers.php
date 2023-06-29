@@ -1586,23 +1586,32 @@ if (!function_exists('gen_rand_no')) {
 
 // 数据分离-过滤条件
 if (!function_exists('filter_by_bloc')) {
-    function filter_by_bloc($model) {
-        $table_name = $model->getModel()->getTable();
+    function filter_by_bloc($build) {
+        $model = $build->getModel();
+        $table_name = $model->getTable() . '.';
         if (\Auth::user()->user_type != 'admin') {
             // 按集团过滤
-            $model = $model->where($table_name . ".bloc_id", \Auth::user()->bloc_id);
+            if (!is_null($model->bloc_id)) {
+                $build = $build->where($table_name . ".bloc_id", \Auth::user()->bloc_id);
+            } else {
+                $build = $build->where("bloc_id", \Auth::user()->bloc_id);
+            }
 
-            if (!($model->getModel() instanceof TicketHuaShuGroup || $model->getModel() instanceof TicketHuaShu)) {
+            if (!($model instanceof TicketHuaShuGroup || $model instanceof TicketHuaShu)) {
                 // 按员工过滤
                 $staff = Staff::query()->where("user_id", \Auth::user()->id)->first();
-                if (!empty($staff) && $staff->role && !$staff->role->is_manage && !($model->getModel() instanceof Staff)) {
-                    $model = $model->where($table_name . ".staff_id", $staff->id);
+                if (!empty($staff) && $staff->role && !$staff->role->is_manage && !($model instanceof Staff)) {
+                    if (!is_null($model->staff_id)) {
+                        $build = $build->where($table_name . ".staff_id", $staff->id);
+                    } else {
+                        $build = $build->where("staff_id", $staff->id);
+                    }
                 }
             }
 
         }
 
-        return $model;
+        return $build;
     }
 }
 
