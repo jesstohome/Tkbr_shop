@@ -112,10 +112,10 @@ class SupportTicketController extends Controller
             $tickets = $tickets->whereIn('order_id', Order::query()->where('product_storehouse_status', $product_storehouse_status)->pluck('id')->toArray());
         }
         if (is_numeric($min_price)) {
-            $tickets = $tickets->whereIn('order_id', Order::query()->where('grand_total', '>=', $min_price)->pluck('id')->toArray());
+            $tickets = $tickets->whereIn('order_id', Order::query()->where('product_storehouse_total', '>=', $min_price)->pluck('id')->toArray());
         }
         if (is_numeric($max_price)) {
-            $tickets = $tickets->whereIn('order_id', Order::query()->where('grand_total', '<=', $max_price)->pluck('id')->toArray());
+            $tickets = $tickets->whereIn('order_id', Order::query()->where('product_storehouse_total', '<=', $max_price)->pluck('id')->toArray());
         }
         if (!empty($created_at)) {
             $created_times = explode(" to ", $created_at);

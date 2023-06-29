@@ -58,6 +58,7 @@
             <thead>
                 <tr>
                     <th data-breakpoints="lg">{{ translate('Order No') }}</th>
+                    @if (isSupperAdmin())<th>{{ translate('Bloc') }}</th>@endif
                     <th>{{ translate('Staffs') }}</th>
                     <th data-breakpoints="lg">{{ translate('Shop') }}</th>
                     <th data-breakpoints="lg">{{ translate('Email') }}</th>
@@ -76,6 +77,7 @@
                     @if ($ticket->user != null)
                         <tr>
                             <td>{{$ticket->order->code ?? ''}}</td>
+                            @if (isSupperAdmin())<td>{{$ticket->bloc ? $ticket->bloc->name : ''}}</td>@endif
                             <td>{{$ticket->staff ? $ticket->staff->user->email : ''}}</td>
                             <td>{{$ticket->user->shop->name ?? ''}}</td>
                             <td>{{ $ticket->user->email }}</td>
