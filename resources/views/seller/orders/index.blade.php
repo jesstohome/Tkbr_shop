@@ -87,6 +87,8 @@
                     @foreach(get_express_status() as $status_key => $status_text)
                     <option value="{{$status_key}}" @isset($delivery_status) @if($delivery_status == $status_key) selected @endif @endisset>{{ $status_text}}</option>
                     @endforeach
+                    <option value="cancelled" @isset($delivery_status) @if($delivery_status == 'cancelled') selected @endif @endisset>{{translate('Cancelled')}}</option>
+
                 </select>
               </div>
               <div class="col-md-3">
