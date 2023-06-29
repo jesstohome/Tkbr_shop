@@ -763,12 +763,12 @@
                                     <form action="{{ route('product-queries.store') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="product" value="{{ $detailedProduct->id }}">
-                                        <div class="form-group">
+                                        <div class="form-group">`
                                             <textarea class="form-control" rows="3" cols="40" name="question"
-                                                placeholder="Write your question here..." style="resize: none;"></textarea>
+                                                placeholder="{{translate('Write your question here')}}..." style="resize: none;"></textarea>
 
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <button type="submit" class="btn btn-primary">{{translate('Submit')}}</button>
                                     </form>
                                 </div>
                                 @php
