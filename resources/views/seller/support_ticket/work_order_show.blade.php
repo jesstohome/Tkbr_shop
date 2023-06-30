@@ -1,5 +1,5 @@
 @extends('seller.layouts.app')
-<link rel="stylesheet" href="{{ static_asset('assets/css/chat-pc.css') }}">
+<link rel="stylesheet" href="{{ static_asset('assets/css/chat-pc.css?v=1') }}">
 @section('panel_content')
     <div class="chatroot">
         <div class="main">
@@ -28,8 +28,9 @@
                                 @if(empty($ticketreply->user_id))
                                         <div class="pic">
                                             <div class="welcome-msg">
-                                                {{translate($ticketreply->reply)}}！</div>
-                                            <img src="{{static_asset('assets/img/chat/jingling.png')}}" style="width: 140px; height: 140px;position: absolute;top: -80px;left:205px ">
+                                                <svg t="1685791561209" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3147" width="16" height="16"><path d="M809.6 416.64h-53.76V308.48c0-135.68-108.096-243.84-243.2-243.84-135.04 0-243.2 108.16-243.2 243.84v108.16h-53.76c-29.44 0-53.76 24.32-53.76 53.76v433.28c0 29.44 24.32 53.76 53.76 53.76h593.92c30.08 0 54.4-24.32 54.4-53.76V470.4c0-29.44-24.32-53.76-54.4-53.76z m-135.04 0H350.72V308.48c0-89.6 72.96-162.56 161.92-162.56a162.56 162.56 0 0 1 161.92 162.56v108.16z" fill="#040000" p-id="3148"></path></svg>
+                                                {{translate($ticketreply->reply)}}！
+                                            </div>
                                         </div>
                                 @else
                                     <div class="atext">
@@ -73,8 +74,7 @@
                     <div class="sendBtn"></div>
                 </div>
                 <div class="notice">
-                    <img src="{{static_asset('assets/img/chat/icon_laba.png')}}" style="width: 16px; height: 16px;" alt="" />
-                    <span style="color: #5548FB; flex: 1; text-align: left;padding-left: 12px;">{{translate($remind_tips)}}！</span>
+                    {{ translate("The manufacturer has paid a security deposit") }}
                 </div>
             </div>
             <div class="orderinfoRoot">
@@ -84,23 +84,16 @@
                 <div class="orderList">
                     <div class="item1">
                         <div class="info">
-                            <div class="text"><span> {{ translate("The manufacturer has paid a security deposit") }} </span></div>
+                            @if($ticket->order->details[0]->product)
+                                <a class="btn btn-primary" href="{{route('product', $ticket->order->details[0]->product->slug)}}" target="_blank">
+                                    {{translate('Dialogue Product')}}
+                                </a>
+                            @endif
                         </div>
                         <div class="item1divider"></div>
                     </div>
                     <div class="item1">
-                        <img class="orderImgRight" @if($ticket->order->details[0]->product) style="background-image: url('{{uploaded_asset($ticket->order->details[0]->product->image)}}')" @endif/>
                         <div class="info">
-                            <div class="text">{{$ticket->order->details[0]->product ? $ticket->order->details[0]->product->getTranslation('name') : ''}}</div>
-                            <div class="orderbot">
-                                <span class="ordername">{{single_price($ticket->order->product_storehouse_total)}}</span>
-                            </div>
-
-                        </div>
-                        <div class="item1divider"></div>
-                    </div>
-                    <div class="item1">
-                        <div class="info" style="text-align: left">
                             <p> {{ translate('Order No') }}: {{$ticket->order->code}} </p>
                             @if($currency) <p> {{ translate('Currency') }}: {{translate($currency->name)}} </p> @endif
                             <p> {{ translate('Order Amount') }}: {{single_price($ticket->order->grand_total)}} @if($currency) ≈ {{number_format(number_format($currency->exchange_rate, 2) * $ticket->order->grand_total, 2)}} @endif</p>
