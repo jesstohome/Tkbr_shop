@@ -45,26 +45,28 @@
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">{{ translate('Your Password') }}</label>
-                    <div class="col-md-10">
+                    <div class="col-md-10" style="position: relative">
                         <input type="password" class="form-control" placeholder="{{ translate('New Password') }}" name="new_password">
+                        <div class="u-success u-eye"></div>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">{{ translate('Confirm Password') }}</label>
-                    <div class="col-md-10">
+                    <div class="col-md-10" style="position: relative">
                         <input type="password" class="form-control" placeholder="{{ translate('Confirm Password') }}" name="confirm_password">
+                        <div class="u-success u-eye"></div>
                     </div>
                 </div>
 
             </div>
         </div>
-        
+
         @php
             $user = \App\Models\User::find(Auth::user()->id);
         @endphp
-        
+
         <!--------------------------->
-        
+
              <div class="card">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Payment Setting')}}</h5>
@@ -124,7 +126,7 @@
                         @enderror
                     </div>
                 </div>
-                
+
                <div class="row"  id="usdt">
                     <label class="col-md-3 col-form-label">{{ translate('USDT Payment') }}</label>
                     <div class="col-md-9">
@@ -151,10 +153,10 @@
                 </div>
             </div>
         </div>
-        
+
         <!--------------------------->
-        
-        
+
+
 
         <div class="form-group mb-0 text-right">
             <button type="submit" class="btn btn-primary">{{translate('Update Profile')}}</button>
@@ -271,7 +273,7 @@
 
 @section('script')
     <script type="text/javascript">
-        
+
         $('.new-email-verification').on('click', function() {
             $(this).find('.loading').removeClass('d-none');
             $(this).find('.default').addClass('d-none');
@@ -292,9 +294,9 @@
     </script>
 
     @if (get_setting('google_map') == 1)
-        
+
         @include('frontend.partials.google_map')
-        
+
     @endif
 
 @endsection

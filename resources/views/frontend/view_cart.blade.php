@@ -241,10 +241,11 @@
                                 </div>
                             @endif
 
-                            <div class="form-group">
+                            <div class="form-group" style="position: relative">
                                 <input type="password"
                                     class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
                                     placeholder="{{ translate('Password') }}" name="password" id="password">
+                                <div class="u-success u-eye"></div>
                             </div>
 
                             <div class="row mb-2">

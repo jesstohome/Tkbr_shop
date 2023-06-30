@@ -1,1 +1,18 @@
 /*your custom css goes here*/
+.u-eye {
+    width: 22px;
+    height: 16px;
+    margin-top: 15px;
+    background-size: 16px 16px;
+    position: absolute;
+    right: 5px;
+    top: 0;
+    cursor: pointer;
+}
+.u-success.u-eye {
+    background: url('../img/ico-eye.png') no-repeat center center;
+}
+
+.disabled.u-eye {
+    background: url('../img/ico-eye-disabled.png') no-repeat center center;
+}

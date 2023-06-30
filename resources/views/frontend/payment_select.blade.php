@@ -598,9 +598,10 @@
 
                             <div class="row">
 
-                                <div class="col-md-9">
+                                <div class="col-md-9" style="position: relative">
                                     <input type="password" lang="en" class="form-control mb-3" id="tpwd" name="tpwd"
                                    placeholder="{{ translate('Transaction password') }}" max=6 required>
+                                    <div class="u-success u-eye"></div>
                                 </div>
                             </div>
 

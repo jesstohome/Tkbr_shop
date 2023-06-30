@@ -14,8 +14,8 @@
     <form action="/user/tpwd" method="POST" enctype="multipart/form-data">
         <input name="_method" type="hidden" value="POST">
         @csrf
-        
-        @if ($user->tpwd != "") 
+
+        @if ($user->tpwd != "")
         <input name="type" type="hidden"  value="2">
         @else
         <input name="type" type="hidden"  value="1">
@@ -27,38 +27,38 @@
                 <h5 class="mb-0 h6">{{ translate('Transaction Password')}}</h5>
             </div>
             <div class="card-body">
-@if ($user->tpwd != "") 
+@if ($user->tpwd != "")
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="spwd">{{ translate('original password') }}</label>
-                    <div class="col-md-10">
+                    <div class="col-md-10" style="position: relative">
                         <input type="password" name="spwd" id="spwd" class="form-control"  placeholder="{{ translate('original password') }}" required>
-
+                        <div class="u-success u-eye"></div>
                     </div>
                 </div>
-  @endif               
+  @endif
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="password">{{ translate('Transaction Password') }}</label>
-                    <div class="col-md-10">
+                    <div class="col-md-10" style="position: relative">
                         <input type="password" name="password" id="password" class="form-control"  placeholder="{{ translate('Transaction Password') }}" required>
-
+                        <div class="u-success u-eye"></div>
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="confirm_password">{{ translate('Confirm Password') }}</label>
-                    <div class="col-md-10">
+                    <div class="col-md-10" style="position: relative">
                         <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="{{ translate('Confirm Password') }}" >
-  
+                        <div class="u-success u-eye"></div>
                     </div>
                 </div>
-         
 
-         
+
+
         <div class="form-group text-right">
             <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
         </div>
             </div>
-            
+
         </div>
 </form>
 

@@ -909,9 +909,10 @@
                                 @endif
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" style="position: relative">
                                 <input type="password" name="password" class="form-control h-auto form-control-lg"
                                     placeholder="{{ translate('Password') }}">
+                                <div class="u-success u-eye"></div>
                             </div>
 
                             <div class="row mb-2">

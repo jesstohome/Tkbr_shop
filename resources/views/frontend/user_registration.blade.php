@@ -55,17 +55,19 @@
                                             </div>
                                         @endif
 
-                                        <div class="form-group">
+                                        <div class="form-group" style="position: relative">
                                             <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password">
                                             @if ($errors->has('password'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('password') }}</strong>
                                                 </span>
                                             @endif
+                                            <div class="u-success u-eye"></div>
                                         </div>
 
-                                        <div class="form-group">
+                                        <div class="form-group" style="position: relative">
                                             <input type="password" class="form-control" placeholder="{{  translate('Confirm Password') }}" name="password_confirmation">
+                                            <div class="u-success u-eye"></div>
                                         </div>
 
                                         @if(get_setting('google_recaptcha') == 1)
