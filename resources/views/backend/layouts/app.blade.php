@@ -105,6 +105,15 @@
 	        AIZ.plugins.notify('{{ $message['level'] }}', '{{ $message['message'] }}');
 	    @endforeach
 
+        // 密码眼睛的切换
+        $("div.u-eye").on("click", function () {
+            if ($(this).hasClass("disabled")) {
+                $(this).prev("input").attr("type", 'password');
+            } else {
+                $(this).prev("input").attr("type", 'text');
+            }
+            $(this).toggleClass("disabled");
+        });
 
         if ($('#lang-change').length > 0) {
             $('#lang-change .dropdown-menu a').each(function() {

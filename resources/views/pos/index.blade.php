@@ -44,6 +44,9 @@
                             <option value="DESC">降序(从大到小)</option>
                         </select>
                     </div>
+                    <div class="col-md-2 col-6">
+                        <button class="btn btn-md btn-primary" type="reset" onclick="reset_form();setTimeout(filterProducts, 500)">重置</button>
+                    </div>
                 </div>
                 <div class="aiz-pos-product-list c-scrollbar-light">
                     <div class="d-flex flex-wrap justify-content-center" id="product-list">

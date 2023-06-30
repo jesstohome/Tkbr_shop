@@ -52,8 +52,9 @@
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="password">{{ translate('Your Password') }}</label>
-                    <div class="col-md-10">
+                    <div class="col-md-10" style="position: relative">
                         <input type="password" name="new_password" id="password" class="form-control" placeholder="{{ translate('New Password') }}" autocomplete="new-password">
+                        <div class="u-success u-eye"></div>
                         @error('new_password')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
@@ -61,8 +62,9 @@
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="confirm_password">{{ translate('Confirm Password') }}</label>
-                    <div class="col-md-10">
+                    <div class="col-md-10" style="position: relative">
                         <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="{{ translate('Confirm Password') }}" >
+                        <div class="u-success u-eye"></div>
                         @error('confirm_password')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror

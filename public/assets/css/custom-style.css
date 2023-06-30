@@ -7,6 +7,7 @@
     right: 5px;
     top: 0;
     cursor: pointer;
+    margin-right: 15px;
 }
 .u-success.u-eye {
     background: url('../img/ico-eye.png') no-repeat center center;

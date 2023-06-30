@@ -20,23 +20,26 @@
             <div class="card-body">
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="spwd">{{ translate('original password') }}</label>
-                    <div class="col-md-10">
+                    <div class="col-md-10" style="position: relative">
                         <input type="password" name="spwd" id="spwd" class="form-control"  placeholder="{{ translate('original password') }}" required>
+                        <div class="u-success u-eye"></div>
 
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="password">{{ translate('Please Set Transaction Password') }}</label>
-                    <div class="col-md-10">
+                    <div class="col-md-10" style="position: relative">
                         <input type="password" name="password" id="password" class="form-control"  placeholder="{{ translate('Please Set Transaction Password') }}" required>
+                        <div class="u-success u-eye"></div>
 
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label" for="confirm_password">{{ translate('Confirm Password') }}</label>
-                    <div class="col-md-10">
+                    <div class="col-md-10" style="position: relative">
                         <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="{{ translate('Confirm Password') }}" >
+                        <div class="u-success u-eye"></div>
 
                     </div>
                 </div>
