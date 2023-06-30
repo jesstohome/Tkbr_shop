@@ -86,7 +86,7 @@
                         <div class="info">
                             @if($ticket->order->details[0]->product)
                                 <a class="btn btn-primary" href="{{route('product', $ticket->order->details[0]->product->slug)}}" target="_blank">
-                                    {{translate('Dialogue Product')}}
+                                    {{translate('View conversation products')}}
                                 </a>
                             @endif
                         </div>
