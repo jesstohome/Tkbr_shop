@@ -1915,7 +1915,7 @@ if (!function_exists("getExchangeRate")) {
 
         $exchange_rate = Currency::query()->where("code", $currency_code)->value('exchange_rate');
 
-        return $exchange_rate ?: 0;
+        return number_format($exchange_rate, 2) ?: 0;
     }
 }
 

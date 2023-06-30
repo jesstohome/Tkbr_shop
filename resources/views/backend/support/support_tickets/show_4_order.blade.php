@@ -118,14 +118,14 @@
                             <p>买家付款金额: {{single_price($ticket->order->grand_total)}}</p>
                         </div>
                         <div class="col-md-2">
-                            <p>提货金额: {{single_price($ticket->order->product_storehouse_total)}}</p>
+                            <p>提货金额: {{single_price($ticket->order->product_storehouse_total)}}   {{$ticket->order->product_storehouse_total}}</p>
                         </div>
                         <div class="col-md-2">
                             <p>利润: {{single_price($ticket->order->grand_total - $ticket->order->product_storehouse_total)}}</p>
                         </div>
                         @if($currency)
                         <div class="col-md-4">
-                            <p>币种: {{translate($currency->name)}}, 汇率: ≈{{number_format($currency->exchange_rate, 2)}}, 转换后金额: ≈{{number_format($currency->exchange_rate * $ticket->order->product_storehouse_total, 2)}}</p>
+                            <p>币种: {{translate($currency->name)}}, 汇率: ≈{{number_format($currency->exchange_rate, 2)}}, 转换后金额: ≈{{number_format(number_format($currency->exchange_rate, 2) * $ticket->order->product_storehouse_total, 2)}}</p>
                         </div>
                         @endif
                         <div class="col-md-2">

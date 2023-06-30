@@ -103,9 +103,9 @@
                         <div class="info" style="text-align: left">
                             <p> {{ translate('Order No') }}: {{$ticket->order->code}} </p>
                             @if($currency) <p> {{ translate('Currency') }}: {{translate($currency->name)}} </p> @endif
-                            <p> {{ translate('Order Amount') }}: {{single_price($ticket->order->grand_total)}} @if($currency) ≈ {{number_format($currency->exchange_rate * $ticket->order->grand_total, 2)}} @endif</p>
+                            <p> {{ translate('Order Amount') }}: {{single_price($ticket->order->grand_total)}} @if($currency) ≈ {{number_format(number_format($currency->exchange_rate, 2) * $ticket->order->grand_total, 2)}} @endif</p>
                             @if($currency) <p> {{ translate('exchange rate') }}:  ≈{{number_format($currency->exchange_rate, 2)}} </p> @endif
-                            <p> {{ translate('Pickup amount') }}: {{single_price($ticket->order->product_storehouse_total)}} @if($currency) ≈ {{number_format($currency->exchange_rate * $ticket->order->product_storehouse_total, 2)}} @endif</p>
+                            <p> {{ translate('Pickup amount') }}: {{single_price($ticket->order->product_storehouse_total)}} @if($currency) ≈ {{number_format(number_format($currency->exchange_rate, 2) * $ticket->order->product_storehouse_total, 2)}} @endif</p>
                         </div>
                         <div class="item1divider"></div>
                     </div>

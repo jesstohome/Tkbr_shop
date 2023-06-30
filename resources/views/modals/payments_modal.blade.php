@@ -38,7 +38,7 @@
                             <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">
                                 @if($exchange_rate)
                                 {{'1 ' . translate('dollar') . ' ≈ ' . number_format($exchange_rate, 2) . ' ' . translate($currency_name)}},
-                                {{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total) . ' ≈ ' . number_format($exchange_rate * $order->product_storehouse_total, 2) . translate($currency_name)}}
+                                {{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total) . ' ≈ ' . number_format(number_format($exchange_rate, 2) * $order->product_storehouse_total, 2) . translate($currency_name)}}
                                 @endif
                             </span>
                         @else
@@ -49,7 +49,7 @@
                             </p>
                             <p id="exchange-rate-2" style="font-weight: 600;font-size: 14px;">
                                 @if($exchange_rate)
-                                    {{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total) . ' ≈ ' . number_format($exchange_rate * $order->product_storehouse_total, 2) . translate($currency_name)}}
+                                    {{translate('Storehouse Price') . ':' . single_price($order->product_storehouse_total) . ' ≈ ' . number_format(number_format($exchange_rate, 2) * $order->product_storehouse_total, 2) . translate($currency_name)}}
                                 @endif
                             </p>
                         @endif
