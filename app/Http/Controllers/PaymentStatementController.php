@@ -50,6 +50,14 @@ class PaymentStatementController extends Controller
             $business_type = $request->business_type;
             $payment_statements = $payment_statements->where('business_type', $business_type);
         }
+        if ($request->min_price) {
+            $min_price = $request->min_price;
+            $payment_statements = $payment_statements->where('amount', '>=', $min_price);
+        }
+        if ($request->max_price) {
+            $max_price = $request->max_price;
+            $payment_statements = $payment_statements->where('amount', '<=', $max_price);
+        }
 
         $seller_id = $request->seller_id;
         if (!empty($seller_id)) {
@@ -75,7 +83,7 @@ class PaymentStatementController extends Controller
         $total_seller = $payment_statements_clone->distinct('seller_id')->count();
 
         $payment_statements = $payment_statements->paginate(15)->appends(request()->query());
-        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type', 'seller_id', 'business_type', 'bloc_id', 'staff_id'));
+        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type', 'seller_id', 'business_type', 'bloc_id', 'staff_id', 'min_price', 'max_price'));
     }
 
     /**

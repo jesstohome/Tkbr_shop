@@ -8,7 +8,7 @@
             <option value="">{{ translate('All Sellers') }}</option>
             @foreach ($sellers as $key => $seller)
                 <option value="{{ $seller->id }}" @if ($seller->id == $seller_id) selected @endif>
-                    {{ $seller->shop_name }} ({{ $seller->email }})
+                    {{ $seller->shop_name }} ({{ $seller->email }}) ({{$seller->name}})
                 </option>
             @endforeach
         </select>
