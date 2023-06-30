@@ -122,6 +122,15 @@
 	    @endforeach
 
             $(document).ready(function () {
+                // 密码眼睛的切换
+                $("div.u-eye").on("click", function () {
+                    if ($(this).hasClass("disabled")) {
+                        $(this).prev("input").attr("type", 'password');
+                    } else {
+                        $(this).prev("input").attr("type", 'text');
+                    }
+                    $(this).toggleClass("disabled");
+                });
 
             });
 

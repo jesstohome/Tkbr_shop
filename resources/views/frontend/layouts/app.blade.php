@@ -287,6 +287,16 @@
                 });
             }
 
+            // 密码眼睛的切换
+            $("div.u-eye").on("click", function () {
+                if ($(this).hasClass("disabled")) {
+                    $(this).prev("input").attr("type", 'password');
+                } else {
+                    $(this).prev("input").attr("type", 'text');
+                }
+                $(this).toggleClass("disabled");
+            });
+
             if ($('#currency-change').length > 0) {
                 $('#currency-change .dropdown-menu a').each(function() {
                     $(this).on('click', function(e){
