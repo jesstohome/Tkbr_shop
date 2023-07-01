@@ -134,7 +134,7 @@
                                         {{ translate('Inhouse product') }}
                                     @endif
                                 </div>
-                                @if (get_setting('conversation_system') == 1 && 0)
+                                @if (get_setting('conversation_system') == 1)
                                     <div class="col-auto">
                                         <button class="btn btn-sm btn-soft-primary"
                                             onclick="show_chat_modal()">{{ translate('Message Seller') }}</button>
@@ -763,12 +763,16 @@
                                     <form action="{{ route('product-queries.store') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="product" value="{{ $detailedProduct->id }}">
-                                        <div class="form-group">`
+                                        <div class="form-group">
                                             <textarea class="form-control" rows="3" cols="40" name="question"
                                                 placeholder="{{translate('Write your question here')}}..." style="resize: none;"></textarea>
 
                                         </div>
-                                        <button type="submit" class="btn btn-primary">{{translate('Submit')}}</button>
+                                        @if(Auth::user()->user_type == 'seller')
+                                            <button type="button" class="btn btn-primary" onclick="product_query_submit_check()">{{translate('Submit')}}</button>
+                                        @else
+                                            <button type="submit" class="btn btn-primary">{{translate('Submit')}}</button>
+                                        @endif
                                     </form>
                                 </div>
                                 @php
@@ -1028,26 +1032,21 @@
                 AIZ.plugins.notify('danger', '{{ translate('Oops, unable to copy') }}');
             }
             $temp.remove();
-            // if (document.selection) {
-            //     var range = document.body.createTextRange();
-            //     range.moveToElementText(document.getElementById(containerid));
-            //     range.select().createTextRange();
-            //     document.execCommand("Copy");
+        }
 
-            // } else if (window.getSelection) {
-            //     var range = document.createRange();
-            //     document.getElementById(containerid).style.display = "block";
-            //     range.selectNode(document.getElementById(containerid));
-            //     window.getSelection().addRange(range);
-            //     document.execCommand("Copy");
-            //     document.getElementById(containerid).style.display = "none";
-
-            // }
-            // AIZ.plugins.notify('success', 'Copied');
+        function product_query_submit_check() {
+            @if(Auth::user()->user_type == 'seller')
+            AIZ.plugins.notify('warning', '{{translate('The store account cannot perform this operation')}}');
+            return false;
+            @endif
         }
 
         function show_chat_modal() {
             @if (Auth::check())
+                @if(Auth::user()->user_type == 'seller')
+                AIZ.plugins.notify('warning', '{{translate('The store account cannot perform this operation')}}');
+                return false;
+                @endif
                 $('#chat_modal').modal('show');
             @else
                 $('#login_modal').modal('show');

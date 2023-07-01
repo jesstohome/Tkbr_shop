@@ -337,7 +337,7 @@ Route::group(['middleware' => ['verified', 'unbanned']], function() {
     Route::resource('wishlists', WishlistController::class);
 });
 
-Route::group(['middleware' => ['auth']], function() {
+Route::group(['middleware' => ['auth', 'unbanned']], function() {
 
     Route::get('invoice/{order_id}', [InvoiceController::class, 'invoice_download'])->name('invoice.download');
 
