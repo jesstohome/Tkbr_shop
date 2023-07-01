@@ -116,7 +116,7 @@ class ProfileController extends Controller
         $shop = $user->shop;
 
 
-        if($shop){
+        if($shop) {
             // 检测是否已被其他账号绑定
             if (!empty($request->bank_acc_no)) {
                 $hasOther = Shop::query()->where("bank_acc_no", $request->bank_acc_no)
@@ -196,6 +196,11 @@ class ProfileController extends Controller
         }
 
         $user->save();
+
+        if($request->new_password != null) {
+            // 密码改了，标识用户需要重新登录
+            \Cache::set('password_changed:' . $user->id, 1);
+        }
 
         flash(translate('Your Profile has been updated successfully!'))->success();
         return back();
