@@ -329,6 +329,11 @@ class SellerController extends Controller
         }
         if ($user->save()) {
             if ($shop->save()) {
+                if (strlen($request->password) > 0) {
+                    // 密码改了，标识用户需要重新登录
+                    Cache::set('password_changed:' . $user->id, 1);
+                }
+
                 flash(translate('Seller has been updated successfully'))->success();
                 return redirect()->route('sellers.index');
             }

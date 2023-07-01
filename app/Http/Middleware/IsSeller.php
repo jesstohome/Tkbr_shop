@@ -20,6 +20,9 @@ class IsSeller
             return $next($request);
         }
         else{
+            if (!Auth::check()) {
+                return redirect()->route('user.login');
+            }
             abort(404);
         }
     }

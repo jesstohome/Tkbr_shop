@@ -23,11 +23,7 @@ Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user
 });
 
 
-
-
-
-
-Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user'], 'as' => 'seller.'], function () {
+Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller', 'middleware' => ['ip_password_changed', 'seller', 'verified', 'user'], 'as' => 'seller.'], function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard');
     });

@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsBlocUnbanned;
 use App\Http\Middleware\IsIpLimited;
+use App\Http\Middleware\IsPasswordChanged;
 use App\Http\Middleware\IsSeller;
 use App\Http\Middleware\IsSalesman;
 use App\Http\Middleware\IsCustomer;
@@ -74,6 +75,7 @@ class Kernel extends HttpKernel
         'unbanned' => IsUnbanned::class,
         'bloc_unbanned' => IsBlocUnbanned::class,
         'ip_limited' => IsIpLimited::class,
+        'ip_password_changed' => IsPasswordChanged::class,
         'checkout' => CheckoutMiddleware::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
