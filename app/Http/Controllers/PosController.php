@@ -606,7 +606,9 @@ class PosController extends Controller
         $seller_id = 0;
         if (!empty($conversation->product_id)) {
             $product = Product::find($conversation->product_id);
-            $product_url = route('product', $product->slug);
+            if (!empty($product->slug)) {
+                $product_url = route('product', $product->slug);
+            }
             $seller_id = $product->user_id;
         }
 
