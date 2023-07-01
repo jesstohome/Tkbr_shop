@@ -564,6 +564,10 @@ class PosController extends Controller
             if ($seller_id) {
                 $conversations = $conversations->where("receiver_id", $seller_id);
             }
+            $customer_id = $request->customer_id;
+            if ($customer_id) {
+                $conversations = $conversations->where("sender_id", $customer_id);
+            }
             $bloc_id = $request->bloc_id;
             if ($bloc_id) {
                 $conversations = $conversations->where("bloc_id", $bloc_id);

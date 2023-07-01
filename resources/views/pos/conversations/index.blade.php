@@ -12,6 +12,18 @@
     <div class="card">
         <form>
             <div class="card-header row gutters-5">
+                <div class="col-lg-2">
+                    <div class="form-group mb-0">
+                        <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="customer_id" name="customer_id" data-live-search="true">
+                            <option value="">{{ translate('All Customers') }}</option>
+                            @foreach (filter_by_bloc(App\Models\User::where('user_type', '=', 'customer'))->get() as $key => $customer)
+                                <option value="{{ $customer->id }}" @if ($customer->id == $customer_id) selected @endif>
+                                    {{ $customer->name }} ({{ $customer->email }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 @include('backend.partials.filters.bloc_staff')
                 <div class="col-md-2">
                     <div class="form-group mb-0">
@@ -32,6 +44,16 @@
         </form>
       <div class="card-body">
         <ul class="list-group list-group-flush">
+            <li class="list-group-item px-0 text-center">
+                <div class="row gutters-10">
+                    <div class="col-auto">头像</div>
+                    <div class="col-auto col-lg-3">客户姓名</div>
+                    <div class="col-auto col-lg-1">店铺名</div>
+                    @if(isSupperAdmin()) <div class="col-auto col-lg-1">集团</div> @endif
+                    <div class="col-auto col-lg-1">员工</div>
+                    <div class="col-12 col-lg">标题</div>
+                </div>
+            </li>
           @foreach ($conversations as $key => $conversation)
               @if ($conversation->receiver != null && $conversation->sender != null)
                     <li class="list-group-item px-0">
