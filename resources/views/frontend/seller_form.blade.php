@@ -41,15 +41,19 @@
                                     <label>{{ translate('Your Email')}} <span class="text-primary">*</span></label>
                                     <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email">
                                 </div>
-                                <div class="form-group" style="position: relative">
+                                <div class="form-group">
                                     <label>{{ translate('Your Password')}} <span class="text-primary">*</span></label>
-                                    <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password" data-bv-notempty-message="{{translate('The password is required and cannot be empty')}}">
-                                    <div class="u-success u-eye"></div>
+                                    <div style="position: relative">
+                                        <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="{{  translate('Password') }}" name="password" data-bv-notempty-message="{{translate('The password is required and cannot be empty')}}">
+                                        <div class="u-success u-eye"></div>
+                                    </div>
                                 </div>
-                                <div class="form-group" style="position: relative">
+                                <div class="form-group">
                                     <label>{{ translate('Repeat Password')}} <span class="text-primary">*</span></label>
-                                    <input type="password" class="form-control" placeholder="{{  translate('Confirm Password') }}" name="password_confirmation" data-bv-notempty-message="{{translate('The confirm password is required and cannot be empty')}}">
-                                    <div class="u-success u-eye"></div>
+                                    <div style="position: relative">
+                                        <input type="password" class="form-control" placeholder="{{  translate('Confirm Password') }}" name="password_confirmation" data-bv-notempty-message="{{translate('The confirm password is required and cannot be empty')}}">
+                                        <div class="u-success u-eye"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
