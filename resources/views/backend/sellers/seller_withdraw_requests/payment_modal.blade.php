@@ -31,7 +31,7 @@
                         <td>{{ $user2->bank_name }}</td>
                     </tr>
                     <tr>
-                        <td>{{ translate('Bank Account Name') }}</td>
+                        <td>{{ translate('Name') }}</td>
                         <td>{{ $user2->bank_acc_name }}</td>
                     </tr>
                     <tr>
@@ -88,7 +88,7 @@
                         <td>{{ $user->shop->bank_name }}</td>
                     </tr>
                     <tr>
-                        <td>{{ translate('Bank Account Name') }}</td>
+                        <td>{{ translate('Name') }}</td>
                         <td>{{ $user->shop->bank_acc_name }}</td>
                     </tr>
                     <tr>

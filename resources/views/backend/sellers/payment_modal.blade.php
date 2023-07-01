@@ -18,22 +18,22 @@
                       <td>{{ single_price(abs($shop->admin_to_pay)) }}</td>
                   @endif
               </tr>
-              
+
                <tr>
-                  
+
                         <td>{{ translate('Wallet Money') }}</td>
                         <td>{{ single_price($shop->user->balance) }}</td>
-                    
+
                 </tr>
-                
-                
+
+
               @if ($shop->bank_payment_status == 1 && 0 )
                   <tr>
                       <td>{{ translate('Bank Name') }}</td>
                       <td>{{ $shop->bank_name }}</td>
                   </tr>
                   <tr>
-                      <td>{{ translate('Bank Account Name') }}</td>
+                      <td>{{ translate('Name') }}</td>
                       <td>{{ $shop->bank_acc_name }}</td>
                   </tr>
                   <tr>

@@ -100,9 +100,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col-md-3 col-form-label" for="bank_acc_name">{{ translate('Bank Account Name') }}</label>
+                    <label class="col-md-3 col-form-label" for="bank_acc_name">{{ translate('Name') }}</label>
                     <div class="col-md-9">
-                        <input type="text" name="bank_acc_name" value="{{ $user->bank_acc_name }}" id="bank_acc_name" class="form-control mb-3" placeholder="{{ translate('Bank Account Name')}}">
+                        <input type="text" name="bank_acc_name" value="{{ $user->bank_acc_name }}" id="bank_acc_name" class="form-control mb-3" placeholder="{{ translate('Name')}}">
                         @error('bank_acc_name')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror

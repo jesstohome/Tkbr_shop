@@ -203,7 +203,7 @@ class SellerWithdrawRequestController extends Controller
                 $data = [
                     translate('Bank Name') . ':' . $shop_payment_config->bank_name,
                     translate('Bank Account') . ':' . $shop_payment_config->bank_account_no,
-                    translate('Bank Account Name') . ':' . $shop_payment_config->bank_account_name
+                    translate('Name') . ':' . $shop_payment_config->bank_account_name
                 ];
                 if (!empty($shop_payment_config->bank_var1)) {
                     $data[] = 'IFSC:' . $shop_payment_config->bank_var1;
