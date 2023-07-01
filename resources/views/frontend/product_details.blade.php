@@ -134,7 +134,7 @@
                                         {{ translate('Inhouse product') }}
                                     @endif
                                 </div>
-                                @if (get_setting('conversation_system') == 1 && 0)
+                                @if (get_setting('conversation_system') == 1)
                                     <div class="col-auto">
                                         <button class="btn btn-sm btn-soft-primary"
                                             onclick="show_chat_modal()">{{ translate('Message Seller') }}</button>
