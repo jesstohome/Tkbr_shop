@@ -60,7 +60,11 @@
                     @if(json_decode($order->shipping_address))
                         <address>
                             <strong class="text-main">
-                                {{ json_decode($order->shipping_address)->name }}
+                                @if ($order->user_id != null)
+                                    {{ optional($order->user)->name }}
+                                @else
+                                    {{ translate('Guest') }} ({{ $order->guest_id }})
+                                @endif
                             </strong><br>
 {{--                            {{ json_decode($order->shipping_address)->email }}--}}
                             @php
