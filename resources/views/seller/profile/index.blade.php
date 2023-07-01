@@ -156,7 +156,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-md-3 col-form-label" for="bank_account_name[{{$country_code}}]">{{ translate('Bank Account Name') }}</label>
+                            <label class="col-md-3 col-form-label" for="bank_account_name[{{$country_code}}]">{{ translate('Name') }}</label>
                             <div class="col-md-9">
                                 <input type="text" name="bank_account_name[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_account_name }}" class="form-control mb-3" aria-autocomplete="off">
                             </div>
