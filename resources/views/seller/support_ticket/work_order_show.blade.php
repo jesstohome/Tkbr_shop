@@ -1,5 +1,5 @@
 @extends('seller.layouts.app')
-<link rel="stylesheet" href="{{ static_asset('assets/css/chat-pc.css?v=1.1') }}">
+<link rel="stylesheet" href="{{ static_asset('assets/css/chat-pc.css?v=1.2') }}">
 @section('panel_content')
     <div class="chatroot">
         <div class="main">
