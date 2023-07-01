@@ -505,7 +505,7 @@
                                     <label>{{ translate('Country')}}<span class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
-                                    <select id="country_code" name="country_code" class="form-control" onchange="changeCountry(this)">
+                                    <select id="country_code" name="country_code" class="form-control aiz-selectpicker" data-live-search="true" onchange="changeCountry(this)">
                                         <option value="">{{translate('All')}}</option>
                                         @foreach(getPaymentCountries() as $country)
                                         <option value="{{$country->code}}" {{$shop->cur_payment_country_code == $country->code ? 'selected' : ''}}>{{translate($country->name)}}</option>
