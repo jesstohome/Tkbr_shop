@@ -118,7 +118,7 @@
                             <p>买家付款金额: {{single_price($ticket->order->grand_total)}}</p>
                         </div>
                         <div class="col-md-2">
-                            <p>提货金额: {{single_price($ticket->order->product_storehouse_total)}}   {{$ticket->order->product_storehouse_total}}</p>
+                            <p>提货金额: {{single_price($ticket->order->product_storehouse_total)}}</p>
                         </div>
                         <div class="col-md-2">
                             <p>利润: {{single_price($ticket->order->grand_total - $ticket->order->product_storehouse_total)}}</p>
