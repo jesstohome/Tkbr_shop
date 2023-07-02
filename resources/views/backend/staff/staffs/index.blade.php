@@ -16,9 +16,45 @@
 </div>
 
 <div class="card">
-    <div class="card-header">
+    <form class="" id="sort_staff" action="" method="GET">
+    <div class="card-header row gutters-5">
         <h5 class="mb-0 h6">{{translate('Staffs')}}</h5>
+        @if (isSupperAdmin())
+            <div class="col-md-2 ml-auto">
+                <select class="form-control aiz-selectpicker" name="bloc_id" id="bloc_id" onchange="typeof sort_sellers != 'undefined' && sort_sellers()">
+                    <option value="">{{translate('Filter by Bloc')}}</option>
+                    @foreach(\App\Models\Bloc::all() as $bloc)
+                        <option value="{{$bloc->id}}"  @isset($bloc_id) @if($bloc_id == $bloc->id) selected @endif @endisset>{{$bloc->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
+
+        @if(isSupperAdmin() || isBlocManage())
+            <div class="col-md-4 ml-auto">
+                <select class="form-control aiz-selectpicker" name="staff_id" id="staff_id" data-live-search="true">
+                    <option value="">{{translate('Filter by Staff')}}</option>
+                    @foreach(filter_by_bloc(\App\Models\Staff::query())->get() as $staff)
+                        <option value="{{$staff->id}}"  @isset($staff_id) @if($staff_id == $staff->id) selected @endif @endisset>{{$staff->user->name}} ({{$staff->user->email}})</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
+
+        <div class="col-md-3">
+            <div class="form-group mb-0">
+                <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}">
+            </div>
+        </div>
+
+        <div class="col-auto">
+            <div class="form-group mb-0">
+                <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
+            </div>
+        </div>
     </div>
+    </form>
     <div class="card-body">
         <table class="table aiz-table mb-0">
             <thead>
@@ -31,7 +67,7 @@
                     <th data-breakpoints="lg">{{translate('Role')}}</th>
                     <th data-breakpoints="lg">{{translate('Invite code')}}</th>
                     <th data-breakpoints="lg">{{translate('Creation time')}}</th>
-                    <th width="10%">{{translate('Options')}}</th>
+                    <th width="15%" class="text-center">{{translate('Options')}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,7 +99,11 @@
                                         <i class="las la-user-check"></i>
                                     </a>
                                 @endif
-		                        </td>
+
+                                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('staffs.destroy', $staff->id)}}" title="{{ translate('Delete') }}">
+                                    <i class="las la-trash"></i>
+                                </a>
+                            </td>
                         </tr>
                     @endif
                 @endforeach

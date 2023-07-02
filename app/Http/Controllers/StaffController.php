@@ -14,14 +14,38 @@ class StaffController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $user_id = $request->user_id;
+        $bloc_id = $request->bloc_id;
+        $staff_id = $request->staff_id;
+
         $staffs = Staff::query()->orderByDesc('id');
+
+        if ($request->date_range) {
+            $date_range = $request->date_range;
+            $date_var = explode("/", $request->date_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $staffs = $staffs->where( 'created_at', '>=', trim($start_time));
+            $staffs = $staffs->where('created_at', '<=', trim($end_time) . " 23:59:59");
+        }
+        if ($user_id) {
+            $staffs = $staffs->where('user_id', $user_id);
+        }
+        if ($bloc_id) {
+            $staffs = $staffs->where('bloc_id', $bloc_id);
+        }
+        if ($staff_id) {
+            $staffs = $staffs->where('id', $staff_id);
+        }
+
         $staffs = filter_by_bloc($staffs);
         $staffs = $staffs->paginate(10);
-        return view('backend.staff.staffs.index', compact('staffs'));
+        return view('backend.staff.staffs.index', compact('staffs', 'date_range', 'user_id', 'bloc_id', 'staff_id'));
     }
 
     /**
