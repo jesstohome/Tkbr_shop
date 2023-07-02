@@ -338,6 +338,7 @@
     max-width: 810px;
     font-size: 14px;
     text-align: left;
+    word-wrap: break-word;
 }
 
 .chatImg {
@@ -349,7 +350,7 @@
     margin-left: 4px;
     max-width: 210px;
     padding-bottom: 12px;
-    border-radius: 14px 0px 14px 14px;
+    border-radius: 14px 0 14px 14px;
     color: #ffffff;
     height: 110px;
     width: 140px;
@@ -365,10 +366,11 @@
     margin-left: 4px;
     max-width: 810px;
     padding-bottom: 12px;
-    border-radius: 14px 0px 14px 14px;
+    border-radius: 14px 0 14px 14px;
     color: #ffffff;
     font-size: 14px;
     text-align: left;
+    word-wrap: break-word;
 }
 
 .btext {
