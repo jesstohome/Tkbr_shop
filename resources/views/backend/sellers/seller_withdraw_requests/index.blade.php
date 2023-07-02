@@ -69,6 +69,7 @@
                         <th data-breakpoints="lg">{{ translate('Payment Channel') }}</th>
                         <th data-breakpoints="lg">{{ translate('Status') }}</th>
                         <th data-breakpoints="lg">{{ translate('Pass Time') }}</th>
+                        <th data-breakpoints="lg">{{ translate('Salesman') }}</th>
                         <th data-breakpoints="lg" width="15%" class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>
@@ -137,6 +138,21 @@
                                 </td>
                                 <td>
                                     {{ $seller_withdraw_request->status == 1 ? $seller_withdraw_request->updated_at : ''}}
+                                </td>
+                                <td>
+                                    @php
+                                        $uid = $seller_withdraw_request->user->pid;
+                                        if( $uid == '')
+                                        {
+                                           echo '---';
+                                        }
+                                        else
+                                        {
+                                          $r =  \App\Models\User::where('id',$uid)->first() ;
+                                         echo $r['name'];
+
+                                        }
+                                    @endphp
                                 </td>
                                 <td class="text-right" width="300">
                                     <div style="display: flex;justify-content: flex-end;">
