@@ -1,5 +1,9 @@
 @extends('backend.layouts.app')
-
+<style>
+    li.li-header div {
+        padding: 0 10px;
+    }
+</style>
 @section('content')
     <div class="aiz-titlebar mt-2 mb-4">
       <div class="row align-items-center">
@@ -44,14 +48,15 @@
         </form>
       <div class="card-body">
         <ul class="list-group list-group-flush">
-            <li class="list-group-item px-0 text-center">
+            <li class="list-group-item px-0 li-header">
                 <div class="row gutters-10">
-                    <div class="col-auto">头像</div>
-                    <div class="col-auto col-lg-3">客户姓名</div>
+                    <div class="col-auto" style="width:55px">头像</div>
+                    <div class="col-auto col-lg-3"><p>客户姓名</p></div>
                     <div class="col-auto col-lg-1">店铺名</div>
                     @if(isSupperAdmin()) <div class="col-auto col-lg-1">集团</div> @endif
                     <div class="col-auto col-lg-1">员工</div>
                     <div class="col-12 col-lg">标题</div>
+                    <div class="col-auto col-lg-1 text-right">操作</div>
                 </div>
             </li>
           @foreach ($conversations as $key => $conversation)
