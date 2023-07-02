@@ -95,7 +95,7 @@
                     <div class="sendBtn"></div>
                 </div>
                 <div class="notice">
-                    Tiktok Shop Serve
+                    {{translate('Tiktok Shop Serve')}}
                 </div>
             </div>
         </div>
