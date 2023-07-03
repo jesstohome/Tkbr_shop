@@ -16,7 +16,7 @@ class Menu extends Model
      * @param int $menu_id
      * @return mixed
      */
-    public static function getMenus($menu_id = 0)
+    public static function getMenus($menu_id = 0, $all_menus = null)
     {
         $user = \Auth::user();
 
@@ -28,7 +28,13 @@ class Menu extends Model
             if (empty($staffAllowPermissions)) $staffAllowPermissions = [];
         }
 
-        $menus = static::where("status", 1)->where("pid", $menu_id)->get();
+        if (is_null($all_menus)) {
+            // $all_menus = static::where("status", 1)->where("pid", $menu_id)->get();
+            $all_menus = static::where("status", 1)->get();
+        }
+        $menus = $all_menus->filter(function ($value, $key) use ($menu_id) {
+            return $value->pid == $menu_id;
+        });
         foreach ($menus as $key => $row) {
             // 管理员的系统菜单写死在前台了  不显示再展示一次
             if ($user->user_type == 'admin' && $row->id == 99) {
@@ -69,7 +75,7 @@ class Menu extends Model
             }
             $row->show_red_tips = $show_red_tips;
 
-            $children = static::getMenus($row->id);
+            $children = static::getMenus($row->id, $all_menus);
             if (count($children)) {
                 $row->children = $children;
 
