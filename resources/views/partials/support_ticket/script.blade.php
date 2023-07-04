@@ -194,6 +194,7 @@
             }
             if ($(".chatlist").length) {
                 $("body").scrollTop(999990);
+                $(".chatlist").scrollTop(999990);
             }
         }, 500);
 
@@ -454,6 +455,8 @@
 
 
                     $("body").scrollTop(999990);
+                    $(".chatlist").scrollTop(999990);
+
                     $(".file-preview").html('');
                 }
             })
