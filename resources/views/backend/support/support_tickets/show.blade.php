@@ -120,7 +120,7 @@
                                             </div>
                                             @endif
                                             <p class="text-muted text-sm fs-11 time">
-                                                {{date('m-d H:i', strtotime($ticketreply->created_at))}}
+                                                {{substr($ticketreply->created_at, 5, -3)}}
                                                 @if((-1 == $ticketreply->user_id || $ticketreply->user_id == Auth::id()))
                                                     <span style='padding-left:3px;'>{{$ticketreply->read ? "已读" : "未读"}}</span>
                                                 @endif
