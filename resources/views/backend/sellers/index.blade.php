@@ -47,6 +47,14 @@
             </div>
 
             <div class="col-md-2 ml-auto">
+                <select class="form-control aiz-selectpicker" name="is_show" id="is_show" onchange="sort_sellers()">
+                    <option value="1"  @isset($is_show) @if(is_numeric($is_show) &&  $is_show == '1') selected @endif @endisset>屏蔽隐藏</option>
+                    <option value="all"  @isset($is_show) @if($is_show == 'all') selected @endif @endisset>全部店铺</option>
+                    <option value="0"  @isset($is_show) @if(is_numeric($is_show) && $is_show == '0') selected @endif @endisset>仅显示隐藏</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 ml-auto">
                 <select name="salesman_user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true" onchange="sort_sellers()">
                     <option value="">{{translate('All Ssalesman')}}</option>
                     @foreach ($salesmans as $key => $salesman)
@@ -303,6 +311,9 @@
                                         {{translate('Set Salesman')}}
                                     </span>
 
+                                    <span onclick="toggle_show({{$shop->id}})" class="dropdown-item" style="cursor:pointer;">
+                                        {{$shop->is_show ? '隐藏卖家' : '取消隐藏'}}
+                                    </span>
 
 
                                 </div>
@@ -678,10 +689,16 @@
         }
 
     });
-
-
-
      }
+
+     function toggle_show(shop_id) {
+         $.post('{{ route('sellers.toggle_show') }}',{_token:'{{ @csrf_token() }}', id:shop_id}, function(data) {
+             AIZ.plugins.notify('success', '更新成功');
+             location.reload();
+         },'json');
+     }
+
+
      function show_view(shop_id,view_inc_num,view_base_num, view_rand_range) {
             var min_default = "{{DEFAULT_VISITS_MIN}}";
             var max_default = "{{DEFAULT_VISITS_MAX}}";

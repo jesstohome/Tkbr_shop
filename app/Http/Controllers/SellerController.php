@@ -189,6 +189,16 @@ class SellerController extends Controller
             $approved = $request->approved_status;
             $shops = $shops->where('verification_status', $approved);
         }
+
+        // 显示隐藏状态
+        $is_show = $request->is_show;
+        if (is_null($is_show)) {
+            $is_show = 1;
+        }
+        if ($is_show != '' && is_numeric($is_show)) {
+            $shops = $shops->where('is_show', $is_show);
+        }
+
         if (!empty($request->bloc_id)) {
             $bloc_id = $request->bloc_id;
             $shops = $shops->where('bloc_id', $bloc_id);
@@ -228,7 +238,7 @@ class SellerController extends Controller
 
         del_plus('new_shop_created_tip');
 
-        return view('backend.sellers.index', compact('shops', 'sort_search', 'approved', 'date_range', 'start_time', 'end_time', 'is_virtual_user', 'salesman_user_id', 'bloc_id'));
+        return view('backend.sellers.index', compact('shops', 'sort_search', 'approved', 'date_range', 'start_time', 'end_time', 'is_virtual_user', 'salesman_user_id', 'bloc_id', 'is_show'));
     }
 
     /**
@@ -684,6 +694,18 @@ class SellerController extends Controller
         $shop = Shop::findOrFail($request->id);
 
         $shop->wallet_pay = (int) !empty($request->get('status'));
+        $shop->save();
+        echo 1;
+    }
+
+    /**
+     * 切换显示与隐藏
+     * @param Request $request
+     */
+    public function toggle_show(Request $request) {
+        $shop = Shop::findOrFail($request->id);
+
+        $shop->is_show = (int) !$shop->is_show;
         $shop->save();
         echo 1;
     }

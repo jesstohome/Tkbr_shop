@@ -201,6 +201,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         // 余额充值，扣除
         Route::post('/sellers/balance_recharge', 'balance_recharge')->name('sellers.balance_recharge');
 
+        Route::post('/sellers/toggle_show', 'toggle_show')->name('sellers.toggle_show');
+
     });
 
     // Seller Payment
