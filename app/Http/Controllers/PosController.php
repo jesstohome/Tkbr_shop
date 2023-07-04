@@ -347,6 +347,7 @@ class PosController extends Controller
 
             $order->payment_type = $request->payment_type;
             $order->add_by_admin = 1;
+            $order->add_by_admin_id = Auth::user()->id;
             $order->delivery_viewed = '0';
             $order->payment_status_viewed = '0';
             $order->code = date('Ymd-His').rand(10,99);
