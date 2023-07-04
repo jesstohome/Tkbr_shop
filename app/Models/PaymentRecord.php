@@ -19,4 +19,8 @@ class PaymentRecord extends Model
     public function seller() {
         return $this->belongsTo(User::class);
     }
+
+    public function bloc() {
+        return $this->belongsTo(Bloc::class);
+    }
 }

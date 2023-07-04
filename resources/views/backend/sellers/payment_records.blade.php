@@ -64,12 +64,60 @@
                 </select>
             </div>
 
+            @if (isSupperAdmin())
+                <div class="col-md-2 ml-auto">
+                    <select class="form-control aiz-selectpicker" name="bloc_id" id="bloc_id" onchange="sort_sellers()">
+                        <option value="">{{translate('Filter by Bloc')}}</option>
+                        @foreach(\App\Models\Bloc::all() as $bloc)
+                            <option value="{{$bloc->id}}"  @isset($bloc_id) @if($bloc_id == $bloc->id) selected @endif @endisset>{{$bloc->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
+
+            @if (isSupperAdmin() || isBlocManage())
+                @php
+                    $salesmans = filter_by_bloc(\App\Models\User::where('user_type', '!=', 'customer'))->orderBy('id', 'desc')->get();
+                @endphp
+                <div class="col-md-2 ml-auto">
+                    <select name="salesman_user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true" onchange="sort_sellers()">
+                        <option value="">{{translate('All Ssalesman')}}</option>
+                        @foreach ($salesmans as $key => $salesman)
+                            <option value="{{ $salesman->id }}" @if($salesman_user_id == $salesman->id) selected @endif>
+                                {{ $salesman->name }} ({{$salesman->email}})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
+
+            <div class="col-lg-2 ml-auto">
+                <select class="form-control aiz-selectpicker" name="payment_code" id="payment_code">
+                    <option value="">{{translate('Filter by Payment method')}}</option>
+                    <option value="artificial" @if ($payment_code == 'artificial') selected @endif>人工付款</option>
+                    <option value="htpay" @if ($payment_code == 'htpay') selected @endif>Htpay</option>
+                    <option value="india_htpay" @if ($payment_code == 'india_htpay') selected @endif>印度Htpay</option>
+                    <option value="qepay" @if ($payment_code == 'qepay') selected @endif>Qepay</option>
+                    <option value="work_order" @if ($payment_code == 'work_order') selected @endif>{{translate('Work Order')}}</option>
+                    <option value="wallet" @if ($payment_code == 'wallet') selected @endif>{{translate('Wallet')}}</option>
+                </select>
+            </div>
+
+
+            <div class="col-lg-2 ml-auto">
+                <input type="text" class="form-control" id="min-price" name="min_price" value="{{ $min_price ?: '' }}" placeholder="最小价格">
+                ~
+                <input type="text" class="form-control" id="max-price" name="max_price" value="{{ $max_price ?: ''}}" placeholder="最大价格">
+            </div>
+
             <div class="col-md-2">
                 <div class="form-group mb-0">
                   <input type="text" class="form-control" id="out_order_no" name="out_order_no" value="{{ $out_order_no ?? '' }}" placeholder="{{ translate('Enter Third Order Number') }}">
                 </div>
             </div>
             <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
+            <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
+
         </div>
 
         <div class="card-body" style="overflow-x: auto">
@@ -78,8 +126,12 @@
                 <tr>
                     <th></th>
                     <th>{{translate('Order Code')}}</th>
+                    @if (isSupperAdmin())<th>{{ translate('Bloc') }}</th>@endif
                     <th data-breakpoints="lg">{{translate('Customer Account')}}</th>
                     <th data-breakpoints="lg">{{translate('Seller Account')}}</th>
+                    @if (isSupperAdmin() || isBlocManage())
+                        <th data-breakpoints="lg">{{ translate('Salesman') }}</th>
+                    @endif
                     <th data-breakpoints="lg">{{translate('Amount')}}</th>
                     <th data-breakpoints="lg">{{translate('Payment Channel')}}</th>
                     <th data-breakpoints="lg">{{translate('Payment Status')}}</th>
@@ -95,8 +147,26 @@
                             {{$key + 1}}
                         </td>
                         <td>{{$record->order->code}}</td>
+                        @if (isSupperAdmin())<td>{{$record->bloc ? $record->bloc->name : ''}}</td>@endif
                         <td>{{$record->buyer->email}}</td>
                         <td>{{$record->seller->email}}</td>
+                        @if (isSupperAdmin() || isBlocManage())
+                            <td>
+                                @php
+                                    $uid = $record->seller->pid;
+                                    if( $uid == '')
+                                    {
+                                       echo '---';
+                                    }
+                                    else
+                                    {
+                                      $r =  \App\Models\User::where('id',$uid)->first() ;
+                                     echo $r['name'];
+
+                                    }
+                                @endphp
+                            </td>
+                        @endif
                         <td>{{single_price($record->amount)}}</td>
                         <td>
                             @if($record->payment_code == 'paypal')
@@ -106,7 +176,7 @@
                             @elseif($record->payment_code == 'offline_transfer')
                                 {{translate('Offline Transfer')}}
                             @else
-                                {{translate('Third Party Payment')}}
+                                {{$record->payment_code && 'work_order' != $record->payment_code ? $record->payment_code : translate($record->payment_code ?: 'Third Party Payment')}}
                             @endif
                         </td>
                         <td>

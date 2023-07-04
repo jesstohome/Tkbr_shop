@@ -592,7 +592,9 @@ class SellerController extends Controller
         $start_time = $request->get("start_time");
         $end_time = $request->get("end_time");
         $order_no = $request->get("order_no");
+        $bloc_id = $request->get("bloc_id");
         $seller_id = $request->get("seller_id");
+        $salesman_user_id = $request->get("salesman_user_id");
         $buyer_id = $request->get("buyer_id");
         $payment_code = $request->get("payment_code");
         $out_order_no = $request->get("out_order_no");
@@ -618,6 +620,17 @@ class SellerController extends Controller
         if ($buyer_id) {
             $list = $list->where('buyer_id', $buyer_id);
         }
+        if ($bloc_id) {
+            $list = $list->where('bloc_id', $bloc_id);
+        }
+        if ($salesman_user_id) {
+            $parent_ids = User::query()->where('pid', $salesman_user_id)->pluck('id')->toArray();
+            if (!empty($parent_ids)) {
+                $list = $list->whereIn('seller_id', $parent_ids);
+            } else {
+                $list = $list->whereRaw('1=2');
+            }
+        }
         if ($payment_code) {
             $list = $list->where('payment_code', $payment_code);
         }
@@ -626,6 +639,14 @@ class SellerController extends Controller
         }
         if ($pay_status != '') {
             $list = $list->where('pay_status', $pay_status);
+        }
+        if ($request->min_price) {
+            $min_price = $request->min_price;
+            $list = $list->where('amount', '>=', $min_price);
+        }
+        if ($request->max_price) {
+            $max_price = $request->max_price;
+            $list = $list->where('amount', '<=', $max_price);
         }
 
         $list = filter_by_bloc($list);
@@ -639,7 +660,7 @@ class SellerController extends Controller
 
         del_plus("orders_pick_up_tip");
 
-        return view('backend.sellers.payment_records', compact('list', 'start_date', 'end_date', 'seller_id', 'buyer_id', 'payment_code', 'out_order_no', 'pay_status', 'order_no', 'total', 'total_seller', 'total_amount'));
+        return view('backend.sellers.payment_records', compact('list', 'start_date', 'end_date', 'seller_id', 'buyer_id', 'payment_code', 'out_order_no', 'pay_status', 'order_no', 'total', 'total_seller', 'total_amount', 'min_price', 'max_price', 'salesman_user_id', 'bloc_id'));
     }
 
     public function update_seller_staff (Request $request) {
