@@ -144,18 +144,6 @@ class ShopController extends Controller
                 return back();
             }
 
-            // 检测用户名是否已经存在
-            if (!empty($request->name)) {
-                $has_name = User::query()->where('name', $request->name)->count();
-                if ($has_name) {
-
-                    if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Name already exists!')]);
-
-                    flash(translate('Name already exists!'))->error();
-                    return back();
-                }
-            }
-
             // 检测店铺名是否已经存在
             $shop_name = $request->shop_name ?: $request->name;
             if (!empty($shop_name)) {
