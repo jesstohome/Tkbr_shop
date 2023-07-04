@@ -14,11 +14,36 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $roles = filter_by_bloc(Role::query());
+        $bloc_id = $request->bloc_id;
+        $staff_user_id = $request->staff_user_id;
+
+        $roles = Role::query()->orderByDesc('id');
+
+        if ($request->has('search')) {
+            $sort_search = $request->search;
+            $roles = $roles->where('name', 'like', '%' . $sort_search . '%');
+        }
+
+        if ($request->date_range) {
+            $date_range = $request->date_range;
+            $date_var = explode("/", $request->date_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $roles = $roles->where( 'created_at', '>=', trim($start_time));
+            $roles = $roles->where('created_at', '<=', trim($end_time) . " 23:59:59");
+        }
+        if ($bloc_id) {
+            $roles = $roles->where('bloc_id', $bloc_id);
+        }
+        if ($staff_user_id) {
+            $roles = $roles->where('admin_id', $staff_user_id);
+        }
+
+        $roles = filter_by_bloc($roles);
         $roles = $roles->paginate(10);
-        return view('backend.staff.staff_roles.index', compact('roles'));
+        return view('backend.staff.staff_roles.index', compact('roles', 'date_range', 'sort_search', 'staff_user_id', 'bloc_id'));
     }
 
     /**

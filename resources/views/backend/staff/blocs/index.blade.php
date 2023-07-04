@@ -16,16 +16,32 @@
     </div>
 
     <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0 h6">{{translate('Blocs')}}</h5>
-        </div>
+        <form class="" id="sort_role" action="" method="GET">
+            <div class="card-header">
+                <h5 class="mb-0 h6">{{translate('Blocs')}}</h5>
+
+                <div class="col-lg-6">
+                    <div class="form-group mb-0">
+                        <input type="text" class="form-control" id="search" name="search" @isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Name & hit Enter') }}">
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <div class="form-group mb-0">
+                        <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                        <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
         <div class="card-body">
             <table class="table aiz-table">
                 <thead>
                 <tr>
                     <th width="10%">#</th>
                     <th>{{translate('Bloc Name')}}</th>
-                    <th width="10%">{{translate('Options')}}</th>
+                    <th width="15%">{{translate('Options')}}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -46,6 +62,10 @@
                                     <i class="las la-user-check"></i>
                                 </a>
                             @endif
+
+                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('bloc.destroy', $bloc->id)}}" title="{{ translate('Delete') }}">
+                                <i class="las la-trash"></i>
+                            </a>
                         </td>
                     </tr>
                 @endforeach

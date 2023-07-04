@@ -12,10 +12,15 @@ class BlocController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $blocs = Bloc::paginate(10);
-        return view('backend.staff.blocs.index', compact('blocs'));
+        $blocs = Bloc::query();
+        if ($request->has('search')) {
+            $sort_search = $request->search;
+            $blocs = $blocs->where('name', 'like', '%' . $sort_search . '%');
+        }
+        $blocs = $blocs->paginate(10);
+        return view('backend.staff.blocs.index', compact('blocs', 'sort_search'));
     }
 
     /**
