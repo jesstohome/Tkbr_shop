@@ -43,7 +43,7 @@
                                         @if($ticketreply->reply)
                                             <span class="bspan">@php echo empty($ticketreply->user_id) || -1 == $ticketreply->user_id ? translate($ticketreply->reply) : $ticketreply->reply; @endphp</span>
                                         @endif
-                                        <img src="{{Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/chat/head2.png')}}" class="head" style="margin-left: 8px;" />
+                                        <img src="{{Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head2.png')}}" class="head" style="margin-left: 8px;" />
                                     </div>
                                 @else
                                     @if(empty($ticketreply->user_id))
