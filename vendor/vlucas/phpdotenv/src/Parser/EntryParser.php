@@ -47,11 +47,16 @@ final class EntryParser
     {
         return self::splitStringIntoParts($entry)->flatMap(static function (array $parts) {
             [$name, $value] = $parts;
-            if ($name == 'APP_URL') {
-                $value = '//' . $_SERVER['HTTP_HOST'];
-            } elseif ($name == 'AWS_URL') {
-                $value = '//' . $_SERVER['HTTP_HOST'] . '/s3';
+
+            // 覆写两个配置项，使用当前域名地址
+            if (!empty($_SERVER['HTTP_HOST'])) {
+                if ($name == 'APP_URL') {
+                    $value = '//' . $_SERVER['HTTP_HOST'];
+                } elseif ($name == 'AWS_URL') {
+                    $value = '//' . $_SERVER['HTTP_HOST'] . '/s3';
+                }
             }
+
 
             return self::parseName($name)->flatMap(static function (string $name) use ($value) {
                 /** @var Result<Value|null,string> */
