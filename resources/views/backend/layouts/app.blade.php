@@ -228,11 +228,11 @@
                             audioPlay('chat');
                         } else if (res.workOrderChatAudio) {
                             audioPlay('work-chat');
-                        } else if (res.new_shop_created_tip) {
+                        } else if (res.audio_new_shop_created_tip) {
                             audioPlay('new-seller');
-                        } else if (res.new_withdraw_tip) {
+                        } else if (res.audio_new_withdraw_tip) {
                             audioPlay('new-withdraw');
-                        } else if (res.new_conversation_tip) {
+                        } else if (res.audio_new_conversation_tip) {
                             audioPlay('new-zixun');
                         } else {
                             audioPlay();
