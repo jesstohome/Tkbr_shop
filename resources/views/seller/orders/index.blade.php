@@ -101,14 +101,19 @@
 
               <div class="col-md-2">
                   <div class="form-group mb-0">
-                      <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}" onchange="sort_orders()">
+                      <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}">
                   </div>
               </div>
 
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <div class="from-group mb-0">
                     <input type="text" class="form-control" id="search" name="search" @isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
+              </div>
+              <div class="col-auto">
+                  <div class="form-group mb-0">
+                      <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                  </div>
               </div>
           </div>
         </form>
