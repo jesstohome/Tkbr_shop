@@ -150,9 +150,21 @@
                             $("#set_meal_name").html($("#set_meal_name").html() + meal_item);
                         }
                         if (response.products) {
+                            var success_num = 0;
+                            var repeat_num = 0;
                             response.products.forEach((product) => {
-                                updateSelection(product.id, product.name, product.unit_price, set_meal_id);
-                            })
+                                var flag = updateSelection(product.id, product.name, product.unit_price, set_meal_id);
+                                if (flag) {
+                                    success_num++;
+                                } else {
+                                    repeat_num++;
+                                }
+                            });
+                            if (repeat_num > 0) {
+                                AIZ.plugins.notify('warning', '{{ translate('Some products are duplicated') }}');
+                            } else {
+                                AIZ.plugins.notify('success', '{{ translate('Product has been added successfully') }}');
+                            }
                         }
                     }
                 }
@@ -209,11 +221,14 @@
                                             </div>
                                         </li>`)
                 $("#product-num").html("{{translate('Product Number')}}:" + container.find("li").length);
+                return true;
             } else {
                 container.find("li[data-product-id='" + product_id + "']")
                     .clearQueue().stop()
                     .fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100)
             }
+
+            return false;
         }
 
         function getSelectedIds() {
