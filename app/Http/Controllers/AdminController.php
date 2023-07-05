@@ -104,7 +104,7 @@ class AdminController extends Controller
             'workOrderChatAudio' => get_plus("work_order_loop_load_new_reply_audio_backend") > 0,
             'new_shop_created_tip' => hlen_plus("new_shop_created_tip") > 0,
             'new_withdraw_tip' => hlen_plus("new_withdraw_tip") > 0,
-            'new_conversation_tip' => hlen_plus("new_conversation_tip") > 0,
+            'new_conversation_tip' => hlen_plus("new_conversation_tip") > 0 || hlen_plus("new_pos_conversation_tip") > 0,
             'msg'=> 'Yes',
             'keys' => [
                 'new_shop_created_tip' => hlen_plus("new_shop_created_tip") > 0,
