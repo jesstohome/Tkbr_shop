@@ -59,4 +59,11 @@ class Order extends Model
     public function paymentStatement() {
         return $this->hasOne(PaymentStatement::class, 'target_id')->where('business_type', 'pick_up');
     }
+
+    /**
+     * 提货付款记录
+     */
+    public function payment_record() {
+        return $this->hasOne(PaymentRecord::class);
+    }
 }

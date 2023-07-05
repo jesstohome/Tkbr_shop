@@ -14,36 +14,6 @@
 <div class="card">
     <form class="" action="" id="sort_orders" method="GET">
         <div class="card-header row gutters-5">
-            <!-- Change Status Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">
-                                {{translate('Choose an order status')}}
-                            </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <select class="form-control aiz-selectpicker" onchange="change_status()" data-minimum-results-for-search="Infinity" id="update_delivery_status">
-                                <option value="pending">{{translate('Pending')}}</option>
-                                <option value="confirmed">{{translate('Confirmed')}}</option>
-                                <option value="picked_up">{{translate('Picked Up')}}</option>
-                                <option value="on_the_way">{{translate('On The Way')}}</option>
-                                <option value="delivered">{{translate('Delivered')}}</option>
-                                <option value="cancelled">{{translate('Cancel')}}</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="col-md-2">
                 <div class="form-group mb-0">
                     <input type="text" class="form-control form-control-sm aiz-date-range" data-time-picker="true" data-format="YYYY-MM-DD HH:mm:ss" id="search1" name="order_time_range" @isset($order_time_range) value="{{ $order_time_range }}" @endisset placeholder="{{ translate('Order Time') }}">
@@ -69,6 +39,7 @@
             </div>
 
             @include('backend.partials.filters.seller')
+            @include('backend.partials.filters.payment_code')
 
             <div class="col-lg-2">
                 <div class="form-group mb-0">
@@ -124,6 +95,7 @@
                         <th>{{ translate('Order Time') }}</th>
                         <th>{{ translate('Pickup Time') }}</th>
                         <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
+                        <th data-breakpoints="md">{{ translate('Payment Code') }}</th>
                         <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
                         @if (addon_is_activated('refund_request'))
                         <th>{{ translate('Refund') }}</th>
@@ -211,6 +183,7 @@
                                 {{translate(str_replace('_', ' ', $status))}}
                             @endif
                         </td>
+                        <td>{{$order->payment_record ? translate(str_replace('_', ' ', $order->payment_record->payment_code)) : ''}}</td>
                         <td>
                             @if ($order->payment_status == 'paid')
                             <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>

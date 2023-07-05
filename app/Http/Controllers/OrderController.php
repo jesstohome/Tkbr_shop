@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\OTPVerificationController;
 use App\Models\DeletedOrder;
+use App\Models\PaymentRecord;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ClubPointController;
@@ -158,6 +159,10 @@ class OrderController extends Controller
         if ($customer_id) {
             $orders = $orders->where($table_name.'.user_id', $customer_id);
         }
+        if ($request->payment_code) {
+            $payment_code = $request->payment_code;
+            $orders = $orders->whereIn($table_name.'.id', PaymentRecord::query()->where('payment_code', $request->payment_code)->pluck('order_id')->toArray());
+        }
 
         $orders = $this->_filter_orders($orders, $request, $table_name);
 
@@ -181,7 +186,7 @@ class OrderController extends Controller
         if ($request->source === 'deleted') {
             $view = 'backend.sales.all_orders.index_deleted';
         }
-        return view($view, compact('orders', 'sort_search', 'delivery_status', 'date_range', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
+        return view($view, compact('orders', 'sort_search', 'delivery_status', 'date_range', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code'));
     }
 
     public function all_deleted_orders(Request $request) {
@@ -557,6 +562,10 @@ class OrderController extends Controller
             $orders = $orders->where('freeze_expired_at', '>=', strtotime($start_time));
             $orders = $orders->where('freeze_expired_at', '<=', strtotime($end_time));
         }
+        if ($request->payment_code) {
+            $payment_code = $request->payment_code;
+            $orders = $orders->whereIn($table_name.'.id', PaymentRecord::query()->where('payment_code', $request->payment_code)->pluck('order_id')->toArray());
+        }
 
         $orders = $this->_filter_orders($orders, $request);
 
@@ -570,7 +579,7 @@ class OrderController extends Controller
 
         $orders = $orders->paginate(15)->appends(request()->query());
 
-        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'customer_id', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
+        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'customer_id', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code'));
     }
 
     public function seller_orders_show($id)

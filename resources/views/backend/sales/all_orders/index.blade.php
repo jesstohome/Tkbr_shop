@@ -29,7 +29,10 @@
                     <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}">
                 </div>
             </div>
+
             @include('backend.partials.filters.seller')
+            @include('backend.partials.filters.payment_code')
+
             <div class="col-lg-2">
                 <div class="form-group mb-0">
                     <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="customer_id" name="customer_id" data-live-search="true">
@@ -84,6 +87,7 @@
                         <th>{{ translate('Order Time') }}</th>
                         <th>{{ translate('Pickup Time') }}</th>
                         <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
+                        <th data-breakpoints="md">{{ translate('Payment Code') }}</th>
                         <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
                         @if (addon_is_activated('refund_request'))
                         <th>{{ translate('Refund') }}</th>
@@ -189,6 +193,7 @@
                                 {{translate(str_replace('_', ' ', $status))}}
                             @endif
                         </td>
+                        <td>{{$order->payment_record ? translate(str_replace('_', ' ', $order->payment_record->payment_code)) : ''}}</td>
                         <td>
                             @if ($order->payment_status == 'paid')
                             <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
