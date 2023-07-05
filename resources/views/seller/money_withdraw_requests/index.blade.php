@@ -426,7 +426,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
                 @if ($balance >= (int) get_setting('minimum_seller_amount_withdraw'))
-                    <form id="withdraw-form" class="" action="{{ route('seller.money_withdraw_request.store') }}" method="post">
+                    <form id="withdraw-form" class="" action="{{ route('seller.money_withdraw_request.store') }}" method="post" onsubmit="return checkWithdraw();">
                         @csrf
                         <div class="modal-body gry-bg px-3 pt-3">
                             <div class="row">
@@ -586,6 +586,13 @@
                 $('#offline_wallet_recharge_modal_body').html(data);
                 $('#offline_wallet_recharge_modal').modal('show');
             });
+        }
+        // 提交前，检测是否被限制提现
+        function checkWithdraw() {
+            @if(Auth::user()->shop->limit_withdraw)
+            AIZ.plugins.notify('warning', '{{ translate('Due to your store violating Article 19 of the "Store Opening and Admission Policy", you have been restricted from withdrawing funds. If you have any questions, please contact our Tiktok online customer service.') }}');
+            return false;
+            @endif
         }
 
         function changeCountry(evt) {

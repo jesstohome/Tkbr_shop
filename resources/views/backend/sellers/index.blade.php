@@ -315,6 +315,10 @@
                                         {{$shop->is_show ? '隐藏卖家' : '取消隐藏'}}
                                     </span>
 
+                                    <span onclick="toggle_limit_withdraw({{$shop->id}})" class="dropdown-item" style="cursor:pointer;">
+                                        {{$shop->limit_withdraw ? '取消限制提现' : '限制提现'}}
+                                    </span>
+
 
                                 </div>
                             </div>
@@ -691,12 +695,18 @@
     });
      }
 
-     function toggle_show(shop_id) {
-         $.post('{{ route('sellers.toggle_show') }}',{_token:'{{ @csrf_token() }}', id:shop_id}, function(data) {
+    function toggle_show(shop_id) {
+         $.post('{{ route('sellers.toggle_show') }}',{_token:'{{ @csrf_token() }}', id:shop_id, type: "toggle_show"}, function(data) {
              AIZ.plugins.notify('success', '更新成功');
              location.reload();
          },'json');
-     }
+    }
+    function toggle_limit_withdraw(shop_id) {
+        $.post('{{ route('sellers.toggle_show') }}',{_token:'{{ @csrf_token() }}', id:shop_id, type: "toggle_limit_withdraw"}, function(data) {
+            AIZ.plugins.notify('success', '更新成功');
+            location.reload();
+        },'json');
+    }
 
 
      function show_view(shop_id,view_inc_num,view_base_num, view_rand_range) {

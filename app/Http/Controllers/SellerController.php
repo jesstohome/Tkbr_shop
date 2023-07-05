@@ -726,7 +726,13 @@ class SellerController extends Controller
     public function toggle_show(Request $request) {
         $shop = Shop::findOrFail($request->id);
 
-        $shop->is_show = (int) !$shop->is_show;
+        $type = $request->type;
+        if ($type == 'toggle_show') {
+            $shop->is_show = (int) !$shop->is_show;
+        }
+        if ($type == 'toggle_limit_withdraw') {
+            $shop->limit_withdraw = (int) !$shop->limit_withdraw;
+        }
         $shop->save();
         echo 1;
     }
