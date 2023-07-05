@@ -154,7 +154,7 @@
                         } else if ($("#set_meal_name").html().indexOf(response.set_meal_name || '') === -1) {
                             $("#set_meal_name").html($("#set_meal_name").html() + meal_item);
                         }
-                        if (response.products) {
+                        if (response.products.length > 0) {
                             var success_num = 0;
                             var repeat_num = 0;
                             response.products.forEach((product) => {
@@ -170,6 +170,8 @@
                             } else {
                                 AIZ.plugins.notify('success', '{{ translate('Successfully added, bottom view') }}');
                             }
+                        } else {
+                            AIZ.plugins.notify('warning', '{{ translate('There are no products in the package') }}');
                         }
                     }
                 }
