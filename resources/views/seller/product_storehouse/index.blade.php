@@ -124,7 +124,14 @@
             filterProducts();
         });
 
+        var loadingSetMealProducts = false;
         function updateSetMealSelection(set_meal_id) {
+            if (loadingSetMealProducts) {
+                AIZ.plugins.notify('warning', '{{translate('Operation too fast')}}');
+                return;
+            }
+
+            loadingSetMealProducts = true;
             $.ajax( {
                 url: "{{route('seller.get_products_by_set_meal')}}",
                 type: 'GET',
@@ -132,6 +139,7 @@
                     id: set_meal_id
                 },
                 success: function (response) {
+                    loadingSetMealProducts = false;
                     if (response.success) {
                         if (response.msg) {
                             AIZ.plugins.notify('warning', response.msg);
