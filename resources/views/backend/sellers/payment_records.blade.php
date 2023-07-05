@@ -1,4 +1,9 @@
 @extends('backend.layouts.app')
+<style>
+    .card .card-header:nth-child(-n+2) {
+        border-bottom: 0!important;
+    }
+</style>
 
 @section('content')
     <script src='/My97DatePicker/WdatePicker.js'></script>
@@ -27,10 +32,10 @@
                 </div>
             </div>
 
-            <div class="col-md-2 ml-auto">
+            <div class="col-md-4 ml-auto">
                 <div class="form-group mb-0">
-                    <input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" type="text" class="form-control" value="{{$start_time ?? ''}}" name="start_time" /> ~
-                    <input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" type="text" class="form-control" value="{{$start_time ?? ''}}" name="end_time" />
+                    <input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" type="text" class="form-control d-inline col-5" value="{{$start_time ?? ''}}" name="start_time" placeholder="{{translate('Start Time')}}"/> ~
+                    <input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" type="text" class="form-control d-inline col-5" value="{{$start_time ?? ''}}" name="end_time" placeholder="{{translate('End Time')}}"/>
                 </div>
             </div>
 
@@ -63,7 +68,8 @@
                     @endforeach
                 </select>
             </div>
-
+        </div>
+        <div class="card-header row gutters-5">
             @if (isSupperAdmin())
                 <div class="col-md-2 ml-auto">
                     <select class="form-control aiz-selectpicker" name="bloc_id" id="bloc_id" onchange="sort_sellers()">
@@ -93,10 +99,10 @@
 
             @include('backend.partials.filters.payment_code')
 
-            <div class="col-lg-2 ml-auto">
-                <input type="text" class="form-control" id="min-price" name="min_price" value="{{ $min_price ?: '' }}" placeholder="最小价格">
+            <div class="col-lg-4 ml-auto form-group">
+                <input type="text" class="form-control d-inline col-5" id="min-price" name="min_price" value="{{ $min_price ?: '' }}" placeholder="最小价格">
                 ~
-                <input type="text" class="form-control" id="max-price" name="max_price" value="{{ $max_price ?: ''}}" placeholder="最大价格">
+                <input type="text" class="form-control d-inline col-5" id="max-price" name="max_price" value="{{ $max_price ?: ''}}" placeholder="最大价格">
             </div>
 
             <div class="col-md-2">
@@ -104,9 +110,12 @@
                   <input type="text" class="form-control" id="out_order_no" name="out_order_no" value="{{ $out_order_no ?? '' }}" placeholder="{{ translate('Enter Third Order Number') }}">
                 </div>
             </div>
-            <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
-            <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
-
+        </div>
+        <div class="card-header row gutters-5">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
+                <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
+            </div>
         </div>
 
         <div class="card-body" style="overflow-x: auto">
