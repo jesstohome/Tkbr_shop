@@ -170,7 +170,11 @@
                                 }
 
                             @endphp
-                            {!! $status !!}
+                            @if($order->delivery_status == 'cancelled')
+                                {!! $status !!}
+                            @else
+                                {{translate(str_replace('_', ' ', $status))}}
+                            @endif
                         </td>
                         <td>
                             @if ($order->payment_status == 'paid')
@@ -195,7 +199,7 @@
                             <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
                                 <i class="las la-download"></i>
                             </a>
-                            
+
                         </td>
                     </tr>
                     @endforeach

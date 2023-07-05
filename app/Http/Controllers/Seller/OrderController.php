@@ -55,6 +55,14 @@ class OrderController extends Controller
             $sort_search = $request->search;
             $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
         }
+        if ($request->date_range) {
+            $date_range = $request->date_range;
+            $date_var = explode("/", $request->date_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $orders = $orders->where($table_name . '.created_at', '>=', trim($start_time));
+            $orders = $orders->where($table_name . '.created_at', '<=', trim($end_time) . " 23:59:59");
+        }
 
         $orders = $orders->paginate(15);
 
@@ -63,7 +71,7 @@ class OrderController extends Controller
             $order->viewed = 1;
             $order->save();
         }
-        return view('seller.orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'product_storehouse_status'));
+        return view('seller.orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'product_storehouse_status', 'date_range'));
     }
 
     public function show( $id ) {

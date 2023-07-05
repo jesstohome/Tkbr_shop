@@ -209,7 +209,11 @@
                                 }
 
                             @endphp
-                            {!! $status !!}
+                            @if($order->delivery_status == 'cancelled')
+                                {!! $status !!}
+                            @else
+                                {{translate(str_replace('_', ' ', $status))}}
+                            @endif
                         </td>
                         <td>
                             @if ($order->payment_status == 'paid')

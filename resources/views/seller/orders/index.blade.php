@@ -65,7 +65,7 @@
             <div class="col text-center text-md-left">
               <h5 class="mb-md-0 h6">{{ translate('Orders') }}</h5>
             </div>
-              <div class="col-md-3 ml-auto">
+              <div class="col-md-2 ml-auto">
                   <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Status')}}" name="payment_status" onchange="sort_orders()">
                       <option value="">{{ translate('Filter by Payment Status')}}</option>
                       <option value="paid" @isset($payment_status) @if($payment_status == 'paid') selected @endif @endisset>{{ translate('Buyer has paid')}}</option>
@@ -82,7 +82,7 @@
               </div>
 
               <div class="col-md-2 ml-auto">
-                <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Status')}}" name="delivery_status" onchange="sort_orders()">
+                <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Delivery Status')}}" name="delivery_status" onchange="sort_orders()">
                     <option value="">{{ translate('Filter by Deliver Status')}}</option>
                     @foreach(get_express_status() as $status_key => $status_text)
                     <option value="{{$status_key}}" @isset($delivery_status) @if($delivery_status == $status_key) selected @endif @endisset>{{ $status_text}}</option>
@@ -91,7 +91,21 @@
 
                 </select>
               </div>
-              <div class="col-md-3">
+
+              <div class="col-md-2 ml-auto">
+                  <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Type')}}" name="delivery_status" onchange="sort_orders()">
+                      <option value="">{{ translate('Filter by Payment Type')}}</option>
+                      <option value="cancelled" @isset($delivery_status) @if($delivery_status == 'cancelled') selected @endif @endisset>{{translate('Cancelled')}}</option>
+                  </select>
+              </div>
+
+              <div class="col-md-2">
+                  <div class="form-group mb-0">
+                      <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}" onchange="sort_orders()">
+                  </div>
+              </div>
+
+              <div class="col-md-2">
                 <div class="from-group mb-0">
                     <input type="text" class="form-control" id="search" name="search" @isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>

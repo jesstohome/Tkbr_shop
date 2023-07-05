@@ -115,7 +115,7 @@
                                 <td>{{ number_format(number_format($value->exchange_rate, 2) * $value->amount, 2) }}</td>
                                 <td>{{ number_format($value->exchange_rate, 2) }}</td>
                                 <td>{{ translate($value->business_type) }}</td>
-                                <td>{{ 'artificial' == $value ->payment_type ? '人工付款' : ucfirst(str_replace('_', ' ', $value ->payment_type)) }}</td>
+                                <td>{{ 'artificial' == $value ->payment_type ? '人工付款' : translate(ucfirst(str_replace('_', ' ', $value ->payment_type))) }}</td>
                                 <td class="text-right">
                                     @if ($value->status == 1)
                                         <span class="badge badge-inline badge-success">{{translate('Success')}}</span>
