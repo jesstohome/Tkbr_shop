@@ -108,7 +108,12 @@
                 var product_id = $(this).data('product-id');
                 var product_name = $(this).data('product-name');
                 var product_price = $(this).data('product-price');
-                updateSelection(product_id, product_name, product_price);
+                var ok = updateSelection(product_id, product_name, product_price);
+                if (!ok) {
+                    AIZ.plugins.notify('warning', '{{ translate('Some products are duplicated, Do not add again') }}');
+                } else {
+                    AIZ.plugins.notify('success', '{{ translate('Successfully added, bottom view') }}');
+                }
             });
 
             $('#product-list').on('click', '.add-plus.set-meal:not(.c-not-allowed)', function () {
@@ -161,9 +166,9 @@
                                 }
                             });
                             if (repeat_num > 0) {
-                                AIZ.plugins.notify('warning', '{{ translate('Some products are duplicated') }}');
+                                AIZ.plugins.notify('warning', '{{ translate('Some products are duplicated, Do not add again') }}');
                             } else {
-                                AIZ.plugins.notify('success', '{{ translate('Product has been added successfully') }}');
+                                AIZ.plugins.notify('success', '{{ translate('Successfully added, bottom view') }}');
                             }
                         }
                     }
