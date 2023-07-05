@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\EmailManager;
+use App\Models\DeletedOrder;
 use App\Models\EmailTask;
 use App\Models\PaymentRecord;
 use App\Models\ShopManage;
@@ -663,6 +664,11 @@ class SellerController extends Controller
         return view('backend.sellers.payment_records', compact('list', 'start_date', 'end_date', 'seller_id', 'buyer_id', 'payment_code', 'out_order_no', 'pay_status', 'order_no', 'total', 'total_seller', 'total_amount', 'min_price', 'max_price', 'salesman_user_id', 'bloc_id'));
     }
 
+    /**
+     * 转移卖家到指定的员工名称(责任人)
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update_seller_staff (Request $request) {
         $seller = User::find($request->seller_id);
         if (empty($seller)) {
@@ -675,6 +681,20 @@ class SellerController extends Controller
         $seller->shop->staff_id = $staff->id;
         $seller->shop->bloc_id = $staff->bloc_id;
         $seller->shop->save();
+
+        // 将产品、订单全部转移到新的集团及员工名下
+        Product::query()->where('user_id', $seller->id)->update([
+            'bloc_id' => $staff->bloc_id,
+            'staff_id' => $staff->id,
+        ]);
+        Order::query()->where('seller_id', $seller->id)->update([
+            'bloc_id' => $staff->bloc_id,
+            'staff_id' => $staff->id,
+        ]);
+        DeletedOrder::query()->where('seller_id', $seller->id)->update([
+            'bloc_id' => $staff->bloc_id,
+            'staff_id' => $staff->id,
+        ]);
 
         hset_plus('new_shop_created_tip', $seller->shop->id, 1, $staff->id, '', $staff->user);
 
