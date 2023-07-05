@@ -32,10 +32,9 @@
                 </div>
             </div>
 
-            <div class="col-md-4 ml-auto">
+            <div class="col-lg-2">
                 <div class="form-group mb-0">
-                    <input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" type="text" class="form-control d-inline col-5" value="{{$start_time ?? ''}}" name="start_time" placeholder="{{translate('Start Time')}}"/> ~
-                    <input  onclick="WdatePicker({dateFmt:'yyyy:MM:dd HH:mm:ss'})" type="text" class="form-control d-inline col-5" value="{{$start_time ?? ''}}" name="end_time" placeholder="{{translate('End Time')}}"/>
+                    <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}" autocomplete="off">
                 </div>
             </div>
 
@@ -99,7 +98,7 @@
 
             @include('backend.partials.filters.payment_code')
 
-            <div class="col-lg-4 ml-auto form-group">
+            <div class="col-lg-4 ml-auto">
                 <input type="text" class="form-control d-inline col-5" id="min-price" name="min_price" value="{{ $min_price ?: '' }}" placeholder="最小价格">
                 ~
                 <input type="text" class="form-control d-inline col-5" id="max-price" name="max_price" value="{{ $max_price ?: ''}}" placeholder="最大价格">
@@ -186,7 +185,7 @@
                         </td>
                         <td>{{$record->out_order_no}}</td>
                         <td>{{$record->created_at}}</td>
-                        <td>{{date("Y-m-d H:i:s", $record->pay_time)}}</td>
+                        <td>{{$record->created_at}}</td>
 
                     </tr>
                 @endforeach

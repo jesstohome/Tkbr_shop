@@ -609,11 +609,13 @@ class SellerController extends Controller
                 $list = $list->whereRaw('1=2');
             }
         }
-        if ($start_time) {
-            $list = $list->where("created_at", ">=", strtotime($start_time));
-        }
-        if ($end_time) {
-            $list = $list->where("created_at", "<=", strtotime($end_time));
+        if ($request->date_range) {
+            $date_range = $request->date_range;
+            $date_var = explode("/", $request->date_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $list = $list->where('created_at', '>=', trim($start_time));
+            $list = $list->where('created_at', '<=', trim($end_time) . " 23:59:59");
         }
         if ($seller_id) {
             $list = $list->where('seller_id', $seller_id);
@@ -661,7 +663,7 @@ class SellerController extends Controller
 
         del_plus("orders_pick_up_tip");
 
-        return view('backend.sellers.payment_records', compact('list', 'start_date', 'end_date', 'seller_id', 'buyer_id', 'payment_code', 'out_order_no', 'pay_status', 'order_no', 'total', 'total_seller', 'total_amount', 'min_price', 'max_price', 'salesman_user_id', 'bloc_id'));
+        return view('backend.sellers.payment_records', compact('list', 'start_date', 'end_date', 'seller_id', 'buyer_id', 'payment_code', 'out_order_no', 'pay_status', 'order_no', 'total', 'total_seller', 'total_amount', 'min_price', 'max_price', 'salesman_user_id', 'bloc_id', 'date_range'));
     }
 
     /**
