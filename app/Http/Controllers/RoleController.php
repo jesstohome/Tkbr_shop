@@ -38,7 +38,11 @@ class RoleController extends Controller
             $roles = $roles->where('bloc_id', $bloc_id);
         }
         if ($staff_user_id) {
-            $roles = $roles->where('admin_id', $staff_user_id);
+            if ($staff_user_id == Auth::id() && isSupperAdmin()) {
+                $roles = $roles->where('admin_id', 0);
+            } else {
+                $roles = $roles->where('admin_id', $staff_user_id);
+            }
         }
 
         $roles = filter_by_bloc($roles);
