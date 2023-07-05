@@ -35,7 +35,7 @@
             <div class="col-md-2 ml-auto">
                 <select class="form-control aiz-selectpicker" name="staff_user_id" id="staff_user_id" data-live-search="true">
                     <option value="">{{translate('Filter by Staff')}}</option>
-                    @foreach(filter_by_bloc(\App\Models\User::query()->where('user_type', 'staff'))->get() as $user)
+                    @foreach(filter_by_bloc(\App\Models\User::query()->whereIn('user_type', ['staff', 'admin']))->get() as $user)
                         <option value="{{$user->id}}"  @isset($staff_user_id) @if($staff_user_id == $user->id) selected @endif @endisset>{{$user->name}} ({{$user->email}})</option>
                     @endforeach
                 </select>
