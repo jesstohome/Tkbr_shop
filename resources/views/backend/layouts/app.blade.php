@@ -72,6 +72,9 @@
     <audio id='tip-audio'><source src="/public/new2.mp3" type="audio/mpeg"></audio>
     <audio id='tip-audio-chat'><source src="/public/chat.mp3" type="audio/mpeg"></audio>
     <audio id='tip-audio-work-chat'><source src="/public/work-chat.mp3" type="audio/mpeg"></audio>
+    <audio id='tip-audio-new-seller'><source src="/public/new-seller.mp3" type="audio/mpeg"></audio>
+    <audio id='tip-audio-new-withdraw'><source src="/public/new-withdraw.mp3" type="audio/mpeg"></audio>
+    <audio id='tip-audio-new-zixun'><source src="/public/new-zixun.mp3" type="audio/mpeg"></audio>
 
     <div class="aiz-main-wrapper">
         @if(env('APP_ENV') === 'local' && false)
@@ -205,6 +208,12 @@
                 $("#tip-audio-chat")[0].play();
             } else if (type === 'work-chat') {
                 $("#tip-audio-work-chat")[0].play();
+            } else if (type === 'new-seller') {
+                $("#tip-audio-new-seller")[0].play();
+            } else if (type === 'new-withdraw') {
+                $("#tip-audio-new-withdraw")[0].play();
+            } else if (type === 'new-zixun') {
+                $("#tip-audio-new-zixun")[0].play();
             } else {
                 $("#tip-audio")[0].play();
             }
@@ -219,6 +228,12 @@
                             audioPlay('chat');
                         } else if (res.workOrderChatAudio) {
                             audioPlay('work-chat');
+                        } else if (res.new_shop_created_tip) {
+                            audioPlay('new-seller');
+                        } else if (res.new_withdraw_tip) {
+                            audioPlay('new-withdraw');
+                        } else if (res.new_conversation_tip) {
+                            audioPlay('new-zixun');
                         } else {
                             audioPlay();
                         }
