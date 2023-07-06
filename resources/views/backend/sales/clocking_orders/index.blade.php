@@ -69,6 +69,7 @@
                         <th data-breakpoints="md">{{ translate('Pick Up Status') }}</th>
                         <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
                         <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
+                        <th data-breakpoints="md">{{ translate('Effective Time') }}</th>
                         @if (addon_is_activated('refund_request'))
                         <th>{{ translate('Refund') }}</th>
                         @endif
@@ -152,6 +153,7 @@
                             <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
                             @endif
                         </td>
+                        <td>{{$order->created_at}}</td>
                         @if (addon_is_activated('refund_request'))
                         <td>
                             @if (count($order->refund_requests) > 0)

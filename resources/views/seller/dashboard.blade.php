@@ -70,7 +70,7 @@
                                 <span class="fs-16 text-info">{{ translate('Total Order') }}</span>
                             </p>
                             <h3 class="mb-0 text-white fs-30">
-                                {{ \App\Models\Order::where('seller_id', Auth::user()->id)->count() }}
+                                {{ \App\Models\Order::where('seller_id', Auth::user()->id)->where('created_at', '<=', date('Y-m-d H:i:s'))->count() }}
                             </h3>
                         </div>
                         <div class="col-auto text-right">
@@ -130,7 +130,11 @@
                                     $orderDetails = \App\Models\OrderDetail::where('seller_id', Auth::user()->id)->get();
                                     $total = 0;
                                     foreach ($orderDetails as $key => $orderDetail) {
-                                        if ($orderDetail->order != null && $orderDetail->order->payment_status == 'paid' && $orderDetail->order->delivery_status != 'cancelled') {
+                                        if ($orderDetail->order != null &&
+                                        $orderDetail->order->payment_status == 'paid' &&
+                                        $orderDetail->order->created_at <= date('Y-m-d H:i:s') &&
+                                        $orderDetail->order->delivery_status != 'cancelled'
+                                        ) {
                                             $total += $orderDetail->price;
                                         }
                                     }

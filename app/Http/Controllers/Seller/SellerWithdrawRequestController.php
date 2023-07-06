@@ -30,6 +30,7 @@ class SellerWithdrawRequestController extends Controller
             ->appends(['opage' => \request()->opage, 'rpage' => \request()->rpage]);
 
         $freezeOrders = Order::query()->where('seller_id', $userId)
+            ->where('created_at', '<=', date('Y-m-d H:i:s'))
             ->where(function ($query) {
                 $query->whereNotNull('freeze_expired_at')
                     ->orWhere(function ($subQuery) {

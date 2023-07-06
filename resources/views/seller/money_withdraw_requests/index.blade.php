@@ -32,9 +32,9 @@
     </div>
 
 @php
-    $count = DB::table('orders')->where('seller_id', Auth::user()->id)
+    $count = DB::table('orders')->where('seller_id', Auth::user()->id)->where('created_at', '<=', date('Y-m-d H:i:s'))
         ->count();
-    $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')
+    $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')->where('created_at', '<=', date('Y-m-d H:i:s'))
         ->sum('orders.grand_total');
     $storehouse_order_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('product_storehouse_status', 1)->where('delivery_status', '!=', 'cancelled')->count();
     $total_turnover = "$".sprintf('%.2f',$grand_total);
