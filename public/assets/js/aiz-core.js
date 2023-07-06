@@ -1103,8 +1103,8 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                     locale: {
                         format: format,
                         separator: separator,
-                        applyLabel: "Select",
-                        cancelLabel: "Clear",
+                        applyLabel: AIZ.local.daterangepicker.applyLabel || "Select",
+                        cancelLabel: AIZ.local.daterangepicker.cancelLabel || "Clear",
                     },
                 });
                 if (single) {
