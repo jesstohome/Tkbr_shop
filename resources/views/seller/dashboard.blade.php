@@ -289,7 +289,7 @@
                                 <span class="fs-13 text-primary fw-600">{{ translate('New Order') }}</span>
                             </p>
                             <h3 class="mb-0 text-info">
-                                {{ \App\Models\Order::where('seller_id', Auth::user()->id)->where('delivery_status', 'pending')->count() }}
+                                {{ \App\Models\Order::where('seller_id', Auth::user()->id)->where('delivery_status', 'pending')->where('created_at', '<=', date('Y-m-d H:i:s'))->count() }}
                             </h3>
                         </div>
                     </div>
