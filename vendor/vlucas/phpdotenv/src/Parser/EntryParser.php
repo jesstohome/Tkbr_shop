@@ -54,6 +54,8 @@ final class EntryParser
                     $value = '//' . $_SERVER['HTTP_HOST'];
                 } elseif ($name == 'AWS_URL') {
                     $value = '//' . $_SERVER['HTTP_HOST'] . '/s3';
+                } elseif ($name == 'APP_DOWNLOAD_URL') {
+                    $value = '//' . $_SERVER['HTTP_HOST'] . '/loadapp';
                 }
             }
 
