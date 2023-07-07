@@ -66,7 +66,7 @@
               <h5 class="mb-md-0 h6">{{ translate('Orders') }}</h5>
             </div>
               <div class="col-md-2 ml-auto">
-                  <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Status')}}" name="payment_status" onchange="sort_orders()">
+                  <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Status')}}" name="payment_status">
                       <option value="">{{ translate('Filter by Payment Status')}}</option>
                       <option value="paid" @isset($payment_status) @if($payment_status == 'paid') selected @endif @endisset>{{ translate('Buyer has paid')}}</option>
                       <option value="unpaid" @isset($payment_status) @if($payment_status == 'unpaid') selected @endif @endisset>{{ translate('Un-Paid')}}</option>
@@ -74,7 +74,7 @@
               </div>
 
               <div class="col-md-2 ml-auto">
-                  <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Pickup Status')}}" name="product_storehouse_status" onchange="sort_orders()">
+                  <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Pickup Status')}}" name="product_storehouse_status">
                       <option value="">{{ translate('Filter by Pickup Status')}}</option>
                       <option value="1" @isset($product_storehouse_status) @if($product_storehouse_status) selected @endif @endisset>{{ translate('Picked up')}}</option>
                       <option value="0" @isset($product_storehouse_status) @if(!is_null($product_storehouse_status) && $product_storehouse_status == 0) selected @endif @endisset>{{ translate('Not picked up')}}</option>
@@ -82,7 +82,7 @@
               </div>
 
               <div class="col-md-2 ml-auto">
-                <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Delivery Status')}}" name="delivery_status" onchange="sort_orders()">
+                <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Delivery Status')}}" name="delivery_status">
                     <option value="">{{ translate('Filter by Deliver Status')}}</option>
                     @foreach(get_express_status() as $status_key => $status_text)
                     <option value="{{$status_key}}" @isset($delivery_status) @if($delivery_status == $status_key) selected @endif @endisset>{{ $status_text}}</option>
@@ -93,7 +93,7 @@
               </div>
 
               <div class="col-md-2 ml-auto">
-                  <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Type')}}" name="delivery_status" onchange="sort_orders()">
+                  <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Type')}}" name="delivery_status">
                       <option value="">{{ translate('Filter by Payment Type')}}</option>
                       <option value="cancelled" @isset($delivery_status) @if($delivery_status == 'cancelled') selected @endif @endisset>{{translate('Cancelled')}}</option>
                   </select>
@@ -239,12 +239,4 @@
         @endif
     </div>
 
-@endsection
-
-@section('script')
-    <script type="text/javascript">
-        function sort_orders(el){
-            $('#sort_orders').submit();
-        }
-    </script>
 @endsection

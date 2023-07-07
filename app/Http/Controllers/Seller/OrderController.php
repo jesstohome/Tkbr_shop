@@ -64,7 +64,7 @@ class OrderController extends Controller
             $orders = $orders->where($table_name . '.created_at', '<=', trim($end_time) . " 23:59:59");
         }
 
-        $orders = $orders->paginate(15);
+        $orders = $orders->paginate(15)->appends(request()->query());
 
         foreach ($orders as $key => $value) {
             $order = Order::find($value->id);
