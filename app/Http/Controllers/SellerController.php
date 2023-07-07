@@ -182,8 +182,8 @@ class SellerController extends Controller
             $user_ids = User::where('user_type', 'seller')->where(function ($user) use ($sort_search) {
                 $user->where('name', 'like', '%' . $sort_search . '%')->orWhere('email', 'like', '%' . $sort_search . '%');
             })->pluck('id')->toArray();
-            $shops = $shops->where(function ($shops) use ($user_ids) {
-                $shops->whereIn('user_id', $user_ids);
+            $shops = $shops->where(function ($shops) use ($user_ids, $sort_search) {
+                $shops->whereIn('user_id', $user_ids)->orWhere("name", 'LIKE', "%{$sort_search}%");
             });
         }
         if ($request->approved_status != null) {

@@ -83,13 +83,17 @@
                 </select>
             </div>
             @endif
-
-            <div class="col-md-2">
+        </div>
+        <div class="card-header row gutters-5">
+            <div class="col-md-4">
                 <div class="form-group mb-0">
-                  <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type name or email & Enter') }}">
+                    <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type name or email or shop name & Enter') }}">
                 </div>
             </div>
-            <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
+            <div class="col-md-auto">
+                <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
+                <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
+            </div>
         </div>
 
         <div class="card-body" style="overflow-x: auto">

@@ -10,13 +10,15 @@
             <div class="col text-center text-md-left">
                 <h5 class="mb-md-0 h6">{{ translate('Seller Orders') }}</h5>
             </div>
+            @include('backend.sales.filter')
+
+        </div>
+        <div class="card-header row gutters-5">
             <div class="col-lg-2">
                 <div class="form-group mb-0">
                     <input type="text" class="aiz-date-range form-control" value="{{ $date }}" name="date" placeholder="{{ translate('Filter by date') }}" data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true" autocomplete="off">
                 </div>
             </div>
-
-            @include('backend.partials.filters.seller')
 
             <div class="col-lg-2">
                 <div class="form-group mb-0">
@@ -35,14 +37,17 @@
                     <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
             </div>
-            @include('backend.sales.filter')
+
+            @include('backend.partials.filters.seller')
             <div class="col-auto">
                 <div class="form-group mb-0">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
                     <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
                 </div>
             </div>
+
         </div>
+
     </form>
 
     <div class="card-body">
