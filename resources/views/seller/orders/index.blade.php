@@ -110,8 +110,8 @@
                     <input type="text" class="form-control" id="search" name="search" @isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
               </div>
-              <div class="col-auto">
-                  <div class="form-group mb-0" style="display: flex;justify-content: space-between;">
+              <div class="col-md-3">
+                  <div class="form-group mt-1" style="display: flex;justify-content: space-between;">
                       <button class="btn btn-sm btn-light" type="reset" onclick="reset_form()">重置</button>
                       <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
                   </div>
