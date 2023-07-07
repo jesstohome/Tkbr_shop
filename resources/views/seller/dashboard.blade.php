@@ -188,6 +188,7 @@
                         ->where('payment_status', 'paid')
                         ->where('delivery_status', '!=', 'cancelled')
                         ->where('created_at', '>=', $days_ago_30)
+                        ->where('created_at', '<=', date('Y-m-d H:i:s'))
                         ->sum('grand_total');
                 @endphp
 

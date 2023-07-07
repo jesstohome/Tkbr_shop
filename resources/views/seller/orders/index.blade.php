@@ -15,11 +15,11 @@
     </style>
     <div class="row gutters-10 justify-content-center">
         @php
-            $count = DB::table('orders')->where('seller_id', Auth::user()->id)
+            $count = DB::table('orders')->where('seller_id', Auth::user()->id)->where('created_at', '<=', date('Y-m-d H:i:s'))
                 ->count();
-            $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')
+            $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')->where('created_at', '<=', date('Y-m-d H:i:s'))
                 ->sum('orders.grand_total');
-            $product_storehouse_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')
+            $product_storehouse_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')->where('created_at', '<=', date('Y-m-d H:i:s'))
                 ->sum('orders.product_storehouse_total');
             $total_turnover = "$".sprintf('%.2f',$grand_total);
             $total_profit = "$".sprintf('%.2f',($grand_total - $product_storehouse_total));
