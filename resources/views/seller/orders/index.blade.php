@@ -111,10 +111,17 @@
                 </div>
               </div>
               <div class="col-md-3">
-                  <div class="form-group mt-1" style="display: flex;justify-content: space-between;">
-                      <button class="btn btn-sm btn-light" type="reset" onclick="reset_form()">重置</button>
-                      <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
-                  </div>
+                  @if(is_pc())
+                      <div class="form-group mt-1 float-right">
+                          <button class="btn btn-light" type="reset" onclick="reset_form()">重置</button>
+                          <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                      </div>
+                  @else
+                      <div class="form-group mt-1" style="display: flex;justify-content: space-between;">
+                          <button class="btn btn-sm btn-light" type="reset" onclick="reset_form()">重置</button>
+                          <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
+                      </div>
+                  @endif
               </div>
           </div>
         </form>
