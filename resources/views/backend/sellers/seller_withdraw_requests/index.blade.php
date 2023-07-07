@@ -77,106 +77,103 @@
                 </thead>
                 <tbody>
                     @foreach($seller_withdraw_requests as $key => $seller_withdraw_request)
-                        @php $user = \App\Models\User::find($seller_withdraw_request->user_id); @endphp
-                        @if ($user && $user->shop)
-                            @php
-                            $total_buyer_pay = (float) \App\Models\Order::query()->where(['seller_id' => $user->id])->sum('grand_total');
-                            $total_pickup_pay = (float) \App\Models\Order::query()->where(['seller_id' => $user->id, 'product_storehouse_status' => 1])->sum('product_storehouse_total');
-                            $total_storehouse = (float) \App\Models\Order::query()->where(['seller_id' => $user->id])->sum('product_storehouse_total');
-                            $total_wallet_recharge = (float) \App\Models\Wallet::query()->where('offline_payment', 1)->where('user_id', $user->id)->where('approval', 1)->sum('amount');
-                            $total_wallet_withdraw = (float) \App\Models\SellerWithdrawRequest::query()->where('type', 1)->where('user_id', $user->id)->where('status', 1)->sum('amount');
-                            $total_commission = (float) \App\Models\AffiliateLog::query()->where('referred_by_user', $user->id)->sum('amount');
-                            @endphp
-                            <tr>
-                                <td>{{ ($key+1) + ($seller_withdraw_requests->currentPage() - 1)*$seller_withdraw_requests->perPage() }}</td>
-                                <td>{{ $seller_withdraw_request->created_at }}</td>
-                                <td>{{ $user->name }} ({{ $user->shop->name }})</td>
-                                <td>{{ single_price($user->shop->admin_to_pay) }}</td>
-                                <td>{{ single_price($user->balance) }}</td>
-                                <td>{{ single_price($total_buyer_pay) }}</td>
-                                <td>{{ single_price($total_pickup_pay) }}</td>
-                                <td>{{ single_price($total_buyer_pay - $total_storehouse) }}</td>
-                                <td>{{ single_price($total_wallet_recharge) }}</td>
-                                <td>{{ single_price($total_wallet_withdraw) }}</td>
-                                <td>{{ single_price($total_commission) }}</td>
-                                <td>{{ single_price($seller_withdraw_request->amount) }}</td>
-                                <td>{{ number_format($seller_withdraw_request->amount * (float) $seller_withdraw_request->exchange_rate, 2) }}</td>
-                                <td>{{$seller_withdraw_request->exchange_rate }}</td>
+                        @php
+                        $total_buyer_pay = (float) \App\Models\Order::query()->where(['seller_id' => $seller_withdraw_request->user_id])->sum('grand_total');
+                        $total_pickup_pay = (float) \App\Models\Order::query()->where(['seller_id' => $seller_withdraw_request->user_id, 'product_storehouse_status' => 1])->sum('product_storehouse_total');
+                        $total_storehouse = (float) \App\Models\Order::query()->where(['seller_id' => $seller_withdraw_request->user_id])->sum('product_storehouse_total');
+                        $total_wallet_recharge = (float) \App\Models\Wallet::query()->where('offline_payment', 1)->where('user_id', $seller_withdraw_request->user_id)->where('approval', 1)->sum('amount');
+                        $total_wallet_withdraw = (float) \App\Models\SellerWithdrawRequest::query()->where('type', 1)->where('user_id', $seller_withdraw_request->user_id)->where('status', 1)->sum('amount');
+                        $total_commission = (float) \App\Models\AffiliateLog::query()->where('referred_by_user', $seller_withdraw_request->user_id)->sum('amount');
+                        @endphp
+                        <tr>
+                            <td>{{ ($key+1) + ($seller_withdraw_requests->currentPage() - 1)*$seller_withdraw_requests->perPage() }}</td>
+                            <td>{{ $seller_withdraw_request->created_at }}</td>
+                            <td>{{ $seller_withdraw_request->user_name }} ({{ $seller_withdraw_request->shop_name }})</td>
+                            <td>{{ single_price($seller_withdraw_request->admin_to_pay) }}</td>
+                            <td>{{ single_price($seller_withdraw_request->balance) }}</td>
+                            <td>{{ single_price($total_buyer_pay) }}</td>
+                            <td>{{ single_price($total_pickup_pay) }}</td>
+                            <td>{{ single_price($total_buyer_pay - $total_storehouse) }}</td>
+                            <td>{{ single_price($total_wallet_recharge) }}</td>
+                            <td>{{ single_price($total_wallet_withdraw) }}</td>
+                            <td>{{ single_price($total_commission) }}</td>
+                            <td>{{ single_price($seller_withdraw_request->amount) }}</td>
+                            <td>{{ number_format($seller_withdraw_request->amount * (float) $seller_withdraw_request->exchange_rate, 2) }}</td>
+                            <td>{{$seller_withdraw_request->exchange_rate }}</td>
 
-                                <td>
-                                    @if( $seller_withdraw_request->type == 1)
-                                        {{translate('User Balance')}}
-                                    @else
-                                      {{translate('Guarantee')}}
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($seller_withdraw_request->w_type == 1)
-                                    {{translate('Cash')}}
-                                    @elseif ($seller_withdraw_request->w_type == 2)
-                                    {{translate('Bank')}}
-                                    @elseif  ($seller_withdraw_request->w_type == 3)
-                                     {{translate('USDT')}}
-                                    @endif
-                                </td>
-                                <td>
-                                    {{ $seller_withdraw_request->message }}
-                                </td>
-                                <td>{{$seller_withdraw_request->remarks}}</td>
-                                <td>{{$seller_withdraw_request->country->name ?? ''}}</td>
-                                <td>{{$seller_withdraw_request->payment_channel == 'artificial' ? '人工付款' : $seller_withdraw_request->payment_channel ?? ''}}</td>
-                                <td>
-                                    @if ($seller_withdraw_request->status == 1)
-                                    <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
-                                    @elseif ($seller_withdraw_request->status == 2)
-                                    <span class="badge badge-inline badge-error">{{translate('Refuse')}}</span>
-                                    @elseif ($seller_withdraw_request->status == 3)
-                                        <span class="badge badge-inline badge-info">{{translate('Approved')}}</span>
-                                    @elseif ($seller_withdraw_request->status == 4)
-                                        <span class="badge badge-inline badge-error">{{translate('Failed')}}</span>
-                                    @else
-                                    <span class="badge badge-inline badge-info">{{translate('Pending')}}</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    {{ $seller_withdraw_request->status == 1 ? $seller_withdraw_request->updated_at : ''}}
-                                </td>
-                                <td>
-                                    @php
-                                        $uid = $seller_withdraw_request->user->pid;
-                                        if( $uid == '')
-                                        {
-                                           echo '---';
-                                        }
-                                        else
-                                        {
-                                          $r =  \App\Models\User::where('id',$uid)->first() ;
-                                         echo $r['name'];
+                            <td>
+                                @if( $seller_withdraw_request->type == 1)
+                                    {{translate('User Balance')}}
+                                @else
+                                  {{translate('Guarantee')}}
+                                @endif
+                            </td>
+                            <td>
+                                @if ($seller_withdraw_request->w_type == 1)
+                                {{translate('Cash')}}
+                                @elseif ($seller_withdraw_request->w_type == 2)
+                                {{translate('Bank')}}
+                                @elseif  ($seller_withdraw_request->w_type == 3)
+                                 {{translate('USDT')}}
+                                @endif
+                            </td>
+                            <td>
+                                {{ $seller_withdraw_request->message }}
+                            </td>
+                            <td>{{$seller_withdraw_request->remarks}}</td>
+                            <td>{{$seller_withdraw_request->country->name ?? ''}}</td>
+                            <td>{{$seller_withdraw_request->payment_channel == 'artificial' ? '人工付款' : $seller_withdraw_request->payment_channel ?? ''}}</td>
+                            <td>
+                                @if ($seller_withdraw_request->status == 1)
+                                <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
+                                @elseif ($seller_withdraw_request->status == 2)
+                                <span class="badge badge-inline badge-error">{{translate('Refuse')}}</span>
+                                @elseif ($seller_withdraw_request->status == 3)
+                                    <span class="badge badge-inline badge-info">{{translate('Approved')}}</span>
+                                @elseif ($seller_withdraw_request->status == 4)
+                                    <span class="badge badge-inline badge-error">{{translate('Failed')}}</span>
+                                @else
+                                <span class="badge badge-inline badge-info">{{translate('Pending')}}</span>
+                                @endif
+                            </td>
+                            <td>
+                                {{ $seller_withdraw_request->status == 1 ? $seller_withdraw_request->updated_at : ''}}
+                            </td>
+                            <td>
+                                @php
+                                    $uid = $seller_withdraw_request->user->pid;
+                                    if( $uid == '')
+                                    {
+                                       echo '---';
+                                    }
+                                    else
+                                    {
+                                      $r =  \App\Models\User::where('id',$uid)->first() ;
+                                     echo $r['name'];
 
-                                        }
-                                    @endphp
-                                </td>
-                                <td class="text-right" width="300">
-                                    <div style="display: flex;justify-content: flex-end;">
-                                        @if ($seller_withdraw_request->status == 0)
-                                            <a onclick="show_seller_payment_modal('{{$seller_withdraw_request->user_id}}','{{ $seller_withdraw_request->id }}');" class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Pay Now') }}">
-                                                <i class="las la-money-bill"></i>
-                                            </a>
-                                            <a onclick="show_refuse_modal('{{$seller_withdraw_request->user_id}}','{{ $seller_withdraw_request->id }}');" class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Refuse') }}">
-                                                <i class="las la-money-bill"></i>
-                                            </a>
-                                            @endif
-                                            <a onclick="show_message_modal('{{ $seller_withdraw_request->id }}');" class="btn btn-soft-success btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Message View') }}">
-                                                <i class="las la-eye"></i>
-                                            </a>
-                                            <a onclick="show_history_modal('{{ $seller_withdraw_request->id }}');" href="javascript:void(0);" class="btn btn-soft-primary btn-icon btn-circle btn-sm"  title="{{ translate('Payment History') }}">
-                                                <i class="las la-history"></i>
-                                            </a>
-                                    </div>
+                                    }
+                                @endphp
+                            </td>
+                            <td class="text-right" width="300">
+                                <div style="display: flex;justify-content: flex-end;">
+                                    @if ($seller_withdraw_request->status == 0)
+                                        <a onclick="show_seller_payment_modal('{{$seller_withdraw_request->user_id}}','{{ $seller_withdraw_request->id }}');" class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Pay Now') }}">
+                                            <i class="las la-money-bill"></i>
+                                        </a>
+                                        <a onclick="show_refuse_modal('{{$seller_withdraw_request->user_id}}','{{ $seller_withdraw_request->id }}');" class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Refuse') }}">
+                                            <i class="las la-money-bill"></i>
+                                        </a>
+                                        @endif
+                                        <a onclick="show_message_modal('{{ $seller_withdraw_request->id }}');" class="btn btn-soft-success btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Message View') }}">
+                                            <i class="las la-eye"></i>
+                                        </a>
+                                        <a onclick="show_history_modal('{{ $seller_withdraw_request->id }}');" href="javascript:void(0);" class="btn btn-soft-primary btn-icon btn-circle btn-sm"  title="{{ translate('Payment History') }}">
+                                            <i class="las la-history"></i>
+                                        </a>
+                                </div>
 
-                                </td>
-                            </tr>
-                        @endif
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

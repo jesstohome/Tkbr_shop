@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\SellerWithdrawRequest;
 use App\Models\User;
 use Auth;
+use Illuminate\Support\Facades\DB;
 use function compact;
 use function count;
 use function dd;
@@ -27,46 +28,55 @@ class SellerWithdrawRequestController extends Controller
     {
         $seller_id = $request->get('seller_id');
         $status = $request->get('status');
-        $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',1)->latest();
+        \DB::connection()->enableQueryLog();#开启执行日志
+        $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',1)->join("shops", "shops.user_id", "=", "seller_withdraw_requests.user_id")->join("users", "users.id", "=", "shops.user_id");
+        $table_name = $seller_withdraw_requests->getModel()->getTable();
+        $seller_withdraw_requests = $seller_withdraw_requests->select([
+            $table_name.".*",
+            "shops.name as shop_name",
+            "shops.admin_to_pay",
+            "users.name as user_name",
+            "users.balance",
+        ])->orderBy($table_name. ".id", "DESC");
 
         if ($request->date_range) {
             $date_range = $request->date_range;
             $date_var = explode("/", $request->date_range);
             $start_time = $date_var[0];
             $end_time = $date_var[1];
-            $seller_withdraw_requests = $seller_withdraw_requests->where('created_at', '>=', trim($start_time));
-            $seller_withdraw_requests = $seller_withdraw_requests->where('created_at', '<=', trim($end_time) . " 23:59:59");
+            $seller_withdraw_requests = $seller_withdraw_requests->where($table_name.'.created_at', '>=', trim($start_time));
+            $seller_withdraw_requests = $seller_withdraw_requests->where($table_name.'.created_at', '<=', trim($end_time) . " 23:59:59");
         }
         if ($request->bloc_id) {
             $bloc_id = $request->bloc_id;
-            $seller_withdraw_requests = $seller_withdraw_requests->where('bloc_id', $bloc_id);
+            $seller_withdraw_requests = $seller_withdraw_requests->where($table_name.'.bloc_id', $bloc_id);
         }
         if ($request->staff_id) {
             $staff_id = $request->staff_id;
-            $seller_withdraw_requests = $seller_withdraw_requests->where('staff_id', $staff_id);
+            $seller_withdraw_requests = $seller_withdraw_requests->where($table_name.'.staff_id', $staff_id);
         }
         if ($request->min_price) {
             $min_price = $request->min_price;
-            $seller_withdraw_requests = $seller_withdraw_requests->where('amount', '>=', $min_price);
+            $seller_withdraw_requests = $seller_withdraw_requests->where($table_name.'.amount', '>=', $min_price);
         }
         if ($request->max_price) {
             $max_price = $request->max_price;
-            $seller_withdraw_requests = $seller_withdraw_requests->where('amount', '<=', $max_price);
+            $seller_withdraw_requests = $seller_withdraw_requests->where($table_name.'.amount', '<=', $max_price);
         }
 
         if (!is_null($status) && $status !== '') {
-            $seller_withdraw_requests = $seller_withdraw_requests->where("status", $status);
+            $seller_withdraw_requests = $seller_withdraw_requests->where($table_name.".status", $status);
         }
         if (!empty($seller_id)) {
-            $seller_withdraw_requests = $seller_withdraw_requests->where("user_id", $seller_id);
+            $seller_withdraw_requests = $seller_withdraw_requests->where($table_name.".user_id", $seller_id);
         }
 
         $seller_withdraw_requests = filter_by_bloc($seller_withdraw_requests);
 
         $seller_withdraw_requests_clone = clone $seller_withdraw_requests;
         $total = $seller_withdraw_requests_clone->count();
-        $total_amount = $seller_withdraw_requests_clone->sum('amount');
-        $total_seller = $seller_withdraw_requests_clone->distinct('user_id')->count();
+        $total_amount = $seller_withdraw_requests_clone->sum($table_name.'.amount');
+        $total_seller = $seller_withdraw_requests_clone->distinct($table_name.'.user_id')->count();
 
 
         $seller_withdraw_requests = $seller_withdraw_requests->paginate(15)->appends(request()->query());
