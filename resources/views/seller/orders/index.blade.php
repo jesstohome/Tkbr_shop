@@ -62,9 +62,6 @@
     <div class="card">
         <form id="sort_orders" action="" method="GET">
           <div class="card-header row gutters-5">
-            <div class="col text-center text-md-left">
-              <h5 class="mb-md-0 h6">{{ translate('Orders') }}</h5>
-            </div>
               <div class="col-md-2 ml-auto">
                   <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Status')}}" name="payment_status">
                       <option value="">{{ translate('Filter by Payment Status')}}</option>
@@ -92,25 +89,18 @@
                 </select>
               </div>
 
-              <div class="col-md-2 ml-auto">
-                  <select class="form-control aiz-selectpicker" data-placeholder="{{ translate('Filter by Payment Type')}}" name="delivery_status">
-                      <option value="">{{ translate('Filter by Payment Type')}}</option>
-                      <option value="cancelled" @isset($delivery_status) @if($delivery_status == 'cancelled') selected @endif @endisset>{{translate('Cancelled')}}</option>
-                  </select>
-              </div>
-
               <div class="col-md-2">
                   <div class="form-group mb-0">
                       <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}">
                   </div>
               </div>
 
-              <div class="col-md-3">
+              <div class="col-md-2">
                 <div class="from-group mb-0">
                     <input type="text" class="form-control" id="search" name="search" @isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-2">
                   @if(is_pc())
                       <div class="form-group mt-1 float-right">
                           <button class="btn btn-light" type="reset" onclick="reset_form()">重置</button>
