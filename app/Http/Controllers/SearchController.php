@@ -18,6 +18,7 @@ class SearchController extends Controller
 {
     public function index(Request $request, $category_id = null, $brand_id = null)
     {
+        $page_num = 12;
         $query = $request->keyword;
         $sort_by = $request->sort_by;
         $min_price = $request->min_price;
@@ -37,10 +38,6 @@ class SearchController extends Controller
             $conditions = array_merge($conditions, ['brand_id' => $brand_id]);
         }
 
-        // if ($seller_id != null) {
-        //     $conditions = array_merge($conditions, ['user_id' => Seller::findOrFail($seller_id)->user->id]);
-        // }
-
         $products = Product::where($conditions);
 
         if ($category_id != null) {
@@ -51,20 +48,6 @@ class SearchController extends Controller
 
             $attribute_ids = AttributeCategory::whereIn('category_id', $category_ids)->pluck('attribute_id')->toArray();
             $attributes = Attribute::whereIn('id', $attribute_ids)->get();
-        } else {
-            // if ($query != null) {
-            //     foreach (explode(' ', trim($query)) as $word) {
-            //         $ids = Category::where('name', 'like', '%'.$word.'%')->pluck('id')->toArray();
-            //         if (count($ids) > 0) {
-            //             foreach ($ids as $id) {
-            //                 $category_ids[] = $id;
-            //                 array_merge($category_ids, CategoryUtility::children_ids($id));
-            //             }
-            //         }
-            //     }
-            //     $attribute_ids = AttributeCategory::whereIn('category_id', $category_ids)->pluck('attribute_id')->toArray();
-            //     $attributes = Attribute::whereIn('id', $attribute_ids)->get();
-            // }
         }
 
         if ($min_price != null && $max_price != null) {
@@ -121,17 +104,19 @@ class SearchController extends Controller
             }
         }
 
+        $firstPageProducts = [];
         if (empty($request->page) || $request->page == 1) {
             // 第一页随机取产品
             $productIds = $products->pluck("id")->toArray();
             shuffle($productIds);
-            $productIds = array_slice($productIds, 0, 12);
-            $products->whereIn('id', $productIds);
+            $productIds = array_slice($productIds, 0, $page_num);
+            $firstPageProducts = clone $products;
+            $firstPageProducts = $firstPageProducts->whereIn('id', $productIds);
         }
 
-        $products = filter_products($products)->with('taxes')->paginate(12)->appends(request()->query());
+        $products = filter_products($products)->with('taxes')->paginate($page_num)->appends(request()->query());
 
-        return view('frontend.product_listing', compact('products', 'query', 'category_id', 'brand_id', 'sort_by', 'seller_id', 'min_price', 'max_price', 'attributes', 'selected_attribute_values', 'colors', 'selected_color'));
+        return view('frontend.product_listing', compact('products', 'query', 'category_id', 'brand_id', 'sort_by', 'seller_id', 'min_price', 'max_price', 'attributes', 'selected_attribute_values', 'colors', 'selected_color', 'firstPageProducts'));
     }
 
     public function listing(Request $request)
