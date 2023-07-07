@@ -104,16 +104,6 @@ class SearchController extends Controller
             }
         }
 
-        $firstPageProducts = [];
-        if (empty($request->page) || $request->page == 1) {
-            // 第一页随机取产品
-            $productIds = $products->pluck("id")->toArray();
-            shuffle($productIds);
-            $productIds = array_slice($productIds, 0, $page_num);
-            $firstPageProducts = clone $products;
-            $firstPageProducts = $firstPageProducts->whereIn('id', $productIds);
-        }
-
         $products = filter_products($products)->with('taxes')->paginate($page_num)->appends(request()->query());
 
         return view('frontend.product_listing', compact('products', 'query', 'category_id', 'brand_id', 'sort_by', 'seller_id', 'min_price', 'max_price', 'attributes', 'selected_attribute_values', 'colors', 'selected_color', 'firstPageProducts'));
