@@ -12,22 +12,21 @@
     </div>
     <div class="card">
         <form class="" id="sort_withdraw_request" action="" method="GET">
+            <div class="card-header">
+                @include('backend.partials.filters.bloc_staff')
+                @include('backend.partials.filters.seller', ['col_num' => 4])
 
-        <div class="card-header">
-            <div class="col-md-4">
-                <div class="form-group mb-0">
-                    <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}">
+                <div class="col-lg-4 ml-auto">
+                    <input type="text" class="form-control d-inline col-5" id="min-price" name="min_price" value="{{ $min_price ?: '' }}" placeholder="最小价格">
+                    ~
+                    <input type="text" class="form-control d-inline col-5" id="max-price" name="max_price" value="{{ $max_price ?: ''}}" placeholder="最大价格">
                 </div>
             </div>
-                <div class="col-md-2 ml-auto">
-                    <select class="form-control aiz-selectpicker" data-live-search="true" name="seller_id" id="seller_id">
-                        <option value="">{{translate('All')}}</option>
-                        @foreach (filter_by_bloc(\App\Models\User::where('user_type', 'seller'))->get() as $key => $seller)
-                            <option value="{{ $seller->id }}" @if($seller_id == $seller->id) selected @endif data-contact="{{ $seller->email }}">
-                                {{ $seller->name }}
-                            </option>
-                        @endforeach
-                    </select>
+            <div class="card-header">
+                <div class="col-md-3">
+                    <div class="form-group mb-0">
+                        <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}" autocomplete="off" data-advanced-range="true">
+                    </div>
                 </div>
 
                 <div class="col-md-2 ml-auto">
@@ -39,8 +38,11 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
-        </div>
+                <div class="col-md-2 ml-auto">
+                    <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
+                    <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
+                </div>
+            </div>
         </form>
 
         <div class="card-body" style="overflow-x: auto">

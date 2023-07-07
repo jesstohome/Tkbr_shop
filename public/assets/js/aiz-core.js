@@ -1100,6 +1100,11 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                     timePickerIncrement: timePickerIncrement,
                     autoUpdateInput: false,
                     ranges: ranges,
+                    // alwaysShowCalendars
+                    // Displays "Custom Range" at the end of the list of predefined ranges, when the ranges option is used.
+                    // This option will be highlighted whenever the current date range selection does not match one of the predefined ranges.
+                    // Clicking it will display the calendars to select a new range.
+                    alwaysShowCalendars: true,
                     locale: {
                         format: format,
                         separator: separator,

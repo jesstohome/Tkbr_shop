@@ -25,8 +25,6 @@ class SellerWithdrawRequestController extends Controller
 
     public function index( Request $request)
     {
-        $start_time = $request->get('start_time');
-        $end_time = $request->get('end_time');
         $seller_id = $request->get('seller_id');
         $status = $request->get('status');
         $seller_withdraw_requests = SellerWithdrawRequest::where('t_type',1)->latest();
@@ -38,6 +36,22 @@ class SellerWithdrawRequestController extends Controller
             $end_time = $date_var[1];
             $seller_withdraw_requests = $seller_withdraw_requests->where('created_at', '>=', trim($start_time));
             $seller_withdraw_requests = $seller_withdraw_requests->where('created_at', '<=', trim($end_time) . " 23:59:59");
+        }
+        if ($request->bloc_id) {
+            $bloc_id = $request->bloc_id;
+            $seller_withdraw_requests = $seller_withdraw_requests->where('bloc_id', $bloc_id);
+        }
+        if ($request->staff_id) {
+            $staff_id = $request->staff_id;
+            $seller_withdraw_requests = $seller_withdraw_requests->where('staff_id', $staff_id);
+        }
+        if ($request->min_price) {
+            $min_price = $request->min_price;
+            $seller_withdraw_requests = $seller_withdraw_requests->where('amount', '>=', $min_price);
+        }
+        if ($request->max_price) {
+            $max_price = $request->max_price;
+            $seller_withdraw_requests = $seller_withdraw_requests->where('amount', '<=', $max_price);
         }
 
         if (!is_null($status) && $status !== '') {
@@ -59,7 +73,7 @@ class SellerWithdrawRequestController extends Controller
 
         del_plus("new_withdraw_tip");
 
-        return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests', 'date_range', 'status', 'total', 'total_seller', 'total_amount', 'seller_id'));
+        return view('backend.sellers.seller_withdraw_requests.index', compact('seller_withdraw_requests', 'date_range', 'status', 'total', 'total_seller', 'total_amount', 'seller_id', 'min_price', 'max_price', 'bloc_id', 'staff_id'));
     }
 
     /**
