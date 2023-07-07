@@ -545,8 +545,7 @@
                                     </textarea>
                                 </div>
                             </div>
-                            <div class="form-group" style="display: flex;justify-content: space-between;">
-                                <button class="btn btn-sm btn-light" type="reset" onclick="reset_form()">重置</button>
+                            <div class="form-group">
                                 <button type="submit" class="btn btn-sm btn-primary">{{translate('Send')}}</button>
                             </div>
                         </div>
