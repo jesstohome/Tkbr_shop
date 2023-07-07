@@ -151,6 +151,18 @@
                 });
             });
         }
+
+        // 表单重置
+        function reset_form() {
+            $('.aiz-selectpicker').selectpicker('val', '');
+            $('.aiz-selectpicker').each((k, it) => {
+                $(it).find("option").first().attr("selected", true).siblings().attr("selected", false);
+            });
+            setTimeout(function () {
+                $("form input[type=text]").val('');
+            }, 200);
+        }
+        
         function menuSearch(){
 			var filter, item;
 			filter = $("#menu-search").val().toUpperCase();
