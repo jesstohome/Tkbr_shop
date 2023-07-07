@@ -69,7 +69,7 @@ class SellerWithdrawRequestController extends Controller
         $total_seller = $seller_withdraw_requests_clone->distinct('user_id')->count();
 
 
-        $seller_withdraw_requests = $seller_withdraw_requests->paginate(15);
+        $seller_withdraw_requests = $seller_withdraw_requests->paginate(15)->appends(request()->query());
 
         del_plus("new_withdraw_tip");
 
