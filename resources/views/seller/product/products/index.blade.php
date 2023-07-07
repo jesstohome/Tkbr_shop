@@ -88,7 +88,7 @@
                                 >
                             </td>
                             <td>
-                                <a href="{{ route('product', $product->slug) }}" target="_blank" class="text-reset">
+                                <a href="{{ route('product', $product->slug) }}" target="_blank" class="text-reset" style="word-wrap: break-word;">
                                     {{ $product->getTranslation('name') }}
                                 </a>
                             </td>
