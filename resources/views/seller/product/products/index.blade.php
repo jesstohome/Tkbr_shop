@@ -249,8 +249,8 @@
         $(document).ready(function () {
             @if(!is_pc())
             setTimeout(function () {
-                $(".name-td").css("display", "flex").css("width", "100px");
-            }, 1e3);
+                $(".name-td").css("display", "flex").find("a").css("width", "100px");
+            }, 500);
             @endif
         })
     </script>
