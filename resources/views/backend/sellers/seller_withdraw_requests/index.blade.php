@@ -51,6 +51,7 @@
                     <tr>
                         <th data-breakpoints="lg">#</th>
                         <th data-breakpoints="lg">{{translate('Date')}}</th>
+                        @if(isSupperAdmin()) <th data-breakpoints="lg">{{translate('Bloc')}}</th>@endif
                         <th>{{translate('Seller')}}</th>
                         <th data-breakpoints="lg">{{translate('Outstanding Balance')}}</th>
                         <th data-breakpoints="lg">{{translate('Balance')}}</th>
@@ -88,6 +89,9 @@
                         <tr>
                             <td>{{ ($key+1) + ($seller_withdraw_requests->currentPage() - 1)*$seller_withdraw_requests->perPage() }}</td>
                             <td>{{ $seller_withdraw_request->created_at }}</td>
+                            @if(isSupperAdmin())
+                            <td>{{$seller_withdraw_request->user->bloc->name ?: ''}}</td>
+                            @endif
                             <td>{{ $seller_withdraw_request->user_name }} ({{ $seller_withdraw_request->shop_name }})</td>
                             <td>{{ single_price($seller_withdraw_request->admin_to_pay) }}</td>
                             <td>{{ single_price($seller_withdraw_request->balance) }}</td>
