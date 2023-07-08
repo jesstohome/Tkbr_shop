@@ -125,6 +125,7 @@
         });
 
         var loadingSetMealProducts = false;
+        var selected_set_meal_ids = [];
         function updateSetMealSelection(set_meal_id) {
             if (loadingSetMealProducts) {
                 AIZ.plugins.notify('warning', '{{translate('Operation too fast')}}');
@@ -153,15 +154,15 @@
 
                         var meal_item = '<span class="badge badge-primary">\n' +
                             response.set_meal_name +
-                            '  <button type="button" class="close" aria-label="Close" onclick="removeMeal(this)" data-ids="' + product_ids + '">\n' +
+                            '  <button type="button" class="close" aria-label="Close" onclick="removeMeal(this)" data-set-meal-id="' + set_meal_id + '" data-ids="' + product_ids + '">\n' +
                             '    <span aria-hidden="true">&times;</span>\n' +
                             '  </button>\n' +
                             '</span>';
-                        if ($("#set_meal_name").html().trim() === '') {
-                            $("#set_meal_name").html(meal_item);
-                        } else if ($("#set_meal_name").html().indexOf(response.set_meal_name || '') === -1) {
+                        if (selected_set_meal_ids.indexOf(set_meal_id) === -1) {
+                            selected_set_meal_ids.push(set_meal_id);
                             $("#set_meal_name").html($("#set_meal_name").html() + meal_item);
                         }
+
                         if (response.products.length > 0) {
                             var success_num = 0;
                             var repeat_num = 0;
@@ -187,6 +188,7 @@
         }
 
         function removeMeal(evt) {
+            var set_meal_id = $(evt).data("set-meal-id");
             var ids = ($(evt).data("ids") + '').split(",");
             $('#product-selection li').each((k, it) => {
                 let product_id = $(it).data("product-id");
@@ -194,6 +196,12 @@
                     $(it).remove();
                 }
             });
+
+
+            let index = selected_set_meal_ids.indexOf(set_meal_id);
+            if (index !== -1) {
+                selected_set_meal_ids.splice(index, 1);
+            }
 
             $(evt).parent().remove();
 
