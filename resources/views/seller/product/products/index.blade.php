@@ -248,7 +248,9 @@
 
         $(document).ready(function () {
             @if(!is_pc())
-            $(".name-td").css("display", "flex").css("width", "100px");
+            setTimeout(function () {
+                $(".name-td").css("display", "flex").css("width", "100px");
+            }, 1e3);
             @endif
         })
     </script>
