@@ -87,7 +87,7 @@
                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';"
                                 >
                             </td>
-                            <td>
+                            <td class="name-td">
                                 <a href="{{ route('product', $product->slug) }}" target="_blank" class="text-reset" style="word-wrap: break-word;">
                                     {{ $product->getTranslation('name') }}
                                 </a>
@@ -245,5 +245,11 @@
             $('input[name=product_id]').val(product_id);
             $('#select_payment_type_modal').modal('show');
         }
+
+        $(document).ready(function () {
+            @if(!is_pc())
+            $(".name-td").css("display", "flex").css("width", "100px");
+            @endif
+        })
     </script>
 @endsection
