@@ -230,17 +230,6 @@
                                     </button>
                                 </div>
                                 <div class="col-6 col-lg-auto mb-3 w-lg-200px">
-                                    @if (Route::currentRouteName() != 'products.brand')
-                                        <label class="mb-0 opacity-50">{{ translate('Brands')}}</label>
-                                        <select class="form-control form-control-sm aiz-selectpicker" data-live-search="true" name="brand" onchange="filter()">
-                                            <option value="">{{ translate('All Brands')}}</option>
-                                            @foreach (\App\Models\Brand::all() as $brand)
-                                                <option value="{{ $brand->slug }}" @isset($brand_id) @if ($brand_id == $brand->id) selected @endif @endisset>{{ $brand->getTranslation('name') }}</option>
-                                            @endforeach
-                                        </select>
-                                    @endif
-                                </div>
-                                <div class="col-6 col-lg-auto mb-3 w-lg-200px">
                                     <label class="mb-0 opacity-50">{{ translate('Sort by')}}</label>
                                     <select class="form-control form-control-sm aiz-selectpicker" name="sort_by" onchange="filter()">
                                         <option value="newest" @isset($sort_by) @if ($sort_by == 'newest') selected @endif @endisset>{{ translate('Newest')}}</option>
@@ -261,7 +250,7 @@
                             @endforeach
                         </div>
                         <div class="aiz-pagination aiz-pagination-center mt-4">
-                            {{ $products->appends(request()->input())->links() }}
+                            {{ $all_products->appends(request()->input())->links() }}
                         </div>
                     </div>
                 </div>

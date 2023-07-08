@@ -30,6 +30,7 @@ class SearchController extends Controller
         $selected_color = null;
 
         $conditions = ['published' => 1, ['added_by', '!=',  'admin']];
+        $should_shuffle = $category_id != null;
 
         if ($brand_id != null) {
             $conditions = array_merge($conditions, ['brand_id' => $brand_id]);
@@ -51,10 +52,12 @@ class SearchController extends Controller
         }
 
         if ($min_price != null && $max_price != null) {
+            $should_shuffle = false;
             $products->where('unit_price', '>=', $min_price)->where('unit_price', '<=', $max_price);
         }
 
         if ($query != null) {
+            $should_shuffle = false;
             $searchController = new SearchController;
             $searchController->store($request);
 
@@ -91,12 +94,14 @@ class SearchController extends Controller
         }
 
         if ($request->has('color')) {
+            $should_shuffle = false;
             $str = '"' . $request->color . '"';
             $products->where('colors', 'like', '%' . $str . '%');
             $selected_color = $request->color;
         }
 
         if ($request->has('selected_attribute_values')) {
+            $should_shuffle = false;
             $selected_attribute_values = $request->selected_attribute_values;
             foreach ($selected_attribute_values as $key => $value) {
                 $str = '"' . $value . '"';
@@ -104,9 +109,29 @@ class SearchController extends Controller
             }
         }
 
-        $products = filter_products($products)->with('taxes')->paginate($page_num)->appends(request()->query());
+        $products = filter_products($products);
+        $all_products = clone $products;
 
-        return view('frontend.product_listing', compact('products', 'query', 'category_id', 'brand_id', 'sort_by', 'seller_id', 'min_price', 'max_price', 'attributes', 'selected_attribute_values', 'colors', 'selected_color'));
+        $page = $request->page ?: 0;
+        if ($should_shuffle) {
+            $cache_key = sprintf("home_category_products:%s:%s:%s", $category_id, (int) $brand_id, \Session::getId());
+            if (empty($page) || $page == 1) {
+                // 第一页随机取产品
+                $productIds = $products->pluck("id")->toArray();
+                shuffle($productIds);
+                \Cache::set($cache_key, $productIds, 3600);
+            } else {
+                $productIds = \Cache::get($cache_key);
+            }
+            $productIds = array_slice($productIds, ($page - 1) * $page_num, $page_num);
+            $products = Product::query()->whereIn('id', $productIds)->get();
+            $all_products = $all_products->with('taxes')->paginate($page_num)->appends(request()->query());
+        } else {
+            $products = $products->with('taxes')->paginate($page_num)->appends(request()->query());
+            $all_products = $products;
+        }
+
+        return view('frontend.product_listing', compact('products', 'all_products', 'query', 'category_id', 'brand_id', 'sort_by', 'seller_id', 'min_price', 'max_price', 'attributes', 'selected_attribute_values', 'colors', 'selected_color'));
     }
 
     public function listing(Request $request)
