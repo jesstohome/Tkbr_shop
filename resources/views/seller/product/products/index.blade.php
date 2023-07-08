@@ -250,7 +250,7 @@
             @if(!is_pc())
             setTimeout(function () {
                 $(".name-td").css("display", "flex").find("a").css("width", "100px");
-            }, 500);
+            }, 1e3);
             @endif
         })
     </script>
