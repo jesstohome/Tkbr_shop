@@ -104,7 +104,7 @@ class LanguageController extends Controller
     {
         $language = Language::findOrFail($request->id);
         foreach ($request->values as $key => $value) {
-            $translation_def = Translation::where('lang_key', $key)->where('lang', $language->code)->latest()->first();
+            $translation_def = Translation::where('lang_key', $key)->where('lang', $language->code)->first();
             if($translation_def == null){
                 $translation_def = new Translation;
                 $translation_def->lang = $language->code;
@@ -113,8 +113,9 @@ class LanguageController extends Controller
                 $translation_def->save();
             }
             else {
-                $translation_def->lang_value = $value;
-                $translation_def->save();
+                Translation::where('lang_key', $key)->where('lang', $language->code)->update([
+                    'lang_value' => $value
+                ]);
             }
         }
         Cache::forget('translations-'.$language->code);
