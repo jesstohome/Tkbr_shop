@@ -146,7 +146,7 @@
                                         {{ $key+1 }}
                                     </td>
                                     <td>
-                                        <a href="#{{ $order->code }}" onclick="show_order_details({{ $order->id }})">{{ $order->code }}</a>
+                                        <a href="#{{ $order->code }}">{{ $order->code }}</a>
                                     </td>
                                     <td>
                                          @if ($order->order_type == 6)
@@ -219,7 +219,7 @@
                                             <a href="{{ route('seller.orders.show', encrypt($order->id)) }}" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="{{ translate('Order Details') }}" @if($order->delivery_status == 'cancelled') onclick="AIZ.plugins.notify('warning', '{{translate('The order has been cancelled')}}');return false;" @endif>
                                                 <i class="las la-eye"></i>
                                             </a>
-                                            <a href="{{ route('seller.invoice.download', $order->id) }}" class="btn btn-soft-warning btn-icon btn-circle btn-sm" title="{{ translate('Download Invoice') }}">
+                                            <a href="{{ is_android() ? 'javascript:void(0);' : route('seller.invoice.download', $order->id) }}" class="btn btn-soft-warning btn-icon btn-circle btn-sm" title="{{ translate('Download Invoice') }}" @if (is_android()) onclick="downloadInvoicePdf('{{route('seller.invoice.download', $order->id)}}');" @endif>
                                                 <i class="las la-download"></i>
                                             </a>
                                         </div>

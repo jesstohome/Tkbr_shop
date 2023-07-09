@@ -162,7 +162,16 @@
                 $("form input[type=text]").val('');
             }, 200);
         }
-        
+
+        // 下载PDF订单信息
+        function downloadInvoicePdf(pdfUrl) {
+            if (window.android) {
+                window.android.openWindow(pdfUrl)
+            } else {
+                window.open(pdfUrl)
+            }
+        }
+
         function menuSearch(){
 			var filter, item;
 			filter = $("#menu-search").val().toUpperCase();
