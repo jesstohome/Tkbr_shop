@@ -132,7 +132,7 @@ class RoleController extends Controller
             $role->permissions = is_string($request->menu_ids) ? explode(",", $request->menu_ids) : $request->menu_ids;
             $role->save();
 
-            $role_translation = RoleTranslation::firstOrNew(['lang' => $request->lang, 'role_id' => $role->id]);
+            $role_translation = RoleTranslation::firstOrNew(['lang' => $request->lang ?: 'en', 'role_id' => $role->id]);
             $role_translation->name = $request->name;
             $role_translation->save();
 

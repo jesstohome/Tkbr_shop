@@ -88,14 +88,13 @@ class PaymentStatementController extends Controller
         $payment_statements_clone = clone $payment_statements;
         $total = $payment_statements_clone->count();
         $total_amount = $payment_statements_clone->sum('amount');
+        $amount_4_currency = number_format($payment_statements_clone->sum('amount_exchanged'), 2);
         $total_seller = $payment_statements_clone->distinct('seller_id')->count();
         // 集团对应货币的金额总额
         $currency_name = '';
-        $amount_4_currency = '';
         if ($bloc) {
             $bloc_currency = Currency::query()->where('code', $bloc->currency_code)->first();
             $currency_name = $bloc_currency->name;
-            $amount_4_currency = number_format($total_amount * $bloc_currency->exchange_rate, 2);
         }
 
         $perPage = $request->perPage ?: 15;
