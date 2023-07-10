@@ -216,7 +216,11 @@ class LoginController extends Controller
      */
     protected function sendFailedLoginResponse(Request $request)
     {
-        flash(translate('Invalid login credentials'))->error();
+        if (User::query()->where('email', $request->email)->count()) {
+            flash(translate('Password input error'))->error();
+        } else {
+            flash(translate('Account input error'))->error();
+        }
         return back();
     }
 
