@@ -484,8 +484,7 @@ Route::group(['prefix' => 'salesman', 'middleware' => ['salesman']], function() 
         Route::get('/orders/index', 'index')->name('salesman.orders.index');
         Route::get('/orders/{id}/show', 'show')->name('salesman.orders.show');
     });
-});
-
-Route::controller(InvoiceController::class)->group(function () {
-    Route::get('/invoice/{order_id}', 'invoice_download')->name('salesman.invoice.download');
+    Route::controller(InvoiceController::class)->group(function () {
+        Route::get('/invoice/{order_id}', 'invoice_download')->name('salesman.invoice.download');
+    });
 });

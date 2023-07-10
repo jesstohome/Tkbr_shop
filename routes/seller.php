@@ -3,6 +3,8 @@
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\OnlinePaymentController;
 use App\Http\Controllers\ProductSetMealController;
+use App\Http\Controllers\Seller\InvoiceController;
+
 //use App\Http\Controllers\Seller\SupportTicketController;
 
 //Upload
@@ -99,9 +101,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
     });
     Route::resource('orders', OrderController::class);
 
-    Route::controller(InvoiceController::class)->group(function () {
-        Route::get('/invoice/{order_id}', 'invoice_download')->name('invoice.download');
-    });
     // Route::get('invoice/{order_id}',[InvoiceController::class, 'invoice_download'])->name('invoice.download');
     //Review
     Route::controller(ReviewController::class)->group(function () {
@@ -186,4 +185,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
 
 Route::controller(\App\Http\Controllers\BusinessSettingsController::class)->group(function () {
     Route::post('/business-settings/update4admin', 'update4admin')->name('business_settings.update4admin');
+});
+
+Route::controller(InvoiceController::class)->group(function () {
+    Route::get('/seller/invoice/{order_id}', 'invoice_download')->name('invoice.download');
 });
