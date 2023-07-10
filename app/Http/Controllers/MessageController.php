@@ -52,7 +52,14 @@ class MessageController extends Controller
         $conversation->is_tip = 0;
         $conversation->save();
 
+        $product = $conversation->product;
+
         hset_plus('new_review_tip', $request->conversation_id, 1, $conversation->staff_id);
+        hset_plus('new_pos_conversation_tip', $conversation->id, 1, $product->staff_id ?? $conversation->staff_id, $product->user_id ?? 0);
+        if (!$conversation->add_by_admin) {
+            // 卖家端红点
+            hset_plus('new_conversation_tip', $conversation->id, 1, $product->staff_id ?? $conversation->staff_id, $product->user_id ?? 0);
+        }
 
         return back();
     }

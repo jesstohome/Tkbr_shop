@@ -110,11 +110,8 @@ class ConversationController extends Controller
         $conversation->admin_viewed = 0;
         $conversation->save();
 
-        if ($conversation->add_by_admin) {
-            hset_plus('new_pos_conversation_tip', $conversation->id, 1);
-        } else {
-            hset_plus('new_conversation_tip', $conversation->id, 1);
-        }
+        hset_plus('new_pos_conversation_tip', $conversation->id, 1);
+        hset_plus('new_conversation_tip', $conversation->id, 1);
 
         return back();
     }
