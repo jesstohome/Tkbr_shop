@@ -84,11 +84,8 @@ class PaymentStatementController extends Controller
 
         $payment_statements = filter_by_bloc($payment_statements);
 
-        // 统计
         $payment_statements_clone = clone $payment_statements;
-        $total = $payment_statements_clone->count();
-        $total_amount = $payment_statements_clone->sum('amount');
-        $total_seller = $payment_statements_clone->distinct('seller_id')->count();
+
         // 集团对应货币的金额总额
         $currency_name = '';
         $amount_4_currency = 0;
@@ -99,6 +96,11 @@ class PaymentStatementController extends Controller
             $bloc_currency = Currency::query()->where('code', $bloc->currency_code)->first();
             $currency_name = $bloc_currency->name;
         }
+
+        // 统计
+        $total = $payment_statements_clone->count();
+        $total_amount = $payment_statements_clone->sum('amount');
+        $total_seller = $payment_statements_clone->distinct('seller_id')->count();
 
         $perPage = $request->perPage ?: 15;
         $payment_statements = $payment_statements->paginate($perPage)->appends(request()->query());
