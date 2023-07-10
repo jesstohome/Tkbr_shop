@@ -505,6 +505,8 @@ class PosController extends Controller
 
                         $task = new EmailTask();
                         $task->email = $seller->email;
+                        // 根据订单的时间，定时发送，定时订单到时间点才发送邮件通知
+                        $task->created_at = $order->created_at;
                         $task->array = json_encode($array, JSON_UNESCAPED_UNICODE);
                         $task->save();
                     } catch (\Exception $e) {

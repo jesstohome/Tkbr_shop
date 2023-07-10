@@ -88,7 +88,7 @@ class Kernel extends ConsoleKernel
                 });
 
             // 定制发送邮件
-            EmailTask::query()->where('status', 0)->chunk(100, function ($tasks) {
+            EmailTask::query()->where('status', 0)->where('created_at', '<=', date('Y-m-d H:i:s'))->chunk(100, function ($tasks) {
                 \Log::debug('定时发送邮件 ' . count($tasks));
                 foreach ($tasks as $task) {
                     try {
