@@ -132,7 +132,6 @@ class ConversationController extends Controller
     public function store(Request $request)
     {
         $product = Product::findOrFail($request->product_id);
-        $user_type = $product->user->user_type;
 
         $add_by_admin = (int) $request->post('add_by_admin');
         $sender_id = $request->post('user_id', Auth::user()->id);
@@ -153,9 +152,10 @@ class ConversationController extends Controller
             $message->message = $request->message;
 
             if ($message->save()) {
-                if ($add_by_admin) {
-                    hset_plus('new_pos_conversation_tip', $conversation->id, 1, $product->staff_id, $product->user_id);
-                } else {
+                // 行政后台红点
+                hset_plus('new_pos_conversation_tip', $conversation->id, 1, $product->staff_id, $product->user_id);
+                if (!$add_by_admin) {
+                    // 卖家端红点
                     hset_plus('new_conversation_tip', $conversation->id, 1, $product->staff_id, $product->user_id);
                 }
             }
