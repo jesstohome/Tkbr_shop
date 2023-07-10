@@ -140,8 +140,14 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="aiz-pagination mt-4">
+                <div class="aiz-pagination mt-4" style="display: flex">
                     {{ $payment_statements->links() }}
+
+                    <select name="perPage" class="form-control" style="flex: 0.1" onchange="changeFormPerPage(this)">
+                        @foreach([15, 50, 100, 200] as $page_num)
+                            <option value="{{$page_num}}" {{$perPage == $page_num ? 'selected' : ''}}>{{$page_num}}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         </div>

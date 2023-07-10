@@ -2428,6 +2428,8 @@ class Builder
     {
         $page = $page ?: Paginator::resolveCurrentPage($pageName);
 
+        $perPage = request()->get('perPage', $perPage);
+
         $total = $this->getCountForPagination();
 
         $results = $total ? $this->forPage($page, $perPage)->get($columns) : collect();

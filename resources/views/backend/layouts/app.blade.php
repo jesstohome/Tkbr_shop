@@ -131,6 +131,13 @@
                 });
             });
         }
+
+        // 表单每页数量改变
+        function changeFormPerPage(evt) {
+            $("form[method=GET]").append("<input type='hidden' name='perPage' value='" + $(evt).val() + "' />").submit();
+        }
+
+        // 菜单搜索
         function menuSearch(){
 			var filter, item;
 			filter = $("#menu-search").val().toUpperCase();
