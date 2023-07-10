@@ -4,7 +4,7 @@
 
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <div class=" align-items-center">
-        <h1 class="h3">{{translate('Payment Statement')}} ({{translate('Total')}}: {{$total_seller}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}})</h1>
+        <h1 class="h3">{{translate('Payment Statement')}} ({{translate('Total')}}: {{$total_seller}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}} {{$currency_name ? ' ,' . $currency_name . ':' . $amount_4_currency : ''}})</h1>
     </div>
 </div>
 
@@ -80,6 +80,16 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>
+                                <div class="form-group">
+                                    <div class="aiz-checkbox-inline">
+                                        <label class="aiz-checkbox">
+                                            <input type="checkbox" class="check-all">
+                                            <span class="aiz-square-check"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </th>
                             <th>{{ translate('Seller')}}</th>
                             <th data-breakpoints="lg">{{  translate('Date') }}</th>
                             @if (isSupperAdmin())<th>{{ translate('Bloc')}}</th> @endif
@@ -102,6 +112,16 @@
                         @foreach ($payment_statements as $key => $value)
                             <tr>
                                 <td>{{ $key+1 }}</td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="aiz-checkbox-inline">
+                                            <label class="aiz-checkbox">
+                                                <input type="checkbox" class="check-one item-row-id" name="id[]" value="{{$value->id}}">
+                                                <span class="aiz-square-check"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
                                 @if ($value->seller != null)
                                     <td>{{ $value->seller->name }}</td>
                                 @else
@@ -143,11 +163,13 @@
                 <div class="aiz-pagination mt-4" style="display: flex">
                     {{ $payment_statements->links() }}
 
+                    @if($payment_statements->lastPage() > 1)
                     <select name="perPage" class="form-control" style="flex: 0.1" onchange="changeFormPerPage(this)">
                         @foreach([15, 50, 100, 200] as $page_num)
                             <option value="{{$page_num}}" {{$perPage == $page_num ? 'selected' : ''}}>{{$page_num}}</option>
                         @endforeach
                     </select>
+                    @endif
                 </div>
             </div>
         </div>
@@ -279,6 +301,24 @@
                     }
                 } );
             });
+
+            // 表单提交前，判断是否选择了id checkbox
+            $("form").on("submit", function () {
+                try {
+                    let ids = [];
+                    $("input.item-row-id").each((k, it) => {
+                        if ($(it).is(":checked")) {
+                            ids.push($(it).val());
+                        }
+                    });
+                    console.log(ids);
+                    if (!$(this).find("#ids").length) {
+                        $(this).append("<input type='hidden' id='ids' name='ids' value='' />")
+                    }
+
+                    $(this).find("#ids").val(ids.join(","));
+                } catch(e) {console.log(e)}
+            })
         });
     </script>
 @endsection

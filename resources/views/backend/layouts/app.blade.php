@@ -108,6 +108,22 @@
 	        AIZ.plugins.notify('{{ $message['level'] }}', '{{ $message['message'] }}');
 	    @endforeach
 
+        $(document).ready(function () {
+            // 全选功能
+            $(document).on("change", ".check-all", function() {
+                if(this.checked) {
+                    // Iterate each checkbox
+                    $('.check-one:checkbox').each(function() {
+                        this.checked = true;
+                    });
+                } else {
+                    $('.check-one:checkbox').each(function() {
+                        this.checked = false;
+                    });
+                }
+            });
+        });
+
         // 密码眼睛的切换
         $("div.u-eye").on("click", function () {
             if ($(this).hasClass("disabled")) {

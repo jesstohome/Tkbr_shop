@@ -3,6 +3,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bloc;
+use App\Models\Currency;
 use App\Models\Order;
 use App\Models\PaymentStatement;
 use Illuminate\Http\Request;
@@ -64,14 +66,20 @@ class PaymentStatementController extends Controller
             $payment_statements = $payment_statements->where('seller_id', $seller_id);
         }
 
+        $bloc = \Auth::user()->bloc;
         $bloc_id = $request->bloc_id;
         if (!empty($bloc_id)) {
+            $bloc = Bloc::find($bloc_id);
             $payment_statements = $payment_statements->where('bloc_id', $bloc_id);
         }
 
         $staff_id = $request->staff_id;
         if (!empty($staff_id)) {
             $payment_statements = $payment_statements->where('staff_id', $staff_id);
+        }
+
+        if ($request->ids) {
+            $payment_statements = $payment_statements->whereIn('id', explode(",", $request->ids));
         }
 
         $payment_statements = filter_by_bloc($payment_statements);
@@ -81,10 +89,19 @@ class PaymentStatementController extends Controller
         $total = $payment_statements_clone->count();
         $total_amount = $payment_statements_clone->sum('amount');
         $total_seller = $payment_statements_clone->distinct('seller_id')->count();
+        // 集团对应货币的金额总额
+        $currency_name = '';
+        $amount_4_currency = '';
+        if ($bloc) {
+            $bloc_currency = Currency::query()->where('code', $bloc->currency_code)->first();
+            $currency_name = $bloc_currency->name;
+            $amount_4_currency = number_format($total_amount * $bloc_currency->exchange_rate, 2);
+        }
 
         $perPage = $request->perPage ?: 15;
         $payment_statements = $payment_statements->paginate($perPage)->appends(request()->query());
-        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type', 'seller_id', 'business_type', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'perPage'));
+
+        return view('backend.reports.payment_statement', compact('payment_statements', 'date_range', 'total', 'total_seller', 'total_amount', 'order_code', 'inner_order_code', 'status', 'payment_type', 'seller_id', 'business_type', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'perPage', 'currency_name', 'amount_4_currency'));
     }
 
     /**
