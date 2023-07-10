@@ -558,7 +558,7 @@ class PosController extends Controller
      */
     public function pos_conversation(Request $request) {
         if (BusinessSetting::where('type', 'conversation_system')->first()->value == 1) {
-            $conversations = Conversation::where('add_by_admin', 1)->orderBy('updated_at', 'desc');
+            $conversations = Conversation::query()->orderBy('updated_at', 'desc');
             $conversations = filter_by_bloc($conversations);
 
             $seller_id = $request->seller_id;
