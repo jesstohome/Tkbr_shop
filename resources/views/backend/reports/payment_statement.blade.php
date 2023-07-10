@@ -4,7 +4,7 @@
 
 <div class="aiz-titlebar text-left mt-2 mb-3">
     <div class=" align-items-center">
-        <h1 class="h3">{{translate('Payment Statement')}} ({{translate('Total')}}: {{$total_seller}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}} {{$currency_name ? translate($currency_name) . ':' . $amount_4_currency : ''}})</h1>
+        <h1 class="h3">{{translate('Payment Statement')}} ({{translate('Total')}}: {{$total_seller}} {{translate('People')}} {{$total}} {{translate('Transactions')}}  {{single_price($total_amount)}} {{translate('Amount')}} {{$currency_name ? translate($currency_name) . ':' . $amount_4_currency : ''}})</h1>
     </div>
 </div>
 
