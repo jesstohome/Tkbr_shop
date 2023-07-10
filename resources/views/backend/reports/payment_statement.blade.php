@@ -51,18 +51,18 @@
                             <option value="withdraw" @if ($business_type == 'withdraw') selected @endif>{{translate('Withdraw')}}</option>
                         </select>
                     </div>
-
+                </div>
+                <div class="card-header row gutters-5">
                     @include('backend.partials.filters.bloc_staff')
-
                     <div class="col-md-2">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}" autocomplete="off" data-advanced-range="true">
                         </div>
                     </div>
-                    <div class="col-lg-2 ml-auto">
-                        <input type="text" class="form-control" id="min-price" name="min_price" value="{{ $min_price ?: '' }}" placeholder="最小价格">
+                    <div class="col-lg-4 ml-auto">
+                        <input type="text" class="form-control d-inline col-5" id="min-price" name="min_price" value="{{ $min_price ?: '' }}" placeholder="最小价格">
                         ~
-                        <input type="text" class="form-control" id="max-price" name="max_price" value="{{ $max_price ?: ''}}" placeholder="最大价格">
+                        <input type="text" class="form-control d-inline col-5" id="max-price" name="max_price" value="{{ $max_price ?: ''}}" placeholder="最大价格">
                     </div>
                     <div class="col-md-2">
                         <button class="btn btn-md btn-primary" type="submit">
@@ -72,6 +72,8 @@
                     </div>
                 </div>
             </form>
+
+
             <div class="card-body payment-statement" style="overflow-x: auto">
 
                 <table class="table aiz-table mb-0">
