@@ -61,13 +61,13 @@
           <tr>
               <td style="line-height: 120px">{{ translate('Identity Card Front') }}</td>
               <td>
-                  <img height="120" src="{{ uploaded_asset($shop->user->identity_card_front) }}" data-src="{{ uploaded_asset($shop->user->identity_card_front) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded">
+                  @if(!empty($shop->user->identity_card_front)) <img height="120" src="{{ uploaded_asset($shop->user->identity_card_front) }}" data-src="{{ uploaded_asset($shop->user->identity_card_front) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded"> @endif
               </td>
           </tr>
           <tr>
               <td style="line-height: 120px">{{ translate('Identity Card Back') }}</td>
               <td>
-                  <img height="120" src="{{ uploaded_asset($shop->user->identity_card_back) }}" data-src="{{ uploaded_asset($shop->user->identity_card_back) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded">
+                  @if(!empty($shop->user->identity_card_back))<img height="120" src="{{ uploaded_asset($shop->user->identity_card_back) }}" data-src="{{ uploaded_asset($shop->user->identity_card_back) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded">@endif
               </td>
           </tr>
           </tbody>
