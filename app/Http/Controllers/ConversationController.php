@@ -141,7 +141,7 @@ class ConversationController extends Controller
         $conversation->bloc_id = $product->bloc_id;
         $conversation->staff_id = $product->staff_id;
         $conversation->sender_id = $sender_id;
-        $conversation->receiver_id = $product->user_id;
+        $conversation->receiver_id = $request->post('receiver_id', $product->user_id);
         $conversation->product_id = $product->id;
         $conversation->title = $request->title;
         $conversation->add_by_admin = $add_by_admin;
@@ -161,7 +161,11 @@ class ConversationController extends Controller
             }
         }
 
-        flash(translate('Message has been sent to seller'))->success();
+        if (!empty($request->post('receiver_id'))) {
+            flash(translate('Message has been sent to customer'))->success();
+        } else {
+            flash(translate('Message has been sent to seller'))->success();
+        }
         return back();
     }
 

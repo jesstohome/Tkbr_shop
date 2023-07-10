@@ -63,7 +63,7 @@
                                           </div>
                                       </div>
                                       <p class="mb-0 opacity-50">
-                                          {{ $conversation->messages->last()->message }}
+                                          <a href="{{ route('conversations.show', encrypt($conversation->id)) }}" class="text-dark fw-600">{{ $conversation->messages->last()->message }}</a>
                                       </p>
                                   </div>
                               </div>

@@ -222,6 +222,11 @@
                                             <a href="{{ is_android() ? 'javascript:void(0);' : route('seller.invoice.download', $order->id) }}" class="btn btn-soft-warning btn-icon btn-circle btn-sm" title="{{ translate('Download Invoice') }}" @if (is_android()) onclick="downloadInvoicePdf('{{route('seller.invoice.download', $order->id)}}');" @endif>
                                                 <i class="las la-download"></i>
                                             </a>
+                                            <a href="javascript:void(0);" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="{{ translate('Order Details') }}" onclick="order_reply({{!empty($order->orderDetails[0]) ? $order->orderDetails[0]->product_id : 0}}, '{{!empty($order->orderDetails[0]->product->slug) ? route('product', $order->orderDetails[0]->product->slug) : ''}}', {{$order->seller_id}}, {{$order->user_id}}, '{{$order->user->name}}');">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-text-fill" viewBox="0 0 16 16">
+                                                    <path d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zM4.5 5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7zm0 2.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7zm0 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4z"/>
+                                                </svg>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -236,4 +241,66 @@
         @endif
     </div>
 
+@endsection
+
+
+@section('modal')
+    <!-- 对话框 -->
+    <div class="modal fade" id="chat_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom product-modal" id="modal-size" role="document">
+            <div class="modal-content position-relative">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-600 h5"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="" action="{{ route('conversations.store') }}" method="POST"
+                      enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="user_id" value="">
+                    <input type="hidden" name="receiver_id" value="">
+                    <input type="hidden" name="product_id" value="">
+                    <div class="modal-body gry-bg px-3 pt-3">
+                        <div class="form-group">
+                            <a class="btn btn-primary btn-md product-url" href="" target="_blank">{{ translate('View conversation products') }}</a>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="8" name="message" required
+                                      placeholder="{{ translate('Your Question') }}"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary fw-600"
+                                data-dismiss="modal">{{ translate('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary fw-600">{{ translate('Send') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('script')
+<script>
+    // 显示对话框
+    function order_reply(product_id, product_url, seller_id, receiver_id, user_name) {
+        if (!receiver_id) {
+            AIZ.plugins.notify('danger', '请选择一个买家');
+            return false;
+        }
+        $("#chat_modal .modal-title").html(user_name);
+        if (product_url === '') {
+            $("#chat_modal a.product-url").hide();
+        }
+        $("#chat_modal a.product-url").attr('href', product_url);
+        $("#chat_modal input[name=user_id]").val(seller_id);
+        $("#chat_modal input[name=receiver_id]").val(receiver_id);
+        $("#chat_modal input[name=product_id]").val(product_id);
+
+        // 加载对话内容
+        $('#chat_modal').modal('show');
+    }
+</script>
 @endsection
