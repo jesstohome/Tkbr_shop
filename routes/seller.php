@@ -188,5 +188,5 @@ Route::controller(\App\Http\Controllers\BusinessSettingsController::class)->grou
 });
 
 Route::controller(InvoiceController::class)->group(function () {
-    Route::get('/seller/invoice/{order_id}', 'invoice_download')->name('invoice.download');
+    Route::get('/seller/invoice/{order_id}', 'invoice_download')->name('seller.invoice.download');
 });
