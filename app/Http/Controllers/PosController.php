@@ -626,6 +626,7 @@ class PosController extends Controller
 
     /**
      * 回复对话
+     * 行政后台的回复，是以买家的身份回复给卖家的
      * author: Sym
      * time: 2023-04-08 12:54
      * @param Request $request
@@ -635,7 +636,17 @@ class PosController extends Controller
         $conversation = Conversation::findOrFail( $request->conversation_id );
         $message = new Message;
         $message->conversation_id = $request->conversation_id;
-        $message->user_id = $conversation->sender_id;
+
+        // 判断哪个是买家的ID
+        $customer_id = $conversation->sender_id;
+        $is_customer = User::query()->where('id', $customer_id)->where('user_type', 'customer')->count();
+        if (!$is_customer) {
+            // 由此可见，receiver_id 才是买家ID
+            $customer_id = $conversation->receiver_id;
+        }
+        // user_id 为 买家ID
+        $message->user_id = $customer_id;
+
         $message->message = $request->message;
         $message->save();
 
