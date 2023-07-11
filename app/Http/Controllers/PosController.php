@@ -639,10 +639,12 @@ class PosController extends Controller
 
         // 判断哪个是买家的ID
         $customer_id = $conversation->sender_id;
+        $to_seller_id = $conversation->receiver_id;
         $is_customer = User::query()->where('id', $customer_id)->where('user_type', 'customer')->count();
         if (!$is_customer) {
             // 由此可见，receiver_id 才是买家ID
             $customer_id = $conversation->receiver_id;
+            $to_seller_id = $conversation->sender_id;
         }
         // user_id 为 买家ID
         $message->user_id = $customer_id;
@@ -653,12 +655,13 @@ class PosController extends Controller
         $conversation->sender_viewed = "1";
         $conversation->save();
 
-        $cache_key = $conversation->add_by_admin ? 'new_pos_conversation_tip' : 'new_conversation_tip';
         if (isAdmin()) {
-            $to_user = User::find($conversation->receiver_id);
-            hset_plus($cache_key, $conversation->id, 1, $conversation->staff_id, $to_user->id, $to_user, true);
+            $to_user = User::find($to_seller_id);
+            hset_plus('new_pos_conversation_tip', $conversation->id, 1, $conversation->staff_id, $to_user->id, $to_user, true);
+            hset_plus('new_conversation_tip', $conversation->id, 1, $conversation->staff_id, $to_user->id, $to_user, true);
         } else {
-            hset_plus($cache_key, $conversation->id, 1, $conversation->staff_id, $conversation->receiver_id, '', true);
+            hset_plus('new_pos_conversation_tip', $conversation->id, 1, $conversation->staff_id, $to_seller_id, '', true);
+            hset_plus('new_conversation_tip', $conversation->id, 1, $conversation->staff_id, $to_seller_id, '', true);
         }
 
         return back();
