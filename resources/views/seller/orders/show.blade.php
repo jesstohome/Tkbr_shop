@@ -362,7 +362,7 @@
                     </tbody>
                 </table>
                 <div class="no-print text-right">
-                    <a href="{{ is_android() ? 'javascript:void(0);' : route('seller.invoice.download', $order->id) }}" type="button" class="btn btn-icon btn-light" @if (is_android()) onclick="downloadInvoicePdf('{{route('seller.invoice.download', $order->id)}}');" @endif>
+                    <a href="{{ is_android() ? 'javascript:void(0);' : route('invoice.download', $order->id) }}" type="button" class="btn btn-icon btn-light" @if (is_android()) onclick="downloadInvoicePdf('{{route('seller.invoice.download', $order->id)}}');" @endif>
                         <i class="las la-print"></i>
                     </a>
                 </div>

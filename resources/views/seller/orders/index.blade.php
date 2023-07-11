@@ -219,7 +219,7 @@
                                             <a href="{{ route('seller.orders.show', encrypt($order->id)) }}" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="{{ translate('Order Details') }}" @if($order->delivery_status == 'cancelled') onclick="AIZ.plugins.notify('warning', '{{translate('The order has been cancelled')}}');return false;" @endif>
                                                 <i class="las la-eye"></i>
                                             </a>
-                                            <a href="{{ is_android() ? 'javascript:void(0);' : route('seller.invoice.download', $order->id) }}" class="btn btn-soft-warning btn-icon btn-circle btn-sm" title="{{ translate('Download Invoice') }}" @if (is_android()) onclick="downloadInvoicePdf('{{route('seller.invoice.download', $order->id)}}');" @endif>
+                                            <a href="{{ is_android() ? 'javascript:void(0);' : route('invoice.download', $order->id) }}" class="btn btn-soft-warning btn-icon btn-circle btn-sm" title="{{ translate('Download Invoice') }}" @if (is_android()) onclick="downloadInvoicePdf('{{route('seller.invoice.download', $order->id)}}');" @endif>
                                                 <i class="las la-download"></i>
                                             </a>
                                             <a href="javascript:void(0);" class="btn btn-soft-info btn-icon btn-circle btn-sm" title="{{ translate('Order Details') }}" onclick="order_reply({{!empty($order->orderDetails[0]) ? $order->orderDetails[0]->product_id : 0}}, '{{!empty($order->orderDetails[0]->product->slug) ? route('product', $order->orderDetails[0]->product->slug) : ''}}', {{$order->seller_id}}, {{$order->user_id}}, '{{$order->user->name}}');">
