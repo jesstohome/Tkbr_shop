@@ -158,7 +158,7 @@
                                          @endif
                                     </td>
                                     <td>
-                                        {{ count($order->orderDetails->where('seller_id', Auth::user()->id)) }}
+                                        {{ $order->orderDetails->where('seller_id', Auth::user()->id)->sum("quantity") }}
                                     </td>
                                     <td>
                                         @if ($order->user_id != null)
