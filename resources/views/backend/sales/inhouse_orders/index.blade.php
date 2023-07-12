@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-    </from>
+    </form>
 
     <div class="card-body">
         <table class="table aiz-table mb-0">

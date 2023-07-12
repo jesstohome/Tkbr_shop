@@ -47,7 +47,7 @@
                     <button type="submit" class="btn btn-sm btn-primary">{{translate('Save')}}</button>
                 </div>
             </div>
-        </from>
+        </form>
     </div>
 </div>
 
