@@ -61,30 +61,39 @@ class ProductSetMealController extends Controller
             $meal_products = ProductSetMeal::query()->where('category_id', $category_id);
             $meal_products = filter_by_bloc($meal_products);
             $meal_products = $meal_products->select("product_ids")->get();
-            $meal_used_product_ids = [];
             foreach ($meal_products as $meal_product) {
                 $_product_ids = is_string($meal_product->product_ids) ? json_decode($meal_product->product_ids, true) : $meal_product->product_ids;
                 if (!empty($_product_ids)) {
-                    $meal_used_product_ids = array_merge($meal_used_product_ids, $_product_ids);
+                    $all_product_ids = array_merge($all_product_ids, $_product_ids);
+                }
+            }
+
+            $id_count_maps = [];
+            foreach ($all_product_ids as $all_product_id) {
+                if (!isset($id_count_maps[$all_product_id])) {
+                    $id_count_maps[$all_product_id] = 0;
+                } else {
+                    $id_count_maps[$all_product_id]++;
                 }
             }
 
             for($i = 1; $i <= $num; $i++) {
+                // 按已使用数量，从小到大排序
+                asort($id_count_maps);
+
+                // 排序好的取产品ID
+                $product_ids = array_keys($id_count_maps);
+
                 // 排除已在套餐内的产品
-                $product_ids = array_diff($all_product_ids, $meal_used_product_ids);
-                // Log::debug(var_export([$i, $all_product_ids, $meal_used_product_ids, $product_ids], true));
-                if (empty($product_ids)) {
-                    if ($i > 1) continue;
-
-                    flash(translate('No products available'))->error();
-                    return back();
-                }
-
                 $product_num = mt_rand($min_product_num, $max_product_num);
                 $product_ids = array_slice($product_ids, 0, $product_num);
 
-                // 新使用的产品，过滤掉
-                $meal_used_product_ids = array_merge($meal_used_product_ids, $product_ids);
+                // Log::debug(var_export([$i, $id_count_maps, $product_ids], true));
+
+                // 新使用的产品，累计使用次数
+                foreach ($product_ids as $product_id) {
+                    $id_count_maps[$product_id]++;
+                }
 
                 $productSetMeal = new ProductSetMeal();
                 $productSetMeal->bloc_id = \Auth::user()->bloc_id;
