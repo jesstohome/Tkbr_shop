@@ -38,7 +38,10 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-12 col-from-label num-tips"></label>
+                    <label class="col-md-5 col-from-label">当前分类已有套餐数量(个)：</label>
+                    <div class="col-md-5">
+                        <span class="num-tips">0</span>
+                    </div>
                 </div>
 
                 <div class="form-group mb-0 text-right">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductSetMeal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductSetMealController extends Controller
 {
@@ -71,6 +72,7 @@ class ProductSetMealController extends Controller
             for($i = 1; $i <= $num; $i++) {
                 // 排除已在套餐内的产品
                 $product_ids = array_diff($all_product_ids, $meal_used_product_ids);
+                // Log::debug(var_export([$i, $all_product_ids, $meal_used_product_ids, $product_ids], true));
                 if (empty($product_ids)) {
                     if ($i > 1) continue;
 
@@ -92,7 +94,7 @@ class ProductSetMealController extends Controller
                 $productSetMeal->min_price = Product::query()->whereIn('id', $product_ids)->min('unit_price');
                 $productSetMeal->max_price = Product::query()->whereIn('id', $product_ids)->max('unit_price');
                 $productSetMeal->stock = 5000;
-                $productSetMeal->name = chr(65 + $i + $has_count);
+                $productSetMeal->name = chr(65 + $i - 1 + $has_count);
                 $productSetMeal->save();
             }
 
@@ -188,12 +190,10 @@ class ProductSetMealController extends Controller
      * @return mixed
      */
     public function get_has_nums(Request $request) {
-        dd($request);
         $category_id = $request->get('category_id');
         $meal = ProductSetMeal::query()->where("category_id", $category_id);
         $meal = filter_by_bloc($meal);
 
-        dd($meal->count());
         return $meal->count();
     }
 }

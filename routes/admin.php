@@ -632,7 +632,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned',
         Route::get('/product_set_meal/edit/{id}', 'edit')->name('product_set_meal.edit');
         Route::get('/product_set_meal/destroy/{id}', 'destroy')->name('product_set_meal.destroy');
         Route::post('/product_set_meal/products', 'products')->name('product_set_meal.products');
-        Route::get('/product_set_meal/get_has_nums', 'get_has_nums')->name('product_set_meal.get_has_nums');
+        Route::get('/product_set_meal_get_has_nums', 'get_has_nums')->name('product_set_meal.get_has_nums');
     });
 
     Route::resource('/huashu_group', TicketHuaShuGroupController::class);
