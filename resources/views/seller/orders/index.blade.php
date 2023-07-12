@@ -129,7 +129,7 @@
                             <th data-breakpoints="md">{{ translate('Pick Up Price')}}</th>
                             <th data-breakpoints="md">{{ translate('Amount')}}</th>
                             <th data-breakpoints="md">{{ translate('Profit')}}</th>
-                            <th>{{ translate('Pick Up Status') }}</th>
+                            <th style="width: 60px">{{ translate('Pick Up Status') }}</th>
                             <th data-breakpoints="lg">{{ translate('Delivery Status')}}</th>
                             <th>{{ translate('Payment Status')}}</th>
                             <th class="text-right">{{ translate('Options')}}</th>
@@ -150,7 +150,7 @@
                                     </td>
                                     <td>
                                          @if ($order->order_type == 6)
-                                          <span class="badge badge-inline badge-danger">{{ translate('Urgent') }}</span>
+                                            {{ translate('Urgent') }}
                                          @elseif ($order->order_type == 24)
                                           {{ translate('ordinary') }}
                                          @else
@@ -182,16 +182,16 @@
                                     </td>
                                     <td>
                                         @if($order->delivery_status == 'cancelled')
-                                            <span class="badge badge-inline badge-danger">{{translate('Cancelled')}}</span>
+                                            {{translate('Cancelled')}}
                                         @else
                                             @if ($order->product_storehouse_status)
-                                                <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
+                                                {{translate('Picked Up')}}
                                             @else
                                                 @if($order->paymentStatement)
-                                                        <span class="badge badge-inline badge-info">{{translate('Pending')}}</span>
+                                                    {{translate('Pending')}}
                                                 @else
                                                     @if ($order->product_storehouse_total)
-                                                        <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
+                                                        {{translate('Unpicked Up')}}
                                                     @endif
                                                 @endif
                                             @endif
@@ -205,12 +205,12 @@
                                     </td>
                                     <td>
                                         @if($order->delivery_status == 'cancelled')
-                                            <span class="badge badge-inline badge-danger">{{translate('Cancelled')}}</span>
+                                            {{translate('Cancelled')}}
                                         @else
                                             @if ($order->payment_status == 'paid')
-                                                <span class="badge badge-inline badge-success">{{ translate('Buyer has paid')}}</span>
+                                                {{ translate('Buyer has paid')}}
                                             @else
-                                                <span class="badge badge-inline badge-danger">{{ translate('Unpaid')}}</span>
+                                                {{ translate('Unpaid')}}
                                             @endif
                                         @endif
                                     </td>
