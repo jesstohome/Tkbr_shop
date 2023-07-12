@@ -45,7 +45,7 @@
         table = layui.table;
         var dropdown = layui.dropdown;
         @if($list)
-        list = JSON.parse("{{json_encode($list, JSON_UNESCAPED_UNICODE)}}".replace(/&quot;/g, '"'));
+        list = JSON.parse("{{json_encode($list, JSON_UNESCAPED_UNICODE)}}".replace(/&quot;/g, '"').replace(/[\r|\n|\t]/g, ''));
         origin_list = list || [];
         @endif
 
