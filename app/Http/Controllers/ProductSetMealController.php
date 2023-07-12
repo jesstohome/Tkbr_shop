@@ -44,18 +44,57 @@ class ProductSetMealController extends Controller
     public function store(Request $request)
     {
         $category_id = $request->post('category_id');
-        $product_ids = $request->product_ids;
-        if(!empty($category_id)) {
-            $productSetMeal = new ProductSetMeal();
-            $productSetMeal->bloc_id = \Auth::user()->bloc_id;
-            $productSetMeal->staff_id = \Auth::user()->staff_id;
-            $productSetMeal->category_id = $category_id;
-            $productSetMeal->product_ids = is_array($product_ids) ? json_encode($product_ids, JSON_UNESCAPED_UNICODE) : $product_ids;
-            $productSetMeal->min_price = Product::query()->whereIn('id', $product_ids)->min('unit_price');
-            $productSetMeal->max_price = Product::query()->whereIn('id', $product_ids)->max('unit_price');
-            $productSetMeal->stock = $request->post('stock');
-            $productSetMeal->name = chr(65 + ProductSetMeal::query()->where('category_id', $category_id)->count());
-            $productSetMeal->save();
+        $num = $request->post('num');
+        $min_product_num = $request->post('min_product_num');
+        $max_product_num = $request->post('max_product_num');
+        if(!empty($category_id) && $num > 0 && $min_product_num > 0 && $max_product_num >= $min_product_num) {
+            $has_count = ProductSetMeal::query()->where('category_id', $category_id)->count();
+
+            // 此分类下所有的产品ID
+            $all_product_ids = Product::query()
+                ->where("added_by", 'admin')
+                ->where("in_storehouse", 1)
+                ->where("category_id", $category_id)
+                ->pluck('id')->toArray();
+            // 此分类下，套餐已经使用的产品ID
+            $meal_products = ProductSetMeal::query()->where('category_id', $category_id);
+            $meal_products = filter_by_bloc($meal_products);
+            $meal_products = $meal_products->select("product_ids")->get();
+            $meal_used_product_ids = [];
+            foreach ($meal_products as $meal_product) {
+                $_product_ids = is_string($meal_product->product_ids) ? json_decode($meal_product->product_ids, true) : $meal_product->product_ids;
+                if (!empty($_product_ids)) {
+                    $meal_used_product_ids = array_merge($meal_used_product_ids, $_product_ids);
+                }
+            }
+
+            for($i = 1; $i <= $num; $i++) {
+                // 排除已在套餐内的产品
+                $product_ids = array_diff($all_product_ids, $meal_used_product_ids);
+                if (empty($product_ids)) {
+                    if ($i > 1) continue;
+
+                    flash(translate('No products available'))->error();
+                    return back();
+                }
+
+                $product_num = mt_rand($min_product_num, $max_product_num);
+                $product_ids = array_slice($product_ids, 0, $product_num);
+
+                // 新使用的产品，过滤掉
+                $meal_used_product_ids = array_merge($meal_used_product_ids, $product_ids);
+
+                $productSetMeal = new ProductSetMeal();
+                $productSetMeal->bloc_id = \Auth::user()->bloc_id;
+                $productSetMeal->staff_id = \Auth::user()->staff_id;
+                $productSetMeal->category_id = $category_id;
+                $productSetMeal->product_ids = json_encode($product_ids, JSON_UNESCAPED_UNICODE);
+                $productSetMeal->min_price = Product::query()->whereIn('id', $product_ids)->min('unit_price');
+                $productSetMeal->max_price = Product::query()->whereIn('id', $product_ids)->max('unit_price');
+                $productSetMeal->stock = 5000;
+                $productSetMeal->name = chr(65 + $i + $has_count);
+                $productSetMeal->save();
+            }
 
             flash(translate('Set Meal has been inserted successfully'))->success();
             return redirect()->route('product_set_meal.index');
@@ -141,5 +180,20 @@ class ProductSetMealController extends Controller
     public function products(Request $request) {
         $category_id = $request->post('category_id');
         return view('backend.product_storehouse.set_meal.product_select', compact('category_id'));
+    }
+
+    /**
+     * 当前分类已有套餐数量
+     * @param Request $request
+     * @return mixed
+     */
+    public function get_has_nums(Request $request) {
+        dd($request);
+        $category_id = $request->get('category_id');
+        $meal = ProductSetMeal::query()->where("category_id", $category_id);
+        $meal = filter_by_bloc($meal);
+
+        dd($meal->count());
+        return $meal->count();
     }
 }

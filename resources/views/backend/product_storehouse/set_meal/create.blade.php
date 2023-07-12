@@ -23,17 +23,22 @@
                 </div>
 
                 <div class="form-group row mb-3">
-                    <label class="col-sm-3 control-label" for="products">{{translate('Products')}}</label>
-                    <div class="col-sm-9 products-selector">
-
+                    <label class="col-sm-3 control-label" for="num">套餐数量</label>
+                    <div class="col-sm-9">
+                        <input type="number" placeholder="套餐数量" id="num" name="num" class="form-control" required>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-3 col-from-label" for="name">{{translate('Total Stock')}}</label>
+                    <label class="col-md-3 col-from-label" for="min_stock">每个套餐里商品随机数量区间</label>
                     <div class="col-md-9">
-                        <input type="number" placeholder="{{translate('Total Stock')}}" id="stock" name="stock" class="form-control" required>
+                        <input type="number" placeholder="最小" id="min_product_num" name="min_product_num" class="form-control d-inline col-5" required> ~
+                        <input type="number" placeholder="最大" id="max_product_num" name="max_product_num" class="form-control d-inline col-5" required>
                     </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-12 col-from-label num-tips"></label>
                 </div>
 
                 <div class="form-group mb-0 text-right">
@@ -49,9 +54,8 @@
 @section('script')
     <script type="text/javascript">
         function changeCategory() {
-            $.post('{{ route('product_set_meal.products') }}', {_token:'{{ csrf_token() }}', category_id: $("#category_id").val()}, function(data){
-                $('.products-selector').html(data);
-                $(".aiz-selectpicker").selectpicker("refresh");
+            $.get('{{ route('product_set_meal.get_has_nums') }}', {_token:'{{ csrf_token() }}', category_id: $("#category_id").val()}, function(data){
+                $('.num-tips').html(data);
             });
         }
     </script>
