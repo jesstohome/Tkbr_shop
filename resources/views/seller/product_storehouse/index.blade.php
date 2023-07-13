@@ -128,6 +128,9 @@
         var selected_set_meal_ids = [];
         function updateSetMealSelection(set_meal_id) {
             if (loadingSetMealProducts) {
+                // 连续点击的情况下，不要重复提示。就出现一个提示，然后等进度条走完，再次点击的话，才会再提示
+                if ($(".aiz-notify .progress-bar").length > 0) return;
+
                 AIZ.plugins.notify('warning', '{{translate('Operation too fast')}}');
                 return;
             }
