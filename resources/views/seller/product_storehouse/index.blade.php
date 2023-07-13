@@ -178,11 +178,13 @@
                                 }
                             });
                             if (repeat_num > 0) {
+                                if ($(".aiz-notify .progress-bar").length > 0) return;
                                 AIZ.plugins.notify('warning', '{{ translate('Some products are duplicated, Do not add again') }}');
                             } else {
                                 AIZ.plugins.notify('success', '{{ translate('Successfully added, bottom view') }}');
                             }
                         } else {
+                            if ($(".aiz-notify .progress-bar").length > 0) return;
                             AIZ.plugins.notify('warning', '{{ translate('There are no products in the package') }}');
                         }
                     }
