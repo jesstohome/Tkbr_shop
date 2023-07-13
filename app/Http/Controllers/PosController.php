@@ -33,7 +33,19 @@ class PosController extends Controller
         $product_id = $request->product_id;
         $customer_id = $request->customer_id;
         $seller_id = $request->get('seller_id', Session::get('seller_id', 0));
-        $customers = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->where('bloc_id', '>', 0)->orderBy('created_at', 'desc');
+        $customers = User::query()
+            ->leftJoin("conversations", function ($join) use ($seller_id) {
+                $join->on("conversations.sender_id", "=", "users.id")->where("conversations.receiver_id", "=", $seller_id);
+            })
+            ->leftJoin("orders", function ($join) {
+                $join->on("orders.user_id", "=", "users.id")->where("orders.seller_id", "=", $seller_id);
+            })
+            ->where('user_type', 'customer')
+            ->where('email_verified_at', '!=', null)
+            ->where('users.bloc_id', '>', 0)
+            ->selectRaw("users.*, count(conversations.id) as total_conversation, count(orders.id) as total_orders")
+            ->groupBy("users.id")
+            ->orderBy('users.id', 'desc');
         $customers = filter_by_bloc($customers);
         $customers = $customers->get();
         $product = Product::find($product_id);
@@ -109,7 +121,26 @@ class PosController extends Controller
 
         $stocks = new PosProductCollection($products);
         $stocks->appends(['keyword' =>  $request->keyword,'category' => $request->category, 'brand' => $request->brand, 'user_id' => $request->user_id, 'order_by_price' => $request->order_by_price]);
-        return ['page_links' => $page_links, 'products' => $stocks];
+
+        // 根据sellerID重新筛选一次用户
+        $seller_id = $request->user_id;
+        $customers = User::query()
+            ->leftJoin("conversations", function ($join) use ($seller_id) {
+                $join->on("conversations.sender_id", "=", "users.id")->where("conversations.receiver_id", "=", $seller_id);
+            })
+            ->leftJoin("orders", function ($join) {
+                $join->on("orders.user_id", "=", "users.id")->where("orders.seller_id", "=", $seller_id);
+            })
+            ->where('user_type', 'customer')
+            ->where('email_verified_at', '!=', null)
+            ->where('users.bloc_id', '>', 0)
+            ->selectRaw("users.*, count(conversations.id) as total_conversation, count(orders.id) as total_orders")
+            ->groupBy("users.id")
+            ->orderBy('users.id', 'desc');
+        $customers = filter_by_bloc($customers);
+        $customers = $customers->get();
+
+        return ['page_links' => $page_links, 'products' => $stocks, 'customers' => $customers];
     }
 
     public function addToCart(Request $request)

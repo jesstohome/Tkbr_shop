@@ -66,12 +66,11 @@
                                     <option value="">{{translate('Walk In Customer')}}</option>
                                     @foreach ($customers as $key => $customer)
 										<option value="{{ $customer->id }}" data-contact="{{ $customer->email }}" {{$customer->id == $customer_id ? 'selected' : ''}}>
-
-
 										    @if ($customer->is_virtual_user == 1)   (<font color="red">{{translate('Virtual')}}</font>)@endif
-
-
-											{{ $customer->name }} @if($customer->is_virtual == 1) (<font color="red">{{translate('Virtual')}}</font>) @endif
+											{{ $customer->name }}
+                                            @if($customer->is_virtual == 1) (<font color="red">{{translate('Virtual')}}</font>) @endif
+                                            @if($customer->total_conversation) (<font color="red">o</font>) @endif
+                                            @if($customer->total_orders) (<font color="red">⭐</font>) @endif
 										</option>
 									@endforeach
                                 </select>
@@ -501,6 +500,22 @@
                 products = data.products || [];
                 $('#product-list').html(null);
                 setProductList(data);
+
+                // 判断是否显示用户标记
+                (data.customers || []).forEach((customer) => {
+                    let cname = customer.name;
+                    if (customer.is_virtual_user || customer.is_virtual) {
+                        cname = "({{translate('Virtual')}})" + cname;
+                    }
+                    if (customer.total_conversation) {
+                        cname += "(<font style=\"color:red\">o</font>)";
+                    }
+                    if (customer.total_orders) {
+                        cname += "(<font style=\"color:red\">⭐</font>)";
+                    }
+                    $("select[name=user_id]").find("option[value=" + customer.id + "]").html(cname);
+                });
+                $("select[name=user_id]").selectpicker("refresh");
             });
         }
 
