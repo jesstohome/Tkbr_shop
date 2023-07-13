@@ -99,6 +99,8 @@ class ProductSetMealController extends Controller
                 $productSetMeal->bloc_id = \Auth::user()->bloc_id;
                 $productSetMeal->staff_id = \Auth::user()->staff_id;
                 $productSetMeal->category_id = $category_id;
+                $productSetMeal->min_product_num = $min_product_num;
+                $productSetMeal->max_product_num = $max_product_num;
                 $productSetMeal->product_ids = json_encode($product_ids, JSON_UNESCAPED_UNICODE);
                 $productSetMeal->min_price = Product::query()->whereIn('id', $product_ids)->min('unit_price');
                 $productSetMeal->max_price = Product::query()->whereIn('id', $product_ids)->max('unit_price');

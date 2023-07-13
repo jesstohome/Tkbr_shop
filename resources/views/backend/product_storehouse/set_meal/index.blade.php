@@ -56,6 +56,10 @@
                         </th>
                         <th>{{translate('Name')}}</th>
                         <th data-breakpoints="md">{{translate('Number of times added')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total  Product Range')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Products In Storehouse')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Products')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Set Meal')}}</th>
                         <th data-breakpoints="lg">{{translate('Total Stock')}}</th>
                         <th data-breakpoints="sm" class="text-right">{{translate('Options')}}</th>
                     </tr>
@@ -83,6 +87,10 @@
                             </div>
                         </td>
                         <td>{{$row->added_times}}</td>
+                        <td>{{$row->min_product_num}} ~ {{$row->max_product_num}}</td>
+                        <td>{{\App\Models\Product::query()->where("category_id", $row->category_id)->where("in_storehouse", 1)->count()}}</td>
+                        <td>{{count(is_string($row->product_ids) ? json_decode($row->product_ids, true) : $row->product_ids)}}</td>
+                        <td>{{\App\Models\ProductSetMeal::query()->where("category_id", $row->category_id)->count()}}</td>
                         <td>{{$row->stock}}</td>
                         <td class="text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('product_set_meal.edit', ['id' => $row->id] )}}" title="{{ translate('Edit') }}">
