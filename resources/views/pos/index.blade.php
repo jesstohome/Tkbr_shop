@@ -508,12 +508,12 @@
                         cname = "({{translate('Virtual')}})" + cname;
                     }
                     if (customer.total_conversation) {
-                        cname += "(<font style=\"color:red\">o</font>)";
+                        cname += "(<span style=\"color:red\">o</span>)";
                     }
                     if (customer.total_orders) {
-                        cname += "(<font style=\"color:red\">⭐</font>)";
+                        cname += "(<span style=\"color:red\">⭐</span>)";
                     }
-                    $("select[name=user_id]").find("option[value=" + customer.id + "]").html(cname);
+                    $("select[name=user_id]").find("option[value=" + customer.id + "]").attr("data-content", cname).html(cname);
                 });
                 $("select[name=user_id]").selectpicker("refresh");
             });
