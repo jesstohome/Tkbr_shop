@@ -338,13 +338,13 @@
         },3000)
 
 
-        $('#search').on('keyup', function(){
+        /*$('#search').on('keyup', function(){
             search();
         });
 
         $('#search').on('focus', function(){
             search();
-        });
+        });*/
 
         function search(){
             var searchKey = $('#search').val();
