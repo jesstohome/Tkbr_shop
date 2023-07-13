@@ -47,6 +47,8 @@ class CustomerController extends Controller
     public function create_virtual_user( Request $request ) {
         try
         {
+            $max = \intval($request->input('max')) < 1 ? 1 : ( \intval($request->input('max')) > 100 ? 100 : \intval($request->input('max')) );
+
             \DB::beginTransaction();
 
             $bloc_id = Auth::user()->bloc_id;
@@ -55,13 +57,12 @@ class CustomerController extends Controller
                 // 普通员工，最多只能添加100个虚拟卖家
                 if (!isSupperAdmin() && !isBlocManage()) {
                     $count = User::query()->where('user_type', 'customer')->where("staff_id", $staff_id)->count();
-                    if ($count >= 100) {
+                    if ($count + $max >= 100) {
                         return -1;
                     }
                 }
             }
 
-            $max = \intval($request->input('max')) < 1 ? 1 : ( \intval($request->input('max')) > 100 ? 100 : \intval($request->input('max')) );
             for ( $i = 0; $i < $max; $i++ )
             {
                 $faker = \Faker\Factory::create();
