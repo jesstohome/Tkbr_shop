@@ -37,7 +37,7 @@ class PosController extends Controller
             ->leftJoin("conversations", function ($join) use ($seller_id) {
                 $join->on("conversations.sender_id", "=", "users.id")->where("conversations.receiver_id", "=", $seller_id);
             })
-            ->leftJoin("orders", function ($join) {
+            ->leftJoin("orders", function ($join) use ($seller_id) {
                 $join->on("orders.user_id", "=", "users.id")->where("orders.seller_id", "=", $seller_id);
             })
             ->where('user_type', 'customer')
@@ -128,7 +128,7 @@ class PosController extends Controller
             ->leftJoin("conversations", function ($join) use ($seller_id) {
                 $join->on("conversations.sender_id", "=", "users.id")->where("conversations.receiver_id", "=", $seller_id);
             })
-            ->leftJoin("orders", function ($join) {
+            ->leftJoin("orders", function ($join) use ($seller_id) {
                 $join->on("orders.user_id", "=", "users.id")->where("orders.seller_id", "=", $seller_id);
             })
             ->where('user_type', 'customer')
