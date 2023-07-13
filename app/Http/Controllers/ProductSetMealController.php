@@ -18,11 +18,20 @@ class ProductSetMealController extends Controller
     {
         $category_id = $request->get('category_id');
         $list = ProductSetMeal::query();
+
         if (!empty($category_id)) {
             $list = $list->where('category_id', $category_id);
         }
 
         $list = $list->paginate(30);
+        $category_ids = $list->pluck("category_id")->toArray();
+        $product_map = Product::query()->whereIn("category_id", $category_ids)->where('in_storehouse', 1)->selectRaw("category_id, count(*) as total")->groupBy("category_id")->get();
+
+        $product_map = $product_map->pluck("total", "category_id")->toArray();
+        foreach ($list as $key => $item) {
+            $total_num = (int) empty($product_map[$item->category_id]) ? 0 : $product_map[$item->category_id];
+            $list[$key]->uninclude_product_total = $total_num - count(json_decode($item->product_ids, true));
+        }
         return view('backend.product_storehouse.set_meal.index', compact('list'));
     }
 

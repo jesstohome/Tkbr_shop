@@ -56,8 +56,9 @@
                         </th>
                         <th>{{translate('Name')}}</th>
                         <th data-breakpoints="md">{{translate('Number of times added')}}</th>
-                        <th data-breakpoints="lg">{{translate('Total  Product Range')}}</th>
+                        <th data-breakpoints="lg">{{translate('Total Product Range')}}</th>
                         <th data-breakpoints="lg">{{translate('Total Products In Storehouse')}}</th>
+                        <th data-breakpoints="lg">{{translate('Not Added Total Products')}}</th>
                         <th data-breakpoints="lg">{{translate('Total Products')}}</th>
                         <th data-breakpoints="lg">{{translate('Total Set Meal')}}</th>
                         <th data-breakpoints="lg">{{translate('Total Stock')}}</th>
@@ -89,6 +90,7 @@
                         <td>{{$row->added_times}}</td>
                         <td>{{$row->min_product_num}} ~ {{$row->max_product_num}}</td>
                         <td>{{\App\Models\Product::query()->where("category_id", $row->category_id)->where("in_storehouse", 1)->count()}}</td>
+                        <td>{{$row->uninclude_product_total}}</td>
                         <td>{{count(is_string($row->product_ids) ? json_decode($row->product_ids, true) : $row->product_ids)}}</td>
                         <td>{{\App\Models\ProductSetMeal::query()->where("category_id", $row->category_id)->count()}}</td>
                         <td>{{$row->stock}}</td>
