@@ -50,6 +50,17 @@ class CustomerController extends Controller
             \DB::beginTransaction();
 
             $bloc_id = Auth::user()->bloc_id;
+            $staff_id = get_staff_id();
+            if (!empty($staff_id)) {
+                // 普通员工，最多只能添加100个虚拟卖家
+                if (!isSupperAdmin() && !isBlocManage()) {
+                    $count = User::query()->where('user_type', 'customer')->where("staff_id", $staff_id)->count();
+                    if ($count >= 100) {
+                        return -1;
+                    }
+                }
+            }
+
             $max = \intval($request->input('max')) < 1 ? 1 : ( \intval($request->input('max')) > 100 ? 100 : \intval($request->input('max')) );
             for ( $i = 0; $i < $max; $i++ )
             {

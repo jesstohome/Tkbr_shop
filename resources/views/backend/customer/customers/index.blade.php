@@ -287,14 +287,15 @@
                     .then( res =>
                     {
                         if ( res == 1 ) {
-                            AIZ.plugins.notify( 'success', '{{translate('Successfully created virtual customer')}}' )
+                            AIZ.plugins.notify( 'success', '{{translate('Successfully created virtual customer')}}' );
                             setTimeout( () =>
                             {
                                 window.location.reload()
                             }, 500 )
-                        }
-                        else {
-                            AIZ.plugins.notify( 'danger', '{{translate('Executed failure Try again')}}' )
+                        } else if (res == -1) {
+                            AIZ.plugins.notify( 'danger', '{{translate('You can only create up to 100 virtual buyers')}}' );
+                        } else {
+                            AIZ.plugins.notify( 'danger', '{{translate('Executed failure Try again')}}' );
                             target.removeClass( 'disabled' )
                         }
                     } )
