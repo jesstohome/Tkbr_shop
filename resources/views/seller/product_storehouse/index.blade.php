@@ -184,7 +184,13 @@
                                 if ($(".aiz-notify .progress-bar").length > 0) return;
                                 AIZ.plugins.notify('warning', '{{ translate('Some products are duplicated, Do not add again') }}');
                             } else {
-                                AIZ.plugins.notify('success', '{{ translate('Successfully added, bottom view') }}');
+                                if ($(".aiz-notify .progress-bar").length > 0) {
+                                    setTimeout(function () {
+                                        AIZ.plugins.notify('success', '{{ translate('Successfully added, bottom view') }}');
+                                    }, 1e3);
+                                } else {
+                                    AIZ.plugins.notify('success', '{{ translate('Successfully added, bottom view') }}');
+                                }
                             }
                         } else {
                             if ($(".aiz-notify .progress-bar").length > 0) return;
