@@ -23,15 +23,28 @@ class ProductSetMealController extends Controller
             $list = $list->where('category_id', $category_id);
         }
 
-        $list = $list->paginate(30);
         $category_ids = $list->pluck("category_id")->toArray();
         $product_map = Product::query()->whereIn("category_id", $category_ids)->where('in_storehouse', 1)->selectRaw("category_id, count(*) as total")->groupBy("category_id")->get();
 
         $product_map = $product_map->pluck("total", "category_id")->toArray();
+        $used_product_ids = [];
+        foreach ($list->get() as $key => $item) {
+            $product_ids = is_string($item->product_ids) ? json_decode($item->product_ids, true) : $item->product_ids;
+            if (!isset($used_product_ids[$item->category_id])) {
+                $used_product_ids[$item->category_id] = $product_ids;
+            } else {
+                $used_product_ids[$item->category_id] = array_merge($used_product_ids[$item->category_id], $product_ids);
+            }
+            $used_product_ids[$item->category_id] = array_unique($used_product_ids[$item->category_id]);
+        }
+
+        $list = $list->paginate(30);
+
         foreach ($list as $key => $item) {
             $total_num = (int) empty($product_map[$item->category_id]) ? 0 : $product_map[$item->category_id];
-            $list[$key]->uninclude_product_total = $total_num - count(json_decode($item->product_ids, true));
+            $list[$key]->uninclude_product_total = max(0, $total_num - count($used_product_ids[$item->category_id] ?? []));
         }
+
         return view('backend.product_storehouse.set_meal.index', compact('list'));
     }
 
