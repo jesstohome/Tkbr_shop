@@ -110,8 +110,10 @@
                 var product_price = $(this).data('product-price');
                 var ok = updateSelection(product_id, product_name, product_price);
                 if (!ok) {
+                    if ($(".aiz-notify .progress-bar").length > 0) return;
                     AIZ.plugins.notify('warning', '{{ translate('Some products are duplicated, Do not add again') }}');
                 } else {
+                    if ($(".aiz-notify .progress-bar").length > 0) return;
                     AIZ.plugins.notify('success', '{{ translate('Successfully added, bottom view') }}');
                 }
             });
@@ -146,6 +148,7 @@
                     loadingSetMealProducts = false;
                     if (response.success) {
                         if (response.msg) {
+                            if ($(".aiz-notify .progress-bar").length > 0) return;
                             AIZ.plugins.notify('warning', response.msg);
                         }
 
@@ -420,9 +423,11 @@
                 pos_type: $('select[name=pos_type]').val()
             }, function (data) {
                 if (data.success == 1) {
+                    if ($(".aiz-notify .progress-bar").length > 0) return;
                     AIZ.plugins.notify('success', data.message ? data.message : '{{ translate('Product has been updated successfully') }}');
                     location.reload();
                 } else if (data.success == 2) {
+                    if ($(".aiz-notify .progress-bar").length > 0) return;
                     AIZ.plugins.notify('warning', data.message ? data.message : '{{ translate('Due to restrictions on the number of product merchants, some products were not successfully uploaded') }}');
                     setTimeout(function () {
                         location.reload();
