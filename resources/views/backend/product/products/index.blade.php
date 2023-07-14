@@ -123,7 +123,7 @@
                         <!--<th data-breakpoints="lg">#</th>-->
                         <th>{{translate('Name')}}</th>
                         <th data-breakpoints="lg">{{translate('Category')}}</th>
-                    @if($type == 'Seller' || $type == 'All')
+                        @if($type == 'Seller' || $type == 'All')
                             <th data-breakpoints="lg">{{translate('Added By')}}</th>
                         @endif
                         <th data-breakpoints="sm">{{translate('Info')}}</th>
@@ -193,17 +193,12 @@
                         @if($type != 'Seller')
                         <td>
                             <label class="aiz-switch aiz-switch-success mb-0">
-                                <input onchange="update_todays_deal(this)" value="{{ $product->id }}" type="checkbox" <?php if ($product->todays_deal == 1) echo "checked"; ?> >
-                                <span class="slider round"></span>
-                            </label>
-                        </td>
-                        @endif
-                        <td>
-                            <label class="aiz-switch aiz-switch-success mb-0">
                                 <input onchange="update_published(this)" value="{{ $product->id }}" type="checkbox" <?php if ($product->published == 1) echo "checked"; ?> >
                                 <span class="slider round"></span>
                             </label>
                         </td>
+                        @endif
+
                         @if(get_setting('product_approve_by_admin') == 1 && $type == 'Seller')
                             <td>
                                 <label class="aiz-switch aiz-switch-success mb-0">

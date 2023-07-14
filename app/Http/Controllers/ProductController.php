@@ -844,6 +844,13 @@ class ProductController extends Controller
     public function destroy( $id ) {
         $product = Product::findOrFail($id);
 
+        // 判断当前产品是否已经被卖家上架
+        $seller_count = Product::query()->where('original_id', $product->id)->count();
+        if ($seller_count > 0) {
+            flash(translate('The current product has been copied by the seller, could not delete'))->error();
+            return back();
+        }
+
         $product->product_translations()->delete();
         $product->stocks()->delete();
         $product->taxes()->delete();
@@ -1054,46 +1061,6 @@ class ProductController extends Controller
 
         $combinations = Combinations::makeCombinations($options);
         return view('backend.product.products.sku_combinations_edit', compact('combinations', 'unit_price', 'colors_active', 'product_name', 'product'));
-    }
-
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function depository_products( Request $request ) {
-        CoreComponentRepository::instantiateShopRepository();
-
-        $type = 'In House';
-        $col_name = NULL;
-        $query = NULL;
-        $sort_search = NULL;
-
-        $products = Product::where('added_by', 'admin')->where('auction_product', 0)->where('wholesale_product', 0);
-
-        if ( $request->type != NULL )
-        {
-            $var = explode(",", $request->type);
-            $col_name = $var[0];
-            $query = $var[1];
-            $products = $products->orderBy($col_name, $query);
-            $sort_type = $request->type;
-        }
-        if ( $request->search != NULL )
-        {
-            $sort_search = $request->search;
-            $products = $products
-                ->where('name', 'like', '%' . $sort_search . '%')
-                ->orWhereHas('stocks', function ( $q ) use ( $sort_search )
-                {
-                    $q->where('sku', 'like', '%' . $sort_search . '%');
-                });
-        }
-
-        $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(15);
-
-        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'sort_search'));
     }
 
     // 触发店铺生成产品
