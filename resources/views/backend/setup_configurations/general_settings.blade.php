@@ -77,17 +77,27 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-from-label">{{translate('Seller Shop Default Logo')}}</label>
+                            <div class="col-sm-9">
+                                <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text bg-soft-secondary">{{ translate('Browse') }}</div>
+                                    </div>
+                                    <div class="form-control file-amount">{{ translate('Choose Files') }}</div>
+                                    <input type="hidden" name="types[]" value="seller_shop_default_logo">
+                                    <input type="hidden" name="seller_shop_default_logo" value="{{ get_setting('seller_shop_default_logo') }}" class="selected-files">
+                                </div>
+                                <div class="file-preview box sm"></div>
+                            </div>
+                        </div>
 
-                        		 <div class="form-group row">
-                        <label class="col-md-3 col-from-label">Api Url</label>
-						<div class="col-md-8">
-
-							<input readonly type="text" class="form-control"   value="<?php echo "https://".$_SERVER['HTTP_HOST'].'/apicj'; ?>" />
-
-
-
-						</div>
-					</div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">Api Url</label>
+                            <div class="col-md-8">
+                                <input readonly type="text" class="form-control"   value="<?php echo "https://".$_SERVER['HTTP_HOST'].'/apicj'; ?>" />
+                            </div>
+					    </div>
 
 					 <div class="form-group row">
                         <label class="col-md-3 col-from-label">Key</label>

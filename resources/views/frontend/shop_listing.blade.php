@@ -31,7 +31,7 @@
                                     <a href="{{ route('shop.visit', $shop->slug) }}" class="d-block p-3" tabindex="0">
                                         <img
                                             src="{{ static_asset('assets/img/shop-logo.png') }}"
-                                            data-src="{{ uploaded_asset($shop->logo) }}"
+                                            data-src="@if ($shop->logo !== null) {{ uploaded_asset($shop->logo) }} @else {{ !empty(get_setting('seller_shop_default_logo')) ? uploaded_asset(get_setting('seller_shop_default_logo')) : static_asset('assets/img/shop-logo.png') }} @endif"
                                             alt="{{ $shop->name }}"
                                             class="img-fluid lazyload"
                                             style="height: 65px !important;"
