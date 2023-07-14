@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\AffiliateController;
 use App\Http\Controllers\OTPVerificationController;
+use App\Models\Currency;
 use App\Models\DeletedOrder;
 use App\Models\PaymentRecord;
 use App\Models\Review;
@@ -39,7 +40,7 @@ use function translate;
 
 class OrderController extends Controller
 {
-     public function update_delivery_info(Request $request)
+    public function update_delivery_info(Request $request)
     {
         parse_str( $_POST['data'] , $arr );
         $arr['express_info'] = array_filter($arr['express_info']);
@@ -1240,5 +1241,19 @@ class OrderController extends Controller
         ])->orderByDesc('id')->first();
 
         return view('backend.sales.cashier_orders.product_review_detail_modal', compact('review'));
+    }
+
+    private function _get_bloc_exchange_amount($list, $bloc) {
+        $currency_name = '';
+        $amount_4_currency = 0;
+        if ($bloc) {
+            foreach ($list->select("grand_total", "exchange_rate")->get() as $row) {
+                $amount_4_currency += (float) number_format($row->amount * number_format($row->exchange_rate, 2), 2, '.', '');
+            }
+            $bloc_currency = Currency::query()->where('code', $bloc->currency_code)->first();
+            $currency_name = $bloc_currency->name;
+        }
+
+        return [$currency_name, $amount_4_currency];
     }
 }
