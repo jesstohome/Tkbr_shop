@@ -684,6 +684,7 @@ class PosController extends Controller
         $message->save();
 
         $conversation->sender_viewed = "1";
+        $conversation->updated_at = date('Y-m-d H:i:s');
         $conversation->save();
 
         if (isAdmin()) {
