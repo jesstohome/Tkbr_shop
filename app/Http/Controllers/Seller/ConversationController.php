@@ -108,7 +108,6 @@ class ConversationController extends Controller
             $conversation->sender_viewed = "1";
         }
         $conversation->admin_viewed = 0;
-        $conversation->updated_at = date('Y-m-d H:i:s');
         $conversation->save();
 
         hset_plus('new_pos_conversation_tip', $conversation->id, 1);
