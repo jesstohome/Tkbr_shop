@@ -3,6 +3,9 @@
     .card-body {
         overflow-x: auto;
     }
+    table {
+        font-size: 12px;
+    }
 </style>
 @section('content')
     <div class="row">
