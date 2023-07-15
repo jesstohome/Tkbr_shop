@@ -50,123 +50,7 @@
         </div>
     </form>
 
-    <div class="card-body">
-        <table class="table aiz-table mb-0">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>{{translate('Order Code')}}</th>
-                    <th>{{ translate('Order Type') }}</th>
-                    <th>{{ translate('Time Left') }}</th>
-                    @if (isSupperAdmin())<th>{{ translate('Bloc') }}</th>@endif
-                    <th>{{ translate('Staffs') }}</th>
-                    <th>{{translate('Shop')}}</th>
-                    <th data-breakpoints="md">{{translate('Num. of Products')}}</th>
-                    <th data-breakpoints="md">{{translate('Customer')}}</th>
-                    <th data-breakpoints="md">{{translate('Amount')}}</th>
-                    <th data-breakpoints="md">{{translate('Delivery Status')}}</th>
-                    <th data-breakpoints="md">{{translate('Payment Method')}}</th>
-                    <th data-breakpoints="md">{{translate('Payment Status')}}</th>
-                    @if (addon_is_activated('refund_request'))
-                        <th>{{translate('Refund')}}</th>
-                    @endif
-                    <th class="text-right" width="15%">{{translate('Options')}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($orders as $key => $order)
-                    <tr>
-                        <td>
-                            {{ ($key+1) + ($orders->currentPage() - 1)*$orders->perPage() }}
-                        </td>
-                        <td>
-                            {{ $order->code }}@if($order->viewed == 0) <span class="badge badge-inline badge-info">{{translate('New')}}</span>@endif
-                        </td>
-                        <td>
-                             @if ($order->order_type == 6)
-                              <span class="badge badge-inline badge-danger">{{ translate('Urgent') }}</span>
-                             @elseif ($order->order_type == 24)
-                              {{ translate('ordinary') }}
-                             @else
-                              {{ translate('ordinary') }}
-                             @endif
-                        </td>
-                        <td>
-                            @if ($order->order_type == 6)
-                                {{ strtotime($order['created_at'].'+6 hours')-strtotime(date('Y-m-d H:i:s'))>0?date('H:i:s',strtotime($order['created_at'].'+6 hours')-strtotime(date('Y-m-d H:i:s'))):0 }}
-                            @else
-                                {{ strtotime($order['created_at'].'+24 hours')-strtotime(date('Y-m-d H:i:s')) >0?date('H:i:s',strtotime($order['created_at'].'+24 hours')-strtotime(date('Y-m-d H:i:s'))):0}}
-                            @endif
-                        </td>
-                        @if (isSupperAdmin())<td>{{$order->shop->bloc ? $order->shop->bloc->name : ''}}</td>@endif
-                        <td>{{$order->shop->staff ? $order->shop->staff->user->email : ''}}</td>
-                         <td>
-                            @php
-                            $shop = App\Models\User::where('id',$order->seller_id)->first();
-                            echo $shop['name'];
-                            @endphp
-
-
-                        </td>
-
-
-                        <td>
-                            {{ count($order->orderDetails->where('seller_id', $admin_user_id)) }}
-                        </td>
-                        <td>
-                            @if ($order->user != null)
-                                {{ $order->user->name }}
-                            @else
-                                Guest ({{ $order->guest_id }})
-                            @endif
-                        </td>
-                        <td>
-                            {{ single_price($order->orderDetails->where('seller_id', $admin_user_id)->sum('price') + $order->orderDetails->where('seller_id', $admin_user_id)->sum('tax')) }}
-                        </td>
-                        <td>
-                            @php
-                                $status = $order->delivery_status;
-                            @endphp
-                            {{ translate(ucfirst(str_replace('_', ' ', $status))) }}
-                        </td>
-                        <td>
-                            {{ translate(ucfirst(str_replace('_', ' ', $order->payment_type))) }}
-                        </td>
-                        <td>
-                            @if ($order->payment_status == 'paid')
-                            <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
-                            @else
-                            <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
-                            @endif
-                        </td>
-                        @if (addon_is_activated('refund_request'))
-                            <td>
-                                @if (count($order->refund_requests) > 0)
-                                    {{ count($order->refund_requests) }} {{ translate('Refund') }}
-                                @else
-                                    {{ translate('No Refund') }}
-                                @endif
-                            </td>
-                        @endif
-
-                        <td class="text-right">
-                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('inhouse_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
-                                <i class="las la-eye"></i>
-                            </a>
-                            <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
-                                <i class="las la-download"></i>
-                            </a>
-
-                            @include('backend.sales.btns')
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="aiz-pagination">
-            {{ $orders->appends(request()->input())->links() }}
-        </div>
-    </div>
+    @include("backend.sales.order-table")
 </div>
 
 @endsection
@@ -181,4 +65,5 @@
             $('#sort_orders').submit();
         }
     </script>
+    @include("backend.sales.script")
 @endsection

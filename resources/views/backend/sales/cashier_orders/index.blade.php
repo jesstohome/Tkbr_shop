@@ -40,7 +40,11 @@
 
             @include('backend.partials.filters.seller')
             @include('backend.partials.filters.payment_code')
-
+        </div>
+        <div class="card-header row gutters-5">
+            @include('backend.sales.filter')
+        </div>
+        <div class="card-header row gutters-5" style="justify-content: flex-start;">
             <div class="col-lg-2">
                 <div class="form-group mb-0">
                     <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="customer_id" name="customer_id" data-live-search="true">
@@ -53,13 +57,11 @@
                     </select>
                 </div>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-3">
                 <div class="form-group mb-0">
                     <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
             </div>
-            @include('backend.sales.filter')
-
             <div class="col-auto">
                 <div class="form-group mb-0">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
@@ -68,179 +70,7 @@
             </div>
         </div>
 
-        <div class="card-body">
-            <table class="table aiz-table mb-0">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>
-                            <div class="form-group">
-                                <div class="aiz-checkbox-inline">
-                                    <label class="aiz-checkbox">
-                                        <input type="checkbox" class="check-all">
-                                        <span class="aiz-square-check"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </th>
-                        <th>{{ translate('Order Code') }}</th>
-                        @if (isSupperAdmin())<th>{{ translate('Bloc') }}</th>@endif
-                        <th>{{ translate('Staffs') }}</th>
-                        <th>{{ translate('Shop') }}</th>
-                        <th data-breakpoints="md">{{ translate('Num. of Products') }}</th>
-                        <th data-breakpoints="md">{{ translate('Customer') }}</th>
-                        <th data-breakpoints="md">{{ translate('Amount') }}</th>
-                        <th data-breakpoints="md">{{ translate('Profit') }}</th>
-                        <th data-breakpoints="md">{{ translate('Pick Up Status') }}</th>
-                        <th>{{ translate('Order Time') }}</th>
-                        <th>{{ translate('Pickup Time') }}</th>
-                        <th data-breakpoints="md">{{ translate('Delivery Status') }}</th>
-                        <th data-breakpoints="md">{{ translate('Payment Code') }}</th>
-                        <th data-breakpoints="md">{{ translate('Payment Status') }}</th>
-                        @if (addon_is_activated('refund_request'))
-                        <th>{{ translate('Refund') }}</th>
-                        @endif
-                        <th>{{ translate('Has the loan been released') }}</th>
-                        <th>{{ translate('Unfreeze Time') }}</th>
-                        <th class="text-right" width="15%">{{translate('options')}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($orders as $key => $order)
-                    <tr>
-                        <td>
-                            {{ ($key+1) + ($orders->currentPage() - 1)*$orders->perPage() }}
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                <div class="aiz-checkbox-inline">
-                                    <label class="aiz-checkbox">
-                                        <input type="checkbox" class="check-one" name="id[]" value="{{$order->id}}">
-                                        <span class="aiz-square-check"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            {{ $order->code }}
-                        </td>
-        @if (isSupperAdmin())<td>{{$order->shop->bloc ? $order->shop->bloc->name : ''}}</td>@endif
-        <td>{{$order->shop->staff ? $order->shop->staff->user->email : ''}}</td>
-                        <td>
-                            @php
-             $shop = App\Models\User::where('id',$order->seller_id)->first();
-             echo $shop['name'];
-             @endphp
-
-
-                        </td>
-                        <td>
-                            {{ count($order->orderDetails) }}
-                        </td>
-                        <td>
-                            @if ($order->user != null)
-                            {{ $order->user->name }}
-                            @else
-                            Guest ({{ $order->guest_id }})
-                            @endif
-                        </td>
-                        <td>
-                            {{ single_price($order->grand_total) }}
-                        </td>
-                        <td>
-                            @if ($order->product_storehouse_total > 0)
-                                {{ single_price($order->grand_total - $order->product_storehouse_total) }}
-                            @else
-                                {{ translate('None') }}
-                            @endif
-                        </td>
-                        <td style="width: 80px;">
-                            @if ($order->product_storehouse_total > 0)
-                                @if ($order->product_storehouse_status)
-                                    <span class="badge badge-inline badge-success">{{translate('Picked Up')}}</span>
-                                    @if(hget_plus('orders_pick_up_tip', $order->id))
-                                        <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
-                                    @endif
-                                @else
-                                    <span class="badge badge-inline badge-danger">{{translate('Unpicked Up')}}</span>
-                                @endif
-                            @endif
-                        </td>
-        <td>{{$order->created_at}}</td>
-
-        <td>{{$order->pickup_time ? date('Y-m-d H:i:s', $order->pickup_time) : ''}}</td>
-                        <td>
-                            @php
-             $status = $order->delivery_status;
-             if($order->delivery_status == 'cancelled') {
-                 $status = '<span class="badge badge-inline badge-danger">'.translate('Cancel').'</span>';
-             }
-
-             @endphp
-                            @if($order->delivery_status == 'cancelled')
-                                {!! $status !!}
-                            @else
-                                {{translate(str_replace('_', ' ', $status))}}
-                            @endif
-                        </td>
-                        <td>{{$order->payment_record ? translate(str_replace('_', ' ', $order->payment_record->payment_code)) : ''}}</td>
-                        <td>
-                            @if ($order->payment_status == 'paid')
-                            <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
-                            @else
-                            <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
-                            @endif
-                        </td>
-                        @if (addon_is_activated('refund_request'))
-                        <td>
-                            @if (count($order->refund_requests) > 0)
-                            {{ count($order->refund_requests) }} {{ translate('Refund') }}
-                            @else
-                            {{ translate('No Refund') }}
-                            @endif
-                        </td>
-                        <td>
-                            @if ($order->product_storehouse_status && !$order->freeze_expired_at)
-                            {{translate('Yes')}}
-                            @else
-                            {{translate('No')}}
-                            @endif
-                        </td>
-                        @endif
-
-        <td>{{$order->unfreeze_time ? date('Y-m-d H:i:s', $order->unfreeze_time) : ''}}</td>
-                        <td class="text-right">
-                            @if(count($order->orderDetails) == 1)
-                                @if($order->orderDetails[0]->reviewed)
-                                    <a class="btn btn-soft-success btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_review_detail('{{ $order->orderDetails[0]->product_id }}', '{{$order->user_id}}', '{{$order->id}}')">
-                                        {{translate('Reviewed')}}
-                                    </a>
-                                @else
-                                <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_review('{{ $order->orderDetails[0]->product_id }}', '{{$order->user_id}}', '{{$order->id}}')" title="{{ translate('Review') }}">
-                                    {{ translate('Review') }}
-                                </a>
-                                @endif
-                            @endif
-                            <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
-                                <i class="las la-eye"></i>
-                            </a>
-                            <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{ route('invoice.download', $order->id) }}" title="{{ translate('Download Invoice') }}">
-                                <i class="las la-download"></i>
-                            </a>
-
-                            @include('backend.sales.btns')
-
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            <div class="aiz-pagination">
-                {{ $orders->appends(request()->input())->links() }}
-            </div>
-
-        </div>
+        @include("backend.sales.order-table")
     </form>
 </div>
 
@@ -260,6 +90,7 @@
 @endsection
 
 @section('script')
+    @include('backend.sales.script')
     <script type="text/javascript">
         function product_review(product_id, user_id, order_id) {
             $.post('{{ route('product_review_modal.show') }}', {
@@ -344,4 +175,5 @@
             });
         }
     </script>
+    @include("backend.sales.script")
 @endsection

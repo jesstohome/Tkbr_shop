@@ -165,6 +165,10 @@ class OrderController extends Controller
             $orders = $orders->whereIn($table_name.'.id', PaymentRecord::query()->where('payment_code', $request->payment_code)->pluck('order_id')->toArray());
         }
 
+        if ($request->ids) {
+            $orders = $orders->whereIn('id', explode(",", $request->ids));
+        }
+
         $orders = $this->_filter_orders($orders, $request, $table_name);
 
         $orders = filter_by_bloc($orders);
@@ -173,6 +177,7 @@ class OrderController extends Controller
         $orders_clone = clone $orders;
         $total = $orders_clone->count();
         $total_amount = $orders_clone->sum('grand_total');
+        $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
         $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
         $orders = $orders->paginate(15)->appends(request()->query());
@@ -187,7 +192,7 @@ class OrderController extends Controller
         if ($request->source === 'deleted') {
             $view = 'backend.sales.all_orders.index_deleted';
         }
-        return view($view, compact('orders', 'sort_search', 'delivery_status', 'date_range', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code'));
+        return view($view, compact('orders', 'sort_search', 'delivery_status', 'date_range', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code', 'sum_product_storehouse_total'));
     }
 
     public function all_deleted_orders(Request $request) {
@@ -254,8 +259,19 @@ class OrderController extends Controller
         if ($date != null) {
             $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
+        if ($request->ids) {
+            $orders = $orders->whereIn('id', explode(",", $request->ids));
+        }
+
+        // 统计
+        $orders_clone = clone $orders;
+        $total = $orders_clone->count();
+        $total_amount = $orders_clone->sum('grand_total');
+        $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
+        $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
+
         $orders = $orders->paginate(15);
-        return view('backend.sales.storehouse_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date'));
+        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total'));
     }
 
     public function storehouse_orders_show($id)
@@ -349,6 +365,9 @@ class OrderController extends Controller
         if ($date != null) {
             $orders = $orders->whereDate('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->whereDate('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
         }
+        if ($request->ids) {
+            $orders = $orders->whereIn('id', explode(",", $request->ids));
+        }
 
         $orders = $this->_filter_orders($orders, $request);
 
@@ -358,10 +377,11 @@ class OrderController extends Controller
         $orders_clone = clone $orders;
         $total = $orders_clone->count();
         $total_amount = $orders_clone->sum('grand_total');
-        $total_customers = $orders_clone->distinct('user_id')->count();
+        $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
+        $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
         $orders = $orders->paginate(15)->appends(request()->query());
-        return view('backend.sales.inhouse_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total'));
     }
 
     public function show($id)
@@ -420,6 +440,9 @@ class OrderController extends Controller
         if ($customer_id) {
             $orders = $orders->where('user_id', $customer_id);
         }
+        if ($request->ids) {
+            $orders = $orders->whereIn('id', explode(",", $request->ids));
+        }
 
         $orders = $this->_filter_orders($orders, $request);
 
@@ -429,11 +452,12 @@ class OrderController extends Controller
         $orders_clone = clone $orders;
         $total = $orders_clone->count();
         $total_amount = $orders_clone->sum('grand_total');
-        $total_customers = $orders_clone->distinct('user_id')->count();
+        $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
+        $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
         $orders = $orders->paginate(15)->appends(request()->query());
 
-        return view('backend.sales.seller_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'customer_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'customer_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total'));
     }
 
      //Clocking Orders
@@ -474,6 +498,9 @@ class OrderController extends Controller
         if ($seller_id) {
             $orders = $orders->where('seller_id', $seller_id);
         }
+        if ($request->ids) {
+            $orders = $orders->whereIn('id', explode(",", $request->ids));
+        }
 
         $orders = $this->_filter_orders($orders, $request);
 
@@ -483,11 +510,12 @@ class OrderController extends Controller
         $orders_clone = clone $orders;
         $total = $orders_clone->count();
         $total_amount = $orders_clone->sum('grand_total');
-        $total_customers = $orders_clone->distinct('user_id')->count();
+        $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
+        $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
         $orders = $orders->paginate(15)->appends(request()->query());
 
-        return view('backend.sales.clocking_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total'));
     }
 
     /**
@@ -537,6 +565,9 @@ class OrderController extends Controller
         if ($customer_id) {
             $orders = $orders->where('user_id', $customer_id);
         }
+        if ($request->ids) {
+            $orders = $orders->whereIn('id', explode(",", $request->ids));
+        }
 
         // 三种时间的区间筛选
         if ($request->order_time_range) {
@@ -576,11 +607,12 @@ class OrderController extends Controller
         $orders_clone = clone $orders;
         $total = $orders_clone->count();
         $total_amount = $orders_clone->sum('grand_total');
-        $total_customers = $orders_clone->distinct('user_id')->count();
+        $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
+        $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
         $orders = $orders->paginate(15)->appends(request()->query());
 
-        return view('backend.sales.cashier_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'customer_id', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'customer_id', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code', 'sum_product_storehouse_total'));
     }
 
     public function seller_orders_show($id)
