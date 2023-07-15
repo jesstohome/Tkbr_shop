@@ -1162,7 +1162,7 @@ if (!function_exists('purchase_payment_done')) {
 if (!function_exists('storehouseProduct_payment_done')) {
     function storehouseProduct_payment_done($order_id, $payment_code, $third_order_code = '', $pickup_pay_amount = -1)
     {
-        \Illuminate\Support\Facades\Log::debug(var_export(['storehouseProduct_payment_done.request()' => [request()->input(), request()->post(), request()->all()]], true));
+        \Illuminate\Support\Facades\Log::debug(var_export(['storehouseProduct_payment_done.request()' => [request()->input()]], true));
         $order = Order::findOrFail($order_id);
         $shop = $order->shop;
         // 累计冻结资金
@@ -1174,12 +1174,13 @@ if (!function_exists('storehouseProduct_payment_done')) {
         $order->freeze_expired_at = \Illuminate\Support\Carbon::now()->addDays($freezeDays)->timestamp;
 
         $pickup_pay_amount = (float) $pickup_pay_amount > -1 ? $pickup_pay_amount : $order->product_storehouse_total;
-        $pickup_currency = request()->input('currency');
+        $pickup_currency = request()->input('currency', $shop->bloc->currency_code);
         $currency = Currency::query()->where('code', $pickup_currency)->first();
-
-        $order->pickup_currency = $pickup_currency;
-        $order->pickup_currency_exchange_rate = $currency->exchange_rate;
-        $order->pickup_currency_storehouse_amount = $currency->exchange_rate * $pickup_pay_amount;
+        if (!empty($currency)) {
+            $order->pickup_currency = $pickup_currency;
+            $order->pickup_currency_exchange_rate = $currency->exchange_rate;
+            $order->pickup_currency_storehouse_amount = $currency->exchange_rate * $pickup_pay_amount;
+        }
         $order->pickup_pay_amount = $pickup_pay_amount;
         $order->pickup_time = time();
         $order->product_storehouse_status = 1;
