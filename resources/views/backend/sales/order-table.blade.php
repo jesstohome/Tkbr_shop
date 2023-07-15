@@ -182,8 +182,16 @@
         </tbody>
     </table>
 
-    <div class="aiz-pagination">
+    <div class="aiz-pagination" style="display: flex">
         {{ $orders->appends(request()->input())->links() }}
+
+        @if($orders->lastPage() > 1)
+            <select name="perPage" class="form-control" style="flex: 0.1" onchange="changeFormPerPage(this)">
+                @foreach([15, 50, 100, 200] as $page_num)
+                    <option value="{{$page_num}}" {{$perPage == $page_num ? 'selected' : ''}}>{{$page_num}}</option>
+                @endforeach
+            </select>
+        @endif
     </div>
 
 </div>

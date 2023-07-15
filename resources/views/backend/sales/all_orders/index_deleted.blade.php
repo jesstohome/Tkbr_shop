@@ -6,7 +6,7 @@
 </style>
 @section('content')
     <div class="row">
-        <div class="col-12"><h5 class="mb-md-0 h6">({{translate('Total')}}: {{$total_customers}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}})</h5></div>
+        <div class="col-12"><h5 class="mb-md-0 h6">({{translate('Total')}}: {{$total_customers}} {{translate('People')}}, {{$total}} {{translate('Transactions')}}, {{single_price($total_amount)}} {{translate('Amount')}} {{translate('Pickup Amount')}}:{{single_price($sum_product_storehouse_total)}})</h5></div>
     </div>
 <div class="card">
     <form class="" action="" id="sort_orders" method="GET">
@@ -83,6 +83,7 @@
                         <th data-breakpoints="md">{{ translate('Num. of Products') }}</th>
                         <th data-breakpoints="md">{{ translate('Customer') }}</th>
                         <th data-breakpoints="md">{{ translate('Amount') }}</th>
+                        <th data-breakpoints="md">{{ translate('Pickup Amount') }}</th>
                         <th data-breakpoints="md">{{ translate('Profit') }}</th>
                         <th data-breakpoints="md">{{ translate('Pick Up Status') }}</th>
                         <th>{{ translate('Pickup Time') }}</th>
@@ -152,6 +153,9 @@
                         </td>
                         <td>
                             {{ single_price($order->grand_total) }}
+                        </td>
+                        <td>
+                            {{ single_price($order->product_storehouse_total) }}
                         </td>
                         <td>
                             @if ($order->product_storehouse_total > 0)
@@ -225,8 +229,16 @@
                 </tbody>
             </table>
 
-            <div class="aiz-pagination">
+            <div class="aiz-pagination" style="display: flex">
                 {{ $orders->appends(request()->input())->links() }}
+
+                @if($orders->lastPage() > 1)
+                    <select name="perPage" class="form-control" style="flex: 0.1" onchange="changeFormPerPage(this)">
+                        @foreach([15, 50, 100, 200] as $page_num)
+                            <option value="{{$page_num}}" {{$perPage == $page_num ? 'selected' : ''}}>{{$page_num}}</option>
+                        @endforeach
+                    </select>
+                @endif
             </div>
 
         </div>
@@ -296,4 +308,6 @@
         }
 
     </script>
+
+    @include("backend.sales.script")
 @endsection

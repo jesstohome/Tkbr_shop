@@ -180,7 +180,8 @@ class OrderController extends Controller
         $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
         $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
-        $orders = $orders->paginate(15)->appends(request()->query());
+        $perPage = $request->perPage ?: 15;
+        $orders = $orders->paginate($perPage)->appends(request()->query());
         foreach ($orders as $order) {
             $order->admin_viewed = 1;
             $order->save();
@@ -193,7 +194,7 @@ class OrderController extends Controller
             $view = 'backend.sales.all_orders.index_deleted';
         }
 
-        return view($view, compact('orders', 'sort_search', 'delivery_status', 'date_range', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code', 'sum_product_storehouse_total'));
+        return view($view, compact('orders', 'sort_search', 'delivery_status', 'date_range', 'seller_id', 'customer_id', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code', 'sum_product_storehouse_total', 'perPage'));
     }
 
     public function all_deleted_orders(Request $request) {
@@ -271,10 +272,11 @@ class OrderController extends Controller
         $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
         $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
-        $orders = $orders->paginate(15);
+        $perPage = $request->perPage ?: 15;
+        $orders = $orders->paginate($perPage)->appends(request()->query());
 
         $order_title = 'Storehouse Orders';
-        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title'));
+        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage'));
     }
 
     public function storehouse_orders_show($id)
@@ -383,10 +385,11 @@ class OrderController extends Controller
         $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
         $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
-        $orders = $orders->paginate(15)->appends(request()->query());
+        $perPage = $request->perPage ?: 15;
+        $orders = $orders->paginate($perPage)->appends(request()->query());
 
         $order_title = 'Inhouse Orders';
-        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage'));
     }
 
     public function show($id)
@@ -460,10 +463,11 @@ class OrderController extends Controller
         $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
         $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
-        $orders = $orders->paginate(15)->appends(request()->query());
+        $perPage = $request->perPage ?: 15;
+        $orders = $orders->paginate($perPage)->appends(request()->query());
 
         $order_title = 'Seller Orders';
-        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'customer_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'customer_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage'));
     }
 
      //Clocking Orders
@@ -519,10 +523,11 @@ class OrderController extends Controller
         $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
         $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
-        $orders = $orders->paginate(15)->appends(request()->query());
+        $perPage = $request->perPage ?: 15;
+        $orders = $orders->paginate($perPage)->appends(request()->query());
 
         $order_title = 'All Orders';
-        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage'));
     }
 
     /**
@@ -617,10 +622,11 @@ class OrderController extends Controller
         $sum_product_storehouse_total = $orders_clone->sum('product_storehouse_total');
         $total_customers = $orders_clone->distinct($table_name.'.user_id')->count();
 
-        $orders = $orders->paginate(15)->appends(request()->query());
+        $perPage = $request->perPage ?: 15;
+        $orders = $orders->paginate($perPage)->appends(request()->query());
 
         $order_title = 'All Orders';
-        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'customer_id', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code', 'sum_product_storehouse_total', 'order_title'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'customer_id', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code', 'sum_product_storehouse_total', 'order_title', 'perPage'));
     }
 
     public function seller_orders_show($id)
