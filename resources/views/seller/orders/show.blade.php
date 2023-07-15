@@ -449,6 +449,7 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="order_id" value="{{encrypt($order->id)}}">
+                    <input type="hidden" name="currency" value="">
                     <div class="row">
                         <div class="col-6 text-left" style="font-weight: 600">
                             <p>{{ translate('Wallet Balance')}}: {{single_price(Auth::user()->balance)}}</p>

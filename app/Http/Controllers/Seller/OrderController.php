@@ -196,27 +196,29 @@ class OrderController extends Controller
         if (!$order || $order->product_storehouse_total <= 0) return response()->json(['success' => 0, 'message' => translate('Something went wrong!')]);
         if ($order->product_storehouse_status == 1) return response()->json(['success' => 0, 'message' => translate('Payment completed')]);
 
+        $pickup_pay_amount = $order->product_storehouse_total;
         $bloc = Bloc::find($order->shop->bloc_id);
         if (!empty($bloc->discount)) {
-            $order->product_storehouse_total = $order->product_storehouse_total * (1 - $bloc->discount / 100);
+            $pickup_pay_amount = $pickup_pay_amount * (1 - $bloc->discount / 100);
         }
 
         DB::beginTransaction();
         $shop = $order->shop;
         $user = $shop->user;
 
-        if ($user->balance >= $order->product_storehouse_total) {
-            $user->balance -= $order->product_storehouse_total;
+        if ($user->balance >= $pickup_pay_amount) {
+            $user->balance -= $pickup_pay_amount;
             $user->save();
 
             // 记录钱包支出日志
             $walletExpenseLog = new WalletExpenseLog();
             $walletExpenseLog->user_id = $user->id;
-            $walletExpenseLog->amount = $order->product_storehouse_total;
+            $walletExpenseLog->target_id = $order->id;
+            $walletExpenseLog->amount = $pickup_pay_amount;
             $walletExpenseLog->type = 'pick up';
             $walletExpenseLog->save();
 
-            storehouseProduct_payment_done($orderId, 'wallet');
+            storehouseProduct_payment_done($orderId, 'wallet', '', $pickup_pay_amount);
 
             DB::commit();
 

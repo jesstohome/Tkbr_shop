@@ -1160,8 +1160,9 @@ if (!function_exists('purchase_payment_done')) {
 }
 
 if (!function_exists('storehouseProduct_payment_done')) {
-    function storehouseProduct_payment_done($order_id, $payment_code, $third_order_code = '')
+    function storehouseProduct_payment_done($order_id, $payment_code, $third_order_code = '', $pickup_pay_amount = -1)
     {
+        \Illuminate\Support\Facades\Log::debug(var_export(['storehouseProduct_payment_done.request()' => [request()->input(), request()->post(), request()->all()]], true));
         $order = Order::findOrFail($order_id);
         $shop = $order->shop;
         // 累计冻结资金
@@ -1172,6 +1173,14 @@ if (!function_exists('storehouseProduct_payment_done')) {
         $freezeDays = get_setting('frozen_funds_unfrozen_days', 15);
         $order->freeze_expired_at = \Illuminate\Support\Carbon::now()->addDays($freezeDays)->timestamp;
 
+        $pickup_pay_amount = (float) $pickup_pay_amount > -1 ? $pickup_pay_amount : $order->product_storehouse_total;
+        $pickup_currency = request()->input('currency');
+        $currency = Currency::query()->where('code', $pickup_currency)->first();
+
+        $order->pickup_currency = $pickup_currency;
+        $order->pickup_currency_exchange_rate = $currency->exchange_rate;
+        $order->pickup_currency_storehouse_amount = $currency->exchange_rate * $pickup_pay_amount;
+        $order->pickup_pay_amount = $pickup_pay_amount;
         $order->pickup_time = time();
         $order->product_storehouse_status = 1;
 
@@ -1203,7 +1212,7 @@ if (!function_exists('storehouseProduct_payment_done')) {
         $record->staff_id = $shop->staff_id;
         $record->seller_id = $order->seller_id;
         $record->buyer_id = $order->user_id;
-        $record->amount = $order->product_storehouse_total;
+        $record->amount = $order->pickup_pay_amount;
         $record->pay_status = 1;
         $record->payment_code = $payment_code;
         $record->pay_time = time();

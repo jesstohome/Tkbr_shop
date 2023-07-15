@@ -199,6 +199,7 @@
             AIZ.plugins.notify('warning', '{{ translate("Due to your store's violation of Article 19 of the 'Store Opening and Admission Policy', you have been restricted from using the wallet payment function. If you have any questions, please contact TikTok online customer service") }}');
             return;
         @endif
+        $('#payment_for_storehouse_modal').find("input[name=currency]").val($("#currency").val());
         $('#payment_for_storehouse_modal').modal('show');
     }
 </script>

@@ -129,6 +129,7 @@ class SellerWithdrawRequestController extends Controller
                     // 记录支出日志
                     $walletExpenseLog = new WalletExpenseLog();
                     $walletExpenseLog->user_id = $user->id;
+                    $walletExpenseLog->target_id = $seller_withdraw_request->id;
                     $walletExpenseLog->amount = $request->amount;
                     $walletExpenseLog->type = 'withdrawal';
                     $walletExpenseLog->save();
