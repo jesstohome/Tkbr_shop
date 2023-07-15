@@ -60,10 +60,10 @@
             css: [ // 重设当前表格样式
                 // '.layui-table-tool-temp{padding-right: 145px;}'
             ].join(''),
-            cellMinWidth: 300,
+            cellMinWidth: 150,
             cols: [[
-                {field:'abstract', width: '40%', title: '{{translate('abstract')}}', edit: 'textarea'},
-                {field:'content',width: '40%', title: '{{translate('content')}}', edit: 'textarea'},
+                {field:'abstract', width: '10%', title: '{{translate('abstract')}}', edit: 'textarea'},
+                {field:'content',width: '600', title: '{{translate('content')}}', edit: 'textarea'},
                 {{--{field:'group_id',Width: '10%', title: '{{translate('Group')}}', templet: '#TPL-select-group'},--}}
                 {title:'{{translate('Option')}}', Width: '200px', toolbar: '#barDemo'}
             ]],

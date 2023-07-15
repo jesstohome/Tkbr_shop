@@ -39,7 +39,7 @@ class TicketHuaShuGroupController extends Controller
     {
         $group = new TicketHuaShuGroup();
         $group->bloc_id = \Auth::user()->bloc_id;
-        $group->staff_id = \Auth::user()->staff_id;
+        $group->staff_id = \Auth::user()->staffInfo->id;
         $group->name = $request->name;
         if($group->save()) {
             if ($request->huashu_ids) {

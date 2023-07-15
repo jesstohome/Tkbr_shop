@@ -1596,7 +1596,7 @@ if (!function_exists('filter_by_bloc')) {
                 $build = $build->where("bloc_id", \Auth::user()->bloc_id);
             }
 
-            if (!($model instanceof TicketHuaShuGroup || $model instanceof TicketHuaShu)) {
+            if (!$model instanceof TicketHuaShu) {
                 // 按员工过滤
                 $staff = Staff::query()->where("user_id", \Auth::user()->id)->first();
                 if (!empty($staff) && $staff->role && !$staff->role->is_manage && !($model instanceof Staff)) {
