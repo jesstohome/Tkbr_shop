@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TicketHuaShu;
+use App\Models\TicketHuaShuGroup;
 use Illuminate\Http\Request;
 
 class TicketHuaShuController extends Controller
@@ -14,7 +15,13 @@ class TicketHuaShuController extends Controller
      */
     public function index()
     {
-        $list = filter_by_bloc(TicketHuaShu::query())->get();
+        $groups = filter_by_bloc(TicketHuaShuGroup::query())->get();
+        if (!isSupperAdmin()) {
+            $groups = $groups->merge(TicketHuaShuGroup::query()->where('bloc_id', 0)->get());
+        }
+
+        $groupIds = $groups->pluck("id")->toArray();
+        $list = TicketHuaShu::query()->whereIn("group_id", $groupIds)->get();
         return view('backend.support.support_tickets.fast_reply_modal', compact('list'));
     }
 

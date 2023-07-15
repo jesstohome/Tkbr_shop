@@ -16,6 +16,9 @@ class TicketHuaShuGroupController extends Controller
     public function index()
     {
         $groups = filter_by_bloc(TicketHuaShuGroup::query())->get();
+        if (!isSupperAdmin()) {
+            $groups = $groups->merge(TicketHuaShuGroup::query()->where('bloc_id', 0)->get());
+        }
         return view('backend.support.ticket_huashu_group.index', compact('groups'));
     }
 
