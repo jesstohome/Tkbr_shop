@@ -61,18 +61,7 @@ class SearchController extends Controller
             $searchController = new SearchController;
             $searchController->store($request);
 
-            $products->where(function ($q) use ($query) {
-                foreach (explode(' ', trim($query)) as $word) {
-                    $q->where('name', 'like', '%' . $word . '%')
-                        ->orWhere('tags', 'like', '%' . $word . '%')
-                        ->orWhereHas('product_translations', function ($q) use ($word) {
-                            $q->where('name', 'like', '%' . $word . '%');
-                        })
-                        ->orWhereHas('stocks', function ($q) use ($word) {
-                            $q->where('sku', 'like', '%' . $word . '%');
-                        });
-                }
-            });
+            $products->where("name", "LIKE", '%' . $query . '%');
         }
 
         switch ($sort_by) {
