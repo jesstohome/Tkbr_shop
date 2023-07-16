@@ -15,17 +15,7 @@ class TicketHuaShuGroupController extends Controller
      */
     public function index()
     {
-        $groups = filter_by_bloc(TicketHuaShuGroup::query())->get();
-        if (!isSupperAdmin()) {
-            // 合并总平台的
-            $groups = $groups->merge(TicketHuaShuGroup::query()->where('bloc_id', 0)->get());
-
-            // 合并集团的
-            $groups = $groups->merge(TicketHuaShuGroup::query()
-                ->where('bloc_id', \Auth::user()->bloc_id)
-                ->where("staff_id", 0)
-                ->get());
-        }
+        $groups = get_huashu_groups();
         return view('backend.support.ticket_huashu_group.index', compact('groups'));
     }
 

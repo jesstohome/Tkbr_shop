@@ -14,11 +14,7 @@
 <div class="modal-header" style="justify-content: flex-start;flex-wrap: wrap;">
     <button type="button" class="btn btn-light btn-reply-group" onclick="filter_by_group(0)">全部</button>
     @php
-        use App\Models\TicketHuaShuGroup;
-        $groups = filter_by_bloc(TicketHuaShuGroup::query())->get();
-        if (!isSupperAdmin()) {
-            $groups = $groups->merge(TicketHuaShuGroup::query()->where('bloc_id', 0)->get());
-        }
+        $groups = get_huashu_groups();
     @endphp
     @foreach($groups as $group)
     <button type="button" class="btn btn-light btn-reply-group" onclick="filter_by_group({{$group->id}})">{{$group->name}}</button>

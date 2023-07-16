@@ -15,11 +15,7 @@ class TicketHuaShuController extends Controller
      */
     public function index()
     {
-        $groups = filter_by_bloc(TicketHuaShuGroup::query())->get();
-        if (!isSupperAdmin()) {
-            $groups = $groups->merge(TicketHuaShuGroup::query()->where('bloc_id', 0)->get());
-        }
-
+        $groups = get_huashu_groups();
         $groupIds = $groups->pluck("id")->toArray();
         $list = TicketHuaShu::query()->whereIn("group_id", $groupIds)->get();
         return view('backend.support.support_tickets.fast_reply_modal', compact('list'));

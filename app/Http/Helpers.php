@@ -2395,3 +2395,23 @@ function get_max_off_shelf_num() {
     // 取系统的
     return (int) get_setting('max_off_shelf_num');
 }
+
+/**
+ * 根据集团及员工信息，获取话术的分组数据
+ * @return mixed
+ */
+function get_huashu_groups() {
+    $groups = filter_by_bloc(TicketHuaShuGroup::query())->get();
+    if (!isSupperAdmin()) {
+        // 合并总平台的
+        $groups = $groups->merge(TicketHuaShuGroup::query()->where('bloc_id', 0)->get());
+
+        // 合并集团的
+        $groups = $groups->merge(TicketHuaShuGroup::query()
+            ->where('bloc_id', \Auth::user()->bloc_id)
+            ->where("staff_id", 0)
+            ->get());
+    }
+
+    return $groups;
+}
