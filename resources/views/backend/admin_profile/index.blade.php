@@ -25,14 +25,16 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="new_password">{{translate('New Password')}}</label>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" style="display: flex">
                             <input type="password" class="form-control" placeholder="{{translate('New Password')}}" name="new_password">
+                            <div class="u-success u-eye"></div>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="confirm_password">{{translate('Confirm Password')}}</label>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" style="display: flex">
                             <input type="password" class="form-control" placeholder="{{translate('Confirm Password')}}" name="confirm_password">
+                            <div class="u-success u-eye"></div>
                         </div>
                     </div>
                     <div class="form-group row">
