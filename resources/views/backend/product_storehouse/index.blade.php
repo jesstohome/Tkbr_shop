@@ -100,6 +100,7 @@
                         @endif
                         <th data-breakpoints="sm">{{translate('Info')}}</th>
                         <th data-breakpoints="md">{{translate('Total Stock')}}</th>
+                        <th data-breakpoints="md">{{translate('Pickup Amount')}}</th>
                         <th data-breakpoints="lg">{{translate('Todays Deal')}}</th>
                         <th data-breakpoints="lg">{{translate('Published')}}</th>
                         @if(get_setting('product_approve_by_admin') == 1 && $type == 'Seller')
@@ -157,6 +158,7 @@
                                 <span class="badge badge-inline badge-danger">Low</span>
                             @endif
                         </td>
+                        <td>{{single_price($product->unit_price)}}</td>
                         <td>
                             <label class="aiz-switch aiz-switch-success mb-0">
                                 <input onchange="update_todays_deal(this)" value="{{ $product->id }}" type="checkbox" <?php if ($product->todays_deal == 1) echo "checked"; ?> >
