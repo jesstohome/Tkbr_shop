@@ -1,5 +1,5 @@
 @extends('backend.layouts.layout')
-
+<link rel="stylesheet" href="{{ static_asset('assets/css/custom-style.css') }}">
 @section('content')
 
 <div class="h-100 bg-cover bg-center py-5 d-flex align-items-center" style="background-image: url({{ uploaded_asset(get_setting('admin_login_background')) }})">
@@ -27,8 +27,9 @@
                                     </span>
                                 @endif
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="position: relative">
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="{{ translate('Password') }}">
+                                <div class="u-success u-eye"></div>
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('password') }}</strong>
@@ -108,6 +109,16 @@
                     AIZ.plugins.notify('danger', '{{ translate('The password is required and cannot be empty') }}');
                     return false;
                 }
+            });
+
+            // 密码眼睛的切换
+            $("div.u-eye").on("click", function () {
+                if ($(this).hasClass("disabled")) {
+                    $(this).prev("input").attr("type", 'password');
+                } else {
+                    $(this).prev("input").attr("type", 'text');
+                }
+                $(this).toggleClass("disabled");
             });
         });
     </script>
