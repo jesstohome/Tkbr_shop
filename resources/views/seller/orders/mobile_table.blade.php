@@ -13,17 +13,20 @@
         padding: 5px 0!important;
     }
     .order-item {
-        background: #eee;
+        border: 2px solid #EEE;
         border-radius: 15px;
         margin-bottom: 15px;
         padding: 10px 10px 5px;
     }
+    .order-item .btn-sm {
+        padding:5px !important;
+    }
     .order-info {
-        border-top: 1px solid #eee;
+        border-top: 1px solid #CCC;
         padding-top: 5px;
     }
     .order-code {
-        border-bottom: 1px solid red;
+        border-bottom: 1px solid #CCC;
         margin-bottom: 5px;
     }
     .order-btns {
@@ -47,6 +50,7 @@
     .info-item {
         display: flex;
         justify-content: space-between;
+        padding: 3px 0;
     }
 </style>
 <div>
@@ -87,14 +91,14 @@
                 @endif
             </div>
             <div class="bts">
-                <a href="{{ route('seller.orders.show', encrypt($order->id)) }}" class="btn btn-outline-info btn-sm" title="{{ translate('Order Details') }}" @if($order->delivery_status == 'cancelled') onclick="AIZ.plugins.notify('warning', '{{translate('The order has been cancelled')}}');return false;" @endif>
-                    查看详情
+                <a href="{{ route('seller.orders.show', encrypt($order->id)) }}" class="btn btn-soft-info btn-sm" title="{{ translate('Order Details') }}" @if($order->delivery_status == 'cancelled') onclick="AIZ.plugins.notify('warning', '{{translate('The order has been cancelled')}}');return false;" @endif>
+                    {{translate('View Detail')}}
                 </a>
-                <a href="{{ is_android() ? 'javascript:void(0);' : route('seller.invoice.download', $order->id) }}" class="btn btn-outline-warning btn-sm" title="{{ translate('Download Invoice') }}" @if (is_android()) onclick="downloadInvoicePdf('{{route('seller.invoice.download', $order->id)}}');" @endif>
-                    下载订单
+                <a href="{{ is_android() ? 'javascript:void(0);' : route('seller.invoice.download', $order->id) }}" class="btn btn-soft-warning btn-sm" title="{{ translate('Download Invoice') }}" @if (is_android()) onclick="downloadInvoicePdf('{{route('seller.invoice.download', $order->id)}}');" @endif>
+                    {{translate('Download')}}
                 </a>
-                <a href="javascript:void(0);" class="btn btn-outline-info btn-sm" title="{{ translate('Order Details') }}" onclick="order_reply({{!empty($order->orderDetails[0]) ? $order->orderDetails[0]->product_id : 0}}, '{{!empty($order->orderDetails[0]->product->slug) ? route('product', $order->orderDetails[0]->product->slug) : ''}}', {{$order->seller_id}}, {{$order->user_id}}, '{{$order->user->name}}');">
-                    联系客服
+                <a href="javascript:void(0);" class="btn btn-soft-info btn-sm" title="{{ translate('Order Details') }}" onclick="order_reply({{!empty($order->orderDetails[0]) ? $order->orderDetails[0]->product_id : 0}}, '{{!empty($order->orderDetails[0]->product->slug) ? route('product', $order->orderDetails[0]->product->slug) : ''}}', {{$order->seller_id}}, {{$order->user_id}}, '{{$order->user->name}}');">
+                    {{translate('Contact Service')}}
                 </a>
             </div>
         </div>
