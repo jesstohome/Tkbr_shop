@@ -59,8 +59,8 @@
         $order = \App\Models\Order::find($order_id->id);
     @endphp
     <div class="order-item">
-        <div class="order-code">
-            {{translate('Order Code')}} {{ $order->code}}
+        <div class="order-code" data-order-code="{{$order->code}}">
+            {{translate('Order Code')}} {{ $order->code}} <i class="icon-copy"></i>
         </div>
         <div class="order-btns">
             <div class="status">

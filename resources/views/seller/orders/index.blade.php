@@ -287,6 +287,7 @@
 @endsection
 
 @section('script')
+<script src="{{ static_asset('assets/js/clipboard-polyfill.js') }}"></script>
 <script>
     // 显示对话框
     function order_reply(product_id, product_url, seller_id, receiver_id, user_name) {
@@ -315,6 +316,14 @@
             $(this).removeClass("show").html("{{translate('Show More')}}<i class=\"icon-angle-down\"></i>");
             $(this).prev(".order-info").hide();
         }
+    });
+
+    // 复制订单号
+    // 创建 ClipboardJS 实例
+    const clipboard = navigator.clipboard;
+    $(".order-item .order-code").on("click", function () {
+        clipboard.writeText($(this).data("order-code"));
+        AIZ.plugins.notify('success', "{{translate('Copy Successfully')}}");
     });
 </script>
 @endsection
