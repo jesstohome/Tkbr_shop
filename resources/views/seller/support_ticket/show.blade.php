@@ -43,7 +43,7 @@
                                                  @if (strpos($filename, ".mp4") === false)
                                                 <img class="chatImg lazyload" src="{{ static_asset('assets/img/chat/placeholder.jpg') }}" data-src="{{$filename}}" onclick="previewImg(this)" />
                                                 @else
-                                                     <video style="width: 100%"><source src="{{$filename}}" type="video/mp4"></video>
+                                                     <video style="width: 200px" controls><source src="{{$filename}}" type="video/mp4"></video>
                                                 @endif
                                             @endforeach
                                         @endif
