@@ -845,11 +845,11 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         // 判断当前产品是否已经被卖家上架
-        $seller_count = Product::query()->where('original_id', $product->id)->count();
+        /*$seller_count = Product::query()->where('original_id', $product->id)->count();
         if ($seller_count > 0) {
             flash(translate('The current product has been copied by the seller, could not delete'))->error();
             return back();
-        }
+        }*/
 
         $product->product_translations()->delete();
         $product->stocks()->delete();
