@@ -26,12 +26,17 @@
         return bytes;
     }
 
-    function uploadImage(blob, cb) {
+    function uploadImage(blob, cb, isVideo) {
         // var blob = new Blob([convertBase64ToBinary(base64Data)], { type: 'image/jpg' });
         var filename = parseInt(Math.random() * 999999999) + ".jpg";
+        var file_type = 'image/jpg';
+        if (isVideo) {
+            filename = parseInt(Math.random() * 999999999) + ".mp4";
+            file_type = 'video/mp4';
+        }
         var form_data = new FormData();
         form_data.append("aiz_file", blob, filename);
-        form_data.append("type", "image/jpg");
+        form_data.append("type", file_type);
         form_data.append("name", filename);
         $.ajax({
             headers: {
@@ -61,11 +66,14 @@
         });
     }
 
-    function addToPreview(base64Image, className = 'remove-attachment') {
+    function addToPreview(base64Image, className = 'remove-attachment', isVideo = false) {
         var thumb =
             '<img src="' +
             base64Image +
             '" class="img-fit">';
+        if (isVideo) {
+            thumb = '<video style="width: 100%;"><source src="' + base64Image + '" type="video/mp4"></video>';
+        }
         var html =
             '<div class="d-flex justify-content-between align-items-center mt-2 file-preview-item" data-id="" title="" onclick="removeImage(this)">' +
             '<div class="align-items-center align-self-stretch d-flex justify-content-center thumb">' +
@@ -208,11 +216,14 @@
                 console.log('已选择文件:', selectedFile);
 
                 // 检查是否是图片类型
-                if (selectedFile && selectedFile.type.indexOf('image') === 0 && selectedFile.size > 0) {
+                let isImage = selectedFile.type.indexOf('image') > -1;
+                let isVideo = selectedFile.type.indexOf('video') > -1;
+                if (selectedFile && (isImage || isVideo) && selectedFile.size > 0) {
                     imageLoading = true;
                     // var reader = new FileReader();
 
                     var imageURL = URL.createObjectURL(selectedFile);
+                    console.log("imageURL=", imageURL)
                     AIZ.extra.log({
                         type:selectedFile.type,
                         size:selectedFile.size,
@@ -233,29 +244,9 @@
                         // 上传到服务器
                         uploadImage(selectedFile, function () {
                             imageLoading = false;
-                            addToPreview(imageURL, 'remove-attachment-mobile');
-                        });
+                            addToPreview(imageURL, 'remove-attachment-mobile', isVideo);
+                        }, isVideo);
                     }
-
-                    // 当读取完成时，将DataURL赋值给预览图片的src属性
-                    /*reader.onload = function(event) {
-                        console.log("当读取完成时");
-
-                        var imageData = event.target.result;
-                        addToPreview(imageData, 'remove-attachment-mobile');
-
-                        $("div.message.send").show();
-                        $("div.message.fujian").hide();
-
-                        imageLoading = false;
-                    };
-
-                    reader.onprogress = function(e) {
-                        console.log(e.lengthComputable, e.loaded, e.total);
-                    };
-
-                    // 将文件内容读取为DataURL
-                    reader.readAsDataURL(selectedFile);*/
                 } else {
                     imageLoading = false;
                     $(".message.loading").hide();
@@ -330,7 +321,7 @@
     }
 
     function previewImg(obj) {
-        var curTop = document.body.scrollTop
+        var curTop = document.body.scrollTop;
         //弹出层
         layer.photos({
             scrollbar: false,
@@ -400,8 +391,13 @@
                 @endif
 
                 (item.file_list || []).forEach((img) => {
-                    images += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">`
-                    images2 += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="chatImg lazyload" alt="Image2">`
+                    if (img.indexOf(".mp4") > -1) {
+                        images += `<video style="width: 100%;"><source src="${img}" type="video/mp4"></video>`;
+                    } else {
+                        images += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">`
+                        images2 += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="chatImg lazyload" alt="Image2">`
+                    }
+
                 })
 
                 if ($("ul.ticket").length) {
