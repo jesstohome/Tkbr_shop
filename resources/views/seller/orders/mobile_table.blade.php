@@ -56,7 +56,7 @@
     @endphp
     <div class="order-item">
         <div class="order-code">
-            {{translate('Order Code')}}:{{ $order->code}}
+            {{translate('Order Code')}} {{ $order->code}}
         </div>
         <div class="order-btns">
             <div class="status">
