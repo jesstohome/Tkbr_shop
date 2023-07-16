@@ -205,7 +205,7 @@
                                     <input type="text" class="border-0 border-lg form-control" id="search" name="keyword" @isset($query)
                                         value="{{ $query }}"
                                     @endisset placeholder="{{translate('I am shopping for...')}}" autocomplete="off" onkeydown="submitSearch()">
-                                    <div class="input-group-append d-none d-lg-block">
+                                    <div class="input-group-append d-lg-block">
                                         <button class="btn btn-primary" type="submit">
                                             <i class="la la-search la-flip-horizontal fs-18"></i>
                                         </button>
