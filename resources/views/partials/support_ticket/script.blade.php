@@ -392,7 +392,8 @@
 
                 (item.file_list || []).forEach((img) => {
                     if (img.indexOf(".mp4") > -1) {
-                        images += `<video style="width: 100%;"><source src="${img}" type="video/mp4"></video>`;
+                        images += `<video style="width: 200px;" controls><source src="${img}" type="video/mp4"></video>`;
+                        images2 += `<video style="width: 200px;" controls><source src="${img}" type="video/mp4"></video>`;
                     } else {
                         images += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">`
                         images2 += `<img src="${img}" data-src="${img}" onclick="previewImg(this)" class="chatImg lazyload" alt="Image2">`
