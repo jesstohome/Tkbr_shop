@@ -16,7 +16,14 @@
                                     <div class="btext">
                                         @if($ticketreply->files)
                                             @foreach ((explode(",",$ticketreply->files)) as $key => $file)
-                                                <img class="chatImg lazyload" src="{{ static_asset('assets/img/chat/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" />
+                                                @php
+                                                    $filename = uploaded_asset($file);
+                                                @endphp
+                                                @if (strpos($filename, ".mp4") === false)
+                                                <img class="chatImg lazyload" src="{{ static_asset('assets/img/chat/placeholder.jpg') }}" data-src="{{ $filename }}" onclick="previewImg(this)" />
+                                                @else
+                                                    <video style="width: 200px" controls><source src="{{$filename}}" type="video/mp4"></video>
+                                                @endif
                                             @endforeach
                                         @endif
                                         @if($ticketreply->reply)

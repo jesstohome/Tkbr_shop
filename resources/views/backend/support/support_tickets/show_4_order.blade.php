@@ -154,9 +154,13 @@
                                             @if($ticketreply->files)
                                             <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
                                             @foreach ((explode(",",$ticketreply->files)) as $key => $file)
-                                                    @php $file_detail = \App\Models\Upload::where('id', $file)->first(); @endphp
-                                                    @if($file_detail != null)
-                                                        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
+                                                    @php
+                                                        $filename = uploaded_asset($file);
+                                                    @endphp
+                                                    @if (strpos($filename, ".mp4") === false)
+                                                    <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ $filename }}" onclick="previewImg(this)" class="mr-3 lazyload size-100px img-fit rounded" alt="Image">
+                                                    @else
+                                                        <video style="width: 200px" controls><source src="{{$filename}}" type="video/mp4"></video>
                                                     @endif
                                                 @endforeach
                                             </div>
