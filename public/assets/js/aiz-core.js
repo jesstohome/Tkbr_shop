@@ -1188,7 +1188,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                 {
                     // settings
                     showProgressbar: true,
-                    delay: 2500,
+                    delay: 1500,
                     mouse_over: "pause",
                     placement: {
                         from: "bottom",
