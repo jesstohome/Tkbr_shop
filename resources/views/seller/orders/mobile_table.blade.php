@@ -1,5 +1,14 @@
 <link rel="stylesheet" href="{{ static_asset('assets/css/font-awesome.min.css') }}">
 <style>
+    .card {
+        border:0;
+    }
+    .card form {
+        border:1px solid #eee;
+    }
+    .card .card-header {
+        border:0;
+    }
     .card .card-body {
         padding: 5px 0!important;
     }
