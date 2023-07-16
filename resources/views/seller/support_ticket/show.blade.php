@@ -38,7 +38,7 @@
                                         @if($ticketreply->files)
                                             @foreach ((explode(",",$ticketreply->files)) as $key => $file)
                                                 @php
-                                                $filename = "{{ uploaded_asset($file) }}";
+                                                $filename = uploaded_asset($file);
                                                 @endphp
                                                  @if (strpos($filename, ".mp4") >= 0)
                                                 <img class="chatImg lazyload" src="{{ static_asset('assets/img/chat/placeholder.jpg') }}" data-src="{{$filename}}" onclick="previewImg(this)" />
