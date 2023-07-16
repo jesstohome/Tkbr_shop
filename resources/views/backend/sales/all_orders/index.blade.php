@@ -10,6 +10,12 @@
             <div class="card-header row gutters-5">
                 @include('backend.partials.filters.seller')
 
+                <div class="col-lg-2">
+                    <div class="form-group mb-0">
+                        <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
+                    </div>
+                </div>
+
                 <div class="col-lg-2 ml-auto">
                     <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status">
                         <option value="">{{translate('Filter by Delivery Status')}}</option>
@@ -37,11 +43,6 @@
                                 </option>
                             @endforeach
                         </select>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="form-group mb-0">
-                        <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                     </div>
                 </div>
             </div>
