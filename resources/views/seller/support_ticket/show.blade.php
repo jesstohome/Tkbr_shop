@@ -40,7 +40,7 @@
                                                 @php
                                                 $filename = uploaded_asset($file);
                                                 @endphp
-                                                 @if (strpos($filename, ".mp4") >= 0)
+                                                 @if (strpos($filename, ".mp4") === false)
                                                 <img class="chatImg lazyload" src="{{ static_asset('assets/img/chat/placeholder.jpg') }}" data-src="{{$filename}}" onclick="previewImg(this)" />
                                                 @else
                                                      <video style="width: 100%"><source src="{{$filename}}" type="video/mp4"></video>
