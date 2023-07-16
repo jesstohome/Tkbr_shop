@@ -118,6 +118,7 @@
 
         @if (count($orders) > 0)
             <div class="card-body p-3">
+                @if(is_pc())
                 <table class="table aiz-table mb-0">
                     <thead>
                         <tr>
@@ -234,6 +235,9 @@
                         @endforeach
                     </tbody>
                 </table>
+                @else
+                    @include("seller.orders.mobile_table")
+                @endif
                 <div class="aiz-pagination">
                     {{ $orders->links() }}
               	</div>
@@ -302,5 +306,15 @@
         // 加载对话内容
         $('#chat_modal').modal('show');
     }
+
+    $(".order-item .show-more").on("click", function () {
+        if (!$(this).hasClass("show")) {
+            $(this).addClass("show").html("{{translate('Retract')}}<i class=\"icon-angle-up\"></i>");
+            $(this).prev(".order-info").show();
+        } else {
+            $(this).removeClass("show").html("{{translate('Show More')}}<i class=\"icon-angle-down\"></i>");
+            $(this).prev(".order-info").hide();
+        }
+    });
 </script>
 @endsection
