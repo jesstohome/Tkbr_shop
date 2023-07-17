@@ -10,6 +10,11 @@
 
 }
 
+video::-webkit-media-controls-play-button {
+    height: 40px;
+    width: 40px;
+}
+
 .aiz-main-content .px-15px, .aiz-main-content .px-lg-25px {
     padding: 0 !important;
 }
