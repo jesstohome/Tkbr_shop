@@ -82,6 +82,7 @@
 @endsection
 
 @section('script')
+    <script src="{{ static_asset('assets/js/jquery.cookie-1.4.1.min.js') }}"></script>
     <script type="text/javascript">
         function autoFill(){
             $('#email').val('admin@example.com');
