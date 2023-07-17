@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\Address;
 use App\Models\Addon;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\View;
 use Session;
 use Auth;
 use Mail;
@@ -140,7 +141,11 @@ class PosController extends Controller
         $customers = filter_by_bloc($customers);
         $customers = $customers->get();
 
-        return ['page_links' => $page_links, 'products' => $stocks, 'customers' => $customers];
+        $customerHtml = View::make('pos.customers_selector', [
+            'customers' => $customers,
+        ], [])->render();
+
+        return ['page_links' => $page_links, 'products' => $stocks, 'customerHtml' => $customerHtml];
     }
 
     public function addToCart(Request $request)

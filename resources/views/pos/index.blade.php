@@ -502,20 +502,9 @@
                 setProductList(data);
 
                 // 判断是否显示用户标记
-                (data.customers || []).forEach((customer) => {
-                    let cname = customer.name;
-                    if (customer.is_virtual_user || customer.is_virtual) {
-                        cname = "({{translate('Virtual')}})" + cname;
-                    }
-                    if (customer.total_conversation) {
-                        cname += "(<span style=\"color:red\">o</span>)";
-                    }
-                    if (customer.total_orders) {
-                        cname += "(<span style=\"color:red\">⭐</span>)";
-                    }
-                    $("select[name=user_id]").find("option[value=" + customer.id + "]").attr("data-content", cname).html(cname);
-                });
-                $("select[name=user_id]").selectpicker("refresh");
+                if (data.customerHtml != '') {
+                    $("select[name=user_id]").html(data.customerHtml).selectpicker("refresh");
+                }
             });
         }
 
