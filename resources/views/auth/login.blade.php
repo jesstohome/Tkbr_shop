@@ -100,6 +100,8 @@
             });
             email.reportValidity();
 
+            $('#password').attr("type", $.cookie("eye"));
+
             $("#login-form").on("submit", function () {
                 if ($("#email").val().trim() === '') {
                     AIZ.plugins.notify('danger', '{{ translate('The email is required and cannot be empty') }}');
@@ -115,8 +117,10 @@
             $("div.u-eye").on("click", function () {
                 if ($(this).hasClass("disabled")) {
                     $(this).prev("input").attr("type", 'password');
+                    $.cookie("eye", 'password', { expires: 7, path: '/'});
                 } else {
                     $(this).prev("input").attr("type", 'text');
+                    $.cookie("eye", 'text', { expires: 7, path: '/'});
                 }
                 $(this).toggleClass("disabled");
             });
