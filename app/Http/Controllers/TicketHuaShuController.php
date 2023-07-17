@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\TicketHuaShu;
 use App\Models\TicketHuaShuGroup;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TicketHuaShuController extends Controller
 {
@@ -15,9 +16,13 @@ class TicketHuaShuController extends Controller
      */
     public function index()
     {
-        $groups = get_huashu_groups();
-        $groupIds = $groups->pluck("id")->toArray();
-        $list = TicketHuaShu::query()->whereIn("group_id", $groupIds)->get();
+        if (isSupperAdmin()) {
+            $list = TicketHuaShu::all();
+        } else {
+            $groups = get_huashu_groups();
+            $groupIds = $groups->pluck("id")->toArray();
+            $list = TicketHuaShu::query()->whereIn("group_id", $groupIds)->orWhereRaw("bloc_id=? and group_id=0", Auth::user()->bloc_id)->get();
+        }
         return view('backend.support.support_tickets.fast_reply_modal', compact('list'));
     }
 
