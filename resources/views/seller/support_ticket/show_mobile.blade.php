@@ -4,10 +4,10 @@
 <style>
     video::-webkit-media-controls-play-button {
         background-color: red;
-        width: 50px;
-        height: 50px;
+        width: 30px;
+        height: 30px;
         position: absolute;
-        top: 20px;
+        top: 10px;
         left: 10px;
     }
 </style>
