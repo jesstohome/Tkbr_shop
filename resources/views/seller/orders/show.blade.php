@@ -23,7 +23,8 @@
                                     <button id="payment_for_storehouse" type="button" class="btn btn-primary">{{ translate('Pay the manufacturer and notify the shipment') }}</button>
                                 </div>
                             @else
-                                <div class="col-md-2 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
+                                <div class="col-md-4 d-flex flex-nowrap justify-content-end align-items-end ml-auto">
+                                    <button type="button" class="btn btn-primary mr-1" onclick="create_work_order()">{{ translate('Contact Manufacturer') }}</button>
                                     <button type="button" class="btn btn-primary" disabled>{{ translate('Picked up') }}</button>
                                 </div>
                             @endif
