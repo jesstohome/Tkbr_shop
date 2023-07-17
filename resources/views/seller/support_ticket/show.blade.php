@@ -65,7 +65,14 @@
                                             <img src="{{static_asset('assets/img/chat/head1.png')}}" class="head" style="margin-right: 8px;" />
                                             @if($ticketreply->files)
                                                 @foreach ((explode(",",$ticketreply->files)) as $key => $file)
+                                                    @php
+                                                        $filename = uploaded_asset($file);
+                                                    @endphp
+                                                    @if (strpos($filename, ".mp4") === false)
                                                     <img class="chatImg lazyload" src="{{ static_asset('assets/img/chat/placeholder.jpg') }}" data-src="{{ uploaded_asset($file) }}" onclick="previewImg(this)" />
+                                                    @else
+                                                        <video style="width: 200px" controls><source src="{{$filename}}" type="video/mp4"></video>
+                                                    @endif
                                                 @endforeach
                                             @endif
                                             @if($ticketreply->reply)
