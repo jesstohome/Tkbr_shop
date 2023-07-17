@@ -82,7 +82,6 @@
 @endsection
 
 @section('script')
-    <script src="{{ static_asset('assets/js/jquery.cookie-1.4.1.min.js') }}"></script>
     <script type="text/javascript">
         function autoFill(){
             $('#email').val('admin@example.com');
@@ -101,10 +100,6 @@
             });
             email.reportValidity();
 
-            // 从cookie中取得保存的账号密码
-            $('#email').val($.cookie("email"));
-            $('#password').val($.cookie("password"));
-
             $("#login-form").on("submit", function () {
                 if ($("#email").val().trim() === '') {
                     AIZ.plugins.notify('danger', '{{ translate('The email is required and cannot be empty') }}');
@@ -114,9 +109,6 @@
                     AIZ.plugins.notify('danger', '{{ translate('The password is required and cannot be empty') }}');
                     return false;
                 }
-
-                $.cookie("email", $("#email").val().trim(), { expires: 7, path: '/'});
-                $.cookie("password", $("#password").val().trim(), { expires: 7, path: '/'});
             });
 
             // 密码眼睛的切换
