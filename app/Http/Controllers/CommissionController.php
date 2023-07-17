@@ -402,25 +402,22 @@ id: 1
                     $shop = $orderDetail->product->user->shop;
                     $admin_commission = ($orderDetail->price * $commission_percentage) / 100;
 
-                    $shop_earning_copy = 0;
-                    if (!$order->product_storehouse_total) {
-                        if (get_setting('product_manage_by_admin') == 1) {
-                            $shop_earning = ($orderDetail->tax + $orderDetail->price) - $admin_commission;
-                            $shop->admin_to_pay += $shop_earning;
-                        } else {
-                            $shop_earning = ($orderDetail->tax + $orderDetail->shipping_cost + $orderDetail->price) - $admin_commission;
-                            $shop->admin_to_pay += $shop_earning;
-                        }
-                        $shop->save();
-                        $shop_earning_copy = $shop_earning;
+                    if (get_setting('product_manage_by_admin') == 1) {
+                        $shop_earning = ($orderDetail->tax + $orderDetail->price) - $admin_commission;
+                        $shop->admin_to_pay += $shop_earning;
+                    } else {
+                        $shop_earning = ($orderDetail->tax + $orderDetail->shipping_cost + $orderDetail->price) - $admin_commission;
+                        $shop->admin_to_pay += $shop_earning;
                     }
+
+                    $shop->save();
 
                     $commission_history = new CommissionHistory;
                     $commission_history->order_id = $order->id;
                     $commission_history->order_detail_id = $orderDetail->id;
                     $commission_history->seller_id = $orderDetail->seller_id;
                     $commission_history->admin_commission = $admin_commission;
-                    $commission_history->seller_earning = $shop_earning_copy;
+                    $commission_history->seller_earning = $shop_earning;
 
                     $commission_history->save();
                 }
