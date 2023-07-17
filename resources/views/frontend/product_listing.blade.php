@@ -229,15 +229,6 @@
                                         <i class="la la-filter la-2x"></i>
                                     </button>
                                 </div>
-                                <div class="col-6 col-lg-auto mb-3 w-lg-200px">
-                                    <label class="mb-0 opacity-50">{{ translate('Sort by')}}</label>
-                                    <select class="form-control form-control-sm aiz-selectpicker" name="sort_by" onchange="filter()">
-                                        <option value="newest" @isset($sort_by) @if ($sort_by == 'newest') selected @endif @endisset>{{ translate('Newest')}}</option>
-                                        <option value="oldest" @isset($sort_by) @if ($sort_by == 'oldest') selected @endif @endisset>{{ translate('Oldest')}}</option>
-                                        <option value="price-asc" @isset($sort_by) @if ($sort_by == 'price-asc') selected @endif @endisset>{{ translate('Price low to high')}}</option>
-                                        <option value="price-desc" @isset($sort_by) @if ($sort_by == 'price-desc') selected @endif @endisset>{{ translate('Price high to low')}}</option>
-                                    </select>
-                                </div>
                             </div>
                         </div>
                         <input type="hidden" name="min_price" value="">
