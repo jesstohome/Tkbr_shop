@@ -797,7 +797,7 @@ class AffiliateController extends Controller
         $query->where('affiliate_user_id', Auth::user()->id);
         $affliate_stats = $query->first();
         $type = $request->type;
-        $url = $request->root().'/shops/create?invitation_code='.Auth::user()->id;
+        $url = str_replace("http:", "https:", $request->root()).'/shops/create?invitation_code='.Auth::user()->id;
         return view('affiliate.seller.index', compact('affiliate_logs', 'affliate_stats', 'type', 'url', 'statistics', 'shops'));
     }
 
