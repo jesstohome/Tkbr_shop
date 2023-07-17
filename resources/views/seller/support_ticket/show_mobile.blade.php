@@ -1,6 +1,16 @@
 @extends('seller.layouts.app')
 
 <link rel="stylesheet" href="{{ static_asset('assets/css/chat.css') }}">
+<style>
+    video::-webkit-media-controls-play-button {
+        background-color: red;
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        top: 20px;
+        left: 10px;
+    }
+</style>
 
 @section('panel_content')
 <div id="app">
