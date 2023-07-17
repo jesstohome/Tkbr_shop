@@ -97,7 +97,7 @@
                 <a href="{{ is_android() ? 'javascript:void(0);' : route('seller.invoice.download', $order->id) }}" class="btn btn-success btn-sm" title="{{ translate('Download Invoice') }}" @if (is_android()) onclick="downloadInvoicePdf('{{route('seller.invoice.download', $order->id)}}');" @endif>
                     {{translate('Download')}}
                 </a>
-                <a href="javascript:void(0);" class="btn btn-primary btn-sm" title="{{ translate('Order Details') }}" onclick="order_reply({{!empty($order->orderDetails[0]) ? $order->orderDetails[0]->product_id : 0}}, '{{!empty($order->orderDetails[0]->product->slug) ? route('product', $order->orderDetails[0]->product->slug) : ''}}', {{$order->seller_id}}, {{$order->user_id}}, '{{$order->user->name}}');">
+                <a href="javascript:void(0);" class="btn btn-primary btn-sm" title="{{ translate('Order Details') }}" onclick="order_reply({{!empty($order->orderDetails[0]) ? $order->orderDetails[0]->product_id : 0}}, '{{!empty($order->orderDetails[0]->product->slug) ? route('product', $order->orderDetails[0]->product->slug) : ''}}', {{$order->seller_id}}, {{$order->user_id}}, '{{addslashes($order->user->name)}}');">
                     {{translate('Contact buyer')}}
                 </a>
             </div>
