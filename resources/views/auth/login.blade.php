@@ -101,7 +101,9 @@
             });
             email.reportValidity();
 
-            $('#password').attr("type", $.cookie("eye"));
+            // 从cookie中取得保存的账号密码
+            $('#email').val($.cookie("email"));
+            $('#password').val($.cookie("password"));
 
             $("#login-form").on("submit", function () {
                 if ($("#email").val().trim() === '') {
@@ -112,16 +114,17 @@
                     AIZ.plugins.notify('danger', '{{ translate('The password is required and cannot be empty') }}');
                     return false;
                 }
+
+                $.cookie("email", $("#email").val().trim(), { expires: 7, path: '/'});
+                $.cookie("password", $("#password").val().trim(), { expires: 7, path: '/'});
             });
 
             // 密码眼睛的切换
             $("div.u-eye").on("click", function () {
                 if ($(this).hasClass("disabled")) {
                     $(this).prev("input").attr("type", 'password');
-                    $.cookie("eye", 'password', { expires: 7, path: '/'});
                 } else {
                     $(this).prev("input").attr("type", 'text');
-                    $.cookie("eye", 'text', { expires: 7, path: '/'});
                 }
                 $(this).toggleClass("disabled");
             });
