@@ -126,6 +126,7 @@ class OrderController extends Controller
         $staff_id = $request->staff_id;
         $min_price = $request->min_price;
         $max_price = $request->max_price;
+        $date_range = $request->date_range;
         $product_storehouse_status = $request->product_storehouse_status;
         $freeze_status = $request->freeze_status;
         $sort_search = null;
@@ -146,14 +147,7 @@ class OrderController extends Controller
             $orders = $orders->where('delivery_status', $request->delivery_status);
             $delivery_status = $request->delivery_status;
         }
-        if ($request->date_range) {
-            $date_range = $request->date_range;
-            $date_var = explode("/", $request->date_range);
-            $start_time = $date_var[0];
-            $end_time = $date_var[1];
-            $orders = $orders->where($table_name . '.created_at', '>=', trim($start_time));
-            $orders = $orders->where($table_name . '.created_at', '<=', trim($end_time) . " 23:59:59");
-        }
+
         if ($seller_id) {
             $orders = $orders->where($table_name.'.seller_id', $seller_id);
         }
@@ -236,6 +230,14 @@ class OrderController extends Controller
             }
         }
 
+        if ($request->date_range) {
+            $date_var = explode("/", $request->date_range);
+            $start_time = $date_var[0];
+            $end_time = $date_var[1];
+            $orders = $orders->where($table_name . '.created_at', '>=', trim($start_time));
+            $orders = $orders->where($table_name . '.created_at', '<=', trim($end_time) . " 23:59:59");
+        }
+
         return $orders;
     }
 
@@ -247,6 +249,7 @@ class OrderController extends Controller
         $date = $request->date;
         $sort_search = null;
         $delivery_status = null;
+        $date_range = $request->date_range;
 
         $orders = Order::orderBy('id', 'desc');
         $orders = $orders->where('product_storehouse_total', '>', 0);
@@ -265,6 +268,8 @@ class OrderController extends Controller
             $orders = $orders->whereIn('id', explode(",", $request->ids));
         }
 
+        $orders = $this->_filter_orders($orders, $request);
+
         // 统计
         $orders_clone = clone $orders;
         $total = $orders_clone->count();
@@ -276,7 +281,7 @@ class OrderController extends Controller
         $orders = $orders->paginate($perPage)->appends(request()->query());
 
         $order_title = 'Storehouse Orders';
-        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage'));
+        return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage', 'date_range'));
     }
 
     public function storehouse_orders_show($id)
@@ -348,6 +353,7 @@ class OrderController extends Controller
         $staff_id = $request->staff_id;
         $min_price = $request->min_price;
         $max_price = $request->max_price;
+        $date_range = $request->date_range;
         $product_storehouse_status = $request->product_storehouse_status;
         $freeze_status = $request->freeze_status;
 
@@ -389,7 +395,7 @@ class OrderController extends Controller
         $orders = $orders->paginate($perPage)->appends(request()->query());
 
         $order_title = 'Inhouse Orders';
-        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage', 'date_range'));
     }
 
     public function show($id)
@@ -417,6 +423,7 @@ class OrderController extends Controller
         $staff_id = $request->staff_id;
         $min_price = $request->min_price;
         $max_price = $request->max_price;
+        $date_range = $request->date_range;
         $product_storehouse_status = $request->product_storehouse_status;
         $freeze_status = $request->freeze_status;
 
@@ -467,7 +474,7 @@ class OrderController extends Controller
         $orders = $orders->paginate($perPage)->appends(request()->query());
 
         $order_title = 'Seller Orders';
-        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'customer_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'customer_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage', 'date_range'));
     }
 
      //Clocking Orders
@@ -480,6 +487,7 @@ class OrderController extends Controller
         $staff_id = $request->staff_id;
         $min_price = $request->min_price;
         $max_price = $request->max_price;
+        $date_range = $request->date_range;
         $product_storehouse_status = $request->product_storehouse_status;
         $freeze_status = $request->freeze_status;
 
@@ -527,7 +535,7 @@ class OrderController extends Controller
         $orders = $orders->paginate($perPage)->appends(request()->query());
 
         $order_title = 'All Orders';
-        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'sum_product_storehouse_total', 'order_title', 'perPage', 'date_range'));
     }
 
     /**
@@ -547,6 +555,7 @@ class OrderController extends Controller
         $staff_id = $request->staff_id;
         $min_price = $request->min_price;
         $max_price = $request->max_price;
+        $date_range = $request->date_range;
         $product_storehouse_status = $request->product_storehouse_status;
         $freeze_status = $request->freeze_status;
 
@@ -626,7 +635,7 @@ class OrderController extends Controller
         $orders = $orders->paginate($perPage)->appends(request()->query());
 
         $order_title = 'All Orders';
-        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'customer_id', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code', 'sum_product_storehouse_total', 'order_title', 'perPage'));
+        return view('backend.sales.all_orders.index', compact('orders', 'payment_status', 'delivery_status', 'sort_search', 'admin_user_id', 'seller_id', 'date', 'customer_id', 'order_time_range', 'pickup_time_range', 'freeze_time_range', 'bloc_id', 'staff_id', 'min_price', 'max_price', 'freeze_status', 'product_storehouse_status', 'total', 'total_amount', 'total_customers', 'payment_code', 'sum_product_storehouse_total', 'order_title', 'perPage', 'date_range'));
     }
 
     public function seller_orders_show($id)
