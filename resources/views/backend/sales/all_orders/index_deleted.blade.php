@@ -30,9 +30,9 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-lg-2">
+            <div class="col-md-2">
                 <div class="form-group mb-0">
-                    <input type="text" class="aiz-date-range form-control" value="{{ $date }}" name="date" placeholder="{{ translate('Filter by date') }}" data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true" autocomplete="off">
+                    <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}" autocomplete="off" data-advanced-range="true">
                 </div>
             </div>
 
