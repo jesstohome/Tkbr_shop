@@ -29,7 +29,7 @@
             </div>
 
             <div class="col-md-2 ml-auto">
-                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="category_id" name="category_id" onchange="sort_products()">
+                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" data-live-search="true" id="category_id" name="category_id" onchange="sort_products()">
                     <option value="">{{ translate('All Categories') }}</option>
                     @foreach (App\Models\Category::all() as $key => $category)
                         <option value="{{ $category->id }}" @if ($category->id == $category_id) selected @endif>
