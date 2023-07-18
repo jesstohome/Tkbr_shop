@@ -496,7 +496,7 @@
             var brand = $('select[name=brand]').val();
             var user_id = $('select[name=shop_id]').val();
             var order_by_price = $('select[name=order_by_price]').val();
-            $.get('{{ route('pos.search_product') }}',{keyword:keyword, category:category, brand:brand, user_id:user_id, order_by_price: order_by_price}, function(data){
+            $.get('{{ route('pos.search_product') }}',{keyword:keyword, category:category, brand:brand, user_id:user_id, customer_id: "{{$customer_id}}", order_by_price: order_by_price}, function(data){
                 products = data.products || [];
                 $('#product-list').html(null);
                 setProductList(data);

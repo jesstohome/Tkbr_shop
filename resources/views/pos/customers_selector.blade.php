@@ -11,5 +11,5 @@
             $content .= '(<span style=\'color:red\'>⭐</span>)';
         }
     @endphp
-    <option value="{{$customer->id}}" data-content="{{$content}}">{{$customer->name}}</option>
+    <option value="{{$customer->id}}" data-content="{{$content}}" {{$customer_id == $customer->id ? 'selected' : ''}}>{{$customer->name}}</option>
 @endforeach

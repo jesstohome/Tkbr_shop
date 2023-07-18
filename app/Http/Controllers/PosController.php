@@ -142,6 +142,7 @@ class PosController extends Controller
         $customers = $customers->get();
 
         $customerHtml = View::make('pos.customers_selector', [
+            'customer_id' => $request->customer_id,
             'customers' => $customers,
         ], [])->render();
 
