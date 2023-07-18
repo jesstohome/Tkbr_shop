@@ -346,7 +346,7 @@
 
         }
 
-        // if ($(".aiz-notify .progress-bar").length > 0) return;
+        if ($(".aiz-notify .progress-bar").length > 0) return;
         AIZ.plugins.notify('success', "{{translate('Copy Successfully')}}");
     });
 </script>
