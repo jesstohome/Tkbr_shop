@@ -322,7 +322,10 @@
     // 创建 ClipboardJS 实例
     const clipboard = navigator.clipboard;
     $(".order-item .order-code").on("click", function () {
+
         clipboard.writeText($(this).data("order-code"));
+
+        if ($(".aiz-notify .progress-bar").length > 0) return;
         AIZ.plugins.notify('success', "{{translate('Copy Successfully')}}");
     });
 </script>
