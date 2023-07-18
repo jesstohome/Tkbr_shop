@@ -323,9 +323,11 @@
     const clipboard = navigator.clipboard;
     $(".order-item .order-code").on("click", function () {
         try {
+            navigator.permissions;
+            AIZ.plugins.notify('warning', "permissions=" + (navigator.permissions || 'kong'));
             clipboard.writeText($(this).data("order-code")).then(
                 () => {
-                    /* clipboard successfully set */
+                    AIZ.plugins.notify('success', "clipboard.writeText Success");
                 },
                 () => {
                     AIZ.plugins.notify('danger', e);
