@@ -323,27 +323,20 @@
     const clipboard = navigator.clipboard;
     $(".order-item .order-code").on("click", function () {
         try {
-            if (navigator.permissions) {
-                clipboard.writeText($(this).data("order-code"));
-            } else {
-                AIZ.plugins.notify('danger', e);
+            const textArea = document.createElement('textArea');
+            textArea.value = $(this).data("order-code");
+            textArea.style.width = 0;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999px';
+            textArea.style.top = '10px';
+            textArea.setAttribute('readonly', 'readonly');
+            document.body.appendChild(textArea)
 
-                const textArea = document.createElement('textArea');
-                textArea.value = $(this).data("order-code");
-                textArea.style.width = 0;
-                textArea.style.position = 'fixed';
-                textArea.style.left = '-999px';
-                textArea.style.top = '10px';
-                textArea.setAttribute('readonly', 'readonly');
-                document.body.appendChild(textArea)
-
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea)
-            }
-
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
         } catch (e) {
-
+            AIZ.plugins.notify('danger', e);
         }
 
         if ($(".aiz-notify .progress-bar").length > 0) return;
