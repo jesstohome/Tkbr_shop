@@ -69,7 +69,7 @@
                         @endif
                         <th data-breakpoints="md">{{ translate('Published')}}</th>
                         <th data-breakpoints="md">{{ translate('Featured')}}</th>
-                        <th data-breakpoints="md" class="text-right">{{ translate('Options')}}</th>
+                        <th data-breakpoints="md" class="text-center">{{ translate('Options')}}</th>
                     </tr>
                 </thead>
 
@@ -130,7 +130,7 @@
                                     <span class="slider round"></span>
                                 </label>
                             </td>
-                            <td class="text-right">
+                            <td>
 		                      <a class="btn btn-soft-info btn-icon btn-circle btn-sm" href="{{route('seller.products.edit', ['id'=>$product->id, 'lang'=>env('DEFAULT_LANGUAGE')])}}" title="{{ translate('Edit') }}">
 		                          <i class="las la-edit"></i>
 		                      </a>
