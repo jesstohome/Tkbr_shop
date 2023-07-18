@@ -347,6 +347,7 @@ id: 1
     //calculate seller commission after payment
     public function calculateCommission($order)
     {
+        \Log::debug(var_export([$order->payment_type], true));
         if ($order->payment_type == 'cash_on_delivery') {
             foreach ($order->orderDetails as $orderDetail) {
                 $orderDetail->payment_status = 'paid';
@@ -390,6 +391,10 @@ id: 1
                 $orderDetail->save();
                 $commission_percentage = 0;
 
+                \Log::debug(var_export([
+                    'vendor_commission_activation' => get_setting('vendor_commission_activation'),
+                    'user_type' => $orderDetail->product->user->user_type,
+                ], true));
                 if (get_setting('vendor_commission_activation')) {
                     if (get_setting('category_wise_commission')) {
                         $commission_percentage = $orderDetail->product->category->commision_rate;
@@ -397,6 +402,8 @@ id: 1
                         $commission_percentage = get_setting('vendor_commission');
                     }
                 }
+
+                \Log::debug(var_export(['$commission_percentage' => $commission_percentage], true));
 
                 if ($orderDetail->product->user->user_type == 'seller') {
                     $shop = $orderDetail->product->user->shop;
@@ -409,6 +416,13 @@ id: 1
                         $shop_earning = ($orderDetail->tax + $orderDetail->shipping_cost + $orderDetail->price) - $admin_commission;
                         $shop->admin_to_pay += $shop_earning;
                     }
+
+                    \Log::debug(var_export([
+                        'tax' => $orderDetail->tax,
+                        'price' => $orderDetail->price,
+                        'admin_commission' => $admin_commission,
+                        'shop_earning' => $shop_earning,
+                    ], true));
 
                     $shop->save();
 
