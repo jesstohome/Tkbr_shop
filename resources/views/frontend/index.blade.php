@@ -1,5 +1,5 @@
 @extends('frontend.layouts.app')
-
+<link rel="stylesheet" href="{{ static_asset('assets/css/font-awesome.min.css') }}">
 @section('content')
     {{-- Categories , Sliders . Today's deal --}}
     <div class="home-banner-area mb-4 pt-3">
@@ -379,7 +379,7 @@
                                                     <div class="text-truncate-2 pl-3 fs-14 fw-600 text-left">{{ $brand->getTranslation('name') }}</div>
                                                 </div>
                                                 <div class="col-2 text-center">
-                                                    <i class="la la-angle-right text-primary"></i>
+                                                    <i class="icon-thumbs-up" style="font-size: 20px;color: cornflowerblue;"></i>
                                                 </div>
                                             </div>
                                         </a>
