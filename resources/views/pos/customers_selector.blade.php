@@ -1,3 +1,4 @@
+<option value="">{{translate('Walk In Customer')}}</option>
 @foreach($customers as $customer)
     @php
         $content = $customer->name;
