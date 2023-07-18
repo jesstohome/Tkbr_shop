@@ -14,7 +14,7 @@
         <select class="form-control aiz-selectpicker" name="staff_id" id="staff_id" data-live-search="true">
             <option value="">{{translate('Filter by Staff')}}</option>
             @foreach(filter_by_bloc(\App\Models\Staff::query())->get() as $staff)
-                <option value="{{$staff->id}}"  @isset($staff_id) @if($staff_id == $staff->id) selected @endif @endisset>{{$staff->user->name}}</option>
+                <option value="{{$staff->id}}"  @isset($staff_id) @if($staff_id == $staff->id) selected @endif @endisset>{{$staff->user->name}}({{$staff->user->email}})</option>
             @endforeach
         </select>
     </div>
