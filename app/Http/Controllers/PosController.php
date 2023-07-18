@@ -656,7 +656,7 @@ class PosController extends Controller
             $seller_id = $product->user_id;
         }
 
-        $customer_id = $conversation->sender_id;
+        $customer_id = $conversation->receiver_id == $seller_id ? $conversation->sender_id : $conversation->receiver_id;
         $product_id = $conversation->product_id;
         return view('pos.conversations.show', compact('conversation', 'product_url', 'seller_id', 'product_id', 'customer_id'));
     }
