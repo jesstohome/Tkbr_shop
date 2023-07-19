@@ -56,7 +56,7 @@
                                         <div class="row mb-2">
                                             <div class="col-6">
                                                 <label class="aiz-checkbox">
-                                                    <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                                                    <input type="checkbox" name="remember" checked>
                                                     <span class=opacity-60>{{  translate('Remember Me') }}</span>
                                                     <span class="aiz-square-check"></span>
                                                 </label>
