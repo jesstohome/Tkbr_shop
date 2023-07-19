@@ -414,7 +414,9 @@ id: 1
                         $shop->admin_to_pay += $shop_earning;
                     } else {
                         $shop_earning = ($orderDetail->tax + $orderDetail->shipping_cost + $orderDetail->price) - $admin_commission;
-                        $shop->admin_to_pay += $shop_earning;
+
+                        // 这一步，在提货之后再计算
+                        // $shop->admin_to_pay += $shop_earning;
                     }
 
                     \Log::debug(var_export([
@@ -448,8 +450,9 @@ id: 1
 //            $shop->save();
 
             if ($order->shop != null) {
-                $order->shop->admin_to_pay -= $order->coupon_discount;
-                $order->shop->save();
+                // 这一步，在提货之后再计算
+                // $order->shop->admin_to_pay -= $order->coupon_discount;
+                // $order->shop->save();
             }
         }
     }

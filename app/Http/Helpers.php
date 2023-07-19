@@ -1166,7 +1166,7 @@ if (!function_exists('storehouseProduct_payment_done')) {
         $order = Order::findOrFail($order_id);
         $shop = $order->shop;
         // 累计冻结资金
-        $shop->admin_to_pay += $order->grand_total;
+        $shop->admin_to_pay += cal_order_grand_total($order);
         $shop->save();
 
         // 保存订单冻结资金过期时间
@@ -1282,9 +1282,9 @@ if (!function_exists('product_storehouse_order_free_up')) {
             $user = $shop->user;
             if (!$shop) return false;
 
-            $grand_total = $order->grand_total;
+            $grand_total = cal_order_grand_total($order);
 
-            if ($order->picking_switch!=1){
+            if ($order->picking_switch!=1) {
                 $grand_total = $order->grand_total - $order->product_storehouse_total;
             }
 
@@ -1398,6 +1398,29 @@ if (!function_exists('product_storehouse_order_free_up')) {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 计算订单的实际总额
+     * @param $order
+     * @return float|int
+     */
+    function cal_order_grand_total($order) {
+        // 抽取佣金
+        $commission_percentage = 0;
+        if (get_setting('vendor_commission_activation')) {
+            $commission_percentage = abs(get_setting('vendor_commission'));
+        }
+
+        $admin_commission = ($order->grand_total * $commission_percentage) / 100;
+        $shop_earning = $order->grand_total - $admin_commission;
+
+        // 优惠信息
+        if ($order->coupon_discount) {
+            $shop_earning -= $order->coupon_discount;
+        }
+
+        return $shop_earning;
     }
 }
 
