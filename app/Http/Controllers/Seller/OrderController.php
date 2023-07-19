@@ -118,6 +118,13 @@ class OrderController extends Controller
             return back();
         }
 
+        // 防止多端重复生成
+        $cache_key = sprintf('createWorkOrderPayment:%s', $request->order_id);
+        while (!empty(\Cache::get($cache_key))) {
+            sleep(5);
+        }
+        \Cache::set($cache_key, 1, 60);
+
         $order->pickup_currency = $request->currency ?: '';
         $order->save();
 
@@ -152,6 +159,9 @@ class OrderController extends Controller
 
         // 每次进入都发送欢迎语
         send_hello_msg($ticket);
+
+        // 完成后，解除限制
+        \Cache::delete($cache_key);
 
         return redirect()->route('seller.orders.show_work_order', ['order_id' => $order->id]);
     }
