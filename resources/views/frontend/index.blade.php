@@ -1,5 +1,10 @@
 @extends('frontend.layouts.app')
 <link rel="stylesheet" href="{{ static_asset('assets/css/font-awesome.min.css') }}">
+<style>
+    .slick-slide {
+        height:auto !important;
+    }
+</style>
 @section('content')
     {{-- Categories , Sliders . Today's deal --}}
     <div class="home-banner-area mb-4 pt-3">
