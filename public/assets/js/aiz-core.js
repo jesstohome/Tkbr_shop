@@ -1214,6 +1214,9 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
             if ($("#aiz-upload-files").length > 0) {
                 var uppy = Uppy.Core({
                     autoProceed: true,
+                    restrictions: {
+                        allowedFileTypes: ['image/*', 'video/*', 'img/*'] // mime类型(image/png)或者文件后缀名(.jpg)
+                    }
                 });
                 uppy.use(Uppy.Dashboard, {
                     target: "#aiz-upload-files",
