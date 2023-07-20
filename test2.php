@@ -1,11 +1,18 @@
-<?php
-$start_time = microtime(true);
-echo 'abc';
+<!DOCTYPE html>
+<html>
+<head>
+    <title>图片和视频上传</title>
+</head>
+<body>
+<h1>图片和视频上传表单</h1>
+<form action="upload.php" method="post" enctype="multipart/form-data">
+    <label for="image">选择图片：</label>
+    <input type="file" id="image" name="image" accept="image/*"><br>
 
-function xhprof_log($start_time) {
-    echo $start_time . ':Script executed with success', PHP_EOL;
+    <label for="video">选择视频：</label>
+    <input type="file" id="video" name="video" accept="video/*"><br>
 
-
-}
-
-register_shutdown_function('xhprof_log', $start_time);
+    <input type="submit" value="上传">
+</form>
+</body>
+</html>
