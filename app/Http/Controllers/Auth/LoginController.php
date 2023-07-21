@@ -179,6 +179,11 @@ class LoginController extends Controller
      */
     public function authenticated()
     {
+        // 最后登录时间
+        $user = auth()->user();
+        $user->last_login_time = date('Y-m-d H:i:s');
+        $user->save();
+
         if (session('temp_user_id') != null) {
             Cart::where('temp_user_id', session('temp_user_id'))
                 ->update(

@@ -113,6 +113,7 @@
                     <th>{{translate('Name')}}</th>
                     <th data-breakpoints="lg">{{translate('Shop Name')}}</th>
                     <th data-breakpoints="lg">{{translate('Email Address')}}</th>
+                    <th data-breakpoints="lg">{{translate('Last Login Time')}}</th>
                     @if (isSupperAdmin()) <th data-breakpoints="lg">{{translate('Bloc')}}</th> @endif
                     <th data-breakpoints="lg">{{translate('Verification Info')}}</th>
                     <th data-breakpoints="lg">{{translate('Approval')}}</th>
@@ -154,6 +155,7 @@
                         <td>@if($shop->user->banned == 1) <i class="fa fa-ban text-danger" aria-hidden="true"></i> @endif {{$shop->user->name}} @if($shop->user->is_virtual == 1) (<font color="red">{{translate('Virtual')}}</font>) @endif</td>
                         <td>{{$shop->name}}</td>
                         <td>{{$shop->user->email}}</td>
+                        <td>{{$shop->user->last_login_time}}</td>
                         @if (isSupperAdmin()) <td>{{$shop->bloc->name}}</td> @endif
                         <td>
                             @if ($shop->verification_info != null)
