@@ -97,7 +97,7 @@
                                         <i class="las la-edit"></i> </a>
 
 
-                                    @if(Auth::user()->user_type == 'admin')
+                                    @if(Auth::user()->user_type == 'admin' && false)
                                     <a href="{{route('customers.login', encrypt($user->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('Log in as this Customer') }}">
                                         <i class="las la-edit"></i>
                                     </a>
