@@ -185,6 +185,19 @@
                     <div class="d-flex flex-column flex-md-row justify-content-between">
                         <div class="d-flex">
                             <div class="dropdown dropup">
+                                <button class="btn btn-outline-dark btn-styled dropdown-toggle" type="button" data-toggle="dropdown">
+                                    {{translate('Discount')}}
+                                </button>
+                                <div class="dropdown-menu p-3 dropdown-menu-lg">
+                                    <div class="input-group">
+                                        <input type="number" min="0" placeholder="Amount" name="discount" class="form-control" value="{{ Session::get('pos.discount', 0) }}" required onchange="setDiscount()">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">{{ translate('Flat') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown dropup">
                                 <div class="my-2 my-md-0">
                                     <div class="form-group">
                                         <input class="form-control" type="datetime-local" name="effectivetime" placeholder="{{ translate('Search by Product Name/Barcode') }}" >
