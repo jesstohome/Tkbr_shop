@@ -190,7 +190,7 @@
                                 </button>
                                 <div class="dropdown-menu p-3 dropdown-menu-lg">
                                     <div class="input-group">
-                                        <input type="number" min="0" placeholder="Amount" name="discount" class="form-control" value="{{ Session::get('pos.discount', 0) }}" required onchange="setDiscount()">
+                                        <input type="number" placeholder="Coupon Code" name="coupon_code" class="form-control" value="{{ Session::get('pos.discount', 0) }}" required onchange="useCoupon()">
                                         <div class="input-group-append">
                                             <span class="input-group-text">{{ translate('Flat') }}</span>
                                         </div>
@@ -604,6 +604,13 @@
         function setDiscount(){
             var discount = $('input[name=discount]').val();
             $.post('{{ route('pos.setDiscount') }}',{_token:AIZ.data.csrf, discount:discount}, function(data){
+                updateCart(data);
+            });
+        }
+
+        function useCoupon(){
+            var coupon_code = $('input[name=coupon_code]').val();
+            $.post('{{ route('pos.useCoupon') }}',{_token:AIZ.data.csrf, coupon_code:coupon_code}, function(data){
                 updateCart(data);
             });
         }

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\BusinessSetting;
+use App\Models\Cart;
 use App\Models\Conversation;
+use App\Models\Coupon;
+use App\Models\CouponUsage;
 use App\Models\EmailTask;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -336,6 +339,27 @@ class PosController extends Controller
         if($request->discount >= 0){
             Session::put('pos.discount', $request->discount);
         }
+        return view('pos.cart');
+    }
+
+    /**
+     * 使用优惠码
+     * @param Request $request
+     */
+    public function useCoupon(Request $request) {
+        $coupon_discount = 0;
+
+        $coupon = Coupon::where('code', $request->coupon_code)->first();
+        if(!empty($coupon)) {
+            if (strtotime(date('d-m-Y')) >= $coupon->start_date && strtotime(date('d-m-Y')) <= $coupon->end_date) {
+                if (CouponUsage::where('user_id', Auth::user()->id)->where('coupon_id', $coupon->id)->first() == null) {
+                    $carts = Session::get('pos.cart');
+                    $coupon_discount = carts_product_discount($carts, $coupon);
+                }
+            }
+        }
+
+        Session::put('pos.discount', $coupon_discount);
         return view('pos.cart');
     }
 

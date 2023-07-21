@@ -22,6 +22,7 @@ Route::controller(PosController::class)->group(function () {
 	Route::post('/get_shipping_address_seller', 'getShippingAddressForSeller')->name('pos.getShippingAddressForSeller');
 	Route::post('/setDiscount', 'setDiscount')->name('pos.setDiscount');
 	Route::post('/setShipping', 'setShipping')->name('pos.setShipping');
+	Route::post('/useCoupon', 'useCoupon')->name('pos.useCoupon');
 	Route::post('/set-shipping-address', 'set_shipping_address')->name('pos.set-shipping-address');
 	Route::post('/pos-order-summary', 'get_order_summary')->name('pos.getOrderSummary');
 	Route::post('/pos-order', 'order_store')->name('pos.order_place');

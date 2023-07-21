@@ -307,6 +307,8 @@ if (!function_exists('cart_product_price')) {
 if (!function_exists('cart_product_tax')) {
     function cart_product_tax($cart_product, $product, $formatted = true)
     {
+        $cart_product['variation'] = $cart_product['variation'] ?: $cart_product['variant'];
+
         $str = '';
         if ($cart_product['variation'] != null) {
             $str = $cart_product['variation'];
@@ -391,43 +393,57 @@ if (!function_exists('cart_product_discount')) {
 
 // all discount
 if (!function_exists('carts_product_discount')) {
-    function carts_product_discount($cart_products, $formatted = false)
+    function carts_product_discount($carts, $coupon, $formatted = false)
     {
-        $discount = 0;
-        foreach ($cart_products as $key => $cart_product) {
-            $str = '';
-            $product = \App\Models\Product::find($cart_product['product_id']);
-            if ($cart_product['variation'] != null) {
-                $str = $cart_product['variation'];
-            }
-            $product_stock = $product->stocks->where('variant', $str)->first();
-            $price = $product_stock->price;
+        $coupon_discount = 0;
 
-            //discount calculation
-            $discount_applicable = false;
+        $coupon_details = json_decode($coupon->details);
 
-            if ($product->discount_start_date == null) {
-                $discount_applicable = true;
-            } elseif (strtotime(date('d-m-Y H:i:s')) >= $product->discount_start_date &&
-                strtotime(date('d-m-Y H:i:s')) <= $product->discount_end_date) {
-                $discount_applicable = true;
-            }
-
-            if ($discount_applicable) {
-                if ($product->discount_type == 'percent') {
-                    $discount += ($price * $product->discount) / 100;
-                } elseif ($product->discount_type == 'amount') {
-                    $discount += $product->discount;
+        if (!empty($carts)) {
+            if ($coupon->type == 'cart_base') {
+                $subtotal = 0;
+                $tax = 0;
+                $shipping = 0;
+                foreach ($carts as $key => $cartItem) {
+                    $product = Product::find($cartItem['id']);
+                    $subtotal += cart_product_price($cartItem, $product, false, false) * $cartItem['quantity'];
+                    $tax += cart_product_tax($cartItem, $product, false) * $cartItem['quantity'];
+                    $shipping += $cartItem['shipping_cost'] ?? 0;
+                }
+                $sum = $subtotal + $tax + $shipping;
+                if ($sum >= $coupon_details->min_buy) {
+                    if ($coupon->discount_type == 'percent') {
+                        $coupon_discount = ($sum * $coupon->discount) / 100;
+                        if ($coupon_discount > $coupon_details->max_discount) {
+                            $coupon_discount = $coupon_details->max_discount;
+                        }
+                    } elseif ($coupon->discount_type == 'amount') {
+                        $coupon_discount = $coupon->discount;
+                    }
+                }
+            } elseif ($coupon->type == 'product_base') {
+                foreach ($carts as $key => $cartItem) {
+                    $product = Product::find($cartItem['id']);
+                    foreach ($coupon_details as $key => $coupon_detail) {
+                        if ($coupon_detail->product_id == $cartItem['id']) {
+                            if ($coupon->discount_type == 'percent') {
+                                $coupon_discount += (cart_product_price($cartItem, $product, false, false) * $coupon->discount / 100) * $cartItem['quantity'];
+                                break;
+                            } elseif ($coupon->discount_type == 'amount') {
+                                $coupon_discount += $coupon->discount * $cartItem['quantity'];
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
 
         if ($formatted) {
-            return format_price(convert_price($discount));
+            return format_price(convert_price($coupon_discount));
         } else {
-            return $discount;
+            return $coupon_discount;
         }
-
     }
 }
 
