@@ -347,20 +347,40 @@ class PosController extends Controller
      * @param Request $request
      */
     public function useCoupon(Request $request) {
-        $coupon_discount = 0;
+        Session::put('pos.discount', 0);
 
         $coupon = Coupon::where('code', $request->coupon_code)->first();
-        if(!empty($coupon)) {
-            if (strtotime(date('d-m-Y')) >= $coupon->start_date && strtotime(date('d-m-Y')) <= $coupon->end_date) {
-                if (CouponUsage::where('user_id', Auth::user()->id)->where('coupon_id', $coupon->id)->first() == null) {
-                    $carts = Session::get('pos.cart');
-                    $coupon_discount = carts_product_discount($carts, $coupon);
-                }
-            }
+        if(empty($coupon)) {
+            return [
+                'success' => 0,
+                'html' => view('pos.cart')->render(),
+                'message' => translate('Invalid coupon!'),
+            ];
+        }
+        if ($coupon->start_date > time() || $coupon->end_date < time()) {
+            return [
+                'success' => 0,
+                'html' => view('pos.cart')->render(),
+                'message' => translate('Coupon expired!'),
+            ];
+        }
+
+        $carts = Session::get('pos.cart');
+        $coupon_discount = carts_product_discount($carts, $coupon);
+        if (empty($coupon_discount)) {
+            return [
+                'success' => 0,
+                'html' => view('pos.cart')->render(),
+                'message' => translate('This coupon is not applicable to your cart products!'),
+            ];
         }
 
         Session::put('pos.discount', $coupon_discount);
-        return view('pos.cart');
+        return [
+            'success' => 1,
+            'message' => '',
+            'html' => view('pos.cart')->render(),
+        ];
     }
 
     //set Shipping Cost

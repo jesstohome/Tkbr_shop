@@ -610,8 +610,12 @@
 
         function useCoupon(){
             var coupon_code = $('input[name=coupon_code]').val();
-            $.post('{{ route('pos.useCoupon') }}',{_token:AIZ.data.csrf, coupon_code:coupon_code}, function(data){
-                updateCart(data);
+            $.post('{{ route('pos.useCoupon') }}',{_token:AIZ.data.csrf, coupon_code:coupon_code}, function(data) {
+                if (!data.success) {
+                    AIZ.plugins.notify('warning', data.message || '使用错误');
+                }
+
+                updateCart(data.html);
             });
         }
 
