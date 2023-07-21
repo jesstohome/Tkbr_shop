@@ -49,8 +49,8 @@
                                 @elseif ($coupon->type == 'product_base')
                                     {{ translate('Product Base') }}
                             @endif</td>
-                            <td>{{ date('d-m-Y', $coupon->start_date) }}</td>
-                            <td>{{ date('d-m-Y', $coupon->end_date) }}</td>
+                            <td>{{ date('Y-m-d H:i:s', $coupon->start_date) }}</td>
+                            <td>{{ date('Y-m-d H:i:s', $coupon->end_date) }}</td>
                             <td class="text-right">
                                 <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('seller.coupon.edit', encrypt($coupon->id) )}}" title="{{ translate('Edit') }}">
                                     <i class="las la-edit"></i>

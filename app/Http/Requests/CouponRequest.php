@@ -98,7 +98,7 @@ class CouponRequest extends FormRequest
 
         $this->merge([
             'start_date'    => strtotime($date_range[0]),
-            'end_date'      => strtotime($date_range[1]),
+            'end_date'      => strtotime($date_range[1] . " 23:59:59"),
             'details'       => $coupon_details
         ]);
     }
