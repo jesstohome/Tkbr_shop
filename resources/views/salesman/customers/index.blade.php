@@ -11,7 +11,7 @@
             <span>{{translate('Add Virtual Account')}}</span>
         </a>
     </div> -->
-    
+
       <div class="ml-auto" style="margin-right: 6px;">
                 <button id="create_virtual_user" type="button" class="btn btn-outline-primary btn-block" onclick="">{{translate('Create Virtual Customers')}}</button>
             </div>
@@ -89,17 +89,6 @@
                                 </td>
                                 <td>{{single_price($user->balance)}}</td>
                                 <td class="text-right">
-                                    
-                                       <a href="{{route('customers.login', encrypt($user->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('Log in as this Customer') }}">
-                                            <i class="las la-edit"></i>
-                                        </a>
-                                        
-                                        
-                                    @if(Auth::user()->user_type == 'salesman' && false)
-                                    <a href="{{route('customers.login', encrypt($user->id))}}" class="btn btn-soft-primary btn-icon btn-circle btn-sm" title="{{ translate('Log in as this Customer') }}">
-                                        <i class="las la-edit"></i>
-                                    </a>
-                                    @endif
                                     @if($user->banned != 1)
                                     <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm" onclick="confirm_ban('{{route('salesman.customers.ban', encrypt($user->id))}}');" title="{{ translate('Ban this Customer') }}">
                                         <i class="las la-user-slash"></i>
@@ -165,8 +154,8 @@
 
 @section('modal')
     @include('modals.delete_modal')
-    
-    
+
+
         <div class="modal fade" id="virtual_user_form" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -186,21 +175,21 @@
                         </div>
                         <div class="col-lg-4"><span>{{translate('Optional')}}</span></div>
                     </div>-->
-                    
+
                     <div class="form-group row" style="display:none;">
                         <div class="col-lg-2">{{translate('Referrel User')}}</div>
                         <div class="col-lg-6">
                            <input type="number" class="form-control" name="referred_by" value="@php echo Auth::user()->id;@endphp" placeholder="Referrel User" required>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <div class="col-lg-2">{{translate('Quantity')}}</div>
                         <div class="col-lg-6">
                            <input type="number" min="1" step="1" max="100" class="form-control" name="quantity" value="1" placeholder="Quantity of generate" required>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row">
                         <div class="col-lg-2">{{translate('Initial Balance')}}</div>
                         <div class="col-lg-6">
@@ -210,8 +199,8 @@
                      <div class="form-group row">
                         <div class="col-lg-2"></div>
                         <div class="col-lg-6">
-                            <div style="display: flex; align-items: center;"> 
-                            
+                            <div style="display: flex; align-items: center;">
+
                             <div class="aiz-checkbox-inline" style="display: inline-block;">
                                 <label class="aiz-checkbox">
                                     <input type="checkbox" class="check-one" name="disable_login" value="1">
@@ -219,12 +208,12 @@
                                 </label>
                             </div>
                             <span style="margin-top: 14px;">{{translate('Disable Log in')}}</span>
-                                
-                                
+
+
                             </div>
                         </div>
                     </div>
-                    
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -246,17 +235,17 @@
             $('#create_virtual_user').bind('click', function() {
                 $('#virtual_user_form').modal('show')
             })
-            
+
             $('#submitVirtualCustomer').bind('click', function() {
                 let target = $(this)
                 if (target.hasClass('disabled')) return false
-                
+
                 target.addClass('disabled');
-                
+
                 let max = $('input[name=quantity]').val()
                 let balance = $('input[name=balance]').val()
                 let referred_by = $('input[name=referred_by]').val()
-                
+
                 fetch('{{route('customers.create_virtual_user')}}', {
                     method: 'POST',
                     headers: {
@@ -281,17 +270,17 @@
                         AIZ.plugins.notify('danger', '{{translate('Executed failure Try again')}}')
                         target.removeClass('disabled')
                     }
-                    
+
                 })
                 .catch(err => null).finally(() => {
                     //target.removeClass('disabled')
                 })
-                
+
             })
         })
-        
-        
-        
+
+
+
         $(document).on("change", ".check-all", function() {
             if(this.checked) {
                 // Iterate each checkbox
