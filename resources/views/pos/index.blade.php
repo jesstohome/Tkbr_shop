@@ -190,7 +190,7 @@
                                 </button>
                                 <div class="dropdown-menu p-3 dropdown-menu-lg">
                                     <div class="input-group">
-                                        <input type="number" placeholder="Coupon Code" name="coupon_code" class="form-control" value="{{ Session::get('pos.discount', 0) }}" required onchange="useCoupon()">
+                                        <input type="text" placeholder="Coupon Code" name="coupon_code" class="form-control" value="{{ Session::get('pos.discount', 0) }}" required onchange="useCoupon()">
                                         <div class="input-group-append">
                                             <span class="input-group-text">{{ translate('Flat') }}</span>
                                         </div>
