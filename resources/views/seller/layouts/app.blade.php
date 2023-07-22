@@ -118,7 +118,7 @@
 	<script src="{{ static_asset('assets/js/aiz-core.js?v=1.2.2') }}" ></script>
     <script src="{{ static_asset('assets/js/layui.js') }}"></script>
     <script src="{{ static_asset('assets/js/laravel-echo.min.js') }}"></script>
-    <script src="//{{ Request::getHost() }}:6001/socket.io/socket.io.js"></script>
+    <script src="//{{ Request::getHost() }}/socket/"></script>
     <script type="text/javascript">
         const echo = new Echo({
             broadcaster: 'socket.io',
