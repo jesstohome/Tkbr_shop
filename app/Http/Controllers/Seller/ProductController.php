@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Combinations;
 use Artisan;
 use Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Str;
 
@@ -165,39 +166,47 @@ class ProductController extends Controller
 
     public function update(ProductRequest $request, Product $product)
     {
-        //Product
-        $product = $this->productService->update($request->except([
-            '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
-        ]), $product);
+        \DB::beginTransaction();
+        try {
+            //Product
+            $product = $this->productService->update($request->except([
+                '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
+            ]), $product);
 
-        //Product Stock
-        foreach ($product->stocks as $key => $stock) {
-            $stock->delete();
-        }
-        $request->merge(['product_id' => $product->id]);
-        $this->productStockService->store($request->only([
-            'colors_active', 'colors', 'choice_no', 'unit_price', 'sku', 'current_stock', 'product_id'
-        ]), $product);
-
-        //VAT & Tax
-        if ($request->tax_id) {
-            ProductTax::where('product_id', $product->id)->delete();
+            //Product Stock
+            foreach ($product->stocks as $key => $stock) {
+                $stock->delete();
+            }
             $request->merge(['product_id' => $product->id]);
-            $this->productTaxService->store($request->only([
-                'tax_id', 'tax', 'tax_type', 'product_id'
-            ]));
+            $this->productStockService->store($request->only([
+                'colors_active', 'colors', 'choice_no', 'unit_price', 'sku', 'current_stock', 'product_id'
+            ]), $product);
+
+            //VAT & Tax
+            if ($request->tax_id) {
+                ProductTax::where('product_id', $product->id)->delete();
+                $request->merge(['product_id' => $product->id]);
+                $this->productTaxService->store($request->only([
+                    'tax_id', 'tax', 'tax_type', 'product_id'
+                ]));
+            }
+            // Product Translations
+            ProductTranslation::where('lang', $request->lang)
+                ->where('product_id', $request->product_id)
+                ->updateOrInsert($request->only([
+                    'lang', 'name', 'unit', 'description', 'product_id'
+                ]));
+
+            \DB::commit();
+
+            flash(translate('Product has been updated successfully'))->success();
+
+            Artisan::call('view:clear');
+            Artisan::call('cache:clear');
+        } catch (\Exception $exception) {
+            Log::error(var_export([$exception->getMessage()], true));
+            \DB::rollBack();
         }
-        // Product Translations
-        ProductTranslation::where('lang', $request->lang)
-            ->where('product_id', $request->product_id)
-            ->updateOrInsert($request->only([
-            'lang', 'name', 'unit', 'description', 'product_id'
-        ]));
-
-        flash(translate('Product has been updated successfully'))->success();
-
-        Artisan::call('view:clear');
-        Artisan::call('cache:clear');
 
         return back();
     }
