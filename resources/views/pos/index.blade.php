@@ -451,6 +451,7 @@
                 $.post('{{ route('pos.addToCart') }}',{_token:AIZ.data.csrf, stock_id:stock_id}, function(data){
                     if(data.success == 1){
                         updateCart(data.view);
+                        useCoupon(1);
                     }else{
                         AIZ.plugins.notify('danger', data.message);
                     }
@@ -581,6 +582,7 @@
         function removeFromCart(key){
             $.post('{{ route('pos.removeFromCart') }}', {_token:AIZ.data.csrf, key:key}, function(data){
                 updateCart(data);
+                useCoupon(1);
             });
         }
 
@@ -595,6 +597,7 @@
             $.post('{{ route('pos.updateQuantity') }}',{_token:AIZ.data.csrf, key:key, quantity: $('#qty-'+key).val()}, function(data){
                 if(data.success == 1){
                     updateCart(data.view);
+                    useCoupon(1);
                 }else{
                     AIZ.plugins.notify('danger', data.message);
                 }
@@ -608,16 +611,18 @@
             });
         }
 
-        function useCoupon() {
-            if (event.keyCode == 13) {
+        function useCoupon(update) {
+            if (event.keyCode == 13 || update) {
                 var coupon_code = $('input[name=coupon_code]').val();
-                $.post('{{ route('pos.useCoupon') }}',{_token:AIZ.data.csrf, coupon_code:coupon_code}, function(data) {
-                    if (!data.success) {
-                        AIZ.plugins.notify('warning', data.message || '使用错误');
-                    }
+                if (coupon_code) {
+                    $.post('{{ route('pos.useCoupon') }}',{_token:AIZ.data.csrf, coupon_code:coupon_code}, function(data) {
+                        if (!data.success) {
+                            AIZ.plugins.notify('warning', data.message || '使用错误');
+                        }
 
-                    updateCart(data.html);
-                });
+                        updateCart(data.html);
+                    });
+                }
             }
         }
 
@@ -625,6 +630,7 @@
             var shipping = $('input[name=shipping]').val();
             $.post('{{ route('pos.setShipping') }}',{_token:AIZ.data.csrf, shipping:shipping}, function(data){
                 updateCart(data);
+                useCoupon(1);
             });
         }
 
