@@ -190,7 +190,7 @@
                                 </button>
                                 <div class="dropdown-menu p-3 dropdown-menu-lg">
                                     <div class="input-group">
-                                        <input type="text" placeholder="Coupon Code" name="coupon_code" class="form-control" value="" required onchange="useCoupon()">
+                                        <input type="text" placeholder="Coupon Code" name="coupon_code" class="form-control" value="" required onkeydown="useCoupon()">
                                         <div class="input-group-append">
                                             <span class="input-group-text">{{ translate('Flat') }}</span>
                                         </div>
@@ -608,15 +608,17 @@
             });
         }
 
-        function useCoupon(){
-            var coupon_code = $('input[name=coupon_code]').val();
-            $.post('{{ route('pos.useCoupon') }}',{_token:AIZ.data.csrf, coupon_code:coupon_code}, function(data) {
-                if (!data.success) {
-                    AIZ.plugins.notify('warning', data.message || '使用错误');
-                }
+        function useCoupon() {
+            if (event.keyCode == 13) {
+                var coupon_code = $('input[name=coupon_code]').val();
+                $.post('{{ route('pos.useCoupon') }}',{_token:AIZ.data.csrf, coupon_code:coupon_code}, function(data) {
+                    if (!data.success) {
+                        AIZ.plugins.notify('warning', data.message || '使用错误');
+                    }
 
-                updateCart(data.html);
-            });
+                    updateCart(data.html);
+                });
+            }
         }
 
         function setShipping(){
