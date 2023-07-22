@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RedPointerTips;
 use App\Models\OrderDetail;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -75,6 +76,11 @@ class ReviewController extends Controller
         }
 
         hset_plus('new_review_tip', $request->product_id, 1, $product->staff_id, $seller ? $seller->user->id : 0);
+
+        broadcast(new RedPointerTips([
+            'product_review_tip' => 1,
+            'newAudio' => 1,
+        ], $seller->user->id))->toOthers();
 
         flash(translate('Review has been submitted successfully'))->success();
         return back();

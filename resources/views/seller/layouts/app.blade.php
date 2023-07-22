@@ -117,6 +117,28 @@
 	<script src="{{ static_asset('assets/js/vendors.js') }}" ></script>
 	<script src="{{ static_asset('assets/js/aiz-core.js?v=1.2.2') }}" ></script>
     <script src="{{ static_asset('assets/js/layui.js') }}"></script>
+    <script src="{{ static_asset('assets/js/laravel-echo.min.js') }}"></script>
+    <script src="//{{ Request::getHost() }}:6001/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        const echo = new Echo({
+            broadcaster: 'socket.io',
+            host: window.location.hostname + ':6001', // Laravel WebSockets 的默认端口
+            // 更多配置选项...
+        });
+
+        echo.channel(`red-pointer.{{Auth::id()}}`)
+            .listen('RedPointerTips', (e) => {
+                console.log('RedPointerTips', e);
+                let data = e.data;
+                if ( data.new_conversations > 0 ) $( '#conversations' ).show();
+                if ( data.product_review_tip) $( '.product_review_tip' ).show();
+                if (data.ticket_count) $( '.chat-num-tip' ).show();
+
+                if (data.newAudio) {
+                    audioPlay();
+                }
+            });
+    </script>
 
     @yield('script')
 

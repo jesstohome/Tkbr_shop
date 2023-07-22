@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RedPointerTips;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use Auth;
@@ -60,6 +61,12 @@ class MessageController extends Controller
             // 卖家端红点
             hset_plus('new_conversation_tip', $conversation->id, 1, $product->staff_id ?? $conversation->staff_id, $product->user_id ?? 0);
         }
+
+        broadcast(new RedPointerTips([
+            'product_review_tip' => 1,
+            'new_conversations' => 1,
+            'newAudio' => 1,
+        ], $product->user_id))->toOthers();
 
         return back();
     }

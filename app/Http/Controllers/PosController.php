@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RedPointerTips;
 use App\Models\BusinessSetting;
 use App\Models\Cart;
 use App\Models\Conversation;
@@ -745,6 +746,11 @@ class PosController extends Controller
             hset_plus('new_pos_conversation_tip', $conversation->id, 1, $conversation->staff_id, $to_seller_id, '', true);
             hset_plus('new_conversation_tip', $conversation->id, 1, $conversation->staff_id, $to_seller_id, '', true);
         }
+
+        broadcast(new RedPointerTips([
+            'new_conversations' => 1,
+            'newAudio' => 1,
+        ], $to_seller_id))->toOthers();
 
         return back();
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RedPointerTips;
 use App\Models\Bloc;
 use App\Models\Currency;
 use App\Models\Order;
@@ -243,13 +244,15 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket->save();
 
         if($ticket_reply->save()) {
-            Redis::set('loop_load_new_reply_audio_frontend', 1);
-
-
             // 保存下，更新下最新时间
             $ticket = $ticket_reply->ticket;
             $ticket->updated_at = time();
             $ticket->save();
+
+            broadcast(new RedPointerTips([
+                'ticket_count' => 1,
+                'newAudio' => 1,
+            ], $ticket->user_id))->toOthers();
 
             if ($request->ajax()) {
                 $list = appendTicketFiles([$ticket_reply]);

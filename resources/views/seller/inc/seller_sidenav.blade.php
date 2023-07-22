@@ -413,11 +413,11 @@
 
     window.onload = function() {
         get_not_view_count();
-        getConversations();
+        // getConversations();
         setInterval( function ()
         {
             get_not_view_count();
-            getConversations();
+            // getConversations();
         }, 10000 );
         if(boolean==1 && count > 0 && false){
             $('#conversations-modal').modal('show');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RedPointerTips;
 use App\Models\User;
 use App\Notifications\OrderNotification;
 use Illuminate\Http\Request;
@@ -158,6 +159,11 @@ class ConversationController extends Controller
                     // 卖家端红点
                     hset_plus('new_conversation_tip', $conversation->id, 1, $product->staff_id, $product->user_id);
                 }
+
+                broadcast(new RedPointerTips([
+                    'new_conversations' => 1,
+                    'newAudio' => 1,
+                ], $product->user_id))->toOthers();
             }
         }
 
