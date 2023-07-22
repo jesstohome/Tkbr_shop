@@ -240,7 +240,7 @@ if (!function_exists('cart_product_price')) {
     function cart_product_price($cart_product, $product, $formatted = true, $tax = true)
     {
         // 两个字段都取下，存的位置不太一样
-        $cart_product['variation'] = $cart_product['variation'] ?: $cart_product['variant'];
+        $cart_product['variation'] = $cart_product['variation'] ?? $cart_product['variant'];
 
         $str = '';
         if (isset($cart_product['variation'])){
@@ -307,7 +307,7 @@ if (!function_exists('cart_product_price')) {
 if (!function_exists('cart_product_tax')) {
     function cart_product_tax($cart_product, $product, $formatted = true)
     {
-        $cart_product['variation'] = $cart_product['variation'] ?: $cart_product['variant'];
+        $cart_product['variation'] = $cart_product['variation'] ?? $cart_product['variant'];
 
         $str = '';
         if ($cart_product['variation'] != null) {
