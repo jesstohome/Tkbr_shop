@@ -128,6 +128,8 @@
             // 更多配置选项...
         });
 
+        console.log("echo=", echo);
+
         echo.channel(`red-pointer.{{Auth::id()}}`)
             .listen('RedPointerTips', (e) => {
                 console.log('RedPointerTips', e);
