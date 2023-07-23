@@ -119,12 +119,12 @@
     <script src="{{ static_asset('assets/js/layui.js') }}"></script>
     <script src="{{ static_asset('assets/js/laravel-echo.min.js') }}"></script>
 
-    @if(false)
-    <script src="//{{ Request::getHost() }}:8001/socket.io/socket.io.js"></script>
+    @if(Auth::id() == 3663)
+    <script src="//{{ Request::getHost() }}/ws/socket.io/socket.io.js"></script>
     <script type="text/javascript">
         const echo = new Echo({
             broadcaster: 'socket.io',
-            host: window.location.hostname + ':8001', // Laravel WebSockets 的默认端口
+            host: window.location.hostname + '/ws/', // Laravel WebSockets 的默认端口
             // 更多配置选项...
         });
 
