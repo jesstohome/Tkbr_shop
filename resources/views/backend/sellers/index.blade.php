@@ -123,7 +123,7 @@
                     <th data-breakpoints="lg">{{ translate('Creditscore') }}</th>
                     <th data-breakpoints="lg">{{ translate('Wallet Money') }}</th>
                     <th data-breakpoints="lg">{{ translate('Guarantee Money') }}</th>
-                    <th data-breakpoints="lg" style="width:20%;">{{ translate('Views') }}</th>
+                    <th data-breakpoints="lg">{{ translate('Views') }}</th>
                     <th data-breakpoints="lg">{{ translate('Wallet Pay') }}</th>
                     <th data-breakpoints="lg">{{ translate('Home Display') }}</th>
                     <th data-breakpoints="lg">{{ translate('Created Time') }}</th>

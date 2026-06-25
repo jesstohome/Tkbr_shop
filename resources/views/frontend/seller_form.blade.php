@@ -117,11 +117,7 @@
                         </div>
                     </div>
 
-                    @if(get_setting('google_recaptcha') == 1)
-                        <div class="form-group mt-2 mx-auto row">
-                            <div class="g-recaptcha" data-sitekey="{{ env('CAPTCHA_KEY') }}"></div>
-                        </div>
-                    @endif
+
 
                     <div class="text-right">
                         <button type="submit" class="btn btn-primary fw-600">{{ translate('Register Your Shop')}}</button>
