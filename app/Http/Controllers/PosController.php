@@ -10,6 +10,7 @@ use App\Models\Coupon;
 use App\Models\CouponUsage;
 use App\Models\EmailTask;
 use App\Models\Message;
+use App\Models\ProductQuery;
 use Illuminate\Http\Request;
 use App\Models\OrderDetail;
 use App\Models\ProductStock;
@@ -779,5 +780,122 @@ class PosController extends Controller
 
         flash(translate('Something went wrong'))->error();
         return back();
+    }
+
+    /**
+
+    /**
+     * 获取咨询对话消息列表（Conversation）
+     */
+    public function posConsultMessages(Request $request)
+    {
+        $product = Product::findOrFail($request->product_id);
+        $customer_id = $request->customer_id;
+        $seller_id = $product->user_id;
+
+        $messages = [];
+        $conversation = Conversation::where('product_id', $request->product_id)
+            ->where(function ($q) use ($customer_id, $seller_id) {
+                $q->where(function ($q2) use ($customer_id, $seller_id) {
+                    $q2->where('sender_id', $customer_id)->where('receiver_id', $seller_id);
+                })->orWhere(function ($q2) use ($customer_id, $seller_id) {
+                    $q2->where('sender_id', $seller_id)->where('receiver_id', $customer_id);
+                });
+            })->first();
+
+        if ($conversation) {
+            foreach ($conversation->messages()->orderBy('id', 'asc')->get() as $msg) {
+                $msg_user = $msg->user;
+                $user_name = $msg_user ? $msg_user->name : '';
+                $shop_name = '';
+                if ($msg_user && $msg_user->shop) {
+                    $shop_name = $msg_user->shop->name;
+                }
+                $messages[] = [
+                    'id' => $msg->id,
+                    'user_id' => (int) $msg->user_id,
+                    'user_name' => $user_name,
+                    'shop_name' => $shop_name,
+                    'message' => $msg->message,
+                    'created_at' => $msg->created_at->format('m-d H:i'),
+                    'is_mine' => $msg->user_id == $customer_id || $msg->user_id == Auth::user()->id,
+                ];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'messages' => $messages,
+        ]);
+    }
+
+    /**
+     * 发送咨询消息（Conversation）
+     */
+    public function posConsultSend(Request $request)
+    {
+        try {
+            $product = Product::findOrFail($request->product_id);
+            $customer_id = $request->customer_id;
+            $seller_id = $product->user_id;
+
+            $conversation = Conversation::where('product_id', $request->product_id)
+                ->where(function ($q) use ($customer_id, $seller_id) {
+                    $q->where(function ($q2) use ($customer_id, $seller_id) {
+                        $q2->where('sender_id', $customer_id)->where('receiver_id', $seller_id);
+                    })->orWhere(function ($q2) use ($customer_id, $seller_id) {
+                        $q2->where('sender_id', $seller_id)->where('receiver_id', $customer_id);
+                    });
+                })->first();
+
+            if (!$conversation) {
+                $conversation = new Conversation;
+                $conversation->sender_id = $customer_id;
+                $conversation->receiver_id = $seller_id;
+                $conversation->product_id = $product->id;
+                $conversation->bloc_id = $product->bloc_id;
+                $conversation->staff_id = get_staff_id();
+                $conversation->title = $product->getTranslation('name');
+                $conversation->add_by_admin = 1;
+                $conversation->save();
+            }
+
+            $message = new Message;
+            $message->conversation_id = $conversation->id;
+            $message->user_id = $customer_id;
+            $message->message = $request->message;
+            $message->save();
+
+            $conversation->updated_at = now();
+            $conversation->save();
+
+            return response()->json(['success' => true]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    /**
+     * 创建产品留言（ProductQuery）
+     */
+    public function posProductComment(Request $request)
+    {
+        $product = Product::findOrFail($request->product_id);
+
+        $query = new ProductQuery;
+        $query->customer_id = $request->customer_id;
+        $query->seller_id = $product->user_id;
+        $query->product_id = $request->product_id;
+        $query->question = $request->message;
+        $query->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => translate('Comment has been submitted successfully'),
+        ]);
     }
 }

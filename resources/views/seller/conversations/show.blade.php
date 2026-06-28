@@ -28,27 +28,10 @@
         </div>
 
         <div class="card-body">
-            <ul class="list-group list-group-flush">
-                @foreach($conversation->messages as $key => $message)
-                    <li class="list-group-item px-0">
-                        <div class="media mb-2">
-                          <img class="avatar avatar-xs mr-3" @if($message->user != null) src="{{ uploaded_asset($message->user->avatar_original) }}" @endif onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
-                          <div class="media-body">
-                            <h6 class="mb-0 fw-600">
-                                @if ($message->user != null)
-                                    {{ $message->user->name }}
-                                @endif
-                            </h6>
-                            <p class="opacity-50">{{$message->created_at}}</p>
-                          </div>
-                        </div>
-                        <p>
-                            {{ $message->message }}
-                        </p>
-                    </li>
-                @endforeach
-            </ul>
-            <form class="pt-4" action="{{ route('seller.conversations.message_store') }}" method="POST">
+            <div id="messages">
+                @include('frontend.partials.messages', ['conversation' => $conversation])
+            </div>
+            <form class="pt-4" action="{{ route('seller.conversations.message_store') }}" method="POST" id="reply_form">
                 @csrf
                 <input type="hidden" name="conversation_id" value="{{ $conversation->id }}">
                 <div class="form-group">
@@ -64,21 +47,62 @@
 
 @section('script')
     <script type="text/javascript">
+    var lastMessageCount = $('#messages .block-comment').length;
+
+    function scrollToBottom() {
+        var el = document.getElementById('messages');
+        if (el) el.scrollTop = el.scrollHeight;
+    }
+
     function refresh_messages(){
         $.post('{{ route('seller.conversations.refresh') }}', {_token:'{{ @csrf_token() }}', id:'{{ encrypt($conversation->id) }}'}, function(data){
             $('#messages').html(data);
-        })
+            var newCount = $('#messages .block-comment').length;
+            if (newCount > lastMessageCount) {
+                playNotificationSound();
+                scrollToBottom();
+            }
+            lastMessageCount = newCount;
+        });
     }
 
-    refresh_messages(); // This will run on page load
+    function playNotificationSound() {
+        try {
+            var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            var oscillator = audioCtx.createOscillator();
+            var gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            gainNode.gain.value = 0.3;
+            oscillator.start();
+            setTimeout(function() { oscillator.stop(); }, 200);
+        } catch(e) {}
+    }
+
     setInterval(function(){
-        refresh_messages() // this will run after every 5 seconds
+        refresh_messages();
     }, 4000);
 
     var submitting = false;
-    $("form").on("submit", function () {
+    $('#reply_form').on('submit', function(e) {
+        e.preventDefault();
         if (submitting) return false;
+        var msg = $(this).find('textarea[name=message]').val().trim();
+        if (!msg) return false;
         submitting = true;
+        $.post('{{ route('seller.conversations.message_store') }}', {
+            _token: '{{ @csrf_token() }}',
+            conversation_id: '{{ $conversation->id }}',
+            message: msg
+        }, function() {
+            $(this).find('textarea[name=message]').val('');
+            submitting = false;
+            refresh_messages();
+        }.bind(this)).fail(function() {
+            submitting = false;
+        });
     });
     </script>
 @endsection

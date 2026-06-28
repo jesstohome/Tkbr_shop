@@ -399,40 +399,58 @@
         </div>
     </div>
 
-    <!-- 对话框 -->
-    <div class="modal fade" id="chat_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom product-modal" id="modal-size" role="document">
+    {{-- 咨询对话模态框 --}}
+    <div class="modal fade" id="consult_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom modal-lg" role="document">
             <div class="modal-content position-relative">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-600 h5">{{ translate('Any query about this product') }}</h5>
+                    <h5 class="modal-title fw-600 h5" id="consult_modal_title">{{ translate('Consultation') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="" action="{{ route('conversations.store') }}" method="POST"
-                      enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="add_by_admin" value="1">
-                    <input type="hidden" name="user_id" value="">
-                    <input type="hidden" name="product_id" value="">
-                    <div class="modal-body gry-bg px-3 pt-3">
-                        <div class="form-group">
-                            <input type="text" class="form-control mb-3" name="title"
-                                   value="" placeholder="{{ translate('Product Name') }}"
-                                   required>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="8" name="message" required
-                                      placeholder="{{ translate('Your Question') }}"></textarea>
+                <div class="modal-body gry-bg px-3 pt-3" style="max-height: 50vh; overflow-y: auto;">
+                    <ul class="list-group list-group-flush ticket" id="consult_messages" style="min-height: 150px;">
+                        <li class="list-group-item text-center text-muted">{{ translate('Loading...') }}</li>
+                    </ul>
+                </div>
+                <div class="modal-footer d-block">
+                    <div class="input-group">
+                        <textarea class="form-control" id="consult_reply_text" rows="2" placeholder="{{ translate('Type your message...') }}"></textarea>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" onclick="sendConsultMessage()">{{ translate('Send') }}</button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-primary fw-600"
-                                data-dismiss="modal">{{ translate('Cancel') }}</button>
-                        <button type="submit" class="btn btn-primary fw-600">{{ translate('Send') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- 产品留言模态框 --}}
+    <div class="modal fade" id="comment_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
+            <div class="modal-content position-relative">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-600 h5">{{ translate('Leave a comment') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body gry-bg px-3 pt-3">
+                    <input type="hidden" id="comment_product_id" value="">
+                    <div class="form-group">
+                        <label id="comment_product_name" class="fw-600"></label>
                     </div>
-                </form>
+                    <div class="form-group">
+                        <textarea class="form-control" id="comment_text" rows="5" required
+                                  placeholder="{{ translate('Your message about this product...') }}"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary fw-600"
+                            data-dismiss="modal">{{ translate('Cancel') }}</button>
+                    <button type="button" class="btn btn-primary fw-600" onclick="submitComment()">{{ translate('Submit') }}</button>
+                </div>
             </div>
         </div>
     </div>
@@ -440,6 +458,9 @@
 
 
 @section('script')
+    <style>
+        #consult_messages { background-color: #ebedf2; padding: 10px; }
+    </style>
     <script type="text/javascript">
 
         var products = null;
@@ -555,13 +576,10 @@
                                         : `<span>${data.data[i].base_price}</span>`
                                     }
                                 </div>
-                                <div>
-                                    <a class="btn btn-soft-warning btn-icon btn-sm" style="width: auto"  href="javascript:void(0);" onclick="product_reply('${data.data[i].id}', '${data.data[i].name2}', '${data.data[i].slug_url}')" title="{{ translate('Reply') }}">
-                                    {{ translate('Reply') }}
-                                    </a>
-                                    <a class="btn btn-soft-warning btn-icon btn-sm" style="width: auto" href="${data.data[i].slug_url}" target="_blank" title="查看">
-                                    查看
-                    </a>
+                                <div class="mt-2">
+                                    <a class="btn btn-soft-primary btn-sm" href="javascript:void(0);" onclick="product_consult('${data.data[i].id}', '${data.data[i].name2}', '${data.data[i].slug_url}')" title="咨询">咨询</a>
+                                    <a class="btn btn-soft-info btn-sm" href="javascript:void(0);" onclick="product_comment('${data.data[i].id}', '${data.data[i].name2}')" title="留言">留言</a>
+                                    <a class="btn btn-soft-secondary btn-sm" href="${data.data[i].slug_url}" target="_blank" title="查看">查看</a>
                 </div>
 </div>
 
@@ -671,20 +689,136 @@
             $('#offlin_payment').modal('show');
         }
 
-        // 显示对话框
-        function product_reply(product_id, product_name, slug) {
-            let user_id = $("select[name=user_id]").val();
-            if (!user_id) {
-                AIZ.plugins.notify('danger', '请选择一个买家');
+        // 咨询对话
+        var currentConsultProductId = null;
+        var consultPollTimer = null;
+
+        function product_consult(product_id, product_name, slug) {
+            let customer_id = $("select[name=user_id]").val();
+            if (!customer_id) {
+                AIZ.plugins.notify('danger', '请先在右侧选择一个客户');
                 return false;
             }
-            $("#chat_modal input[name=user_id]").val(user_id);
-            $("#chat_modal input[name=product_id]").val(product_id);
-            $("#chat_modal input[name=title]").val(product_name);
 
-            // 加载对话内容
+            currentConsultProductId = product_id;
+            $('#consult_modal_title').text(product_name);
+            $('#consult_messages').html('<li class="list-group-item text-center text-muted">{{ translate("Loading...") }}</li>');
+            $('#consult_modal').modal('show');
 
-            $('#chat_modal').modal('show');
+            loadConsultMessages();
+            if (consultPollTimer) clearInterval(consultPollTimer);
+            consultPollTimer = setInterval(loadConsultMessages, 5000);
+        }
+
+        function loadConsultMessages() {
+            if (!currentConsultProductId) return;
+            let customer_id = $("select[name=user_id]").val();
+            $.post('{{ route('pos.consult.messages') }}', {
+                _token: AIZ.data.csrf,
+                product_id: currentConsultProductId,
+                customer_id: customer_id
+            }, function(res) {
+                if (res.success) {
+                    renderConsultMessages(res.messages);
+                }
+            });
+        }
+
+        function renderConsultMessages(messages) {
+            var html = '';
+            for (var i = 0; i < messages.length; i++) {
+                var msg = messages[i];
+                var isMine = msg.is_mine;
+                var nameHtml = msg.user_name || '';
+                if (msg.shop_name) nameHtml += ' <small class="text-muted">(' + msg.shop_name + ')</small>';
+                html += '<li class="list-group-item px-0 ' + (isMine ? 'mine' : '') + '">';
+                if (isMine) {
+                    html += '<div style="display:flex;flex-direction:column;align-items:flex-end;">';
+                    html += '<div class="mb-1"><small class="text-muted mr-2">' + msg.created_at + '</small><strong>' + nameHtml + '</strong></div>';
+                    html += '<div class="p-2 rounded" style="background:#d9fdd3;max-width:80%;word-break:break-word;">' + (msg.message || '') + '</div>';
+                    html += '</div>';
+                } else {
+                    html += '<div style="display:flex;flex-direction:column;align-items:flex-start;">';
+                    html += '<div class="mb-1"><strong>' + nameHtml + '</strong><small class="text-muted ml-2">' + msg.created_at + '</small></div>';
+                    html += '<div class="p-2 rounded" style="background:#fff;max-width:80%;word-break:break-word;">' + (msg.message || '') + '</div>';
+                    html += '</div>';
+                }
+                html += '</li>';
+            }
+            if (!messages.length) {
+                html = '<li class="list-group-item text-center text-muted">{{ translate("No messages yet. Start a conversation!") }}</li>';
+            }
+            $('#consult_messages').html(html);
+            var el = document.getElementById('consult_messages');
+            if (el && el.parentElement) el.parentElement.scrollTop = el.parentElement.scrollHeight;
+        }
+
+        function sendConsultMessage() {
+            let msg = $('#consult_reply_text').val().trim();
+            if (!msg || !currentConsultProductId) return;
+            let customer_id = $("select[name=user_id]").val();
+
+            $.post('{{ route('pos.consult.send') }}', {
+                _token: AIZ.data.csrf,
+                product_id: currentConsultProductId,
+                customer_id: customer_id,
+                message: msg
+            }, function(res) {
+                if (res.success) {
+                    $('#consult_reply_text').val('');
+                    loadConsultMessages();
+                }
+            }).fail(function(xhr) {
+                var emsg = '发送失败';
+                try { var r = JSON.parse(xhr.responseText); if (r.message) emsg = r.message; } catch(e) {}
+                AIZ.plugins.notify('danger', emsg);
+            });
+        }
+
+        $('#consult_modal').on('hidden.bs.modal', function () {
+            if (consultPollTimer) { clearInterval(consultPollTimer); consultPollTimer = null; }
+            currentConsultProductId = null;
+        });
+
+        $('#consult_reply_text').on('keydown', function(e) {
+            if (e.keyCode === 13 && !e.shiftKey) { e.preventDefault(); sendConsultMessage(); }
+        });
+
+        // 产品留言
+        function product_comment(product_id, product_name) {
+            let customer_id = $("select[name=user_id]").val();
+            if (!customer_id) {
+                AIZ.plugins.notify('danger', '请先在右侧选择一个客户');
+                return false;
+            }
+            $('#comment_product_id').val(product_id);
+            $('#comment_product_name').text(product_name);
+            $('#comment_text').val('');
+            $('#comment_modal').modal('show');
+        }
+
+        function submitComment() {
+            let product_id = $('#comment_product_id').val();
+            let customer_id = $("select[name=user_id]").val();
+            let message = $('#comment_text').val().trim();
+            if (!message) {
+                AIZ.plugins.notify('danger', '{{ translate("Please enter a message") }}');
+                return false;
+            }
+
+            $.post('{{ route('pos.product.comment') }}', {
+                _token: AIZ.data.csrf,
+                product_id: product_id,
+                customer_id: customer_id,
+                message: message
+            }, function(res) {
+                if (res.success) {
+                    AIZ.plugins.notify('success', res.message || '{{ translate("Comment submitted") }}');
+                    $('#comment_modal').modal('hide');
+                }
+            }).fail(function() {
+                AIZ.plugins.notify('danger', '提交失败，请重试');
+            });
         }
 
         var order_submitting = false;

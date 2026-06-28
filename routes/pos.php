@@ -38,6 +38,11 @@ Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function()
 		Route::get('/pos-conversation-show/{id}', 'pos_conversation_show')->name('poin-of-sales.conversation-show');
         Route::post('pos-conversation/message/store', 'pos_conversation_message_store')->name('pos-conversation.message_store');
         Route::get('pos-conversation/message/destroy', 'message_destroy')->name('pos-conversation.message_destroy');
+        // 咨询对话
+        Route::post('/pos/consult/messages', 'posConsultMessages')->name('pos.consult.messages');
+        Route::post('/pos/consult/send', 'posConsultSend')->name('pos.consult.send');
+        // 产品留言
+        Route::post('/pos/product/comment', 'posProductComment')->name('pos.product.comment');
 	});
 });
 
