@@ -74,7 +74,10 @@ class ProductController extends Controller
             }
         }
 
-        $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+        $package = Auth::user()->shop->seller_package;
+        if (!$package) {
+            $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+        }
         return view('seller.product.products.index', compact('products', 'search', 'seller_spread_packages_payments', 'package'));
     }
 
@@ -88,7 +91,10 @@ class ProductController extends Controller
                     ->get();
                 return view('seller.product.products.create', compact('categories'));
             } else {
-                $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+                $package = Auth::user()->shop->seller_package;
+                if (!$package) {
+                    $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+                }
                 flash(sprintf(translate('Up to %d products can be uploaded'), $package->product_upload_limit))->warning();
                 return back();
             }
@@ -104,7 +110,10 @@ class ProductController extends Controller
     {
         if (addon_is_activated('seller_subscription')) {
             if (!seller_package_validity_check()) {
-                $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+                $package = Auth::user()->shop->seller_package;
+                if (!$package) {
+                    $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+                }
                 flash(sprintf(translate('Up to %d products can be uploaded'), $package->product_upload_limit))->warning();
                 return redirect()->route('seller.products');
             }
@@ -369,7 +378,10 @@ class ProductController extends Controller
         }
 
         if (!seller_package_validity_check()) {
-            $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+            $package = Auth::user()->shop->seller_package;
+            if (!$package) {
+                $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
+            }
             flash(sprintf(translate('Up to %d products can be uploaded'), $package->product_upload_limit))->warning();
             return back();
         }

@@ -42,7 +42,10 @@ class ProductStorehouseController extends Controller
 
     public function index()
     {
-        $package = SellerPackage::query()->where('is_default', 1)->first();
+        $package = Auth::user()->shop->seller_package;
+        if (!$package) {
+            $package = SellerPackage::query()->where('is_default', 1)->first();
+        }
         return view('seller.product_storehouse.index', compact('package'));
     }
 
@@ -185,7 +188,10 @@ class ProductStorehouseController extends Controller
             return response()->json(['success' => 0, 'message' => translate('Some products have already been listed in the store and cannot be repeatedly listed')]);
         }
 
-        $package = SellerPackage::query()->where('is_default', 1)->first();
+        $package = $shop->seller_package;
+        if (!$package) {
+            $package = SellerPackage::query()->where('is_default', 1)->first();
+        }
         if (
             $package->product_upload_limit < ($shop->user->products()->count() + count($productIds))
         ) {
@@ -293,7 +299,10 @@ class ProductStorehouseController extends Controller
     }
 
     public function custom_selection() {
-        $package = SellerPackage::query()->where('is_default', 1)->first();
+        $package = Auth::user()->shop->seller_package;
+        if (!$package) {
+            $package = SellerPackage::query()->where('is_default', 1)->first();
+        }
         return view('seller.product_storehouse.custom_selection', compact('package'));
     }
 }

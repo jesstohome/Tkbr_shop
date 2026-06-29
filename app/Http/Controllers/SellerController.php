@@ -95,7 +95,7 @@ class SellerController extends Controller
             $shop->seller_package_id = $package_id;
             $seller_package = SellerPackage::findOrFail( $package_id );
             $shop->product_upload_limit = $seller_package->product_upload_limit;
-            $shop->package_invalid_at = date('Y-m-d', strtotime($seller->package_invalid_at . ' +' . $seller_package->duration . 'days'));
+            $shop->package_invalid_at = date('Y-m-d', strtotime($shop->package_invalid_at . ' +' . $seller_package->duration . 'days'));
             $res = $shop->save();
 
 
