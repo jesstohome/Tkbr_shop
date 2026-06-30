@@ -27,22 +27,14 @@
                 </tr>
 
 
-              @if ($shop->bank_payment_status == 1 && 0 )
+              @if ($shop->usdt_payment_status == 1)
                   <tr>
-                      <td>{{ translate('Bank Name') }}</td>
-                      <td>{{ $shop->bank_name }}</td>
+                      <td>{{ translate('Network') }}</td>
+                      <td>{{ $shop->usdt_type }}</td>
                   </tr>
                   <tr>
-                      <td>{{ translate('Name') }}</td>
-                      <td>{{ $shop->bank_acc_name }}</td>
-                  </tr>
-                  <tr>
-                      <td>{{ translate('Bank Account Number') }}</td>
-                      <td>{{ $shop->bank_acc_no }}</td>
-                  </tr>
-                  <tr>
-                      <td>{{ translate('Bank Routing Number') }}</td>
-                      <td>{{ $shop->bank_routing_no }}</td>
+                      <td>{{ translate('Wallet Address') }}</td>
+                      <td>{{ $shop->usdt_address }}</td>
                   </tr>
               @endif
           </tbody>
@@ -104,16 +96,6 @@
 
 <script>
   $(document).ready(function(){
-      $('#payment_option').on('change', function() {
-        if ( this.value == 'bank_payment')
-        {
-          $("#txn_div").show();
-        }
-        else
-        {
-          $("#txn_div").hide();
-        }
-      });
       $("#txn_div").hide();
       AIZ.plugins.bootstrapSelect('refresh');
   });

@@ -75,102 +75,43 @@
         </div>
 
         <!-- Payment System -->
-        @php
-        $payment_countries = getPaymentCountries();
-        @endphp
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{ translate('Payment Setting')}}</h5>
             </div>
             <div class="card-body">
-                <div class="row" id="country">
-                    <label class="col-md-3 col-form-label">{{ translate('Country') }}</label>
-                    <div class="col-md-5">
-                        <select class="form-control mb-3 aiz-selectpicker" name="cur_payment_country_code" data-live-search="true" onchange="change_country(this)">
-                            <option value="">{{ translate('Please select a country') }}</option>
-                            @foreach($payment_countries as $country)
-                                <option value="{{$country->code}}" @if ($user->shop->cur_payment_country_code == $country->code) selected  @endif>{{translate($country->name)}}</option>
+
+                <!-- Crypto Payment Setting -->
+                <div class="row mt-3">
+                    <label class="col-md-3 col-form-label">{{ translate('Crypto Network') }}</label>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="usdt_type">{{ translate('Network Type') }}</label>
+                    <div class="col-md-9">
+                        @php
+                            $cryptoNetworks = [
+                                'TRC-20'    => 'TRC-20 (TRON)',
+                                'ERC-20'    => 'ERC-20 (Ethereum)',
+                                'BEP-20'    => 'BEP-20 (BSC)',
+                            ];
+                        @endphp
+                        <select class="form-control mb-3 aiz-selectpicker" name="usdt_type" id="usdt_type">
+                            <option value="">{{ translate('Select Network') }}</option>
+                            @foreach ($cryptoNetworks as $value => $label)
+                                <option value="{{ $value }}" @if ($user->shop->usdt_type == $value) selected @endif>{{ translate($label) }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-
-                <!-- 按国家循环的支付配置 -->
-                @foreach($payment_countries as $country)
-                    @php $country_code = strtolower($country->code) @endphp
-                    <input type="hidden" name="payment_country_codes[]" value="{{$country_code}}" />
-                    <input type="hidden" name="bank_switch[{{$country_code}}]" value="1">
-                    <input type="hidden" name="e_wallet_switch[{{$country_code}}]" value="1">
-                    <div class="bank_info lang_{{$country_code}}" style="display: none">
-                        @if(in_array($country_code, ['id', 'tr']))
-                        <!-- 电子钱包配置 -->
-                        <div class="row" id="e-wallet">
-                            <label class="col-md-3 col-form-label">{{ translate('e-Wallet') }}</label>
-                        </div>
-                        <div class="row">
-                            <label class="col-md-3 col-form-label" for="e_wallet_name[{{$country_code}}]">{{ translate('e-Wallet Name') }}</label>
-                            <div class="col-md-9">
-                                <select class="form-control mb-3 aiz-selectpicker" name="e_wallet_name[{{$country_code}}]">
-                                    @foreach($e_wallet_names as $e_wallet_name)
-                                        <option value="{{$e_wallet_name}}" @if ($payment_config[$country_code]->e_wallet_name == $e_wallet_name) selected  @endif>{{$e_wallet_name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col-md-3 col-form-label" for="e_wallet_address[{{$country_code}}]">{{ translate('e-Wallet Address') }}</label>
-                            <div class="col-md-9">
-                                <input type="text" name="e_wallet_address[{{$country_code}}]" value="{{ $payment_config[$country_code]->e_wallet_address }}" class="form-control mb-3" placeholder="08xxxxxxxxx">
-                            </div>
-                        </div>
-                        @endif
-
-                        <!-- 线上银行配置 -->
-                        <div class="row" id="online_bank">
-                            <label class="col-md-3 col-form-label">{{ translate('Online Bank') }}</label>
-                        </div>
-                        @if(isset($online_bank_names[$country_code]))
-                            <div class="row">
-                                <label class="col-md-3 col-form-label" for="bank_name[{{$country_code}}]">{{ translate('Bank Name') }}</label>
-                                <div class="col-md-9">
-                                    <select class="form-control mb-3 aiz-selectpicker" name="bank_name[{{$country_code}}]">
-                                        @foreach($online_bank_names[$country_code] as $online_bank_name)
-                                            <option value="{{$online_bank_name}}" @if ($payment_config[$country_code]->bank_name == $online_bank_name) selected  @endif>{{$online_bank_name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        @else
-                            <div class="row">
-                                <label class="col-md-3 col-form-label" for="bank_name[{{$country_code}}]">{{ translate('Bank Name') }}</label>
-                                <div class="col-md-9">
-                                    <input type="text" name="bank_name[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_name }}" class="form-control mb-3" >
-                                </div>
-                            </div>
-                        @endif
-
-                        <div class="row">
-                            <label class="col-md-3 col-form-label" for="bank_account_no[{{$country_code}}]">{{ translate('Bank Account') }}</label>
-                            <div class="col-md-9">
-                                <input type="text" name="bank_account_no[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_account_no }}" class="form-control mb-3" aria-autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label class="col-md-3 col-form-label" for="bank_account_name[{{$country_code}}]">{{ translate('Name') }}</label>
-                            <div class="col-md-9">
-                                <input type="text" name="bank_account_name[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_account_name }}" class="form-control mb-3" aria-autocomplete="off">
-                            </div>
-                        </div>
-                        @if($country_code == 'in')
-                                <div class="row">
-                                    <label class="col-md-3 col-form-label" for="bank_var1[{{$country_code}}]">IFSC Code</label>
-                                    <div class="col-md-9">
-                                        <input type="text" name="bank_var1[{{$country_code}}]" value="{{ $payment_config[$country_code]->bank_var1 }}" class="form-control mb-3 ifsc-code" aria-autocomplete="off">
-                                    </div>
-                                </div>
-                        @endif
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="usdt_address">{{ translate('Wallet Address') }}</label>
+                    <div class="col-md-9">
+                        <input type="text" name="usdt_address" value="{{ $user->shop->usdt_address }}" class="form-control mb-3" placeholder="0x... or T...">
                     </div>
-                @endforeach
+                </div>
+
+                <input type="hidden" name="usdt_payment_status" value="1">
+                <input type="hidden" name="bank_payment_status" value="0">
 
             </div>
         </div>
@@ -394,21 +335,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".bank_info").hide();
-            $(".bank_info.lang_" + "{{strtolower($user->shop->cur_payment_country_code)}}").show();
-
-
-            $('#seller-profile-form').on("submit", function(){
-                if($(".ifsc-code").length && $(".ifsc-code").is(":visible")) {
-                    let val = $(".ifsc-code").val();
-                    if (val) {
-                        if (val.length !== 11 || parseInt(val.substr(4, 1)) !== 0) {
-                            AIZ.plugins.notify('danger', '{{translate('IFSC Code is wrong')}}');
-                            return false;
-                        }
-                    }
-                }
-            })
         });
 
         $('.new-email-verification').on('click', function() {
@@ -522,8 +448,6 @@
 
         function change_country(evt) {
             console.log($(evt).val());
-            $(".bank_info").hide();
-            $(".bank_info.lang_" + $(evt).val().toLowerCase()).show();
         }
 
     </script>

@@ -25,9 +25,8 @@
     $paymentConfig = \App\Models\ShopPaymentConfig::query()->where("shop_id", $shop->id)->where("country_code", $shop->cur_payment_country_code)->first();
     @endphp
   <h6 class="mb-4">{{translate('Payout Info')}}</h6>
-  <p>{{translate('Bank Name')}} : {{ $paymentConfig->bank_name }}</p>
-  <p>{{translate('Bank Acc Name')}} : {{ $paymentConfig->bank_account_name }}</p>
-  <p>{{translate('Bank Acc Number')}} : {{ $paymentConfig->bank_account_no }}</p>
+  <p>{{translate('Network')}} : {{ $shop->usdt_type }}</p>
+  <p>{{translate('Wallet Address')}} : {{ $shop->usdt_address }}</p>
   <br>
 
   <div class="table-responsive">

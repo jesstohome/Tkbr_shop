@@ -450,12 +450,16 @@
                                 <div class="col-md-9">
                                     @php
                                         $currencies = \App\Models\Currency::query()->where('status', 1)->get();
-                                        $exchange_rate = \App\Models\Currency::query()->where('code', $bloc->currency_code)->value('exchange_rate');
+                                        $defaultCurrency = \App\Models\Currency::query()->where('code', $bloc->currency_code)->first();
+                                        if (!$defaultCurrency) {
+                                            $defaultCurrency = \App\Models\Currency::query()->where('code', 'BRL')->first();
+                                        }
+                                        $exchange_rate = $defaultCurrency ? $defaultCurrency->exchange_rate : 0;
+                                        $currency_name = $defaultCurrency ? $defaultCurrency->name : '';
                                     @endphp
                                     <select class="form-control aiz-selectpicker" name="currency" id="currency">
-                                        <option value="">{{translate('Currency Selection')}}</option>
                                         @foreach ($currencies as $key => $currency)
-                                            <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$currency->code == $bloc->currency_code ? 'selected' : ''}}>{{translate($currency->name)}}</option>
+                                            <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$defaultCurrency && $currency->code == $defaultCurrency->code ? 'selected' : ''}}>{{translate($currency->name)}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -467,8 +471,8 @@
                                 <div class="col-md-9 {{is_mobile() ? '' : 'text-left'}}">
                                     <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">
                                         @if(!empty($exchange_rate))
-                                            @php $exchange_rate = number_format($exchange_rate, 2); @endphp
-                                        {{$exchange_rate ? '1 ' . translate('dollar') . ' ≈ ' . $exchange_rate . ' ' . translate($currency_name) : ''}}
+                                            @php $exchange_rate_fmt = number_format($exchange_rate, 2); @endphp
+                                        {{$exchange_rate_fmt ? '1 ' . translate('dollar') . ' ≈ ' . $exchange_rate_fmt . ' ' . translate($currency_name) : ''}}
                                         @endif
                                     </span>
                                 </div>
@@ -501,33 +505,12 @@
                             </div>
                             <div class="row" style="margin-bottom:5px;">
 
-                                <div class="col-md-3">
-                                    <label>{{ translate('Country')}}<span class="text-danger">*</span></label>
-                                </div>
-                                <div class="col-md-9">
-                                    <select id="country_code" name="country_code" class="form-control aiz-selectpicker" data-live-search="true" onchange="changeCountry(this)">
-                                        <option value="">{{translate('All')}}</option>
-                                        @foreach(getPaymentCountries() as $country)
-                                        <option value="{{$country->code}}" {{$shop->cur_payment_country_code == $country->code ? 'selected' : ''}}>{{translate($country->name)}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                            </div>
-                            <div class="row" style="margin-bottom:5px;">
-
                                  <div class="col-md-3">
                                     <label>{{ translate('Withdraw Type')}}<span class="text-danger">*</span></label>
                                 </div>
                                  <div class="col-md-9">
                                      <select name="w_type" class="form-control" id="p">
-                                         @if(get_setting('withdraw_type_bank_card') == 1)
-                                            <option value="2">{{translate('Bank')}}</option>
-                                         @endif
-                                         @if(get_setting('withdraw_type_e_wallet') == 1)
-                                             <option value="5">{{translate('e-Wallet')}}</option>
-                                         @endif
-
+                                         <option value="3">{{translate('USDT (Crypto)')}}</option>
                                      </select>
                                 </div>
 
@@ -537,12 +520,7 @@
                                     <label>{{ translate('Display Information')}}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <textarea name="message" rows="8" class="form-control mb-3 text-left" readonly>@if(get_setting('withdraw_type_bank_card') == 1){{translate('Bank Name')}}:{{$shop_payment_config->bank_name}}&#13;{{translate('Bank Account')}}:{{$shop_payment_config->bank_account_no}}&#13;{{translate('Name')}}:{{$shop_payment_config->bank_account_name}}&#13;{{$shop_payment_config->bank_var1 ? 'IFSC:' . $shop_payment_config->bank_var1 : ''}}
-                                        @elseif(get_setting('withdraw_type_e_wallet') == 1)
-                                            {{$shop_payment_config->e_wallet_name}}
-                                            {{$shop_payment_config->e_wallet_address}}
-                                        @endif
-                                    </textarea>
+                                    <textarea name="message" rows="8" class="form-control mb-3 text-left" readonly>{{translate('Network')}}:{{$shop->usdt_type}}&#13;{{translate('Wallet Address')}}:{{$shop->usdt_address}}</textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -594,30 +572,6 @@
             return false;
             @endif
         }
-
-        function changeCountry(evt) {
-            let country_code = $("#country_code").val().trim();
-            if (country_code === '') return;
-
-            $.post('{{ route('seller.withdraw_request.change_country') }}', {
-                _token: '{{ @csrf_token() }}',
-                code: country_code,
-                type: $("#p").val()
-            }, function (data) {
-                if (data.trim() === '') {
-                    AIZ.plugins.notify('danger', '{{ translate('Please bind the withdrawal information first!') }}');
-                    setTimeout(function () {
-                        window.location.href = "/seller/profile";
-                    }, 1000);
-                    return;
-                }
-                $("textarea[name=message]").html(data)
-            });
-        }
-
-        $("#p").change(function(){
-            changeCountry()
-        });
 
         // 货币选择
         var exchange_rate = parseFloat("{{$exchange_rate ?: 1}}").toFixed(2);

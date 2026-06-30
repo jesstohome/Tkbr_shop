@@ -95,14 +95,8 @@ class SellerWithdrawRequestController extends Controller
                     flash(translate('withdraw exited'))->error();
                     return back();
                 }
-                if (empty($request->country_code)) {
-                    flash(translate('Please Choose A Country'))->error();
-                    return back();
-                }
-                // 当前国家没有支付配置信息，则不给予提示
-                $payConfig = ShopPaymentConfig::query()->where('shop_id', $user->shop->id)->where('country_code', $request->country_code)->first();
-                if (empty($payConfig) || (empty($payConfig['bank_account_no']) && empty($payConfig['e_wallet_address']))) {
-                    flash(translate('Please Set The Pay Config'))->error();
+                if (empty($user->shop->usdt_type) || empty($user->shop->usdt_address)) {
+                    flash(translate('Please set your crypto wallet information first'))->error();
                     return redirect(route('seller.profile.index'));
                 }
 
@@ -194,26 +188,8 @@ class SellerWithdrawRequestController extends Controller
      * @return string
      */
     public function change_country(Request $request) {
-        $html = '';
-        $shop_payment_config = ShopPaymentConfig::query()->where("country_code", $request->code)->where('shop_id', Auth::user()->shop->id)->first();
-        if (!empty($shop_payment_config)) {
-            // wallet
-            if ($request->type == 5) {
-                $html = join("&#13;", [$shop_payment_config->e_wallet_name, $shop_payment_config->e_wallet_address]);
-            } elseif($request->type == 2) {
-                // bank
-                $data = [
-                    translate('Bank Name') . ':' . $shop_payment_config->bank_name,
-                    translate('Bank Account') . ':' . $shop_payment_config->bank_account_no,
-                    translate('Name') . ':' . $shop_payment_config->bank_account_name
-                ];
-                if (!empty($shop_payment_config->bank_var1)) {
-                    $data[] = 'IFSC:' . $shop_payment_config->bank_var1;
-                }
-                $html = join("&#13;", $data);
-            }
-        }
-
+        $shop = Auth::user()->shop;
+        $html = translate('Network') . ':' . $shop->usdt_type . "&#13;" . translate('Wallet Address') . ':' . $shop->usdt_address;
         return $html;
     }
 }

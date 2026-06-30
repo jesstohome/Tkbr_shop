@@ -17,14 +17,16 @@
                     <div class="col-md-9">
                         @php
                             use App\Models\Currency;$currencies = Currency::query()->where('status', 1)->get();
-                            $currency = Currency::query()->where('code', $bloc->currency_code)->first();
-                            $exchange_rate = $currency->exchange_rate;
-                            $currency_name = $currency->name;
+                            $defaultCurrency = Currency::query()->where('code', $bloc->currency_code)->first();
+                            if (!$defaultCurrency) {
+                                $defaultCurrency = Currency::query()->where('code', 'BRL')->first();
+                            }
+                            $exchange_rate = $defaultCurrency ? $defaultCurrency->exchange_rate : 0;
+                            $currency_name = $defaultCurrency ? $defaultCurrency->name : '';
                         @endphp
                         <select class="form-control aiz-selectpicker" name="currency" id="currency" >
-                            <option value="">{{translate('Currency Selection')}}</option>
                             @foreach ($currencies as $key => $currency)
-                                <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$currency->code == $bloc->currency_code ? 'selected' : ''}}>{{translate($currency->name)}}</option>
+                                <option value="{{$currency->code}}" data-exchange-rate="{{$currency->exchange_rate}}" data-currency-name="{{translate($currency->name)}}" {{$defaultCurrency && $currency->code == $defaultCurrency->code ? 'selected' : ''}}>{{translate($currency->name)}}</option>
                             @endforeach
                         </select>
                     </div>
