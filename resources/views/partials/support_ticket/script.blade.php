@@ -102,6 +102,22 @@
 
     var imageLoading = false;
     var attachment_ids = [];
+
+    function scrollSupportChatToBottom() {
+        var chatlist = document.querySelector('.chatlist');
+        if (chatlist) {
+            window.requestAnimationFrame(function () {
+                chatlist.scrollTop = chatlist.scrollHeight;
+            });
+        }
+        var ticket = document.querySelector('ul.ticket');
+        if (ticket) {
+            window.requestAnimationFrame(function () {
+                ticket.scrollTop = ticket.scrollHeight;
+            });
+        }
+    }
+
     $(document).ready(function () {
         $( '#ticket-reply-form' ).on("submit", function (){
             return false;
@@ -204,6 +220,8 @@
                 $("body").scrollTop(999990);
                 $(".chatlist").scrollTop(999990);
             }
+            scrollSupportChatToBottom();
+            setTimeout(scrollSupportChatToBottom, 250);
         }, 500);
 
         // 文件选择完成后的回调事件
@@ -418,6 +436,7 @@
                         </li>
                         `);
                     $("ul.ticket").scrollTop(999990);
+                    scrollSupportChatToBottom();
                 } else if ($(".chatlist").length) {
                     if (-1 == item.user_id && isAdmin || item.user_id == user_id) {
                         // 自己发送的，在右边
@@ -453,6 +472,7 @@
 
                     $("body").scrollTop(999990);
                     $(".chatlist").scrollTop(999990);
+                    scrollSupportChatToBottom();
 
                     $(".file-preview").html('');
                 }

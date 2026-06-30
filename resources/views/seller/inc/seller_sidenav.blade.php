@@ -7,32 +7,35 @@
 <div class="aiz-sidebar-wrap">
     <div class="aiz-sidebar left c-scrollbar">
         <div class="aiz-side-nav-logo-wrap">
-            <div class="d-block text-center my-3">
+            <div class="d-block text-center">
                 @if (Auth::user()->shop->logo != null)
-                    <a class="" href="{{ route('home')}}" target="_blank" title="{{ translate('Browse Website') }}"><img class="mw-100 mb-3" src="{{ uploaded_asset(Auth::user()->shop->logo) }}" class="brand-icon"
-                                                                                                                                                          alt="{{ get_setting('site_name') }}"></a>
+                    <a href="{{ route('home')}}" target="_blank" title="{{ translate('Browse Website') }}">
+                        <img class="mw-100 mb-2" src="{{ uploaded_asset(Auth::user()->shop->logo) }}" alt="{{ get_setting('site_name') }}" style="max-height:48px;">
+                    </a>
                 @else
-                    <img class="mw-100 mb-3" src="{{ uploaded_asset(get_setting('header_logo')) }}" class="brand-icon"
-                        alt="{{ get_setting('site_name') }}">
+                    <img class="mw-100 mb-2" src="{{ uploaded_asset(get_setting('header_logo')) }}" alt="{{ get_setting('site_name') }}" style="max-height:48px;">
                 @endif
-                <h3 class="fs-16  m-0 text-primary">{{ Auth::user()->shop->name }}</h3>
-                <p class="text-primary">{{ Auth::user()->email }}</p>
-                <p class="text-primary" style="margin-bottom: 0;"><a style="padding: 0" href="{{ route('shop.visit', Auth::user()->shop->slug) }}" class="btn btn-link btn-sm">({{ translate('Visit Shop')}})<i class="la la-external-link"></i>)</a></p>
+                <h3 class="fs-15 fw-700 m-0" style="color:#1e293b;">{{ Auth::user()->shop->name }}</h3>
+                <p class="small text-muted mb-1">{{ Auth::user()->email }}</p>
+                <a href="{{ route('shop.visit', Auth::user()->shop->slug) }}" class="btn btn-link btn-sm" style="padding:2px 10px; border-radius:6px; background:#eef2ff; color:#4f46e5; text-decoration:none; font-size:12px;">
+                    {{ translate('Visit Shop') }} <i class="las la-external-link-alt"></i>
+                </a>
             </div>
         </div>
         <div class="aiz-side-nav-wrap">
+            <input type="text" class="form-control form-control-sm" id="menu-search" placeholder="{{ translate('Search menu...') }}" onkeyup="menuSearch()" autocomplete="off">
             <ul class="aiz-side-nav-list" id="search-menu">
             </ul>
             <ul class="aiz-side-nav-list" id="main-menu" data-toggle="aiz-side-menu">
                 <li class="aiz-side-nav-item">
-                    <a href="{{ route('seller.dashboard') }}" class="aiz-side-nav-link">
-                        <i class="las la-home aiz-side-nav-icon"></i>
+                    <a href="{{ route('seller.dashboard') }}" class="aiz-side-nav-link {{ areActiveRoutes(['seller.dashboard']) }}">
+                        <i class="las la-th-large aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Dashboard') }}</span>
                     </a>
                 </li>
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
-                        <i class="las la-shopping-cart aiz-side-nav-icon"></i>
+                        <i class="las la-box aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Products') }}</span>
                         <span class="badge badge-danger badge-circle badge-sm badge-dot product_review_tip" style="display: none"> </span>
                         <span class="aiz-side-nav-arrow"></span>
@@ -57,7 +60,7 @@
                 </li>
                 <li class="aiz-side-nav-item">
                     <a href="#" class="aiz-side-nav-link">
-                        <i class="las la-store aiz-side-nav-icon"></i>
+                        <i class="las la-warehouse aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Product Storehouse') }}</span>
                         <span class="aiz-side-nav-arrow"></span>
                     </a>
@@ -82,7 +85,7 @@
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('seller.orders.index') }}"
                         class="aiz-side-nav-link {{ areActiveRoutes(['seller.orders.index', 'seller.orders.show']) }}">
-                        <i class="las la-money-bill aiz-side-nav-icon"></i>
+                        <i class="las la-clipboard-list aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Orders') }}</span>
                         <span class="badge badge-danger badge-circle badge-sm badge-dot" id="order-red-tip" style="display: none"> </span>
                     </a>
@@ -92,7 +95,7 @@
                 @if (addon_is_activated('seller_subscription'))
                     <li class="aiz-side-nav-item" style="display: none">
                         <a href="#" class="aiz-side-nav-link">
-                            <i class="las la-shopping-cart aiz-side-nav-icon"></i>
+                            <i class="las la-gem aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Package') }}</span>
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
@@ -123,7 +126,7 @@
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('seller.money_withdraw_requests.index') }}"
                         class="aiz-side-nav-link {{ areActiveRoutes(['seller.money_withdraw_requests.index']) }}">
-                        <i class="las la-money-bill-wave-alt aiz-side-nav-icon"></i>
+                        <i class="las la-hand-holding-usd aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Money Withdraw') }}</span>
                     </a>
                 </li>
@@ -135,7 +138,7 @@
                         <a href="{{ route('seller.conversations.index') }}"
                             style="align-items: center"
                             class="aiz-side-nav-link {{ areActiveRoutes(['seller.conversations.index', 'seller.conversations.show']) }}">
-                            <i class="las la-comment aiz-side-nav-icon"></i>
+                            <i class="las la-comments aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Conversations') }}</span>
                             <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations" style="display: none"> </span>
                         </a>
@@ -152,7 +155,7 @@
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('seller.support_ticket.index') }}"
                        class="aiz-side-nav-link {{ areActiveRoutes(['seller.support_ticket.index']) }}">
-                        <i class="las la-atom aiz-side-nav-icon"></i>
+                        <i class="las la-headset aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Support Ticket') }}</span>
                         <span class="badge badge-danger badge-circle badge-sm badge-dot chat-num-tip" style="display: none"></span>
                     </a>
@@ -162,7 +165,7 @@
                 <li class="aiz-side-nav-item">
                     <a href="{{ route('seller.shop.index') }}"
                         class="aiz-side-nav-link {{ areActiveRoutes(['seller.shop.index']) }}">
-                        <i class="las la-cog aiz-side-nav-icon"></i>
+                        <i class="las la-store-alt aiz-side-nav-icon"></i>
                         <span class="aiz-side-nav-text">{{ translate('Shop Setting') }}</span>
                     </a>
                 </li>
@@ -172,7 +175,7 @@
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('seller.coupon.index') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['seller.coupon.index', 'seller.coupon.create', 'seller.coupon.edit']) }}">
-                            <i class="las la-bullhorn aiz-side-nav-icon"></i>
+                            <i class="las la-tags aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Coupon') }}</span>
                         </a>
                     </li>
@@ -449,22 +452,28 @@
           $must_guarantee_close = get_setting('must_guarantee_close') == 'on' ? 1 : 0;
       @endphp
     <div class="modal fade shop" id="payment_modalsss">
-	    <div class="modal-dialog">
+	    <div class="modal-dialog modal-dialog-centered">
 	        <div class="modal-content" id="payment-modal-content">
-                <div class="modal-body gry-bg px-3 pt-3">
-                    <br> <br>
-                    <div class="row">
-                        <div class="col">
-                            <div class="alert alert-danger" role="alert">
-                                <h6>{{translate('You Shold Pay guarantee Money')}}</h6>
-                            </div>
-                            <div class="alert alert-danger" role="alert">
-                                {{translate('Guarantee money')}}：{{$shop->compulsory_margin_amount}}
-                            </div>
+                <div class="modal-header">
+                    <h5 class="modal-title fw-600">{{ translate('Guarantee Required') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width:64px; height:64px; background:#fef2f2;">
+                            <i class="las la-exclamation-triangle fs-28" style="color:#ef4444;"></i>
                         </div>
                     </div>
-                    <div class="form-group text-right">
-                        <button onclick="location.href='/seller/money-withdraw-requests'" type="submit" class="btn btn-sm btn-primary">{{translate("Go To Pay")}}</button>
+                    <div class="alert" style="background:#fef2f2; color:#991b1b; border:none; border-radius:12px;">
+                        <p class="mb-1 fw-600">{{translate('You Should Pay Guarantee Money')}}</p>
+                        <p class="mb-0 small">{{translate('Guarantee money')}}：<strong>{{$shop->compulsory_margin_amount}}</strong></p>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button onclick="location.href='/seller/money-withdraw-requests'" type="button" class="btn btn-primary px-4">
+                            {{translate("Go To Pay")}}
+                        </button>
                     </div>
                 </div>
 	        </div>
