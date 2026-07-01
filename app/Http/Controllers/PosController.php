@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\RedPointerTips;
+use Illuminate\Support\Facades\Redis;
 use App\Models\BusinessSetting;
 use App\Models\Cart;
 use App\Models\Conversation;
@@ -869,6 +870,9 @@ class PosController extends Controller
             $conversation->updated_at = now();
             $conversation->save();
 
+            hset_plus('new_pos_conversation_tip', $conversation->id, 1, $conversation->staff_id, $seller_id, null, true);
+            hset_plus('new_conversation_tip', $conversation->id, 1, $conversation->staff_id, $seller_id, null, true);
+
             return response()->json(['success' => true]);
         } catch (Exception $e) {
             return response()->json([
@@ -892,6 +896,11 @@ class PosController extends Controller
         $query->product_id = $request->product_id;
         $query->question = $request->message;
         $query->save();
+
+        Redis::hset(sprintf("product_query_red_tips:%s", $product->user_id), $query->id, 1);
+        Redis::hset('new_product_query_tip', $query->id, 1);
+        Redis::hset('audio:new_product_query_tip:seller:' . $product->user_id, $query->id, 1);
+        Redis::hset('audio:new_product_query_tip', $query->id, 1);
 
         return response()->json([
             'success' => true,

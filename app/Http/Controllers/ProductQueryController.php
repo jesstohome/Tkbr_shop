@@ -16,9 +16,13 @@ class ProductQueryController extends Controller
      */
     public function index()
     {
-        $queries = ProductQuery::where('seller_id', Auth::id())->latest()->paginate(20);
-
-        Redis::del(sprintf("product_query_red_tips:%s", Auth::user()->id));
+        if (Auth::user()->user_type == 'admin') {
+            $queries = ProductQuery::latest()->paginate(20);
+            Redis::del('new_product_query_tip');
+        } else {
+            $queries = ProductQuery::where('seller_id', Auth::id())->latest()->paginate(20);
+            Redis::del(sprintf("product_query_red_tips:%s", Auth::user()->id));
+        }
 
         return view('backend.support.product_query.index', compact('queries'));
     }
@@ -52,6 +56,9 @@ class ProductQueryController extends Controller
         $query->save();
 
         Redis::hset(sprintf("product_query_red_tips:%s", $product->user_id), $query->id, 1);
+        Redis::hset('new_product_query_tip', $query->id, 1);
+        Redis::hset('audio:new_product_query_tip:seller:' . $product->user_id, $query->id, 1);
+        Redis::hset('audio:new_product_query_tip', $query->id, 1);
         flash(translate('Your query has been submittes successfully'))->success();
         return redirect()->back();
     }

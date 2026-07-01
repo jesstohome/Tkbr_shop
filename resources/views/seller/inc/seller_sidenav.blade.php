@@ -16,6 +16,10 @@
                     <img class="mw-100 mb-2" src="{{ uploaded_asset(get_setting('header_logo')) }}" alt="{{ get_setting('site_name') }}" style="max-height:48px;">
                 @endif
                 <h3 class="fs-15 fw-700 m-0" style="color:#1e293b;">{{ Auth::user()->shop->name }}</h3>
+                <p class="small m-0 mt-1" style="color:#6b7280;">
+                    <span>{{ translate('Credit Score') }}: </span>
+                    <strong style="color:#4f46e5;">{{ Auth::user()->creditscore }}</strong>
+                </p>
                 <p class="small text-muted mb-1">{{ Auth::user()->email }}</p>
                 <a href="{{ route('shop.visit', Auth::user()->shop->slug) }}" class="btn btn-link btn-sm" style="padding:2px 10px; border-radius:6px; background:#eef2ff; color:#4f46e5; text-decoration:none; font-size:12px;">
                     {{ translate('Visit Shop') }} <i class="las la-external-link-alt"></i>
@@ -133,6 +137,9 @@
 
 
                   <!--对话-->
+                @php
+                    $conversation_seller_count = hlen_plus('new_conversation_tip:seller') || hlen_plus('new_pos_conversation_tip:seller');
+                @endphp
                 @if (get_setting('conversation_system') == 1)
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('seller.conversations.index') }}"
@@ -140,7 +147,11 @@
                             class="aiz-side-nav-link {{ areActiveRoutes(['seller.conversations.index', 'seller.conversations.show']) }}">
                             <i class="las la-comments aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Conversations') }}</span>
-                            <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations" style="display: none"> </span>
+                            @if ($conversation_seller_count)
+                                <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                            @else
+                                <span class="badge badge-danger badge-circle badge-sm badge-dot" id="conversations" style="display: none"> </span>
+                            @endif
                         </a>
                     </li>
                 @endif
@@ -267,14 +278,19 @@
                     </a>
                 </li>
 
+                @php
+                    $product_query_seller_count = \Illuminate\Support\Facades\Redis::hlen(sprintf("product_query_red_tips:%s", Auth::user()->id));
+                @endphp
                 @if (get_setting('product_query_activation') == 1)
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('seller.product_query.index') }}"
                             class="aiz-side-nav-link {{ areActiveRoutes(['seller.product_query.index']) }}">
                             <i class="las la-question-circle aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Product Queries') }}</span>
-                            @if(Redis::hlen(sprintf("product_query_red_tips:%s", Auth::user()->id)))
+                            @if ($product_query_seller_count > 0)
                                 <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                            @else
+                                <span class="badge badge-danger badge-circle badge-sm badge-dot product_query_tip" style="display: none"> </span>
                             @endif
                         </a>
                     </li>
@@ -388,6 +404,7 @@
 
                 if ( data.product_review_tip) $( '.product_review_tip' ).show();
                 if (data.ticket_count) $( '.chat-num-tip' ).show();
+                if (data.product_query_tip) $( '.product_query_tip' ).show();
 
                 if (data.newAudio) {
                     audioPlay();
@@ -416,11 +433,11 @@
 
     window.onload = function() {
         get_not_view_count();
-        // getConversations();
+        getConversations();
         setInterval( function ()
         {
             get_not_view_count();
-            // getConversations();
+            getConversations();
         }, 10000 );
         if(boolean==1 && count > 0 && false){
             $('#conversations-modal').modal('show');

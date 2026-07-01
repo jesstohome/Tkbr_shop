@@ -824,11 +824,19 @@
                                         @endif
                                     </a>
                                 </li>
+                                @php
+                                    $product_query_admin_count = \Illuminate\Support\Facades\Redis::hlen('new_product_query_tip');
+                                @endphp
                                 @if (get_setting('product_query_activation') == 1)
                                     <li class="aiz-side-nav-item">
                                         <a href="{{ route('product_query.index') }}"
                                             class="aiz-side-nav-link {{ areActiveRoutes(['product_query.index','product_query.show']) }}">
                                             <span class="aiz-side-nav-text">{{ translate('Product Queries') }}</span>
+                                            @if ($product_query_admin_count > 0)
+                                                <span class="badge badge-danger badge-circle badge-sm badge-dot"> </span>
+                                            @else
+                                                <span class="badge badge-danger badge-circle badge-sm badge-dot new_product_query_tip" style="display: none"> </span>
+                                            @endif
                                         </a>
                                     </li>
                                 @endif

@@ -42,6 +42,10 @@ class ProductQueryController extends Controller
         $query = ProductQuery::find($id);
         $query->reply = $request->reply;
         $query->save();
+
+        Redis::hset('new_product_query_tip', $query->id, 1);
+        Redis::hset('audio:new_product_query_tip', $query->id, 1);
+
         flash(translate('Replied successfully!'))->success();
         return redirect()->route('seller.product_query.index');
     }
