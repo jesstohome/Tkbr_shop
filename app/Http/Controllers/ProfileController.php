@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Hash;
+use Auth;
 
 class ProfileController extends Controller
 {
@@ -100,5 +101,15 @@ class ProfileController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function refreshGoogleSecret(Request $request)
+    {
+        $secret = \App\Helpers\Google2FA::generateSecret();
+        $user = User::findOrFail(Auth::id());
+        $user->google2fa_secret = $secret;
+        $user->save();
+
+        return response()->json(['secret' => $secret]);
     }
 }

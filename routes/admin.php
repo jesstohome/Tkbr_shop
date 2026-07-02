@@ -265,6 +265,7 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
     });
 
     Route::resource('profile', ProfileController::class);
+    Route::post('/profile/refresh-google-secret', [ProfileController::class, 'refreshGoogleSecret'])->name('profile.refresh_google_secret');
 
     // Business Settings
     Route::controller(BusinessSettingsController::class)->group(function () {

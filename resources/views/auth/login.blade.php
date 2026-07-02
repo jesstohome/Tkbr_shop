@@ -36,6 +36,14 @@
                                     </span>
                                 @endif
                             </div>
+                            <div class="form-group">
+                                <input id="google_code" type="text" class="form-control{{ $errors->has('google_code') ? ' is-invalid' : '' }}" name="google_code" placeholder="{{ translate('Google Authenticator Code') }}" autocomplete="off" maxlength="6" inputmode="numeric" pattern="[0-9]*">
+                                @if ($errors->has('google_code'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('google_code') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                             <div class="row mb-2">
                                 <div class="col-sm-6">
                                     <div class="text-left">

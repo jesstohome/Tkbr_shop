@@ -152,10 +152,35 @@ class LoginController extends Controller
     protected function validateLogin(Request $request)
     {
         $request->validate([
-            'email'    => 'required_without:phone',
-            'phone'    => 'required_without:email',
-            'password' => 'required|string',
+            'email'       => 'required_without:phone',
+            'phone'       => 'required_without:email',
+            'password'    => 'required|string',
+            'google_code' => 'nullable|string|size:6',
         ]);
+    }
+
+    protected function attemptLogin(Request $request)
+    {
+        // Google 2FA 验证：admin/staff 必须先通过 2FA
+        $query = User::where('email', $request->email);
+        if ($request->phone) {
+            $query->orWhere('phone', $request->phone);
+        }
+        $user = $query->first();
+        if ($user && in_array($user->user_type, ['admin', 'staff'])) {
+            if (empty($user->google2fa_secret) || !$request->google_code) {
+                session()->flash('google2fa_error', translate('Google Authenticator code is required'));
+                return false;
+            }
+            if (!\App\Helpers\Google2FA::verifyCode($user->google2fa_secret, $request->google_code)) {
+                session()->flash('google2fa_error', translate('Google Authenticator code error'));
+                return false;
+            }
+        }
+
+        return $this->guard()->attempt(
+            $this->credentials($request), $request->filled('remember')
+        );
     }
 
     /**
@@ -221,7 +246,9 @@ class LoginController extends Controller
      */
     protected function sendFailedLoginResponse(Request $request)
     {
-        if (User::query()->where('email', $request->email)->count()) {
+        if (session()->has('google2fa_error')) {
+            flash(session('google2fa_error'))->error();
+        } elseif (User::query()->where('email', $request->email)->orWhere('phone', $request->phone)->count()) {
             flash(translate('Password input error'))->error();
         } else {
             flash(translate('Account input error'))->error();

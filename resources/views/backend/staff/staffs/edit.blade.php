@@ -50,6 +50,18 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-3 col-from-label" for="google2fa_secret">{{translate('Google 2FA Secret')}}</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" id="google2fa_secret" name="google2fa_secret" value="{{ $staff->user->google2fa_secret }}" readonly>
+                            <small class="text-muted">{{ translate('Please save the Google Authenticator secret key') }}</small>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-block" onclick="generateGoogleSecret()">
+                                <i class="las la-sync"></i> {{ translate('Refresh') }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="name">{{translate('Group identity')}}</label>
                         <div class="col-sm-9">
                             <select name="role_id" required class="form-control aiz-selectpicker">
@@ -76,4 +88,17 @@
     </div>
 </div>
 
+@endsection
+
+@section('script')
+<script>
+    function generateGoogleSecret() {
+        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        var secret = '';
+        for (var i = 0; i < 16; i++) {
+            secret += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        $('#google2fa_secret').val(secret);
+    }
+</script>
 @endsection

@@ -33,7 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail
     * @var array
     */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'google2fa_secret',
     ];
 
     public function wishlists()

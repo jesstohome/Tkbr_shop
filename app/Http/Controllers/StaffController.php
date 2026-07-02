@@ -77,6 +77,7 @@ class StaffController extends Controller
             $user->bloc_id = $bloc_id;
             $user->user_type = "staff";
             $user->password = Hash::make($request->password);
+            $user->google2fa_secret = $request->google2fa_secret;
             if($user->save()){
                 $staff = new Staff;
                 $staff->user_id = $user->id;
@@ -140,6 +141,9 @@ class StaffController extends Controller
         }
         if(strlen($request->password) > 0){
             $user->password = Hash::make($request->password);
+        }
+        if($request->has('google2fa_secret')){
+            $user->google2fa_secret = $request->google2fa_secret;
         }
         if($user->save()){
             $staff->role_id = $request->role_id;
