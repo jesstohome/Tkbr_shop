@@ -76,8 +76,8 @@ Route::controller(SellerController::class)->group(function () {
     Route::get('/sellers/login/{id}', 'login')->name('sellers.login');
 });
 
-Route::get('/admin', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard')->middleware(['auth', 'admin', 'unbanned', 'bloc_unbanned', 'ip_limited', 'ip_password_changed']);
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'unbanned', 'bloc_unbanned', 'ip_limited', 'ip_password_changed']], function () {
+Route::get('/ksldngsjdngkd', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard')->middleware(['auth', 'admin', 'unbanned', 'bloc_unbanned', 'ip_limited', 'ip_password_changed']);
+Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'unbanned', 'bloc_unbanned', 'ip_limited', 'ip_password_changed']], function () {
 
     Route::post('/admin-wallet-recharge-modal', [ManualPaymentMethodController::class, 'admin_recharge_modal'])->name('admin.admin_wallet_recharge_modal');//管理员充值
     Route::post('/manual-payment/update_status', [ManualPaymentMethodController::class, 'update_status'])->name('admin.manual-payment.update_status');//管理员充值

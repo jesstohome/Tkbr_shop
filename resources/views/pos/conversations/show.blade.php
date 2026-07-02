@@ -31,31 +31,33 @@
         </div>
 
         <div class="card-body">
-            <ul class="list-group list-group-flush">
-                @foreach($conversation->messages as $message)
-                    <li class="list-group-item px-0">
-                        <div class="media mb-2">
-                          <img class="avatar avatar-xs mr-3" @if($message->user != null) src="{{ uploaded_asset($message->user->avatar_original) }}" @endif onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
-                          <div class="media-body">
-                            <h6 class="mb-0 fw-600">
-                                @if ($message->user != null)
-                                    {{ $message->user->name }}
-                                @endif
-                            </h6>
-                            <p class="opacity-50">{{$message->created_at}}</p>
-                          </div>
-                        </div>
-                        <p>
-                            {{ $message->message }}
-                        </p>
-                        <p>
-                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('pos-conversation.message_destroy', ['id' => $message->id])}}" title="{{ translate('Delete') }}">
-                                <i class="las la-trash"></i>
-                            </a>
-                        </p>
-                    </li>
-                @endforeach
-            </ul>
+            <div id="conversation-messages" style="max-height: 50vh; overflow-y: auto;">
+                <ul class="list-group list-group-flush">
+                    @foreach($conversation->messages as $message)
+                        <li class="list-group-item px-0">
+                            <div class="media mb-2">
+                              <img class="avatar avatar-xs mr-3" @if($message->user != null) src="{{ uploaded_asset($message->user->avatar_original) }}" @endif onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
+                              <div class="media-body">
+                                <h6 class="mb-0 fw-600">
+                                    @if ($message->user != null)
+                                        {{ $message->user->name }}
+                                    @endif
+                                </h6>
+                                <p class="opacity-50">{{$message->created_at}}</p>
+                              </div>
+                            </div>
+                            <p>
+                                {{ $message->message }}
+                            </p>
+                            <p>
+                                <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('pos-conversation.message_destroy', ['id' => $message->id])}}" title="{{ translate('Delete') }}">
+                                    <i class="las la-trash"></i>
+                                </a>
+                            </p>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
             <form class="pt-4" action="{{ route('pos-conversation.message_store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="conversation_id" value="{{ $conversation->id }}">
@@ -81,5 +83,19 @@
             if (submitting) return false;
             submitting = true;
         });
+
+        var msgBox = document.getElementById('conversation-messages');
+        if (msgBox) {
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+
+        var lastMessageCount = {{ $conversation->messages()->count() }};
+        setInterval(function () {
+            $.get('{{ route('poin-of-sales.conversation-check-new', encrypt($conversation->id)) }}', function (res) {
+                if (res.message_count > lastMessageCount) {
+                    location.reload();
+                }
+            });
+        }, 3000);
     </script>
 @endsection

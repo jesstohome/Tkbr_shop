@@ -426,12 +426,12 @@
         </div>
     </div>
 
-    {{-- 产品留言模态框 --}}
+    {{-- 产品提问模态框 --}}
     <div class="modal fade" id="comment_modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
             <div class="modal-content position-relative">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-600 h5">{{ translate('Leave a comment') }}</h5>
+                    <h5 class="modal-title fw-600 h5">{{ translate('Product Queries') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -577,9 +577,9 @@
                                     }
                                 </div>
                                 <div class="mt-2">
-                                    <a class="btn btn-soft-primary btn-sm" href="javascript:void(0);" onclick="product_consult('${data.data[i].id}', '${data.data[i].name2}', '${data.data[i].slug_url}')" title="咨询">咨询</a>
-                                    <a class="btn btn-soft-info btn-sm" href="javascript:void(0);" onclick="product_comment('${data.data[i].id}', '${data.data[i].name2}')" title="留言">留言</a>
-                                    <a class="btn btn-soft-secondary btn-sm" href="${data.data[i].slug_url}" target="_blank" title="查看">查看</a>
+                                    <a class="btn btn-soft-primary btn-sm" href="javascript:void(0);" onclick="product_consult('${data.data[i].id}', '${data.data[i].name2}', '${data.data[i].slug_url}')" title="{{ translate('Consult') }}">{{ translate('Consult') }}</a>
+                                    <a class="btn btn-soft-info btn-sm" href="javascript:void(0);" onclick="product_comment('${data.data[i].id}', '${data.data[i].name2}')" title="{{ translate('Ask question') }}">{{ translate('Ask question') }}</a>
+                                    <a class="btn btn-soft-secondary btn-sm" href="${data.data[i].slug_url}" target="_blank" title="{{ translate('View') }}">{{ translate('View') }}</a>
                 </div>
 </div>
 
@@ -784,7 +784,7 @@
             if (e.keyCode === 13 && !e.shiftKey) { e.preventDefault(); sendConsultMessage(); }
         });
 
-        // 产品留言
+        // 产品提问
         function product_comment(product_id, product_name) {
             let customer_id = $("select[name=user_id]").val();
             if (!customer_id) {

@@ -670,7 +670,7 @@ class PosController extends Controller
                 $conversations = $conversations->where('updated_at', '<=', trim($date_range1[1]) . " 23:59:59");
             }
 
-            $conversations = $conversations->paginate(5)->appends(request()->query());
+            $conversations = $conversations->paginate(20)->appends(request()->query());
 
             del_plus('new_pos_conversation_tip');
 
@@ -706,6 +706,14 @@ class PosController extends Controller
         $customer_id = $conversation->receiver_id == $seller_id ? $conversation->sender_id : $conversation->receiver_id;
         $product_id = $conversation->product_id;
         return view('pos.conversations.show', compact('conversation', 'product_url', 'seller_id', 'product_id', 'customer_id'));
+    }
+
+    public function pos_conversation_check_new($id) {
+        $conversation = Conversation::findOrFail(decrypt($id));
+        return response()->json([
+            'updated_at' => $conversation->updated_at,
+            'message_count' => $conversation->messages()->count(),
+        ]);
     }
 
     /**
