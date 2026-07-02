@@ -39,13 +39,13 @@
                     </div>
                     <div class="col-md-2 col-6">
                         <select name="order_by_price"  class="form-control form-control-lg aiz-selectpicker" onchange="filterProducts()">
-                            <option value="">价格排序</option>
-                            <option value="ASC">升序(从小到大)</option>
-                            <option value="DESC">降序(从大到小)</option>
+                            <option value="">{{ translate('Sort by price') }}</option>
+                            <option value="ASC">{{ translate('Ascending order (from smallest to largest)') }}</option>
+                            <option value="DESC">{{ translate('Descending order (from largest to smallest)') }}</option>
                         </select>
                     </div>
                     <div class="col-md-2 col-6">
-                        <button class="btn btn-md btn-primary" type="reset" onclick="reset_form();setTimeout(filterProducts, 500)">重置</button>
+                        <button class="btn btn-md btn-primary" type="reset" onclick="reset_form();setTimeout(filterProducts, 500)">{{ translate('Reset') }}</button>
                     </div>
                 </div>
                 <div class="aiz-pos-product-list c-scrollbar-light">
@@ -83,10 +83,10 @@
                         <div class="d-flex border-bottom pb-3">
                             <div class="flex-grow-1">
                                 <select name="order_type" id="order_type" class="form-control aiz-selectpicker pos-customer" data-live-search="true">
-                                        <option value="">订单类型</option>
-										<option value="24">普通订单</option>
-                                        <option value="24">常规订单</option>
-                                        <option value="6" selected>加急订单</option>
+                                        <option value="">{{ translate('Order Type') }}</option>
+										<option value="24">{{ translate('Regular Order') }}</option>
+                                        <!-- <option value="24">{{ translate('Standard Order') }}</option> -->
+                                        <option value="6" selected>{{ translate('Urgent Order') }}</option>
                                 </select>
                             </div>
                         </div>
