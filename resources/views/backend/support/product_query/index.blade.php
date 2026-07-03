@@ -23,7 +23,7 @@
                         <tr>
                             <td>{{ translate($key + 1) }}</td>
                             <td>{{ $query->user->name }}</td>
-                            <td>{{ $query->product->getTranslation('name') }}</td>
+                            <td>{{ $query->product ? $query->product->getTranslation('name') : translate('Product Deleted') }}</td>
                             <td>{{ Str::limit($query->question, 100) }}</td>
                             <td>{{ Str::limit($query->reply, 100) }}</td>
                             <td>

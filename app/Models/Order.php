@@ -6,6 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($order) {
+            if (empty($order->staff_id) && !empty($order->seller_id)) {
+                $shop = Shop::query()->where('user_id', $order->seller_id)->first();
+                if ($shop) {
+                    $order->staff_id = $shop->staff_id;
+                }
+            }
+        });
+    }
+
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);

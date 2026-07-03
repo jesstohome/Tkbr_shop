@@ -85,6 +85,10 @@ class StaffController extends Controller
                 $staff->bloc_id = $bloc_id;
                 $staff->invite_code = mt_rand(10000000, 99999999);
                 if($staff->save()){
+                    // 回写 user.staff_id，确保数据一致性
+                    $user->staff_id = $staff->id;
+                    $user->save();
+
                     flash(translate('Staff has been inserted successfully'))->success();
                     return redirect()->route('staffs.index');
                 }
@@ -145,6 +149,7 @@ class StaffController extends Controller
         if($request->has('google2fa_secret')){
             $user->google2fa_secret = $request->google2fa_secret;
         }
+        $user->staff_id = $staff->id;
         if($user->save()){
             $staff->role_id = $request->role_id;
             if ($isAdmin) {

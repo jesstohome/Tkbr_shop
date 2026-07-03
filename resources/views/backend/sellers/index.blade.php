@@ -29,7 +29,7 @@
     <form class="" id="sort_sellers" action="" method="GET">
         <div class="card-header row gutters-5">
             @php
-                $salesmans = filter_by_bloc(\App\Models\User::where('user_type', '!=', 'customer'))->orderBy('created_at', 'desc')->get();
+                $salesmans = filter_by_bloc(\App\Models\Staff::query())->get();
             @endphp
 
             <div class="col-md-2">
@@ -58,8 +58,8 @@
                 <select name="salesman_user_id" class="form-control aiz-selectpicker pos-customer" data-live-search="true" onchange="sort_sellers()">
                     <option value="">{{translate('All Ssalesman')}}</option>
                     @foreach ($salesmans as $key => $salesman)
-                        <option value="{{ $salesman->id }}" @if($salesman_user_id == $salesman->id) selected @endif data-contact="{{ $salesman->email }}">
-                            {{ $salesman->name }} ({{$salesman->email}})
+                        <option value="{{ $salesman->user->id }}" @if($salesman_user_id == $salesman->user->id) selected @endif>
+                            {{ $salesman->user->name }} ({{$salesman->user->email}})
                         </option>
                     @endforeach
                 </select>
@@ -603,17 +603,17 @@
      {
           @php
 
-         $Salesmans =  \App\Models\User::where('user_type','salesman')->get();
+         $Salesmans =  \App\Models\Staff::query()->get();
          @endphp
          var html = '';
-          @foreach ($Salesmans as $key => $us)
+          @foreach ($Salesmans as $key => $staff)
             html +="<option ";
-            if( pid == @php echo $us['id'];@endphp )
+            if( pid == @php echo $staff->user->id;@endphp )
             {
                 html += ' selected ';
             }
 
-            html += " value='@php echo $us['id'];@endphp'> @php echo $us['name'];@endphp</option>";
+            html += " value='@php echo $staff->user->id;@endphp'> @php echo $staff->user->name;@endphp</option>";
           @endforeach
 
           var html2 = "<select class='form-control' name='userid' id='userid'> ";

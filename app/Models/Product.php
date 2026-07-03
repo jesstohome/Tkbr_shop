@@ -12,6 +12,19 @@ class Product extends Model
 
     protected $with = ['product_translations', 'taxes'];
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($product) {
+            if (empty($product->staff_id) && !empty($product->user_id)) {
+                $shop = Shop::query()->where('user_id', $product->user_id)->first();
+                if ($shop) {
+                    $product->staff_id = $shop->staff_id;
+                }
+            }
+        });
+    }
+
     public function getTranslation($field = '', $lang = false)
     {
         $lang = $lang == false ? App::getLocale() : $lang;

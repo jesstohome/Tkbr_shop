@@ -80,8 +80,26 @@ class SellerController extends Controller
         $user_id = $shop['user_id'];
         $user = User::findOrFail( $user_id );
         $user->pid = $pid;
+
+        // Synchronize staff relationship
+        $staff = Staff::query()->where('user_id', $pid)->first();
+        if ($staff) {
+            $user->staff_id = $staff->id;
+            $user->bloc_id = $staff->bloc_id;
+            $shop->staff_id = $staff->id;
+            $shop->bloc_id = $staff->bloc_id;
+            $shop->save();
+
+            // Update or create ShopManage record
+            ShopManage::query()->updateOrCreate([
+                'shop_id' => $shop->id,
+            ], [
+                'admin_id' => $pid,
+            ]);
+        }
+
         $user->save();
-         echo json_encode(['msg'=>translate("Success")]);
+        echo json_encode(['msg'=>translate("Success")]);
     }
 
 
@@ -226,9 +244,9 @@ class SellerController extends Controller
 
         $salesman_user_id = $request->salesman_user_id;
         if (!empty($salesman_user_id)) {
-            $promotion_user_id = User::query()->where('pid', $salesman_user_id)->pluck('id');
-            if (!empty($promotion_user_id)) {
-                $shops = $shops->whereIn('user_id', $promotion_user_id);
+            $staff = Staff::query()->where('user_id', $salesman_user_id)->first();
+            if ($staff) {
+                $shops = $shops->where('staff_id', $staff->id);
             } else {
                 $shops = $shops->whereRaw('1=2');
             }
@@ -627,9 +645,14 @@ class SellerController extends Controller
             $list = $list->where('bloc_id', $bloc_id);
         }
         if ($salesman_user_id) {
-            $parent_ids = User::query()->where('pid', $salesman_user_id)->pluck('id')->toArray();
-            if (!empty($parent_ids)) {
-                $list = $list->whereIn('seller_id', $parent_ids);
+            $staff = Staff::query()->where('user_id', $salesman_user_id)->first();
+            if ($staff) {
+                $user_ids = User::query()->where('staff_id', $staff->id)->pluck('id')->toArray();
+                if (!empty($user_ids)) {
+                    $list = $list->whereIn('seller_id', $user_ids);
+                } else {
+                    $list = $list->whereRaw('1=2');
+                }
             } else {
                 $list = $list->whereRaw('1=2');
             }

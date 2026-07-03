@@ -1642,7 +1642,18 @@ if (!function_exists('filter_by_bloc')) {
                 // 按员工过滤
                 $staff = Staff::query()->where("user_id", \Auth::user()->id)->first();
                 if (!empty($staff) && $staff->role && !$staff->role->is_manage && !($model instanceof Staff)) {
-                    if (Schema::hasColumn($table_name, 'staff_id')) {
+                    if ($table_name === 'shops') {
+                        // shops 表 staff_id 是可靠的，直接过滤
+                        $build = $build->where("shops.staff_id", $staff->id);
+                    } elseif (Schema::hasColumn($table_name, 'seller_id')) {
+                        // 优先 seller_id（orders/payment_records 等）
+                        $sellerUserIds = Shop::query()->where('staff_id', $staff->id)->pluck('user_id')->toArray();
+                        $build = $build->whereIn($table_name . ".seller_id", $sellerUserIds ?: [0]);
+                    } elseif (Schema::hasColumn($table_name, 'user_id')) {
+                        // products/refund_requests 等通过 user_id 关联卖家
+                        $sellerUserIds = Shop::query()->where('staff_id', $staff->id)->pluck('user_id')->toArray();
+                        $build = $build->whereIn($table_name . ".user_id", $sellerUserIds ?: [0]);
+                    } elseif (Schema::hasColumn($table_name, 'staff_id')) {
                         $build = $build->where($table_name . ".staff_id", $staff->id);
                     } else {
                         $build = $build->where("staff_id", $staff->id);

@@ -19,6 +19,10 @@ class ProductQueryController extends Controller
         if (Auth::user()->user_type == 'admin') {
             $queries = ProductQuery::latest()->paginate(20);
             Redis::del('new_product_query_tip');
+        } elseif (Auth::user()->user_type == 'staff') {
+            $queries = ProductQuery::query();
+            $queries = filter_by_bloc($queries);
+            $queries = $queries->latest()->paginate(20);
         } else {
             $queries = ProductQuery::where('seller_id', Auth::id())->latest()->paginate(20);
             Redis::del(sprintf("product_query_red_tips:%s", Auth::user()->id));
