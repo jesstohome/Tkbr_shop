@@ -227,7 +227,6 @@
 
 
                  @if( $express->express_info )
-             <?php  date_default_timezone_set("PRC");?>
 <style>
     .table2 {
         background-color:#FFF;

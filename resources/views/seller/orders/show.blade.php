@@ -374,7 +374,6 @@
 
 
          @if( $express->express_info )
-             <?php  date_default_timezone_set("PRC");?>
 <style>
     .table {
   border-collapse: collapse;
