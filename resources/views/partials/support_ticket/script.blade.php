@@ -368,7 +368,10 @@
     }
 
     var last_reply_id = "{{$last_reply_id ?: 0}}";
+    var polling = false;
     function loop_load_new_reply() {
+        if (polling) return;
+        polling = true;
         $.ajax( {
             url: "{{route(Auth::user()->user_type != 'seller' ? 'support_ticket.load_new_reply' : 'seller.support_ticket.load_new_reply')}}",
             type: 'GET',
@@ -378,6 +381,7 @@
             },
             success: function (response)
             {
+                polling = false;
                 var list = response.list || [];
                 var readIds = response.readIds || [];
                 var recallIds = response.recallIds || [];
@@ -389,6 +393,9 @@
                         audioPlay && audioPlay(true);
                     }
                 }
+            },
+            error: function () {
+                polling = false;
             }
         } );
     }
@@ -400,6 +407,11 @@
 
         if (list.length) {
             list.forEach((item) => {
+                // 去重：如果消息已经存在，则跳过
+                if ($("ul.ticket li[data-id='" + item.id + "']").length || $(".chatlist .chat[data-id='" + item.id + "']").length) {
+                    return;
+                }
+
                 last_reply_id = item.id;
                 var images = '';
                 var images2 = '';
@@ -523,7 +535,13 @@
         }
         @endif
     }
-    setInterval(loop_load_new_reply, 5e3);
+    function schedule_poll() {
+        setTimeout(function () {
+            loop_load_new_reply();
+            schedule_poll();
+        }, 5e3);
+    }
+    schedule_poll();
 
     function show_fast_reply_modal() {
         $.get('{{ route('huashu.index') }}',{_token:'{{ @csrf_token() }}'}, function(data){

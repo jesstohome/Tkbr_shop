@@ -72,7 +72,14 @@ class SupportTicketController extends Controller
     public function admin_index(Request $request)
     {
         $sort_search = null;
-        $tickets = Ticket::orderBy('viewed')->orderBy('updated_at', 'desc');
+        $tickets = Ticket::orderBy('viewed')
+            ->orderByDesc(
+                \App\Models\TicketReply::select('created_at')
+                    ->whereColumn('ticket_id', 'tickets.id')
+                    ->where('recall', 0)
+                    ->latest()
+                    ->limit(1)
+            );
         if ($request->has('search')){
             $sort_search = $request->search;
             if (!empty($sort_search)) {
@@ -244,10 +251,9 @@ class SupportTicketController extends Controller
         $ticket_reply->ticket->save();
 
         if($ticket_reply->save()) {
-            // 保存下，更新下最新时间
+            // 更新下最新时间
             $ticket = $ticket_reply->ticket;
-            $ticket->updated_at = time();
-            $ticket->save();
+            $ticket->touch();
 
             broadcast(new RedPointerTips([
                 'ticket_count' => 1,

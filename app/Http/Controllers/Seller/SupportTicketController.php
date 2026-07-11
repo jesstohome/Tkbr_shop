@@ -133,7 +133,6 @@ class SupportTicketController extends Controller
         $ticket_reply->reply = $request->reply ?: '';
         $ticket_reply->files = $request->attachments;
         $ticket_reply->ticket->viewed = 0;
-        $ticket_reply->ticket->updated_at = time();
         $ticket_reply->ticket->status = 'pending';
         $ticket_reply->ticket->save();
         if($ticket_reply->save()){

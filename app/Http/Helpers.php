@@ -2166,6 +2166,10 @@ if (!function_exists('ticket_say_hello')) {
         }
 
         $ttl = $ticket->type == 'service' ? $bloc->interval_time : $bloc->work_order_interval_time;
+        // 如果未配置间隔时间，默认1小时内不重复发送招呼语
+        if (empty($ttl)) {
+            $ttl = 3600;
+        }
 
         $ticket_reply = new TicketReply;
         $ticket_reply->ticket_id = $ticket->id;
