@@ -61,6 +61,12 @@ class ProductController extends Controller
             $search = $request->search;
             $products = $products->where('name', 'like', '%' . $search . '%');
         }
+
+        $brand_id = $request->get('brand_id');
+        if (!empty($brand_id)) {
+            $products = $products->where('brand_id', $brand_id);
+        }
+
         $products = $products->paginate(10);
 
         $seller_spread_packages_payments = collect(SellerSpreadPackagePayment::with(['products', 'seller_spread_package'])->where('user_id', Auth::user()->id)->where('expire_at', '>', time())->get())->toArray();
@@ -78,7 +84,7 @@ class ProductController extends Controller
         if (!$package) {
             $package = \App\Models\SellerPackage::query()->where('is_default', 1)->first();
         }
-        return view('seller.product.products.index', compact('products', 'search', 'seller_spread_packages_payments', 'package'));
+        return view('seller.product.products.index', compact('products', 'search', 'seller_spread_packages_payments', 'package', 'brand_id'));
     }
 
     public function create(Request $request)

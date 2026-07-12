@@ -550,10 +550,15 @@ class ProductController extends Controller
             $products = $products->where('category_id', $category_id);
         }
 
+        $brand_id = $request->get('brand_id');
+        if (!empty($brand_id)) {
+            $products = $products->where('brand_id', $brand_id);
+        }
+
         $products = filter_by_bloc($products);
         $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(100);
 
-        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'sort_search', 'category_id'));
+        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'sort_search', 'category_id', 'brand_id'));
     }
 
     /**
@@ -592,11 +597,16 @@ class ProductController extends Controller
             $products = $products->where('category_id', $category_id);
         }
 
+        $brand_id = $request->get('brand_id');
+        if (!empty($brand_id)) {
+            $products = $products->where('brand_id', $brand_id);
+        }
+
         $products = filter_by_bloc($products);
         $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(100);
         $type = 'Seller';
 
-        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search', 'category_id'));
+        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'sort_search', 'category_id', 'brand_id'));
     }
 
     public function all_products( Request $request ) {
@@ -634,11 +644,16 @@ class ProductController extends Controller
             $products = $products->where('category_id', $category_id);
         }
 
+        $brand_id = $request->get('brand_id');
+        if (!empty($brand_id)) {
+            $products = $products->where('brand_id', $brand_id);
+        }
+
         $products = filter_by_bloc($products);
         $products = $products->paginate(100);
         $type = 'All';
 
-        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'category_id', 'sort_search'));
+        return view('backend.product.products.index', compact('products', 'type', 'col_name', 'query', 'seller_id', 'category_id', 'sort_search', 'brand_id'));
     }
 
 

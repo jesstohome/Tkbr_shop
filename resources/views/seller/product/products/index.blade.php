@@ -43,8 +43,16 @@
                 <h5 class="mb-md-0 h6">{{ translate('All Products') }}</h5>
             </div>
             <div class="col-md-4">
-                <form class="" id="sort_brands" action="" method="GET">
+                <form class="" id="sort_products" action="" method="GET">
                     <div class="input-group input-group-sm">
+                        <select class="form-control form-control-sm aiz-selectpicker" data-live-search="true" name="brand_id" onchange="sort_products()">
+                            <option value="">{{ translate('Brands') }}</option>
+                            @foreach (App\Models\Brand::all() as $key => $brand)
+                                <option value="{{ $brand->id }}" @if ($brand->id == $brand_id) selected @endif>
+                                    {{ $brand->getTranslation('name') }}
+                                </option>
+                            @endforeach
+                        </select>
                         <input type="text" class="form-control" id="search" name="search" @isset($search) value="{{ $search }}" @endisset placeholder="{{ translate('Search product') }}">
                     </div>
                 </form>
@@ -198,6 +206,10 @@
 
 @section('script')
     <script type="text/javascript">
+        function sort_products(){
+            $('#sort_products').submit();
+        }
+
         function update_featured(el){
             if(el.checked){
                 var status = 1;

@@ -369,7 +369,7 @@
                                 @php $brand = \App\Models\Brand::find($value); @endphp
                                 @if ($brand != null)
                                     <div class="col-sm-6">
-                                        <a href="javascript:void(0)" class="bg-white border d-block text-reset rounded p-2 hov-shadow-md mb-2">
+                                        <a href="{{ route('products.brand', $brand->slug) }}" class="bg-white border d-block text-reset rounded p-2 hov-shadow-md mb-2">
                                             <div class="row align-items-center no-gutters">
                                                 <div class="col-4 text-center">
                                                     <img

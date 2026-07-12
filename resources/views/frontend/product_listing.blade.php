@@ -194,19 +194,28 @@
                             <li class="breadcrumb-item opacity-50">
                                 <a class="text-reset" href="{{ route('home') }}">{{ translate('Home')}}</a>
                             </li>
-                            @if(!isset($category_id))
-                                <li class="breadcrumb-item fw-600  text-dark">
-                                    <a class="text-reset" href="{{ route('search') }}">"{{ translate('All Categories')}}"</a>
+                            @if(isset($brand_id))
+                                <li class="breadcrumb-item opacity-50">
+                                    <a class="text-reset" href="{{ route('brands.all') }}">{{ translate('All Brands')}}</a>
+                                </li>
+                                <li class="text-dark fw-600 breadcrumb-item">
+                                    <a class="text-reset" href="{{ route('products.brand', \App\Models\Brand::find($brand_id)->slug) }}">"{{ \App\Models\Brand::find($brand_id)->getTranslation('name') }}"</a>
                                 </li>
                             @else
-                                <li class="breadcrumb-item opacity-50">
-                                    <a class="text-reset" href="{{ route('search') }}">{{ translate('All Categories')}}</a>
-                                </li>
-                            @endif
-                            @if(isset($category_id))
-                                <li class="text-dark fw-600 breadcrumb-item">
-                                    <a class="text-reset" href="{{ route('products.category', \App\Models\Category::find($category_id)->slug) }}">"{{ \App\Models\Category::find($category_id)->getTranslation('name') }}"</a>
-                                </li>
+                                @if(!isset($category_id))
+                                    <li class="breadcrumb-item fw-600  text-dark">
+                                        <a class="text-reset" href="{{ route('search') }}">"{{ translate('All Categories')}}"</a>
+                                    </li>
+                                @else
+                                    <li class="breadcrumb-item opacity-50">
+                                        <a class="text-reset" href="{{ route('search') }}">{{ translate('All Categories')}}</a>
+                                    </li>
+                                @endif
+                                @if(isset($category_id))
+                                    <li class="text-dark fw-600 breadcrumb-item">
+                                        <a class="text-reset" href="{{ route('products.category', \App\Models\Category::find($category_id)->slug) }}">"{{ \App\Models\Category::find($category_id)->getTranslation('name') }}"</a>
+                                    </li>
+                                @endif
                             @endif
                         </ul>
 
@@ -214,7 +223,9 @@
                             <div class="row gutters-5 flex-wrap align-items-center">
                                 <div class="col-lg col-10">
                                     <h1 class="h6 fw-600 text-body">
-                                        @if(isset($category_id))
+                                        @if(isset($brand_id))
+                                            {{ \App\Models\Brand::find($brand_id)->getTranslation('name') }}
+                                        @elseif(isset($category_id))
                                             {{ \App\Models\Category::find($category_id)->getTranslation('name') }}
                                         @elseif(isset($query))
                                             {{ translate('Search result for ') }}"{{ $query }}"
