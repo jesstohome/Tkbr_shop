@@ -42,18 +42,25 @@
             <div class="col">
                 <h5 class="mb-md-0 h6">{{ translate('All Products') }}</h5>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-auto">
                 <form class="" id="sort_products" action="" method="GET">
-                    <div class="input-group input-group-sm">
-                        <select class="form-control form-control-sm aiz-selectpicker" data-live-search="true" name="brand_id" onchange="sort_products()">
-                            <option value="">{{ translate('Brands') }}</option>
-                            @foreach (App\Models\Brand::all() as $key => $brand)
-                                <option value="{{ $brand->id }}" @if ($brand->id == $brand_id) selected @endif>
-                                    {{ $brand->getTranslation('name') }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <input type="text" class="form-control" id="search" name="search" @isset($search) value="{{ $search }}" @endisset placeholder="{{ translate('Search product') }}">
+                    <div class="row gutters-5 align-items-center">
+                        {{-- <div class="col-auto">
+                            <select class="form-control form-control-sm aiz-selectpicker" data-live-search="true" name="brand_id" onchange="sort_products()">
+                                <option value="">{{ translate('Brands') }}</option>
+                                @foreach (App\Models\Brand::all() as $key => $brand)
+                                    <option value="{{ $brand->id }}" @if ($brand->id == $brand_id) selected @endif>
+                                        {{ $brand->getTranslation('name') }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+                        <div class="col-auto">
+                            <input type="text" class="form-control form-control-sm" id="search" name="search" @isset($search) value="{{ $search }}" @endisset placeholder="{{ translate('Search product') }}">
+                        </div>
+                        <div class="col-auto pl-0">
+                            <button class="btn btn-primary btn-sm" type="submit">{{ translate('Search') }}</button>
+                        </div>
                     </div>
                 </form>
             </div>
