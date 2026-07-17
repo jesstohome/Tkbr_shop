@@ -131,7 +131,9 @@
                     <th data-breakpoints="lg">{{ translate('Total withdrawal amount') }}</th>
                     <th data-breakpoints="lg">{{ translate('Recharge difference') }}</th>
                     <th data-breakpoints="lg">{{ translate('Salesman') }}</th>
+                    @if(isSupperAdmin() || isBlocManage())
                     <th width="10%">{{translate('Options')}}</th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -262,6 +264,7 @@
 
 
 
+                        @if(isSupperAdmin() || isBlocManage())
                         <td>
                             <div class="dropdown">
                                 <button type="button" class="btn btn-sm btn-circle btn-soft-primary btn-icon dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">
@@ -329,6 +332,7 @@
                                 </div>
                             </div>
                         </td>
+                        @endif
                     </tr>
                 @endforeach
                 @if(count($shops))
