@@ -10,6 +10,8 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessSettingsController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CjCollectController;
+use App\Http\Controllers\OneboundCollectController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\ConversationController;
@@ -91,6 +93,13 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
         Route::post('/categories/featured', 'updateFeatured')->name('categories.featured');
     });
 
+    // CJ Collect
+    Route::controller(CjCollectController::class)->group(function () {
+        Route::get('/cj-collect', 'index')->name('cj.collect.index');
+        Route::post('/cj-collect/search', 'search')->name('cj.collect.search');
+        Route::post('/cj-collect/import', 'import')->name('cj.collect.import');
+    });
+
     // Brand
     Route::resource('brands', BrandController::class);
     Route::controller(BrandController::class)->group(function () {
@@ -141,6 +150,13 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
         Route::get('/product/collect/bulk-product-collect-move-out/{id}', 'product_collect_move_out')->name('product-collect-move-out')->where('id', '[0-9]+');
         Route::get('/product/collect/product-collect-order-free-up/{id}', 'product_collect_order_free_up')->name('product-collect-order-free-up')->where('id', '[0-9]+');
         Route::post('/product/collect/bulk-product-collect-add', 'bulk_product_collect_add')->name('bulk-product-collect-add');
+    });
+
+    // Onebound 多平台采集 (替代原 ProductCollect 的搜索入口)
+    Route::controller(OneboundCollectController::class)->group(function () {
+        Route::get('/onebound-collect', 'index')->name('onebound.collect.index');
+        Route::post('/onebound-collect/search', 'search')->name('onebound.collect.search');
+        Route::post('/onebound-collect/import', 'import')->name('onebound.collect.import');
     });
 
     // Digital Product

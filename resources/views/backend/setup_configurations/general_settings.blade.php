@@ -130,6 +130,17 @@
                         </div>
 
                         <div class="form-group row">
+                            <label class="col-md-3 col-from-label">CJ API Key</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="types[]" value="cj_api_key">
+                                <input type="text" class="form-control" value="{{ get_setting('cj_api_key') }}" placeholder="CJdropshipping API Key" name="cj_api_key">
+                                <small class="text-muted">
+                                    CJ后台 → 个人中心 → API → 添加API → 选择"API Key"类型 → 复制完整Key粘贴到这里
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label class="col-md-3 col-from-label">工单对话话术</label>
                             <div class="col-md-8">
                                 <input type="hidden" name="types[]" value="work_order_caveat">

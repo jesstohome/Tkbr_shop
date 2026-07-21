@@ -146,7 +146,7 @@
                 @endif
 
                 <!-- 产品仓库 -->
-                @if(Auth::user()->user_type == 'admin' || in_array('2', json_decode(Auth::user()->staff->role->permissions)))
+                @if(isSupperAdmin() || isBlocManage() || Auth::user()->user_type == 'admin')
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link ">
                             <i class="las la-store aiz-side-nav-icon"></i>
@@ -160,7 +160,7 @@
                                 </a>
                             </li>
                             <li class="aiz-side-nav-item">
-                                <a href="{{ route('product_collect.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['product_collect.index'])}}">
+                                <a href="{{ route('onebound.collect.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['onebound.collect.index'])}}">
                                     <span class="aiz-side-nav-text">{{ translate('Product Collect') }}</span>    <!-- 产品收集  -->
                                 </a>
                             </li>
