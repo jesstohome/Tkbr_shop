@@ -900,6 +900,40 @@ class ProductController extends Controller
         return 1;
     }
 
+    public function bulk_product_brand( Request $request ) {
+        $brandId = $request->brand_id;
+        if (empty($brandId)) {
+            return 0;
+        }
+
+        if ($request->type == 'all') {
+            // 筛选全部商品
+            $products = Product::query();
+            if (!empty($request->category_id)) {
+                $products->where('category_id', $request->category_id);
+            }
+            if (!empty($request->search)) {
+                $products->where('name', 'like', '%' . $request->search . '%');
+            }
+            if (!empty($request->user_id)) {
+                $products->where('user_id', $request->user_id);
+            }
+            if ($request->product_type == 'In House') {
+                $products->where('added_by', 'admin');
+            } elseif ($request->product_type == 'Seller') {
+                $products->where('added_by', 'seller');
+            }
+            $products = filter_by_bloc($products);
+            $count = $products->update(['brand_id' => $brandId]);
+        } else {
+            // 仅选中商品
+            if (empty($request->id)) return 0;
+            $count = Product::whereIn('id', $request->id)->update(['brand_id' => $brandId]);
+        }
+
+        return $count;
+    }
+
     /**
      * Duplicates the specified resource from storage.
      *

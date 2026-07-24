@@ -1,5 +1,10 @@
 @extends('backend.layouts.app')
 
+<style>
+#brand-modal .bootstrap-select .dropdown-menu { max-height: 400px !important; }
+#brand-modal .bootstrap-select .dropdown-menu .inner { max-height: 400px !important; }
+</style>
+
 @section('content')
 
     @php
@@ -42,6 +47,8 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#" onclick="bulk_delete()"> {{translate('Delete selection')}}</a>
+                    <a class="dropdown-item" href="#" onclick="show_brand_modal()"> 批量设置品牌(选中)</a>
+                    <a class="dropdown-item" href="#" onclick="show_brand_modal('all')"> 批量设置品牌(筛选全部)</a>
                     @if($type == 'In House')
                         <a class="dropdown-item" href="#" onclick="bulk_add_to_storehouse()"> {{translate('Add selection to storehouse')}}</a>
                         <a class="dropdown-item" href="#" onclick="bulk_add_to_storehouse('all')"> {{translate('Add All to storehouse')}}</a>
@@ -321,6 +328,33 @@
             </div>
         </div>
     </div>
+
+    {{-- 批量设置品牌弹窗 --}}
+    <div class="modal fade" id="brand-modal">
+        <div class="modal-dialog modal-dialog-centered" style="overflow:visible;">
+            <div class="modal-content" style="overflow:visible;">
+                <div class="modal-header">
+                    <h5 class="modal-title h6">批量设置品牌</h5>
+                    <button type="button" class="close" data-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" style="overflow-y:visible;min-height:280px;">
+                    <input type="hidden" id="brand-batch-type" value="">
+                    <select class="form-control aiz-selectpicker" data-live-search="true"
+                            data-dropup-auto="false" data-size="15"
+                            id="batch-brand-id">
+                        <option value="">-- 选择品牌 --</option>
+                        @foreach (\App\Models\Brand::all() as $brand)
+                            <option value="{{ $brand->id }}">{{ $brand->getTranslation('name') }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">{{ translate('Cancel') }}</button>
+                    <button type="button" class="btn btn-primary" id="confirm-brand-batch">{{ translate('Confirm') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -486,6 +520,50 @@
                 }
             });
         }
+
+        function show_brand_modal(type) {
+            $('#brand-batch-type').val(type || '');
+            $('#brand-modal').modal('show');
+            // 模态框显示后再初始化 selectpicker
+            setTimeout(function() {
+                $('#batch-brand-id').selectpicker('destroy').selectpicker({liveSearch:true, size:15, dropupAuto:false});
+            }, 200);
+        }
+
+        $('#confirm-brand-batch').on('click', function() {
+            var brandId = $('#batch-brand-id').val();
+            if (!brandId) {
+                AIZ.plugins.notify('warning', '请选择品牌');
+                return;
+            }
+            var batchType = $('#brand-batch-type').val();
+            var data = new FormData($('#sort_products')[0]);
+            data.append('brand_id', brandId);
+            data.append('type', batchType);
+            data.append('product_type', '{{ $type }}');
+
+            $.ajax({
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                url: "{{ route('bulk-product-brand') }}",
+                type: 'POST',
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(count) {
+                    if (count > 0) {
+                        AIZ.plugins.notify('success', '成功设置 ' + count + ' 个商品的品牌');
+                        $('#brand-modal').modal('hide');
+                        setTimeout(function() { location.reload(); }, 1500);
+                    } else {
+                        AIZ.plugins.notify('warning', '没有符合条件的产品');
+                    }
+                },
+                error: function() {
+                    AIZ.plugins.notify('danger', '操作失败');
+                }
+            });
+        });
 
         $(document).ready(function () {
             // 触发导入产品

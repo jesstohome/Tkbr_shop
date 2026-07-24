@@ -11,6 +11,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessSettingsController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CjCollectController;
+use App\Http\Controllers\CrossImportController;
 use App\Http\Controllers\OneboundCollectController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CommissionController;
@@ -125,6 +126,7 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
         Route::get('/products/duplicate/{id}', 'duplicate')->name('products.duplicate');
         Route::get('/products/destroy/{id}', 'destroy')->name('products.destroy');
         Route::post('/bulk-product-delete', 'bulk_product_delete')->name('bulk-product-delete');
+        Route::post('/bulk-product-brand', 'bulk_product_brand')->name('bulk-product-brand');
 
         Route::post('/products/sku_combination', 'sku_combination')->name('products.sku_combination');
         Route::post('/products/sku_combination_edit', 'sku_combination_edit')->name('products.sku_combination_edit');
@@ -150,6 +152,14 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
         Route::get('/product/collect/bulk-product-collect-move-out/{id}', 'product_collect_move_out')->name('product-collect-move-out')->where('id', '[0-9]+');
         Route::get('/product/collect/product-collect-order-free-up/{id}', 'product_collect_order_free_up')->name('product-collect-order-free-up')->where('id', '[0-9]+');
         Route::post('/product/collect/bulk-product-collect-add', 'bulk_product_collect_add')->name('bulk-product-collect-add');
+    });
+
+    // 跨系统导入
+    Route::controller(CrossImportController::class)->group(function () {
+        Route::get('/cross-import', 'index')->name('cross.import.index');
+        Route::post('/cross-import/list', 'listProducts')->name('cross.import.list');
+        Route::post('/cross-import/do', 'import')->name('cross.import.do');
+        Route::get('/cross-import/thumb/{id}', 'thumb')->name('cross.import.thumb');
     });
 
     // Onebound 多平台采集 (替代原 ProductCollect 的搜索入口)
