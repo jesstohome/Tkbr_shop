@@ -42,6 +42,14 @@
             <div class="col">
                 <h5 class="mb-md-0 h6">{{ translate('All Products') }}</h5>
             </div>
+            <div class="dropdown mb-2 mb-md-0">
+                <button class="btn border dropdown-toggle" type="button" data-toggle="dropdown">
+                    {{translate('Bulk Action')}}
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#" onclick="bulk_delete()"> {{translate('Delete selection')}}</a>
+                </div>
+            </div>
             <div class="col-md-auto">
                 <form class="" id="sort_products" action="" method="GET">
                     <div class="row gutters-5 align-items-center">
@@ -69,6 +77,16 @@
             <table class="table aiz-table mb-0">
                 <thead>
                     <tr>
+                        <th>
+                            <div class="form-group">
+                                <div class="aiz-checkbox-inline">
+                                    <label class="aiz-checkbox">
+                                        <input type="checkbox" class="check-all">
+                                        <span class="aiz-square-check"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </th>
                         <th>#</th>
                         <th data-breakpoints="md">
                             {{translate('Thumbnail Image')}}
@@ -91,6 +109,14 @@
                 <tbody>
                     @foreach ($products as $key => $product)
                         <tr>
+                            <td>
+                                <div class="form-group d-inline-block">
+                                    <label class="aiz-checkbox">
+                                        <input type="checkbox" class="check-one" name="id[]" value="{{$product->id}}">
+                                        <span class="aiz-square-check"></span>
+                                    </label>
+                                </div>
+                            </td>
                             <td>{{ ($key+1) + ($products->currentPage() - 1)*$products->perPage() }}</td>
                             <td>
                                 <img
@@ -212,10 +238,40 @@
 @endsection
 
 @section('script')
+    <style>
+        .dropdown-item:hover {
+            color: #212529 !important;
+        }
+    </style>
     <script type="text/javascript">
         function sort_products(){
             $('#sort_products').submit();
         }
+
+        function bulk_delete() {
+            var selected = [];
+            $('.check-one:checked').each(function() {
+                selected.push($(this).val());
+            });
+
+            if (selected.length === 0) {
+                AIZ.plugins.notify('warning', '{{ translate('Please select at least one product') }}');
+                return;
+            }
+
+            var data = {_token:'{{ csrf_token() }}', ids: selected};
+            $.post('{{ route('seller.products.bulk-destroy') }}', data, function(response){
+                if(response == 1) {
+                    location.reload();
+                } else {
+                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+                }
+            });
+        }
+
+        $(document).on('change', '.check-all', function() {
+            $('.check-one').prop('checked', $(this).is(':checked'));
+        });
 
         function update_featured(el){
             if(el.checked){

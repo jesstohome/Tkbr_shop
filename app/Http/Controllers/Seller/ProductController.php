@@ -67,7 +67,7 @@ class ProductController extends Controller
             $products = $products->where('brand_id', $brand_id);
         }
 
-        $products = $products->paginate(10);
+        $products = $products->paginate(25);
 
         $seller_spread_packages_payments = collect(SellerSpreadPackagePayment::with(['products', 'seller_spread_package'])->where('user_id', Auth::user()->id)->where('expire_at', '>', time())->get())->toArray();
         foreach ( $seller_spread_packages_payments as $key=>$seller_spread_packages_payment )
@@ -443,6 +443,36 @@ class ProductController extends Controller
             flash(translate('Something went wrong'))->error();
             return back();
         }
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->ids;
+        if (empty($ids)) {
+            return 0;
+        }
+
+        foreach ($ids as $id) {
+            $product = Product::find($id);
+            if (!$product || Auth::user()->id != $product->user_id) {
+                continue;
+            }
+
+            if (!$this->_checkMaxShelf($id)) {
+                continue;
+            }
+
+            $product->product_translations()->delete();
+            $product->stocks()->delete();
+            $product->taxes()->delete();
+            Product::destroy($id);
+            Cart::where('product_id', $id)->delete();
+        }
+
+        Artisan::call('view:clear');
+        Artisan::call('cache:clear');
+
+        return 1;
     }
 
     private function _checkMaxShelf($product_id) {

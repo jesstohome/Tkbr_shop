@@ -48,6 +48,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         Route::post('/products/seller/featured', 'updateFeatured')->name('products.featured');
         Route::post('/products/published', 'updatePublished')->name('products.published');
         Route::get('/products/destroy/{id}', 'destroy')->name('products.destroy');
+        Route::post('/products/bulk-destroy', 'bulkDestroy')->name('products.bulk-destroy');
         Route::post('/products/spread', 'updateSellerSpreadPackage')->name('products.spread');
     });
 

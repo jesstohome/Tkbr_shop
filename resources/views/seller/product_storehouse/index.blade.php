@@ -44,7 +44,7 @@
                                 <select name="pos_type" class="form-control form-control-lg aiz-selectpicker"
                                         data-live-search="true" onchange="filterProducts()">
                                     <option value="set_meal">{{ translate('Set Meal') }}</option>
-                                    <option value="single_item">{{ translate('Single item') }}</option>
+                                    {{-- <option value="single_item">{{ translate('Single item') }}</option> --}}
 
                                 </select>
                             </div>
