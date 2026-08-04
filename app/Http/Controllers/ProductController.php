@@ -75,10 +75,6 @@ class ProductController extends Controller
     {
 
 
-        error_reporting(0);
-
-        file_put_contents(dirname(__FILE__) . '/apicj_input2.txt', file_get_contents("php://input"));
-
         $json = file_get_contents("php://input");
 
         if ( empty($json) )
@@ -102,8 +98,6 @@ class ProductController extends Controller
     public function caiji(){
 
         try {
-
-            file_put_contents(dirname(__FILE__) . '/post_data.txt', file_get_contents("php://input"));
 
             set_time_limit(0);
 
@@ -350,11 +344,6 @@ class ProductController extends Controller
 
     public function api( Request $request ) {
 
-
-        error_reporting(0);
-        file_put_contents(dirname(__FILE__) . '/tog_post2.txt', var_export($_POST, true), FILE_APPEND);
-        file_put_contents(dirname(__FILE__) . '/tog_get2.txt', var_export($_GET, true), FILE_APPEND);
-        file_put_contents(dirname(__FILE__) . '/tog_input2.txt', file_get_contents("php://input"), FILE_APPEND);
 
         $json = file_get_contents("php://input");
 
