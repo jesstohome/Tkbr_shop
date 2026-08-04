@@ -1122,4 +1122,53 @@ class ProductController extends Controller
 
         return 1;
     }
+
+    // 快速修改分类页面
+    public function fix_category(Request $request) {
+        CoreComponentRepository::instantiateShopRepository();
+
+        $category_id = $request->get('category_id', 27);
+
+        $products = Product::where('added_by', 'admin')
+            ->where('auction_product', 0)
+            ->where('wholesale_product', 0)
+            ->where('digital', 0)
+            ->where('category_id', $category_id);
+
+        $products = filter_by_bloc($products);
+        $products = $products->orderBy('created_at', 'desc')->paginate(100);
+
+        $categories = Category::all();
+
+        return view('backend.product.products.fix_category', compact('products', 'category_id', 'categories'));
+    }
+
+    // 快速修改分类 - 批量更新分类
+    public function fix_category_bulk_update(Request $request) {
+        $ids = $request->input('id', []);
+        $new_category_id = $request->input('new_category_id');
+
+        if (empty($ids) || empty($new_category_id)) {
+            return 0;
+        }
+
+        $count = Product::whereIn('id', $ids)->update(['category_id' => $new_category_id]);
+
+        return $count;
+    }
+
+    // 快速修改分类 - 批量删除
+    public function fix_category_bulk_delete(Request $request) {
+        if ($request->id) {
+            foreach ($request->id as $product_id) {
+                $this->destroy($product_id);
+            }
+        }
+        return 1;
+    }
+
+    // 快速修改分类 - 单个删除
+    public function fix_category_destroy($id) {
+        return $this->destroy($id);
+    }
 }

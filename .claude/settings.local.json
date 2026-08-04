@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(php *)",
-      "Bash(grep -rh 'protected $table' /Users/dingding/work/code/testcode/shop/shopb/shop/app/Models/ '--include=*.php')"
+      "Bash(grep -rh 'protected $table' /Users/dingding/work/code/testcode/shop/shopb/shop/app/Models/ '--include=*.php')",
+      "Bash(products)",
+      "Bash(grep -rn \"CREATE TABLE.*products\\\\|`products`\" /Users/dingding/work/code/testcode/shop/shopb/shop/app/Http/Controllers/InstallController.php)"
     ]
   }
 }

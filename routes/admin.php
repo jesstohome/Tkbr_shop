@@ -128,6 +128,12 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
         Route::post('/bulk-product-delete', 'bulk_product_delete')->name('bulk-product-delete');
         Route::post('/bulk-product-brand', 'bulk_product_brand')->name('bulk-product-brand');
 
+        // 快速修改分类
+        Route::get('/products/fix-category', 'fix_category')->name('products.fix_category');
+        Route::post('/products/fix-category/bulk-update', 'fix_category_bulk_update')->name('products.fix_category.bulk_update');
+        Route::post('/products/fix-category/bulk-delete', 'fix_category_bulk_delete')->name('products.fix_category.bulk_delete');
+        Route::get('/products/fix-category/destroy/{id}', 'fix_category_destroy')->name('products.fix_category.destroy');
+
         Route::post('/products/sku_combination', 'sku_combination')->name('products.sku_combination');
         Route::post('/products/sku_combination_edit', 'sku_combination_edit')->name('products.sku_combination_edit');
         Route::post('/products/add-more-choice-option', 'add_more_choice_option')->name('products.add-more-choice-option');
