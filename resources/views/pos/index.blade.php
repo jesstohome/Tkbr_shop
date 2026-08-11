@@ -197,13 +197,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="dropdown dropup">
-                                <div class="my-2 my-md-0">
-                                    <div class="form-group">
-                                        <input class="form-control" type="datetime-local" name="effectivetime" placeholder="{{ translate('Search by Product Name/Barcode') }}" >
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div class="my-2 my-md-0">
                             <button type="button" class="btn btn-primary btn-block" onclick="orderConfirmation()">{{ translate('Place Order') }}</button>
@@ -831,7 +824,6 @@
             var offline_payment_amount = $('input[name=offline_payment_amount]').val();
             var offline_trx_id = $('input[name=trx_id]').val();
             var offline_payment_proof = $('input[name=payment_proof]').val();
-            var effectivetime = $('input[name=effectivetime]').val();
             var order_type = $('select[name=order_type]').val();
 
             if(order_type==""){
@@ -858,7 +850,6 @@
                 offline_payment_amount  : offline_payment_amount,
                 offline_trx_id          : offline_trx_id,
                 offline_payment_proof   : offline_payment_proof,
-                effectivetime           : effectivetime,
                 order_type              : order_type
 
             }, function(data){

@@ -95,13 +95,25 @@ class ProfileController extends Controller
 
         try {
             $image = $request->image;
-            $request->filename;
             $realImage = base64_decode($image);
 
-            $dir = public_path('uploads/all');
-            $full_path = "$dir/$request->filename";
+            // Sanitize filename to prevent path traversal
+            $filename = basename($request->filename);
+            $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
-            $file_put = file_put_contents($full_path, $realImage); // int or false
+            if (!isset($type[$extension])) {
+                return response()->json([
+                    'result' => false,
+                    'message' => "Only image can be uploaded",
+                    'path' => ""
+                ]);
+            }
+
+            $dir = public_path('uploads/all');
+            $newFileName = rand(10000000000, 9999999999) . date("YmdHis") . "." . $extension;
+            $newFullPath = "$dir/$newFileName";
+
+            $file_put = file_put_contents($newFullPath, $realImage);
 
             if ($file_put == false) {
                 return response()->json([
@@ -113,44 +125,6 @@ class ProfileController extends Controller
 
 
             $upload = new Upload;
-            $extension = strtolower(File::extension($full_path));
-            $size = File::size($full_path);
-
-            if (!isset($type[$extension])) {
-                unlink($full_path);
-                return response()->json([
-                    'result' => false,
-                    'message' => "Only image can be uploaded",
-                    'path' => ""
-                ]);
-            }
-
-
-            $upload->file_original_name = null;
-            $arr = explode('.', File::name($full_path));
-            for ($i = 0; $i < count($arr) - 1; $i++) {
-                if ($i == 0) {
-                    $upload->file_original_name .= $arr[$i];
-                } else {
-                    $upload->file_original_name .= "." . $arr[$i];
-                }
-            }
-
-            //unlink and upload again with new name
-            unlink($full_path);
-            $newFileName = rand(10000000000, 9999999999) . date("YmdHis") . "." . $extension;
-            $newFullPath = "$dir/$newFileName";
-
-            $file_put = file_put_contents($newFullPath, $realImage);
-
-            if ($file_put == false) {
-                return response()->json([
-                    'result' => false,
-                    'message' => "Uploading error",
-                    'path' => ""
-                ]);
-            }
-
             $newPath = "uploads/all/$newFileName";
 
             if (env('FILESYSTEM_DRIVER') == 's3') {
@@ -162,7 +136,7 @@ class ProfileController extends Controller
             $upload->file_name = $newPath;
             $upload->user_id = $user->id;
             $upload->type = $type[$upload->extension];
-            $upload->file_size = $size;
+            $upload->file_size = filesize($newFullPath);
             $upload->save();
 
             $user->avatar_original = $upload->id;
@@ -208,13 +182,26 @@ class ProfileController extends Controller
 
         try {
             $image = $request->image;
-            $request->filename;
             $realImage = base64_decode($image);
 
-            $dir = public_path('uploads/all');
-            $full_path = "$dir/$request->filename";
+            // Sanitize filename to prevent path traversal
+            $filename = basename($request->filename);
+            $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
-            $file_put = file_put_contents($full_path, $realImage); // int or false
+            if (!isset($type[$extension])) {
+                return response()->json([
+                    'result' => false,
+                    'message' => "Only image can be uploaded",
+                    'path' => "",
+                    'upload_id' => 0
+                ]);
+            }
+
+            $dir = public_path('uploads/all');
+            $newFileName = rand(10000000000, 9999999999) . date("YmdHis") . "." . $extension;
+            $newFullPath = "$dir/$newFileName";
+
+            $file_put = file_put_contents($newFullPath, $realImage);
 
             if ($file_put == false) {
                 return response()->json([
@@ -227,46 +214,6 @@ class ProfileController extends Controller
 
 
             $upload = new Upload;
-            $extension = strtolower(File::extension($full_path));
-            $size = File::size($full_path);
-
-            if (!isset($type[$extension])) {
-                unlink($full_path);
-                return response()->json([
-                    'result' => false,
-                    'message' => "Only image can be uploaded",
-                    'path' => "",
-                    'upload_id' => 0
-                ]);
-            }
-
-
-            $upload->file_original_name = null;
-            $arr = explode('.', File::name($full_path));
-            for ($i = 0; $i < count($arr) - 1; $i++) {
-                if ($i == 0) {
-                    $upload->file_original_name .= $arr[$i];
-                } else {
-                    $upload->file_original_name .= "." . $arr[$i];
-                }
-            }
-
-            //unlink and upload again with new name
-            unlink($full_path);
-            $newFileName = rand(10000000000, 9999999999) . date("YmdHis") . "." . $extension;
-            $newFullPath = "$dir/$newFileName";
-
-            $file_put = file_put_contents($newFullPath, $realImage);
-
-            if ($file_put == false) {
-                return response()->json([
-                    'result' => false,
-                    'message' => "Uploading error",
-                    'path' => "",
-                    'upload_id' => 0
-                ]);
-            }
-
             $newPath = "uploads/all/$newFileName";
 
             if (env('FILESYSTEM_DRIVER') == 's3') {
@@ -278,7 +225,7 @@ class ProfileController extends Controller
             $upload->file_name = $newPath;
             $upload->user_id = $user->id;
             $upload->type = $type[$upload->extension];
-            $upload->file_size = $size;
+            $upload->file_size = filesize($newFullPath);
             $upload->save();
 
             return response()->json([

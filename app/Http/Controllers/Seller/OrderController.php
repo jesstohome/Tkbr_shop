@@ -38,7 +38,6 @@ class OrderController extends Controller
             ->where('seller_id', Auth::user()->id)
             ->select('orders.id')
             ->distinct();
-        $orders = $orders->where('created_at', '<=', date('Y-m-d H:i:s'));
         if ($request->product_storehouse_status != null) {
             $orders = $orders->where('product_storehouse_status', $request->product_storehouse_status);
             $product_storehouse_status = $request->product_storehouse_status;
@@ -375,8 +374,6 @@ class OrderController extends Controller
             ->where('viewed', 0)
             ->select('orders.id')
             ->distinct();
-        $orders = $orders->where('created_at', '<=', date('Y-m-d H:i:s'));
-
         $new_order_audio = hlen_plus("audio:new_order_tip:seller") > 0;
         if ($new_order_audio) {
             del_plus("audio:new_order_tip:seller");

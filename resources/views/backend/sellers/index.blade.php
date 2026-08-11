@@ -92,7 +92,7 @@
             </div>
             <div class="col-md-auto">
                 <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
-                <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
+                <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">{{ translate('Reset') }}</button>
             </div>
         </div>
 

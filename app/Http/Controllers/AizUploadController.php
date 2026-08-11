@@ -133,6 +133,18 @@ class AizUploadController extends Controller
                 // Get the MIME type of the file
                 $file_mime = finfo_file($finfo, base_path('public/').$path);
 
+                // Validate actual MIME type matches claimed extension
+                $allowed_mimes = [
+                    'image' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml', 'image/svg'],
+                    'video' => ['video/mp4', 'video/mpeg', 'video/webm', 'video/ogg', 'video/x-msvideo', 'video/quicktime', 'video/x-flv', 'video/x-ms-wmv'],
+                    'audio' => ['audio/mpeg', 'audio/mp4', 'audio/x-wav', 'audio/aac', 'audio/ogg', 'audio/x-ms-wma'],
+                ];
+                $file_category = $type[$extension];
+                if (isset($allowed_mimes[$file_category]) && !in_array($file_mime, $allowed_mimes[$file_category])) {
+                    unlink(base_path('public/').$path);
+                    return response()->json(['error' => 'File type not allowed'], 400);
+                }
+
                 if($type[$extension] == 'image' && get_setting('disable_image_optimization') != 1){
                     try {
                         $img = Image::make($request->file('aiz_file')->getRealPath())->encode();

@@ -15,11 +15,11 @@
     </style>
     <div class="row gutters-10 justify-content-center">
         @php
-            $count = DB::table('orders')->where('seller_id', Auth::user()->id)->where('created_at', '<=', date('Y-m-d H:i:s'))
+            $count = DB::table('orders')->where('seller_id', Auth::user()->id)
                 ->count();
-            $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')->where('created_at', '<=', date('Y-m-d H:i:s'))
+            $grand_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')
                 ->sum('orders.grand_total');
-            $product_storehouse_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')->where('created_at', '<=', date('Y-m-d H:i:s'))
+            $product_storehouse_total = DB::table('orders')->where('seller_id', Auth::user()->id)->where('delivery_status', '!=', 'cancelled')
                 ->sum('orders.product_storehouse_total');
             $total_turnover = "$".sprintf('%.2f',$grand_total);
             $total_profit = "$".sprintf('%.2f',($grand_total - $product_storehouse_total));
@@ -103,12 +103,12 @@
               <div class="col-md-2">
                   @if(is_pc())
                       <div class="form-group mt-1 float-right">
-                          <button class="btn btn-light" type="reset" onclick="reset_form()">重置</button>
+                          <button class="btn btn-light" type="reset" onclick="reset_form()">{{ translate('Reset') }}</button>
                           <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
                       </div>
                   @else
                       <div class="form-group mt-1" style="display: flex;justify-content: space-between;">
-                          <button class="btn btn-sm btn-light" type="reset" onclick="reset_form()">重置</button>
+                          <button class="btn btn-sm btn-light" type="reset" onclick="reset_form()">{{ translate('Reset') }}</button>
                           <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
                       </div>
                   @endif

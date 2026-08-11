@@ -438,14 +438,7 @@ class PosController extends Controller
             $order->date = strtotime('now');
             $order->payment_status = $request->payment_type != 'cash_on_delivery' ? 'paid' : 'unpaid';
             $order->payment_details = $request->payment_type;
-            $effectivetime = $request->effectivetime;
             $order_type = $request->order_type;
-            if ($effectivetime != null) {
-                $order->updated_at = $effectivetime;
-                $order->created_at = $effectivetime;
-            }
-
-            //return array('success' => 0, 'message' => $effectivetime);
             $order->order_type = $order_type;
             //return array('success' => 0, 'message' => translate($today. ' '.$order_type));
             if($request->payment_type == 'offline_payment'){
