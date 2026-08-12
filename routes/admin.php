@@ -230,6 +230,9 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
         // 向厂家付款记录
         Route::get('/sellers_payment_records', 'payment_records')->name('sellers.payment_records');
 
+        // 余额调整记录
+        Route::get('/sellers_wallet_logs', 'wallet_logs')->name('sellers.wallet_logs');
+
         // 余额充值，扣除
         Route::post('/sellers/balance_recharge', 'balance_recharge')->name('sellers.balance_recharge');
 

@@ -19,6 +19,7 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\CreditscoreStream;
+use App\Models\WalletExpenseLog;
 
 use Illuminate\Support\Facades\Hash;
 use App\Models\SellerPackagePayment;
@@ -690,6 +691,39 @@ class SellerController extends Controller
     }
 
     /**
+     * 余额调整记录（后台充值/扣除记录）
+     */
+    public function wallet_logs(Request $request) {
+        $seller_id = $request->get('seller_id');
+        $date_range = $request->get('date_range');
+        $type = $request->get('type');
+        $start_time = null;
+        $end_time = null;
+
+        $walletLogs = WalletExpenseLog::query()->whereIn('type', ['admin_recharge', 'admin_deduct'])->orderByDesc('id');
+
+        if ($request->date_range) {
+            $date_var = explode("/", $request->date_range);
+            $start_time = trim($date_var[0]);
+            $end_time = trim($date_var[1]);
+            $walletLogs = $walletLogs->where('created_at', '>=', $start_time);
+            $walletLogs = $walletLogs->where('created_at', '<=', $end_time . " 23:59:59");
+        }
+        if ($seller_id) {
+            $walletLogs = $walletLogs->where('user_id', $seller_id);
+        }
+        if ($type) {
+            $walletLogs = $walletLogs->where('type', $type);
+        }
+
+        $walletLogs = $walletLogs->paginate(20);
+
+        $sellers = User::where('user_type', 'seller')->get();
+
+        return view('backend.sellers.wallet_logs', compact('walletLogs', 'seller_id', 'date_range', 'type', 'sellers'));
+    }
+
+    /**
      * 转移卖家到指定的员工名称(责任人)
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -744,10 +778,21 @@ class SellerController extends Controller
 
         if ($recharge_type == 'add') {
             $seller->balance += $recharge_amount;
+            $log_type = 'admin_recharge';
         } else if ($recharge_type == 'reduce') {
             $seller->balance -= $recharge_amount;
+            $log_type = 'admin_deduct';
+        } else {
+            return response()->json(['success' => 0, 'msg' => '类型错误']);
         }
         $seller->save();
+
+        $walletExpenseLog = new WalletExpenseLog();
+        $walletExpenseLog->user_id = $seller->id;
+        $walletExpenseLog->target_id = 0;
+        $walletExpenseLog->amount = $recharge_amount;
+        $walletExpenseLog->type = $log_type;
+        $walletExpenseLog->save();
 
         return response()->json(['success' => 1, 'msg' => '保存成功']);
     }

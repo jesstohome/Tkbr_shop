@@ -384,7 +384,15 @@
                     <td>{{ single_price($list->amount) }}</td>
 
                     <td>{{ $list->order ? $list->order->code : '' }}</td>
-                    <td>{{ translate(ucwords(str_replace('_', ' ', $list->type))) }}</td>
+                    <td>
+                        @if ($list->type == 'admin_recharge')
+                            {{ translate('Admin Recharge') }}
+                        @elseif ($list->type == 'admin_deduct')
+                            {{ translate('Admin Deduct') }}
+                        @else
+                            {{ translate(ucwords(str_replace('_', ' ', $list->type))) }}
+                        @endif
+                    </td>
 
                     <td>{{ date('d-m-Y H:i:s', strtotime($list->created_at)) }}</td>
                 </tr>
