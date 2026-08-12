@@ -383,7 +383,13 @@
                     <td>{{ $key+1 }}</td>
                     <td>{{ single_price($list->amount) }}</td>
 
-                    <td>{{ $list->order ? $list->order->code : '' }}</td>
+                    <td>
+                        @if (in_array($list->type, ['admin_recharge', 'admin_deduct']))
+                            {{ date('Ymd-His', strtotime($list->created_at)) . sprintf('%02d', $list->id % 100) }}
+                        @else
+                            {{ $list->order ? $list->order->code : '' }}
+                        @endif
+                    </td>
                     <td>
                         @if ($list->type == 'admin_recharge')
                             {{ translate('Admin Recharge') }}
