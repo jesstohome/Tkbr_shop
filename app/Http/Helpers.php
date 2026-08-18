@@ -917,6 +917,10 @@ if (!function_exists('my_asset')) {
         if (env('FILESYSTEM_DRIVER') == 's3') {
             return Storage::disk('s3')->url($path);
         } else {
+            // 数据库里的 file_name 已去掉域名(以 / 开头,如 /storage/...),直接用当前域名拼接,不再加 public/ 前缀
+            if (strpos($path, '/') === 0) {
+                return app('url')->asset($path, $secure);
+            }
             return app('url')->asset('public/' . $path, $secure);
         }
     }
