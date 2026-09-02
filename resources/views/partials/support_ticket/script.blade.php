@@ -283,8 +283,34 @@
     // 按键盘发送按钮的事件
     function submitReply() {
         if (event.keyCode == 13) {
+            event.preventDefault();
             submit_reply('pending');
         }
+    }
+
+    // 在输入框光标处插入换行
+    function insertLineBreak() {
+        var el = document.querySelector('[name=reply]');
+        if (!el) return;
+        el.focus();
+        if (typeof el.selectionStart === 'number') {
+            var start = el.selectionStart;
+            var end = el.selectionEnd;
+            el.value = el.value.substring(0, start) + "\n" + el.value.substring(end);
+            el.selectionStart = el.selectionEnd = start + 1;
+        } else {
+            el.value += "\n";
+        }
+        el.scrollTop = el.scrollHeight;
+    }
+
+    // 消息内容转义并保留换行
+    function format_reply_html(text) {
+        if (!text) return '';
+        return String(text)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+            .replace(/\r\n|\r|\n/g, '<br>');
     }
 
     // 打开文件选择对话框
@@ -308,7 +334,7 @@
         }
 
         $('input[name=status]').val(status);
-        if($('input[name=reply]').val().length > 0 || $("input[name=attachments]").val() != '') {
+        if($('[name=reply]').val().length > 0 || $("input[name=attachments]").val() != '') {
             var data = new FormData( $( '#ticket-reply-form' )[0] );
             data.delete('file');
 
@@ -324,7 +350,7 @@
 
                     attachment_ids = [];
                     $("input[name=attachments]").val('');
-                    $("input[name=reply]").val('');
+                    $('[name=reply]').val('');
                     $("#fileInput").val('');
                     $(".remove-attachment").click();
                     if (!response.success) {
@@ -437,7 +463,7 @@
                                 <div class="media-body">
                                     <div class="comment-header">
                                         <span class="text-bold h6 text-muted title">
-                                            ${item.reply}
+                                            ${format_reply_html(item.reply)}
                                             <div class="images ${item.user_id == user_id ? 'mine' : ''}">${images}</div>
                                             <p class="text-muted text-sm fs-11 time">${item.created_time} ${isReadHtml}</p>
                                         </span>
@@ -454,7 +480,7 @@
                         // 自己发送的，在右边
                         if ((item.reply || '').trim() !== '') {
                             $(".chatlist").append(`<div class="chat mine"><div class="btext">
-                    <span class="bspan">${item.reply}</span>
+                    <span class="bspan">${format_reply_html(item.reply)}</span>
 <img src="{{ Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head2.png') }}" class="head" style="margin-left: 8px;" />
                     </div></div>`);
                         }
@@ -470,7 +496,7 @@
                         if ((item.reply || '').trim() !== '') {
                             $(".chatlist").append(`<div class="chat" data-id="${item.id}"><div class="atext">
 
-<img src="{{ static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" /><span class="aspan">${item.reply}</span>
+<img src="{{ static_asset('assets/img/chat/head1.png') }}" class="head" style="margin-right: 8px;" /><span class="aspan">${format_reply_html(item.reply)}</span>
                     </div></div>`);
                         }
 

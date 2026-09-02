@@ -84,7 +84,7 @@
             var data = obj.data; // 获得当前行数据
             // console.log(obj)
             if(obj.event === 'send'){
-                $("input[name=reply]").val(data.content)
+                $("[name=reply]").val(data.content)
                 submit_reply();
                 $('#fast_reply_modal').modal('hide');
             } else if(obj.event === 'del'){

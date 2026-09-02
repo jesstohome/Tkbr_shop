@@ -104,7 +104,7 @@
                                 <div class="media-body">
                                     <div class="comment-header">
                                         <span class="text-bold h6 text-muted title">
-                                            @php echo $ticketreply->reply; @endphp
+                                            @php echo nl2br(e($ticketreply->reply)); @endphp
                                             @if($ticketreply->files)
                                             <div class="images {{$ticketreply->user->id == Auth::id() ? 'mine' : ''}}">
                                                 @if (strpos($ticketreply->files, "base64") === false)
@@ -160,10 +160,11 @@
                 </div>
                 <div class="form-group row">
                     <div class="col-md-8">
-                        <input class="form-control" type="text" name="reply" value="" />
+                        <textarea class="form-control" name="reply" rows="2" placeholder="{{ translate('Please enter your question') }}"></textarea>
                     </div>
                     <div class="col-md-4">
                         <button type="button" class="btn btn-sm btn-primary" onclick="show_fast_reply_modal()">{{ translate('Select Fast Reply') }}</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="insertLineBreak()">{{ translate('New Line') }}</button>
                         <button type="submit" class="btn btn-sm btn-primary" onclick="submit_reply('pending')">{{ translate('Send Reply') }}</button>
                     </div>
                 </div>

@@ -160,10 +160,29 @@
     .seller-support-chat-mobile .input {
         width: 100%;
         height: 38px;
-        padding: 0 12px;
+        padding: 8px 12px;
         border: 1px solid #e2e8f0;
         border-radius: 10px;
         background: #ffffff;
+        resize: none;
+        overflow-y: auto;
+        line-height: 1.4;
+    }
+
+    .seller-support-chat-mobile .newline {
+        height: 38px;
+        min-width: 38px;
+        margin-left: 8px;
+        padding: 0 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #f1f5f9;
+        color: #334155;
+        font-size: 12px;
+        cursor: pointer;
+        flex: 0 0 auto;
     }
 
     .seller-support-chat-mobile .senddiv {
@@ -229,7 +248,7 @@
                             @endif
 
                             @if($ticketreply->reply)
-                                <span class="bspan">@php echo empty($ticketreply->user_id) || -1 == $ticketreply->user_id ? translate($ticketreply->reply) : $ticketreply->reply; @endphp</span> @endif
+                                <span class="bspan">@php $reply_text = empty($ticketreply->user_id) || -1 == $ticketreply->user_id ? translate($ticketreply->reply) : $ticketreply->reply; echo nl2br(e($reply_text)); @endphp</span> @endif
                             <img src="{{Auth::user()->avatar_original ? uploaded_asset(Auth::user()->avatar_original) : static_asset('assets/img/chat/head2.png')}}" class="head" style="margin-left: 8px;" />
                         </div>
                 @else
@@ -250,7 +269,7 @@
                             @endif
 
                             @if($ticketreply->reply)
-                                <span class="aspan">@php echo empty($ticketreply->user_id) || -1 == $ticketreply->user_id ? translate($ticketreply->reply) : $ticketreply->reply; @endphp</span>@endif
+                                <span class="aspan">@php $reply_text = empty($ticketreply->user_id) || -1 == $ticketreply->user_id ? translate($ticketreply->reply) : $ticketreply->reply; echo nl2br(e($reply_text)); @endphp</span>@endif
                         </div>
                 @endif
 
@@ -272,8 +291,10 @@
                 <input type="hidden" name="attachments" class="selected-files">
                 <input type="file" id="fileInput" name="file" style="display: none;" />
 
-                <input class="input" placeholder="{{translate('Please enter your question')}}" name="reply" onkeydown="submitReply()" enterkeyhint="send" />
+                <textarea class="input" placeholder="{{translate('Please enter your question')}}" name="reply" onkeydown="submitReply()" enterkeyhint="send"></textarea>
             </form>
+
+            <div class="message newline" onclick="insertLineBreak()">{{ translate('New Line') }}</div>
 
             <div class="senddiv">
                 <div class="message send" onclick="submit_reply('pending')">{{ translate('Send') }}</div>
