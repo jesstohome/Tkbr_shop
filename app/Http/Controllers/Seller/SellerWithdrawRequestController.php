@@ -95,9 +95,16 @@ class SellerWithdrawRequestController extends Controller
                     flash(translate('withdraw exited'))->error();
                     return back();
                 }
-                if (empty($user->shop->usdt_type) || empty($user->shop->usdt_address)) {
-                    flash(translate('Please set your crypto wallet information first'))->error();
-                    return redirect(route('seller.profile.index'));
+                if ($request->w_type == 2) {
+                    if (empty($user->shop->bank_acc_name) || empty($user->shop->bank_acc_no) || empty($user->shop->bank_name) || empty($user->shop->bank_address)) {
+                        flash(translate('Please bind your bank card first'))->error();
+                        return redirect(route('seller.profile.index') . '#bank_card_section');
+                    }
+                } else {
+                    if (empty($user->shop->usdt_type) || empty($user->shop->usdt_address)) {
+                        flash(translate('Please set your crypto wallet information first'))->error();
+                        return redirect(route('seller.profile.index') . '#bank_card_section');
+                    }
                 }
 
                 $currency = Currency::query()->where('code', $request->currency)->first();

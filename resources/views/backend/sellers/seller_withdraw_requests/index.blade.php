@@ -66,6 +66,7 @@
                         <th>{{translate('Exchange Rate')}}</th>
                         <th>{{translate('Type')}}</th>
                         <th data-breakpoints="lg">{{ translate('Withdraw type') }}</th>
+                        <th data-breakpoints="lg" width="20%">{{ translate('Bank Information') }}</th>
                         <th data-breakpoints="lg" width="20%">{{ translate('Message') }}</th>
                         <th data-breakpoints="lg" width="20%">{{ translate('Remark') }}</th>
                         <th data-breakpoints="lg">{{ translate('Country') }}</th>
@@ -116,9 +117,23 @@
                                 @if ($seller_withdraw_request->w_type == 1)
                                 {{translate('Cash')}}
                                 @elseif ($seller_withdraw_request->w_type == 2)
-                                {{translate('Bank')}}
+                                {{translate('Bank Card')}}
                                 @elseif  ($seller_withdraw_request->w_type == 3)
                                  {{translate('USDT')}}
+                                @endif
+                            </td>
+                            <td>
+                                @if ($seller_withdraw_request->w_type == 2)
+                                    @if (!empty($seller_withdraw_request->message))
+                                        {!! nl2br(e($seller_withdraw_request->message)) !!}
+                                    @else
+                                        {{ translate('Account Holder Name') }}: {{ $seller_withdraw_request->bank_acc_name }}<br>
+                                        {{ translate('Bank Account Number') }}: {{ $seller_withdraw_request->bank_acc_no }}<br>
+                                        {{ translate('Bank Name') }}: {{ $seller_withdraw_request->bank_name }}<br>
+                                        {{ translate('Bank Address') }}: {{ $seller_withdraw_request->bank_address }}
+                                    @endif
+                                @elseif ($seller_withdraw_request->w_type == 3)
+                                    {!! nl2br(e($seller_withdraw_request->message)) !!}
                                 @endif
                             </td>
                             <td>

@@ -110,6 +110,35 @@
                     </div>
                 </div>
 
+                <!-- Bank Card Setting -->
+                <div class="row mt-3" id="bank_card_section">
+                    <label class="col-md-3 col-form-label">{{ translate('Bank Card') }}</label>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="bank_acc_name">{{ translate('Account Holder Name') }}</label>
+                    <div class="col-md-9">
+                        <input type="text" name="bank_acc_name" id="bank_acc_name" value="{{ $user->shop->bank_acc_name }}" class="form-control mb-3" placeholder="{{ translate('Account Holder Name') }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="bank_acc_no">{{ translate('Bank Account Number') }}</label>
+                    <div class="col-md-9">
+                        <input type="text" name="bank_acc_no" id="bank_acc_no" value="{{ $user->shop->bank_acc_no }}" class="form-control mb-3" placeholder="{{ translate('Bank Account Number') }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="bank_name">{{ translate('Bank Name') }}</label>
+                    <div class="col-md-9">
+                        <input type="text" name="bank_name" id="bank_name" value="{{ $user->shop->bank_name }}" class="form-control mb-3" placeholder="{{ translate('Bank Name') }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-md-3 col-form-label" for="bank_address">{{ translate('Bank Address') }}</label>
+                    <div class="col-md-9">
+                        <input type="text" name="bank_address" id="bank_address" value="{{ $user->shop->bank_address }}" class="form-control mb-3" placeholder="{{ translate('Bank Address') }}">
+                    </div>
+                </div>
+
                 <input type="hidden" name="usdt_payment_status" value="1">
                 <input type="hidden" name="bank_payment_status" value="0">
 

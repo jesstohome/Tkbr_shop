@@ -35,6 +35,10 @@ class SellerWithdrawRequestController extends Controller
             $table_name.".*",
             "shops.name as shop_name",
             "shops.admin_to_pay",
+            "shops.bank_acc_name",
+            "shops.bank_acc_no",
+            "shops.bank_name",
+            "shops.bank_address",
             "users.name as user_name",
             "users.balance",
         ])->orderBy($table_name. ".id", "DESC");

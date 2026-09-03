@@ -54,7 +54,28 @@
                         <td>{{ single_price($seller_withdraw_request->amount) }}</td>
                     @endif
                 </tr>
-                @if ($user->shop->usdt_payment_status == 1)
+                @if ($seller_withdraw_request->w_type == 2)
+                    <tr>
+                        <td>{{ translate('Withdraw Type') }}</td>
+                        <td>{{ translate('Bank Card') }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ translate('Account Holder Name') }}</td>
+                        <td>{{ $user->shop->bank_acc_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ translate('Bank Account Number') }}</td>
+                        <td>{{ $user->shop->bank_acc_no }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ translate('Bank Name') }}</td>
+                        <td>{{ $user->shop->bank_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ translate('Bank Address') }}</td>
+                        <td>{{ $user->shop->bank_address }}</td>
+                    </tr>
+                @elseif ($user->shop->usdt_payment_status == 1)
                     <tr>
                         <td>{{ translate('Network') }}</td>
                         <td>{{ $user->shop->usdt_type }}</td>

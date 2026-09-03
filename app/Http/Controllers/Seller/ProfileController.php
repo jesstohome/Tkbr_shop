@@ -142,6 +142,7 @@ class ProfileController extends Controller
             $shop->bank_acc_name = $request->bank_acc_name;
             $shop->bank_acc_no = $request->bank_acc_no;
             $shop->bank_routing_no = $request->bank_routing_no;
+            $shop->bank_address = $request->bank_address;
             $shop->usdt_address = $request->usdt_address;
             $shop->usdt_payment_status = $request->usdt_payment_status;
             $shop->usdt_type = $request->usdt_type;

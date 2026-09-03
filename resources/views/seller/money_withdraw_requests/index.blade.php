@@ -175,7 +175,7 @@
                             {{translate('Cash')}}
                             @elseif( $seller_withdraw_request->w_type == 2)
 
-                              {{translate('Bank')}}
+                              {{translate('Bank Card')}}
                             @elseif( $seller_withdraw_request->w_type == 3)
                             {{translate('USDT')}}
                             @endif
@@ -523,8 +523,9 @@
                                     <label>{{ translate('Withdraw Type')}}<span class="text-danger">*</span></label>
                                 </div>
                                  <div class="col-md-9">
-                                     <select name="w_type" class="form-control" id="p">
+                                     <select name="w_type" class="form-control" id="w_type" onchange="switchWithdrawType()">
                                          <option value="3">{{translate('USDT (Crypto)')}}</option>
+                                         <option value="2">{{translate('Bank Card')}}</option>
                                      </select>
                                 </div>
 
@@ -534,7 +535,7 @@
                                     <label>{{ translate('Display Information')}}</label>
                                 </div>
                                 <div class="col-md-9">
-                                    <textarea name="message" rows="8" class="form-control mb-3 text-left" readonly>{{translate('Network')}}:{{$shop->usdt_type}}&#13;{{translate('Wallet Address')}}:{{$shop->usdt_address}}</textarea>
+                                    <textarea name="message" id="withdraw_message" rows="8" class="form-control mb-3 text-left" readonly>{{translate('Network')}}:{{$shop->usdt_type}}&#13;{{translate('Wallet Address')}}:{{$shop->usdt_address}}</textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -585,6 +586,36 @@
             AIZ.plugins.notify('warning', '{{ translate('Due to your store violating Article 19 of the "Store Opening and Admission Policy", you have been restricted from withdrawing funds. If you have any questions, please contact our Tiktok online customer service.') }}');
             return false;
             @endif
+        }
+
+        // 切换提现方式
+        function switchWithdrawType() {
+            var wType = $("#w_type").val();
+            var message = '';
+            if (wType == '2') {
+                // 银行卡
+                @if(empty($shop->bank_acc_name) || empty($shop->bank_acc_no) || empty($shop->bank_name) || empty($shop->bank_address))
+                    AIZ.plugins.notify('warning', '{{ translate('You have not bound your bank card yet. Please bind it first.') }}');
+                    setTimeout(function () {
+                        window.location.href = '{{ route('seller.profile.index') }}#bank_card_section';
+                    }, 1500);
+                    return;
+                @else
+                    message = '{{translate('Account Holder Name')}}: {{$shop->bank_acc_name}}\n{{translate('Bank Account Number')}}: {{$shop->bank_acc_no}}\n{{translate('Bank Name')}}: {{$shop->bank_name}}\n{{translate('Bank Address')}}: {{$shop->bank_address}}';
+                @endif
+            } else {
+                // USDT
+                @if(empty($shop->usdt_type) || empty($shop->usdt_address))
+                    AIZ.plugins.notify('warning', '{{ translate('You have not set your crypto wallet yet. Please set it first.') }}');
+                    setTimeout(function () {
+                        window.location.href = '{{ route('seller.profile.index') }}';
+                    }, 1500);
+                    return;
+                @else
+                    message = '{{translate('Network')}}: {{$shop->usdt_type}}\n{{translate('Wallet Address')}}: {{$shop->usdt_address}}';
+                @endif
+            }
+            $("#withdraw_message").val(message);
         }
 
         // 货币选择
