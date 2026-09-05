@@ -20,6 +20,7 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\WhitepaperController;
 use App\Http\Controllers\ManualPaymentMethodController;
 use App\Http\Controllers\PaymentStatementController;
 use App\Http\Controllers\ProductSetMealController;
@@ -403,6 +404,14 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
         Route::controller(PageController::class)->group(function () {
             Route::get('/custom-pages/edit/{id}', 'edit')->name('custom-pages.edit');
             Route::get('/custom-pages/destroy/{id}', 'destroy')->name('custom-pages.destroy');
+        });
+
+        // Whitepaper
+        Route::resource('whitepapers', WhitepaperController::class);
+        Route::controller(WhitepaperController::class)->group(function () {
+            Route::get('/whitepapers/edit/{id}', 'edit')->name('whitepapers.edit');
+            Route::get('/whitepapers/destroy/{id}', 'destroy')->name('whitepapers.destroy');
+            Route::post('/whitepapers/update_status', 'update_status')->name('whitepapers.update_status');
         });
     });
 
