@@ -20,6 +20,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\WhitepaperController;
 use App\Http\Controllers\Payment\HtpayController;
 use App\Http\Controllers\Payment\IndiaHtpayController;
 use App\Http\Controllers\Payment\QepayController;
@@ -458,6 +459,13 @@ Route::get('/payku/callback/{id}', [PaykuController::class, 'callback'])->name('
 Route::controller(BlogController::class)->group(function () {
     Route::get('/blog', 'all_blog')->name('blog');
     Route::get('/blog/{slug}', 'blog_details')->name('blog.details');
+});
+
+//Whitepaper Section
+Route::controller(WhitepaperController::class)->group(function () {
+    Route::get('/whitepapers', 'all_whitepapers')->name('whitepapers.all');
+    Route::get('/whitepaper/{slug}', 'show_whitepaper')->name('whitepapers.details');
+    Route::get('/whitepaper/{slug}/download', 'download_whitepaper')->name('whitepapers.download');
 });
 
 Route::controller(PageController::class)->group(function () {
