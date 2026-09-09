@@ -25,6 +25,7 @@
             <div class="card-body">
                 <form id="edit_form" class="form-horizontal" action="{{ route('whitepapers.update', $whitepaper->id) }}" method="POST">
                     @csrf
+                    @method('PUT')
                     <input type="hidden" name="lang" value="{{ $lang }}">
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label">

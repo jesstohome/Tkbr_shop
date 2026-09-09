@@ -83,7 +83,9 @@ class SupportTicketController extends Controller
         if ($request->has('search')){
             $sort_search = $request->search;
             if (!empty($sort_search)) {
-                $userIds = User::query()->where("email", 'like', "%{$sort_search}%")->pluck("id")->toArray();
+                $userIds = User::query()->where("email", 'like', "%{$sort_search}%")
+                    ->orWhere("name", 'like', "%{$sort_search}%")
+                    ->pluck("id")->toArray();
                 $shopUserIds = Shop::query()->where("name", 'like', "%{$sort_search}%")->pluck("user_id")->toArray();
                 $userIds = array_merge($userIds, $shopUserIds);
                 if (!empty($userIds)) {
