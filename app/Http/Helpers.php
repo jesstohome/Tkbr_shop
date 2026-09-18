@@ -1545,7 +1545,8 @@ if (!function_exists('scheduled_update_delivery_status')) {
             if (!empty($delivery_status) && $order->delivery_status != $delivery_status) {
                 $order->delivery_status = $delivery_status;
                 // 到已签收状态时，重置订单的冻结时间
-                if ($delivery_status == 'delivered') {
+                // 已解冻过的订单（unfreeze_time 非空）不再重新冻结，避免二次释放重复打款
+                if ($delivery_status == 'delivered' && empty($order->unfreeze_time)) {
                     $freezeDays = get_setting('frozen_funds_unfrozen_days', 15);
                     $order->freeze_expired_at = \Illuminate\Support\Carbon::now()->addDays($freezeDays)->timestamp;
                     Log::debug(var_export([

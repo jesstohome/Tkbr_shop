@@ -277,27 +277,8 @@ id: 1
 
             return redirect()->route('withdraw_requests_all');
         } else {
-            $payment_data = $request->session()->get('payment_data');
-
-//            $shop = Shop::findOrFail($payment_data['shop_id']);
-//            $shop->admin_to_pay = $shop->admin_to_pay - $payment_data['amount'];
-//            $shop->save();
-            $user->balance = $user->balance + $payment_data['amount'];
-            $user->save();
-
-            $payment = new Payment;
-            $payment->bloc_id = $user->bloc_id;
-            $payment->staff_id = $user->staff_id;
-            $payment->seller_id = $user->id;
-            $payment->amount = $payment_data['amount'];
-            $payment->payment_method = 'Seller paid to admin';
-            $payment->txn_code = $payment_data['txn_code'];
-            $payment->payment_details = null;
-            $payment->t_type = $withdrawRequest->t_type;
-            $payment->save();
-
-            flash(translate('Payment completed'))->success();
-            return redirect()->route('withdraw_requests_all');
+            // 手动支付方式（USDT 等）：按人工出款处理，只记账不退还余额
+            return $this->seller_payment_done($request->session()->get('payment_data'), null, $withdrawRequest, $user);
         }
     }
 
