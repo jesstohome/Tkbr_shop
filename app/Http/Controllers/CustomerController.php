@@ -54,10 +54,10 @@ class CustomerController extends Controller
             $bloc_id = Auth::user()->bloc_id;
             $staff_id = get_staff_id();
             if (!empty($staff_id)) {
-                // 普通员工，最多只能添加100个虚拟卖家
+                // 普通员工，最多只能添加300个虚拟卖家
                 if (!isSupperAdmin() && !isBlocManage()) {
                     $count = User::query()->where('user_type', 'customer')->where("staff_id", $staff_id)->count();
-                    if ($count + $max >= 100) {
+                    if ($count + $max >= 300) {
                         return -1;
                     }
                 }

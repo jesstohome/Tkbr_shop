@@ -293,7 +293,7 @@
                                 window.location.reload()
                             }, 500 )
                         } else if (res == -1) {
-                            AIZ.plugins.notify( 'danger', '{{translate('You can only create up to 100 virtual buyers')}}' );
+                            AIZ.plugins.notify( 'danger', '{{translate('You can only create up to 300 virtual buyers')}}' );
                             target.removeClass( 'disabled' );
                         } else {
                             AIZ.plugins.notify( 'danger', '{{translate('Executed failure Try again')}}' );
