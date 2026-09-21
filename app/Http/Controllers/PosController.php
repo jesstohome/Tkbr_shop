@@ -656,6 +656,18 @@ class PosController extends Controller
             if ($staff_id) {
                 $conversations = $conversations->where("staff_id", $staff_id);
             }
+            // 按卖家邮箱筛选
+            $seller_email = $request->seller_email;
+            if ($seller_email) {
+                $seller_ids = User::query()->where('user_type', 'seller')->where('email', 'like', '%' . $seller_email . '%')->pluck('id')->toArray();
+                $conversations = $conversations->whereIn('receiver_id', $seller_ids ?: [-1]);
+            }
+            // 按卖家姓名筛选
+            $seller_name = $request->seller_name;
+            if ($seller_name) {
+                $seller_ids = User::query()->where('user_type', 'seller')->where('name', 'like', '%' . $seller_name . '%')->pluck('id')->toArray();
+                $conversations = $conversations->whereIn('receiver_id', $seller_ids ?: [-1]);
+            }
             if ($request->date_range) {
                 $date_range = $request->date_range;
                 $date_range1 = explode("/", $request->date_range);
@@ -667,7 +679,7 @@ class PosController extends Controller
 
             del_plus('new_pos_conversation_tip');
 
-            return view('pos.conversations.index', compact('conversations', 'seller_id', 'bloc_id', 'staff_id', 'date_range'));
+            return view('pos.conversations.index', compact('conversations', 'seller_id', 'bloc_id', 'staff_id', 'date_range', 'seller_email', 'seller_name'));
         } else {
             flash(translate('Conversation is disabled at this moment'))->warning();
             return back();

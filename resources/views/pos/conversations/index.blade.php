@@ -34,7 +34,7 @@
                         <input type="text" class="form-control form-control-sm aiz-date-range" id="search" name="date_range"@isset($date_range) value="{{ $date_range }}" @endisset placeholder="{{ translate('Daterange') }}" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-md-2 ml-auto">
+                <div class="col-md-2">
                     <select class="form-control aiz-selectpicker" name="seller_id" id="seller_id" data-live-search="true">
                         <option value="">{{translate('Filter by Shop')}}</option>
                         @foreach(filter_by_bloc(\App\Models\User::query()->where('user_type', 'seller'))->get() as $seller)
@@ -42,8 +42,20 @@
                         @endforeach
                     </select>
                 </div>
-                <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
-                <button class="btn btn-md btn-primary" type="reset" onclick="reset_form()">重置</button>
+                <div class="col-md-2">
+                    <div class="form-group mb-0">
+                        <input type="text" class="form-control form-control-sm" name="seller_email" value="{{ $seller_email ?? '' }}" placeholder="{{ translate('Seller Email') }}">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group mb-0">
+                        <input type="text" class="form-control form-control-sm" name="seller_name" value="{{ $seller_name ?? '' }}" placeholder="{{ translate('Seller Name') }}">
+                    </div>
+                </div>
+                <div class="col-auto d-flex align-items-center mb-2 mb-md-0">
+                    <button type="submit" class="btn btn-success btn-styled">{{ translate('Search') }}</button>
+                    <button class="btn btn-md btn-primary ml-1" type="reset" onclick="reset_form()">重置</button>
+                </div>
             </div>
         </form>
       <div class="card-body">
