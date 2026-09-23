@@ -144,7 +144,7 @@
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label">{{translate('Mail Subject')}}</label>
                         <div class="col-md-9">
-                            <input type="text" class="form-control" name="email_verification_subject" value="{{ get_setting('email_verification_subject') ?: translate('Email Verification') }}" placeholder="{{ translate('Email Verification') }}">
+                            <input type="text" class="form-control" name="email_verification_subject" value="{{ get_setting('email_verification_subject') ?: translate('Email Verification Code') }}" placeholder="{{ translate('Email Verification Code') }}">
                         </div>
                     </div>
                     <div class="form-group row">

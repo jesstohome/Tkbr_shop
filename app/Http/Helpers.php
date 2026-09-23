@@ -1020,6 +1020,15 @@ if (!function_exists('get_setting')) {
     }
 }
 
+// 注册验证码邮件标题：发送端与邮件拦截器共用，保证两边取到的标题一致，避免注册验证邮件被误拦截
+if (!function_exists('get_email_verification_subject')) {
+    function get_email_verification_subject()
+    {
+        $subject = get_setting('email_verification_subject');
+        return empty($subject) ? translate('Email Verification Code') : $subject;
+    }
+}
+
 if (!function_exists('get_admin_setting')) {
     function get_admin_setting($key, $default = null, $lang = false)
     {

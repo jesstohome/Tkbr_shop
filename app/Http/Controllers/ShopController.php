@@ -405,8 +405,7 @@ class ShopController extends Controller
         Cache::put('shop_email_code:' . $email, $code, 600);
         Cache::put('shop_email_code_cooldown:' . $email, 1, 60);
 
-        $subject = get_setting('email_verification_subject');
-        if (empty($subject)) $subject = translate('Email Verification');
+        $subject = get_email_verification_subject();
         $content = get_setting('email_verification_content');
         if (empty($content)) $content = translate('Your verification code is: {code}');
         $content = str_replace('{code}', $code, $content);
