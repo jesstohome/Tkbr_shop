@@ -374,6 +374,7 @@ Route::group(['middleware' => ['auth', 'unbanned']], function() {
     });
 });
 
+Route::post('/shops/send_verification_code', [ShopController::class, 'send_verification_code'])->name('shops.send_verification_code');
 Route::resource('shops', ShopController::class);
 Route::post('/shops/create_virtual_sellers', [ShopController::class, 'create_virtual_sellers'])->name('shops.create_virtual_sellers');
 

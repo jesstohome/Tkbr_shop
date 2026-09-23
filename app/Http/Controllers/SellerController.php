@@ -24,7 +24,6 @@ use App\Models\WalletExpenseLog;
 use Illuminate\Support\Facades\Hash;
 use App\Models\SellerPackagePayment;
 use App\Models\SellerPackage;
-use App\Notifications\EmailVerificationNotification;
 use Cache;
 use Illuminate\Support\Facades\Log;
 use function compact;
@@ -290,11 +289,8 @@ class SellerController extends Controller
         $user->password = Hash::make($request->password);
 
         if ($user->save()) {
-            if (get_setting('email_verification') != 1) {
-                $user->email_verified_at = date('Y-m-d H:m:s');
-            } else {
-                $user->notify(new EmailVerificationNotification());
-            }
+            // 后台创建的卖家不再受邮箱验证开关影响，直接置为已验证
+            $user->email_verified_at = date('Y-m-d H:m:s');
             $user->save();
 
             $seller = new Seller;

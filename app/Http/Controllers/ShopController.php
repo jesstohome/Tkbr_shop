@@ -14,8 +14,10 @@ use App\Models\SellerPackage;
 use App\Models\BusinessSetting;
 use App\Models\SellerPackagePayment;
 use Auth;
+use Cache;
 use Hash;
-use App\Notifications\EmailVerificationNotification;
+use Mail;
+use App\Mail\EmailManager;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Monolog\Logger;
@@ -142,6 +144,16 @@ class ShopController extends Controller
                 if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Email already exists!')]);
                 flash(translate('Email already exists!'))->error();
                 return back();
+            }
+
+            // 邮箱验证开关开启时，注册前校验邮箱验证码
+            if (get_setting('email_verification') == 1) {
+                $verification_code = $request->verification_code;
+                if (empty($verification_code) || Cache::get('shop_email_code:' . $request->email) != $verification_code) {
+                    if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Verification code error or expired!')]);
+                    flash(translate('Verification code error or expired!'))->error();
+                    return back();
+                }
             }
 
             // 检测店铺名是否已经存在
@@ -349,7 +361,10 @@ class ShopController extends Controller
                 }
                 else
                 {
-                    $user->notify(new EmailVerificationNotification());
+                    // 注册时已通过验证码校验，直接置为已验证并清除验证码缓存
+                    $user->email_verified_at = date('Y-m-d H:m:s');
+                    $user->save();
+                    Cache::forget('shop_email_code:' . $user->email);
                 }
 
                 // redis cache red tips
@@ -369,6 +384,49 @@ class ShopController extends Controller
         if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Sorry! Something went wrong.')]);
         flash(translate('Sorry! Something went wrong.'))->error();
         return back();
+    }
+
+    /**
+     * 商家注册：发送邮箱验证码
+     */
+    public function send_verification_code( Request $request ) {
+        $email = trim($request->email ?? '');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['success' => 0, 'msg' => translate('Please enter a valid email address')]);
+        }
+        if (User::where('email', $email)->first() != null) {
+            return response()->json(['success' => 0, 'msg' => translate('Email already exists!')]);
+        }
+        if (Cache::has('shop_email_code_cooldown:' . $email)) {
+            return response()->json(['success' => 0, 'msg' => translate('Please wait 60 seconds before resending')]);
+        }
+
+        $code = (string) rand(100000, 999999);
+        Cache::put('shop_email_code:' . $email, $code, 600);
+        Cache::put('shop_email_code_cooldown:' . $email, 1, 60);
+
+        $subject = get_setting('email_verification_subject');
+        if (empty($subject)) $subject = translate('Email Verification');
+        $content = get_setting('email_verification_content');
+        if (empty($content)) $content = translate('Your verification code is: {code}');
+        $content = str_replace('{code}', $code, $content);
+        if (strpos($content, $code) === false) $content .= ' ' . $code;
+
+        $array = [];
+        $array['view'] = 'emails.app_verification';
+        $array['subject'] = $subject;
+        $array['from'] = env('MAIL_FROM_ADDRESS');
+        $array['content'] = $content;
+
+        try {
+            Mail::to($email)->send(new EmailManager($array));
+        } catch (\Throwable $ex) {
+            Cache::forget('shop_email_code:' . $email);
+            Cache::forget('shop_email_code_cooldown:' . $email);
+            return response()->json(['success' => 0, 'msg' => translate('Email sending failed, please check SMTP settings')]);
+        }
+
+        return response()->json(['success' => 1, 'msg' => translate('Verification code sent successfully')]);
     }
 
     /**

@@ -134,6 +134,34 @@
         </div>
         <div class="card">
             <div class="card-header">
+                <h5 class="mb-0 h6">{{translate('Email Verification Mail Settings')}}</h5>
+            </div>
+            <div class="card-body">
+                <form class="form-horizontal" action="{{ route('business_settings.update') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="types[]" value="email_verification_subject">
+                    <input type="hidden" name="types[]" value="email_verification_content">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Mail Subject')}}</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="email_verification_subject" value="{{ get_setting('email_verification_subject') ?: translate('Email Verification') }}" placeholder="{{ translate('Email Verification') }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Mail Content')}}</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" name="email_verification_content" rows="4" placeholder="{{ translate('Your verification code is: {code}') }}">{{ get_setting('email_verification_content') ?: translate('Your verification code is: {code}') }}</textarea>
+                            <small class="text-muted">{{ translate('Use {code} as placeholder for the verification code') }}</small>
+                        </div>
+                    </div>
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
                 <h5 class="mb-0 h6">{{translate('Instruction')}}</h5>
             </div>
             <div class="card-body">

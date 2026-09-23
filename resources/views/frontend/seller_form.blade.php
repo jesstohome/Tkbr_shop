@@ -39,8 +39,21 @@
                                 </div>
                                 <div class="form-group">
                                     <label>{{ translate('Your Email')}} <span class="text-primary">*</span></label>
-                                    <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email">
+                                    <div class="input-group">
+                                        <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{  translate('Email') }}" name="email">
+                                        @if(get_setting('email_verification') == 1)
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-outline-primary" id="send_email_code">{{ translate('Send Code') }}</button>
+                                        </div>
+                                        @endif
+                                    </div>
                                 </div>
+                                @if(get_setting('email_verification') == 1)
+                                <div class="form-group">
+                                    <label>{{ translate('Verification Code')}} <span class="text-primary">*</span></label>
+                                    <input type="text" class="form-control" placeholder="{{  translate('Verification Code') }}" name="verification_code">
+                                </div>
+                                @endif
                                 <div class="form-group">
                                     <label>{{ translate('Your Password')}} <span class="text-primary">*</span></label>
                                     <div style="position: relative">
@@ -170,6 +183,12 @@
                 AIZ.plugins.notify('danger', '{{translate('The email is required and cannot be empty')}}');
                 return false;
             }
+            @if(get_setting('email_verification') == 1)
+            if ($("input[name=verification_code]").val().trim() === '') {
+                AIZ.plugins.notify('danger', '{{translate('The verification code is required and cannot be empty')}}');
+                return false;
+            }
+            @endif
             if ($("input[name=password]").val().trim() === '') {
                 AIZ.plugins.notify('danger', '{{translate('The password is required and cannot be empty')}}');
                 return false;
@@ -219,6 +238,51 @@
 
             return false;
         });
+
+        // 发送邮箱验证码
+        var sendCodeTimer = null;
+        $( '#send_email_code' ).on( 'click', function ()
+        {
+            var btn = $( this );
+            if ( btn.hasClass( 'disabled' ) ) return;
+
+            var email = $( "input[name=email]" ).val().trim();
+            if ( email === '' ) {
+                AIZ.plugins.notify( 'danger', '{{translate('The email is required and cannot be empty')}}' );
+                return;
+            }
+
+            $.ajax( {
+                headers: { 'X-CSRF-TOKEN': AIZ.data.csrf },
+                method: 'POST',
+                url: '{{route('shops.send_verification_code')}}',
+                data: { email: email },
+                success: function ( res )
+                {
+                    if ( res.success ) {
+                        AIZ.plugins.notify( 'success', res.msg );
+                        var seconds = 60;
+                        btn.addClass( 'disabled' ).text( seconds + 's' );
+                        sendCodeTimer = setInterval( function ()
+                        {
+                            seconds--;
+                            if ( seconds <= 0 ) {
+                                clearInterval( sendCodeTimer );
+                                btn.removeClass( 'disabled' ).text( '{{translate('Send Code')}}' );
+                            } else {
+                                btn.text( seconds + 's' );
+                            }
+                        }, 1000 );
+                    } else {
+                        AIZ.plugins.notify( 'danger', res.msg );
+                    }
+                },
+                error: function ()
+                {
+                    AIZ.plugins.notify( 'danger', '{{translate('Request failed, please try again')}}' );
+                }
+            } );
+        } );
     });
 </script>
 @endsection

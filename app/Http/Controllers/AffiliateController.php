@@ -182,15 +182,9 @@ class AffiliateController extends Controller
 
                 auth()->login($user, false);
 
-                if ( get_setting('email_verification') != 1 )
-                {
-                    $user->email_verified_at = date('Y-m-d H:m:s');
-                    $user->save();
-                }
-                else
-                {
-                    event(new Registered($user));
-                }
+                // 联盟注册不再受邮箱验证开关影响，直接置为已验证
+                $user->email_verified_at = date('Y-m-d H:m:s');
+                $user->save();
             }
             else
             {

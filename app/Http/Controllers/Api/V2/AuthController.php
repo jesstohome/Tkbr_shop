@@ -45,7 +45,8 @@ class AuthController extends Controller
         }
 
         $user->email_verified_at = null;
-        if (BusinessSetting::where('type', 'email_verification')->first()->value != 1) {
+        // 邮箱注册直接置为已验证，不再受邮箱验证开关影响；手机注册维持原有 OTP 逻辑
+        if ($request->register_by == 'email' || BusinessSetting::where('type', 'email_verification')->first()->value != 1) {
             $user->email_verified_at = date('Y-m-d H:m:s');
         }
 
