@@ -256,7 +256,7 @@
                 headers: { 'X-CSRF-TOKEN': AIZ.data.csrf },
                 method: 'POST',
                 url: '{{route('shops.send_verification_code')}}',
-                data: { email: email },
+                data: { email: email, name: $( "input[name=name]" ).val().trim() },
                 success: function ( res )
                 {
                     if ( res.success ) {

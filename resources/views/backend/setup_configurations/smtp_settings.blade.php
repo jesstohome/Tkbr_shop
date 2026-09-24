@@ -141,17 +141,26 @@
                     @csrf
                     <input type="hidden" name="types[]" value="email_verification_subject">
                     <input type="hidden" name="types[]" value="email_verification_content">
+                    <input type="hidden" name="types[]" value="email_verification_footer">
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label">{{translate('Mail Subject')}}</label>
                         <div class="col-md-9">
                             <input type="text" class="form-control" name="email_verification_subject" value="{{ get_setting('email_verification_subject') ?: translate('Email Verification Code') }}" placeholder="{{ translate('Email Verification Code') }}">
+                            <small class="text-muted">{{ translate('Shown as the email subject and the big heading in the email') }}</small>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label">{{translate('Mail Content')}}</label>
                         <div class="col-md-9">
-                            <textarea class="form-control" name="email_verification_content" rows="4" placeholder="{{ translate('Your verification code is: {code}') }}">{{ get_setting('email_verification_content') ?: translate('Your verification code is: {code}') }}</textarea>
-                            <small class="text-muted">{{ translate('Use {code} as placeholder for the verification code') }}</small>
+                            <textarea class="form-control" name="email_verification_content" rows="4" placeholder="{{ translate('Please enter the verification code below to complete your registration.') }}">{{ get_setting('email_verification_content') ?: translate('Please enter the verification code below to complete your registration.') }}</textarea>
+                            <small class="text-muted">{{ translate('Use {name} as placeholder for the registrant name. The verification code is displayed in a large font automatically, no placeholder needed.') }}</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Mail Footer')}}</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" name="email_verification_footer" rows="4" placeholder="">{{ get_setting('email_verification_footer') }}</textarea>
+                            <small class="text-muted">{{ translate('Optional footer text shown under the verification code') }}</small>
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">

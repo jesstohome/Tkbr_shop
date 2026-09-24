@@ -149,7 +149,8 @@ class ShopController extends Controller
             // 邮箱验证开关开启时，注册前校验邮箱验证码
             if (get_setting('email_verification') == 1) {
                 $verification_code = $request->verification_code;
-                if (empty($verification_code) || Cache::get('shop_email_code:' . $request->email) != $verification_code) {
+                $cache_data = Cache::get('shop_email_code:' . $request->email);
+                if (empty($verification_code) || !is_array($cache_data) || empty($cache_data['code']) || $cache_data['code'] != $verification_code) {
                     if ($request->ajax()) return response()->json(['success' => 0, 'msg' => translate('Verification code error or expired!')]);
                     flash(translate('Verification code error or expired!'))->error();
                     return back();
@@ -401,21 +402,25 @@ class ShopController extends Controller
             return response()->json(['success' => 0, 'msg' => translate('Please wait 60 seconds before resending')]);
         }
 
+        $name = trim($request->name ?? '');
         $code = (string) rand(100000, 999999);
-        Cache::put('shop_email_code:' . $email, $code, 600);
+        Cache::put('shop_email_code:' . $email, ['code' => $code, 'name' => $name], 600);
         Cache::put('shop_email_code_cooldown:' . $email, 1, 60);
 
         $subject = get_email_verification_subject();
         $content = get_setting('email_verification_content');
-        if (empty($content)) $content = translate('Your verification code is: {code}');
-        $content = str_replace('{code}', $code, $content);
-        if (strpos($content, $code) === false) $content .= ' ' . $code;
+        if (empty($content)) $content = translate('Please enter the verification code below to complete your registration.');
+        // 验证码由模板大号展示，正文中不再内嵌；{name} 替换为注册人姓名
+        $content = str_replace(['{code}', '{name}'], ['', $name], $content);
+        $content = preg_replace('/\n{3,}/', "\n\n", $content);
 
         $array = [];
-        $array['view'] = 'emails.app_verification';
+        $array['view'] = 'emails.verification_code';
         $array['subject'] = $subject;
         $array['from'] = env('MAIL_FROM_ADDRESS');
         $array['content'] = $content;
+        $array['code'] = $code;
+        $array['footer'] = (string) get_setting('email_verification_footer');
 
         try {
             Mail::to($email)->send(new EmailManager($array));
