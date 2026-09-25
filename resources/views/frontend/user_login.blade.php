@@ -62,7 +62,7 @@
                                                 </label>
                                             </div>
                                             <div class="col-6 text-right">
-                                                <a href="{{ route('password.request') }}" class="text-reset opacity-60 fs-14">{{ translate('Forgot password?')}}</a>
+                                                <a href="{{ route('password.reset.page') }}" class="text-reset opacity-60 fs-14">{{ translate('Forgot password?')}}</a>
                                             </div>
                                         </div>
 

@@ -1029,6 +1029,15 @@ if (!function_exists('get_email_verification_subject')) {
     }
 }
 
+// 找回密码邮件标题：发送端与邮件拦截器共用
+if (!function_exists('get_email_reset_subject')) {
+    function get_email_reset_subject()
+    {
+        $subject = get_setting('email_reset_subject');
+        return empty($subject) ? translate('Password Reset') : $subject;
+    }
+}
+
 if (!function_exists('get_admin_setting')) {
     function get_admin_setting($key, $default = null, $lang = false)
     {

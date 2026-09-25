@@ -171,6 +171,43 @@
         </div>
         <div class="card">
             <div class="card-header">
+                <h5 class="mb-0 h6">{{translate('Password Reset Mail Settings')}}</h5>
+            </div>
+            <div class="card-body">
+                <form class="form-horizontal" action="{{ route('business_settings.update') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="types[]" value="email_reset_subject">
+                    <input type="hidden" name="types[]" value="email_reset_content">
+                    <input type="hidden" name="types[]" value="email_reset_footer">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Mail Subject')}}</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="email_reset_subject" value="{{ get_setting('email_reset_subject') ?: translate('Password Reset') }}" placeholder="{{ translate('Password Reset') }}">
+                            <small class="text-muted">{{ translate('Shown as the email subject and the big heading in the email') }}</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Mail Content')}}</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" name="email_reset_content" rows="4" placeholder="{{ translate('You are applying to reset your password, please enter the verification code below to set a new password.') }}">{{ get_setting('email_reset_content') ?: translate('You are applying to reset your password, please enter the verification code below to set a new password.') }}</textarea>
+                            <small class="text-muted">{{ translate('Use {name} as placeholder for the user name. The verification code is displayed in a large font automatically, no placeholder needed.') }}</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Mail Footer')}}</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" name="email_reset_footer" rows="4" placeholder="">{{ get_setting('email_reset_footer') }}</textarea>
+                            <small class="text-muted">{{ translate('Optional footer text shown under the reset button') }}</small>
+                        </div>
+                    </div>
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
                 <h5 class="mb-0 h6">{{translate('Instruction')}}</h5>
             </div>
             <div class="card-body">

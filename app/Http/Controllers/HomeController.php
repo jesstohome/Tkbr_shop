@@ -857,12 +857,10 @@ class HomeController extends Controller
                 }
                 return redirect()->route('home');
             } else {
-                flash("Password and confirm password didn't match")->warning();
-                return redirect()->route('password.request');
+                return back()->withInput()->withErrors(['password' => translate("Password and confirm password didn't match")]);
             }
         } else {
-            flash("Verification code mismatch")->error();
-            return redirect()->route('password.request');
+            return back()->withInput()->withErrors(['code' => translate('Verification code mismatch')]);
         }
     }
 

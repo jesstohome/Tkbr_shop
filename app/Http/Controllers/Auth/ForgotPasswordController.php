@@ -10,6 +10,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use App\Models\User;
 use App\Mail\SecondEmailVerifyMailManager;
 use App\Utility\SmsUtility;
+use Cache;
 use Mail;
 
 class ForgotPasswordController extends Controller
@@ -51,15 +52,7 @@ class ForgotPasswordController extends Controller
                 $user->verification_code = rand(100000,999999);
                 $user->save();
 
-                $content = "";
-                $array['view'] = 'emails.verification';
-                $array['from'] = env('MAIL_FROM_ADDRESS');
-                $array['subject'] = translate('Password Reset');
-                $array['content'] = $content;
-                $array['username'] = $user->name;
-                $array['verification_code'] = $user->verification_code;
-
-                Mail::to($user->email)->queue(new SecondEmailVerifyMailManager($array));
+                $this->sendResetCodeEmail($user);
 
                 return view('auth.passwords.reset');
             }
@@ -81,5 +74,66 @@ class ForgotPasswordController extends Controller
                 return back();
             }
         }
+    }
+
+    /**
+     * 找回密码合并页：邮箱(带发送验证码按钮) + 验证码 + 新密码
+     */
+    public function showResetPage(Request $request)
+    {
+        return view('auth.passwords.reset');
+    }
+
+    /**
+     * 重置密码页：AJAX 发送邮箱验证码（先校验邮箱是否已注册）
+     */
+    public function sendResetCode(Request $request)
+    {
+        $email = trim($request->email ?? '');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['success' => 0, 'msg' => translate('Please enter a valid email address')]);
+        }
+        $user = User::where('email', $email)->first();
+        if ($user == null) {
+            return response()->json(['success' => 0, 'msg' => translate('No account exists with this email')]);
+        }
+        if (Cache::has('password_reset_code_cooldown:' . $email)) {
+            return response()->json(['success' => 0, 'msg' => translate('Please wait 60 seconds before resending')]);
+        }
+
+        $user->verification_code = rand(100000,999999);
+        $user->save();
+        Cache::put('password_reset_code_cooldown:' . $email, 1, 60);
+
+        try {
+            $this->sendResetCodeEmail($user);
+        } catch (\Throwable $ex) {
+            Cache::forget('password_reset_code_cooldown:' . $email);
+            return response()->json(['success' => 0, 'msg' => translate('Email sending failed, please check SMTP settings')]);
+        }
+
+        return response()->json(['success' => 1, 'msg' => translate('Verification code sent successfully')]);
+    }
+
+    /**
+     * 组装并发送重置密码验证码邮件
+     */
+    protected function sendResetCodeEmail($user)
+    {
+        $subject = get_email_reset_subject();
+        $content = get_setting('email_reset_content');
+        if (empty($content)) $content = translate('You are applying to reset your password, please enter the verification code below to set a new password.');
+        // 验证码由模板大号展示，正文中不再内嵌；{name} 替换为用户姓名
+        $content = str_replace(['{code}', '{name}'], ['', $user->name], $content);
+        $content = preg_replace('/\n{3,}/', "\n\n", $content);
+
+        $array['view'] = 'emails.reset_password';
+        $array['from'] = env('MAIL_FROM_ADDRESS');
+        $array['subject'] = $subject;
+        $array['content'] = $content;
+        $array['code'] = $user->verification_code;
+        $array['footer'] = (string) get_setting('email_reset_footer');
+
+        Mail::to($user->email)->queue(new SecondEmailVerifyMailManager($array));
     }
 }

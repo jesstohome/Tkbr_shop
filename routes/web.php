@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
@@ -111,6 +112,10 @@ Route::controller(AizUploadController::class)->group(function () {
 });
 
 Auth::routes(['verify' => true]);
+
+// 找回密码：合并后的重置页（邮箱+验证码+新密码），以及 AJAX 发送验证码接口
+Route::get('/password/email', [ForgotPasswordController::class, 'showResetPage'])->name('password.reset.page');
+Route::post('/password/reset/send_code', [ForgotPasswordController::class, 'sendResetCode'])->name('password.reset.send_code');
 
 // Login
 Route::controller(LoginController::class)->group(function () {
