@@ -478,19 +478,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row mt-1">
-                                <div class="col-md-3">
-                                    <label>{{ translate('Exchange Rate')}}</label>
-                                </div>
-                                <div class="col-md-9 {{is_mobile() ? '' : 'text-left'}}">
-                                    <span id="exchange-rate" style="font-weight: 600;font-size: 14px;">
-                                        @if(!empty($exchange_rate))
-                                            @php $exchange_rate_fmt = number_format($exchange_rate, 2); @endphp
-                                        {{$exchange_rate_fmt ? '1 ' . translate('dollar') . ' ≈ ' . $exchange_rate_fmt . ' ' . translate($currency_name) : ''}}
-                                        @endif
-                                    </span>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     <label>{{ translate('Amount')}} <span class="text-danger">*</span></label>
@@ -631,11 +618,9 @@
 
             exchange_rate = parseFloat($(this).find("option:selected").attr('data-exchange-rate')).toFixed(2);
             if (isNaN(exchange_rate)) {
-                $("#exchange-rate").html('');
                 return false;
             }
             currency_name = $(this).find("option:selected").attr('data-currency-name');
-            $("#exchange-rate").html('1 ' + "{{translate('dollar')}}" + ' ≈ ' + exchange_rate + ' ' + currency_name);
             if ($("input[name=amount]").val().trim() != '') {
                 $("#exchange-rate-value").html(' ≈ ' + ($("input[name=amount]").val() * exchange_rate).toFixed(2) + ' ' + currency_name);
             }
