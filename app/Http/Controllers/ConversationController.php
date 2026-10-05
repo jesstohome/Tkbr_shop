@@ -132,17 +132,24 @@ class ConversationController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::findOrFail($request->product_id);
+        $product = Product::find($request->product_id);
 
         $add_by_admin = (int) $request->post('add_by_admin');
         $sender_id = $request->post('user_id', Auth::user()->id);
 
         $conversation = new Conversation;
-        $conversation->bloc_id = $product->bloc_id;
-        $conversation->staff_id = $product->staff_id;
+        if ($product) {
+            $conversation->bloc_id = $product->bloc_id;
+            $conversation->staff_id = $product->staff_id;
+            $conversation->product_id = $product->id;
+        } else {
+            // 订单消息场景：商品可能已删除或订单详情无商品（product_id 为 0），仍允许发送
+            $conversation->bloc_id = Auth::user()->bloc_id ?? 0;
+            $conversation->staff_id = get_staff_id() ?: 0;
+            $conversation->product_id = 0;
+        }
         $conversation->sender_id = $sender_id;
-        $conversation->receiver_id = $request->post('receiver_id', $product->user_id);
-        $conversation->product_id = $product->id;
+        $conversation->receiver_id = $request->post('receiver_id', $product ? $product->user_id : 0);
         $conversation->title = $request->title;
         $conversation->add_by_admin = $add_by_admin;
 
@@ -153,17 +160,20 @@ class ConversationController extends Controller
             $message->message = $request->message;
 
             if ($message->save()) {
+                $tip_staff_id = $product ? $product->staff_id : $conversation->staff_id;
+                $tip_user_id = $product ? $product->user_id : $conversation->receiver_id;
+
                 // 行政后台红点
-                hset_plus('new_pos_conversation_tip', $conversation->id, 1, $product->staff_id, $product->user_id);
+                hset_plus('new_pos_conversation_tip', $conversation->id, 1, $tip_staff_id, $tip_user_id);
                 if (!$add_by_admin) {
                     // 卖家端红点
-                    hset_plus('new_conversation_tip', $conversation->id, 1, $product->staff_id, $product->user_id);
+                    hset_plus('new_conversation_tip', $conversation->id, 1, $tip_staff_id, $tip_user_id);
                 }
 
                 broadcast(new RedPointerTips([
                     'new_conversations' => 1,
                     'newAudio' => 1,
-                ], $product->user_id))->toOthers();
+                ], $tip_user_id))->toOthers();
             }
         }
 
