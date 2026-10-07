@@ -157,24 +157,65 @@ class CjCollectController extends Controller
             return response()->json(['success' => false, 'message' => '参数不完整'], 400);
         }
 
+        $result = $this->importOne($pid, $categoryId);
+        return response()->json($result, $result['success'] ? 200 : 400);
+    }
+
+    /**
+     * 批量导入：勾选多个商品 + 一个分类，逐个导入
+     */
+    public function batchImport(Request $request)
+    {
+        set_time_limit(0);
+
+        $pids = $request->pids ?? [];
+        $categoryId = $request->category_id;
+
+        if (empty($categoryId)) {
+            return response()->json(['success' => false, 'message' => '参数不完整'], 400);
+        }
+        if (empty($pids) || !is_array($pids)) {
+            return response()->json(['success' => false, 'message' => '请选择要导入的商品'], 400);
+        }
+
+        $successCount = 0;
+        $failList = [];
+        foreach ($pids as $pid) {
+            $result = $this->importOne($pid, $categoryId);
+            if ($result['success']) {
+                $successCount++;
+            } else {
+                $failList[] = $pid . ': ' . $result['message'];
+            }
+        }
+
+        return response()->json([
+            'success' => $successCount > 0,
+            'message' => sprintf('成功导入 %d 个%s', $successCount, empty($failList) ? '' : ',失败 ' . count($failList) . ' 个'),
+            'fails' => $failList,
+        ]);
+    }
+
+    private function importOne($pid, $categoryId)
+    {
         $category = Category::find($categoryId);
         if (!$category) {
-            return response()->json(['success' => false, 'message' => '分类不存在'], 400);
+            return ['success' => false, 'message' => '分类不存在'];
         }
 
         // Check if already imported
         $exists = Product::where('barcode', $pid)->where('added_by', 'admin')->first();
         if ($exists) {
-            return response()->json(['success' => false, 'message' => '该商品已导入过 (ID: ' . $exists->id . ')'], 400);
+            return ['success' => false, 'message' => '该商品已导入过 (ID: ' . $exists->id . ')'];
         }
 
         // Get product detail
         $detail = $this->apiGet('/product/query', ['pid' => $pid]);
         if (isset($detail['error'])) {
-            return response()->json(['success' => false, 'message' => $detail['error']], 500);
+            return ['success' => false, 'message' => $detail['error']];
         }
         if (empty($detail['data'])) {
-            return response()->json(['success' => false, 'message' => '获取商品详情失败'], 500);
+            return ['success' => false, 'message' => '获取商品详情失败'];
         }
 
         $productData = $detail['data'];
@@ -247,9 +288,12 @@ class CjCollectController extends Controller
 
             $basePrice = $productData['sellPrice'] ?? 0;
 
+            // 商品名称：详情接口字段兼容多种命名，兜底用 CJ 商品 ID
+            $productName = $productData['nameEn'] ?? $productData['name'] ?? $productData['productNameEn'] ?? $productData['productName'] ?? ('CJ-' . $pid);
+
             // Create product
             $product = new Product;
-            $product->name = $productData['nameEn'] ?? $productData['name'] ?? '';
+            $product->name = $productName;
             $product->added_by = 'admin';
             $product->user_id = Auth::user()->id;
             $product->category_id = $category->id;
@@ -271,7 +315,7 @@ class CjCollectController extends Controller
             $product->external_link = null;
             $product->external_link_btn = null;
             $product->description = $description;
-            $product->meta_title = $productData['nameEn'] ?? $productData['name'] ?? '';
+            $product->meta_title = $productName;
             $product->meta_description = substr(strip_tags($description), 0, 200);
             $product->meta_img = $thumbnailId;
             $product->shipping_type = 'free';
@@ -279,7 +323,7 @@ class CjCollectController extends Controller
             $product->stock_visibility_state = 'quantity';
             $product->cash_on_delivery = 1;
             $product->est_shipping_days = 3;
-            $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($product->name))) . '-' . Str::random(5);
+            $product->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($productName))) . '-' . Str::random(5);
             $product->approved = 1;
             $product->published = 0;
             $product->source = 'cjdropshipping';
@@ -299,7 +343,8 @@ class CjCollectController extends Controller
                     $stock->variant = $variant['variantNameEn'] ?? $variant['variant'] ?? '';
                     $stock->price = $variant['sellPrice'] ?? $variant['variantSellPrice'] ?? $basePrice;
                     $stock->sku = $variant['variantSku'] ?? $variant['sku'] ?? '';
-                    $stock->qty = $variant['stock'] ?? $variant['inventory'] ?? rand(100, 500);
+                    // 导入库存统一固定 9999，不再使用 CJ 接口库存值
+                    $stock->qty = 9999;
                     $stock->image = $thumbnailId;
                     $stock->save();
                     $totalStock += $stock->qty;
@@ -309,7 +354,8 @@ class CjCollectController extends Controller
                     $product->current_stock = $totalStock;
                 }
             } else {
-                $totalStock = $productData['warehouseInventoryNum'] ?? rand(100, 500);
+                // 导入库存统一固定 9999，不再使用 CJ 接口库存值
+                $totalStock = 9999;
                 $stock = new ProductStock;
                 $stock->product_id = $product->id;
                 $stock->variant = '';
@@ -324,15 +370,15 @@ class CjCollectController extends Controller
 
             DB::commit();
 
-            return response()->json([
+            return [
                 'success'     => true,
                 'message'     => '导入成功',
                 'product_id'  => $product->id,
                 'product_url' => route('products.admin'),
-            ]);
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => '导入失败: ' . $e->getMessage()], 500);
+            return ['success' => false, 'message' => '导入失败: ' . $e->getMessage()];
         }
     }
 
@@ -349,8 +395,13 @@ class CjCollectController extends Controller
                 $ext = 'jpg';
             }
 
-            $dir = 'uploads/cj/' . date('Ymd') . '/' . time() . '_' . mt_rand(100, 999) . '.' . $ext;
-            Storage::disk('public')->put($dir, $content);
+            // 直接写入 public/uploads/cj/，与全站其它图片一致，不依赖 storage 软链
+            $relativePath = 'uploads/cj/' . date('Ymd') . '/' . time() . '_' . mt_rand(100, 999) . '.' . $ext;
+            $fullPath = public_path($relativePath);
+            if (!is_dir(dirname($fullPath))) {
+                mkdir(dirname($fullPath), 0777, true);
+            }
+            file_put_contents($fullPath, $content);
 
             $upload = new Upload;
             $upload->user_id = Auth::user()->id ?? 1;
@@ -358,7 +409,7 @@ class CjCollectController extends Controller
             $upload->extension = $ext;
             $upload->type = 'image';
             $upload->file_original_name = basename($url);
-            $upload->file_name = $dir;
+            $upload->file_name = $relativePath;
             $upload->save();
 
             return $upload->id;

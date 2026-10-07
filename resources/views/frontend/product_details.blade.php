@@ -43,27 +43,31 @@
                     <div class="col-xl-5 col-lg-6 mb-4">
                         <div class="sticky-top z-3 row gutters-10">
                             @php
-                                $photos = explode(',', $detailedProduct->photos);
+                                // photos 为空字符串时 explode 会得到 ['']，过滤掉空元素，避免第一张图为空
+                                $photos = array_filter(explode(',', $detailedProduct->photos));
                             @endphp
                             <div class="col order-1 order-md-2">
                                 <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb'
                                     data-fade='true' data-auto-height='true'>
+                                    @php $mainGalleryIndex = 0; @endphp
                                     @foreach ($photos as $key => $photo)
                                         <div class="carousel-box img-zoom rounded">
-                                            <img class="img-fluid lazyload"
-                                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                            <img class="img-fluid {{ $mainGalleryIndex == 0 ? '' : 'lazyload' }}"
+                                                src="{{ $mainGalleryIndex == 0 ? uploaded_asset($photo) : static_asset('assets/img/placeholder.jpg') }}"
                                                 data-src="{{ uploaded_asset($photo) }}"
                                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                         </div>
+                                        @php $mainGalleryIndex++; @endphp
                                     @endforeach
                                     @foreach ($detailedProduct->stocks as $key => $stock)
                                         @if ($stock->image != null)
                                             <div class="carousel-box img-zoom rounded">
-                                                <img class="img-fluid lazyload"
-                                                    src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                                <img class="img-fluid {{ $mainGalleryIndex == 0 ? '' : 'lazyload' }}"
+                                                    src="{{ $mainGalleryIndex == 0 ? uploaded_asset($stock->image) : static_asset('assets/img/placeholder.jpg') }}"
                                                     data-src="{{ uploaded_asset($stock->image) }}"
                                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                             </div>
+                                            @php $mainGalleryIndex++; @endphp
                                         @endif
                                     @endforeach
                                 </div>

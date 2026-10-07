@@ -408,7 +408,10 @@ class HomeController extends Controller
     {
         $detailedProduct = Product::with('reviews', 'brand', 'stocks', 'user', 'user.shop')->where('auction_product', 0)->where('slug', $slug)->where('approved', 1)->first();
 
-        if ($detailedProduct != null && $detailedProduct->published) {
+        // 管理员/员工可预览未上架商品（买家仍只看到已上架商品）
+        $canPreview = Auth::check() && in_array(Auth::user()->user_type, ['admin', 'staff', 'salesman']);
+
+        if ($detailedProduct != null && ($detailedProduct->published || $canPreview)) {
             $product_queries = ProductQuery::where('product_id', $detailedProduct->id)->where('customer_id', '!=', Auth::id())->latest('id')->paginate(10);
             $total_query = ProductQuery::where('product_id', $detailedProduct->id)->count();
             // Pagination using Ajax

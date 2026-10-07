@@ -100,6 +100,7 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
         Route::get('/cj-collect', 'index')->name('cj.collect.index');
         Route::post('/cj-collect/search', 'search')->name('cj.collect.search');
         Route::post('/cj-collect/import', 'import')->name('cj.collect.import');
+        Route::post('/cj-collect/batch-import', 'batchImport')->name('cj.collect.batch_import');
     });
 
     // Brand

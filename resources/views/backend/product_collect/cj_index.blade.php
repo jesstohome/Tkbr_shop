@@ -73,6 +73,15 @@
         </div>
 
         <div id="results-container" style="display:none;">
+            <div class="d-flex align-items-center mb-2">
+                <label class="mb-0 mr-3" style="cursor:pointer;">
+                    <input type="checkbox" id="select-all"> {{ translate('Select All') }}
+                </label>
+                <span class="text-muted mr-2" id="selected-count"></span>
+                <button type="button" class="btn btn-sm btn-success" id="batch-import-btn">
+                    <i class="las la-download"></i> {{ translate('Batch Import') }}
+                </button>
+            </div>
             <div class="row gutters-5" id="product-list"></div>
 
             <div class="mt-4 text-center" id="pagination"></div>
@@ -83,7 +92,7 @@
 
 <!-- Import Modal -->
 <div class="modal fade" id="import-modal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{{ translate('Import Product') }}</h5>
@@ -93,7 +102,7 @@
                 <input type="hidden" id="import-pid">
                 <div class="form-group">
                     <label>{{ translate('Select Category') }} <span class="text-danger">*</span></label>
-                    <select class="form-control aiz-selectpicker" data-live-search="true" id="import-category">
+                    <select class="form-control" id="import-category" size="12">
                         <option value="">{{ translate('Choose a category') }}</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->getTranslation('name') }}</option>
@@ -137,7 +146,8 @@
             if (name.length > 80) name = name.substring(0, 80) + '...';
 
             html += '<div class="col-xxl-2 col-xl-3 col-lg-4 col-md-6 mb-3">' +
-                '<div class="border rounded h-100 bg-white d-flex flex-column">' +
+                '<div class="border rounded h-100 bg-white d-flex flex-column position-relative">' +
+                    '<input type="checkbox" class="product-check" value="' + p.pid + '" style="position:absolute;top:8px;left:8px;z-index:2;width:18px;height:18px;">' +
                     '<a href="' + (p.image || '') + '" target="_blank">' +
                         '<img src="' + (p.image || '{{ static_asset("assets/img/placeholder.jpg") }}') + '" ' +
                              'class="w-100" style="height:180px;object-fit:cover;" ' +
@@ -161,7 +171,36 @@
             '</div>';
         });
         $('#product-list').html(html);
+        $('#select-all').prop('checked', false);
+        updateSelectedCount();
     }
+
+    function updateSelectedCount() {
+        var n = $('.product-check:checked').length;
+        $('#selected-count').text(n > 0 ? ('{{ translate("Selected") }}: ' + n) : '');
+        $('#batch-import-btn').text(n > 0 ? ('{{ translate("Batch Import") }} (' + n + ')') : '{{ translate("Batch Import") }}');
+    }
+
+    $('#select-all').on('change', function () {
+        var checked = $(this).prop('checked');
+        $('.product-check').prop('checked', checked);
+        updateSelectedCount();
+    });
+
+    $(document).on('change', '.product-check', function () {
+        updateSelectedCount();
+    });
+
+    var isBatchMode = false;
+    $('#batch-import-btn').on('click', function () {
+        var pids = $('.product-check:checked').map(function () { return this.value; }).get();
+        if (!pids.length) {
+            AIZ.plugins.notify('warning', '{{ translate("Please select products first") }}');
+            return;
+        }
+        isBatchMode = true;
+        $('#import-modal').modal('show');
+    });
 
     function renderPagination(page, pages, total) {
         $('#result-count').text('{{ translate("Total") }}: ' + total);
@@ -242,7 +281,6 @@
     }
 
     $('#confirm-import').on('click', function() {
-        var pid = $('#import-pid').val();
         var categoryId = $('#import-category').val();
 
         if (!categoryId) {
@@ -253,6 +291,43 @@
         var btn = $(this);
         btn.prop('disabled', true).text('{{ translate("Importing...") }}');
 
+        // 批量导入
+        if (isBatchMode) {
+            var pids = $('.product-check:checked').map(function () { return this.value; }).get();
+            $.ajax({
+                url: '{{ route("cj.collect.batch_import") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    pids: pids,
+                    category_id: categoryId,
+                },
+                success: function(resp) {
+                    if (resp.success) {
+                        AIZ.plugins.notify('success', resp.message);
+                        if (resp.fails && resp.fails.length) {
+                            AIZ.plugins.notify('warning', resp.fails.join('; ').substring(0, 800));
+                        }
+                        $('#import-modal').modal('hide');
+                        isBatchMode = false;
+                        location.reload();
+                    } else {
+                        AIZ.plugins.notify('danger', resp.message);
+                    }
+                },
+                error: function(xhr) {
+                    var msg = xhr.responseJSON?.message || '{{ translate("Import failed") }}';
+                    AIZ.plugins.notify('danger', msg);
+                },
+                complete: function() {
+                    btn.prop('disabled', false).text('{{ translate("Import") }}');
+                }
+            });
+            return;
+        }
+
+        // 单个导入
+        var pid = $('#import-pid').val();
         $.ajax({
             url: '{{ route("cj.collect.import") }}',
             type: 'POST',

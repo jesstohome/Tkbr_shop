@@ -145,15 +145,14 @@
                                 if($product->variant_product) {
                                     foreach ($product->stocks as $key => $stock) {
                                         $qty += $stock->qty;
-                                        echo $stock->variant.' - '.$stock->qty.'<br>';
                                     }
                                 }
                                 else {
                                     //$qty = $product->current_stock;
                                     $qty = optional($product->stocks->first())->qty;
-                                    echo $qty;
                                 }
                             @endphp
+                            {{ $qty }}
                             @if($qty <= $product->low_stock_quantity)
                                 <span class="badge badge-inline badge-danger">Low</span>
                             @endif
