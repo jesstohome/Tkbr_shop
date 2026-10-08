@@ -23,6 +23,13 @@
                 </div>
 
                 <div class="form-group row mb-3">
+                    <label class="col-sm-3 control-label" for="name">套餐名称</label>
+                    <div class="col-sm-9">
+                        <input type="text" placeholder="套餐名称(留空则自动)" id="name" name="name" class="form-control" value="{{$row->name}}">
+                    </div>
+                </div>
+
+                <div class="form-group row mb-3">
                     <label class="col-sm-3 control-label" for="products">{{translate('Products')}}</label>
                     <div class="col-sm-9 products-selector">
                         <select name="product_ids[]" id="product_ids" class="form-control aiz-selectpicker" multiple required data-placeholder="{{ translate('Choose Products') }}" data-live-search="true" data-selected-text-format="count">

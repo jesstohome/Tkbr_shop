@@ -677,8 +677,10 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
     Route::controller(ProductSetMealController::class)->group(function () {
         Route::get('/product_set_meal/edit/{id}', 'edit')->name('product_set_meal.edit');
         Route::get('/product_set_meal/destroy/{id}', 'destroy')->name('product_set_meal.destroy');
+        Route::post('/product_set_meal/bulk-delete', 'bulk_delete')->name('product_set_meal.bulk_delete');
         Route::post('/product_set_meal/products', 'products')->name('product_set_meal.products');
         Route::get('/product_set_meal_get_has_nums', 'get_has_nums')->name('product_set_meal.get_has_nums');
+        Route::get('/product_set_meal_get_category_product_count', 'get_category_product_count')->name('product_set_meal.get_category_product_count');
     });
 
     Route::resource('/huashu_group', TicketHuaShuGroupController::class);

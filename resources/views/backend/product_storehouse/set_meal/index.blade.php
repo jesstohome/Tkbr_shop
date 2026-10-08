@@ -45,18 +45,17 @@
                 <thead>
                     <tr>
                         <th>
-                            <div class="form-group">
-                                <div class="aiz-checkbox-inline">
-                                    <label class="aiz-checkbox">
-                                        <input type="checkbox" class="check-all">
-                                        <span class="aiz-square-check"></span>
-                                    </label>
-                                </div>
+                            <div class="d-flex align-items-center" style="gap:16px;">
+                                <input type="checkbox" class="check-all" style="width:16px;height:16px;flex-shrink:0;margin:0;">
+                                <a href="#" id="bulk_delete" class="btn btn-soft-danger btn-icon btn-circle btn-sm" title="{{ translate('Delete selection') }}">
+                                    <i class="las la-trash"></i>
+                                </a>
                             </div>
                         </th>
                         <th>{{translate('Name')}}</th>
+                        <th data-breakpoints="md">生成类型</th>
                         <th data-breakpoints="md">{{translate('Number of times added')}}</th>
-                        <th data-breakpoints="lg">{{translate('Total Product Range')}}</th>
+                        <th data-breakpoints="lg">产品范围</th>
                         <th data-breakpoints="lg">{{translate('Total Products In Storehouse')}}</th>
                         <th data-breakpoints="lg">{{translate('Not Added Total Products')}}</th>
                         <th data-breakpoints="lg">{{translate('Total Products')}}</th>
@@ -87,8 +86,25 @@
                                 </div>
                             </div>
                         </td>
+                        <td>
+                            @if($row->gen_type == 2)
+                                <span class="badge badge-inline badge-primary">价格区间</span>
+                            @elseif($row->gen_type == 3)
+                                <span class="badge badge-inline badge-info">排序区间</span>
+                            @else
+                                <span class="badge badge-inline badge-success">随机</span>
+                            @endif
+                        </td>
                         <td>{{$row->added_times}}</td>
-                        <td>{{$row->min_product_num}} ~ {{$row->max_product_num}}</td>
+                        <td>
+                            @if($row->gen_type == 2)
+                                ${{$row->range_from}} ~ ${{$row->range_to}}
+                            @elseif($row->gen_type == 3)
+                                第{{$row->range_from}} ~ {{$row->range_to}}个
+                            @else
+                                {{$row->min_product_num}} ~ {{$row->max_product_num}}
+                            @endif
+                        </td>
                         <td>{{\App\Models\Product::query()->where("category_id", $row->category_id)->where("in_storehouse", 1)->count()}}</td>
                         <td>{{$row->uninclude_product_total}}</td>
                         <td>{{count(is_string($row->product_ids) ? json_decode($row->product_ids, true) : $row->product_ids)}}</td>
@@ -136,6 +152,35 @@
                 });
             }
 
+        });
+
+        // 批量删除(事件委托,兼容表格插件克隆表头)
+        $(document).on('click', '#bulk_delete', function (e) {
+            e.preventDefault();
+            var ids = [];
+            $('.check-one:checked').each(function () {
+                ids.push($(this).val());
+            });
+            if (!ids.length) {
+                AIZ.plugins.notify('warning', '{{ translate("Please select items") }}');
+                return;
+            }
+            if (!confirm('{{ translate("Are you sure to delete selected items?") }}')) {
+                return;
+            }
+            $.post('{{ route("product_set_meal.bulk_delete") }}', {
+                _token: '{{ csrf_token() }}',
+                ids: ids
+            }, function (data) {
+                if (data == 1) {
+                    AIZ.plugins.notify('success', '{{ translate("Deleted successfully") }}');
+                    setTimeout(function () { location.reload(); }, 500);
+                } else {
+                    AIZ.plugins.notify('danger', '{{ translate("Something went wrong") }}');
+                }
+            }).fail(function (xhr) {
+                AIZ.plugins.notify('danger', '请求失败(' + xhr.status + '),请检查路由是否已部署');
+            });
         });
 
         function sort_products(el){
