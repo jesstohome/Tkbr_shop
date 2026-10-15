@@ -574,11 +574,17 @@ class PosController extends Controller
                 foreach($seller_products as $key => $seller_product){
                     try {
                         $seller = User::find($key);
-                        $array['view'] = 'emails.new_order';
-                        $array['subject'] = 'New Order Notice';
+                        $content = get_setting('email_order_notice_content');
+                        if (empty($content)) {
+                            $content = "Dear seller: {name},\n\nThere is a new order in your store, please log in to your store background to view the details.\n\nProcessing orders in a more timely manner can increase the weight of stores to obtain more traffic distribution.";
+                        }
+                        $content = str_replace(['{name}', '{url}'], [$seller->name, env('APP_URL')], $content);
+
+                        $array['view'] = 'emails.new_order_notice';
+                        $array['subject'] = get_email_order_notice_subject();
                         $array['from'] = env('MAIL_FROM_ADDRESS');
-                        $array['content'] = '';
-                        $array['seller_name'] = $seller->name;
+                        $array['content'] = $content;
+                        $array['footer'] = (string) get_setting('email_order_notice_footer');
 
                         $task = new EmailTask();
                         $task->email = $seller->email;

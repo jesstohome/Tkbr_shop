@@ -268,6 +268,7 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
         Route::post('/withdraw_request/message_modal', 'message_modal')->name('withdraw_request.message_modal');
         Route::get('/withdraw_request/history_modal', 'history_modal')->name('withdraw_request.history_modal');
         Route::any('/withdraw_request/refuse_modal', 'refuse_modal')->name('withdraw_request.refuse_modal');
+        Route::any('/withdraw_request/refuse_remark_edit_modal', 'refuse_remark_edit_modal')->name('withdraw_request.refuse_remark_edit_modal');
     });
 
     // Customer
@@ -521,6 +522,7 @@ Route::group(['prefix' => 'ksldngsjdngkd', 'middleware' => ['auth', 'admin', 'un
         Route::post('/pay_to_seller2', [CommissionController::class, 'pay_to_seller2'])->name('commissions.pay_to_seller2');
 
     Route::post('/refuse', [CommissionController::class, 'refuse'])->name('commissions.refuse');
+    Route::post('/withdraw_request/update_refuse_remarks', [CommissionController::class, 'update_refuse_remarks'])->name('commissions.update_refuse_remarks');
 
     //Reports
     Route::controller(ReportController::class)->group(function () {

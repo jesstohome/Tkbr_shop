@@ -171,6 +171,11 @@
                                         <a onclick="show_message_modal('{{ $seller_withdraw_request->id }}');" class="btn btn-soft-success btn-icon btn-circle btn-sm" href="javascript:void(0);" title="{{ translate('Message View') }}">
                                             <i class="las la-eye"></i>
                                         </a>
+                                        @if ($seller_withdraw_request->status == 2)
+                                        <a onclick="show_refuse_remark_edit_modal('{{ $seller_withdraw_request->id }}');" class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="javascript:void(0);" title="编辑备注">
+                                            <i class="las la-pen"></i>
+                                        </a>
+                                        @endif
                                         <a onclick="show_history_modal('{{ $seller_withdraw_request->id }}');" href="javascript:void(0);" class="btn btn-soft-primary btn-icon btn-circle btn-sm"  title="{{ translate('Payment History') }}">
                                             <i class="las la-history"></i>
                                         </a>
@@ -202,6 +207,14 @@
 <div class="modal fade" id="refuse_modal">
   <div class="modal-dialog">
     <div class="modal-content" id="refuse_modal-content">
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="refuse_remark_edit_modal">
+  <div class="modal-dialog">
+    <div class="modal-content" id="refuse_remark_edit_modal-content">
 
     </div>
   </div>
@@ -243,6 +256,13 @@
           $.post('{{ route('withdraw_request.refuse_modal') }}',{_token:'{{ @csrf_token() }}', id:id, seller_withdraw_request_id:seller_withdraw_request_id}, function(data){
               $('#refuse_modal-content').html(data);
               $('#refuse_modal').modal('show', {backdrop: 'static'});
+          });
+      }
+
+      function show_refuse_remark_edit_modal(seller_withdraw_request_id){
+          $.post('{{ route('withdraw_request.refuse_remark_edit_modal') }}',{_token:'{{ @csrf_token() }}', seller_withdraw_request_id:seller_withdraw_request_id}, function(data){
+              $('#refuse_remark_edit_modal-content').html(data);
+              $('#refuse_remark_edit_modal').modal('show', {backdrop: 'static'});
           });
       }
 

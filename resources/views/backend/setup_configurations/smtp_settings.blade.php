@@ -132,6 +132,8 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div class="col-md-6">
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{translate('Email Verification Mail Settings')}}</h5>
@@ -169,6 +171,8 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div class="col-md-6">
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{translate('Password Reset Mail Settings')}}</h5>
@@ -206,6 +210,47 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0 h6">新订单邮件设置</h5>
+            </div>
+            <div class="card-body">
+                <form class="form-horizontal" action="{{ route('business_settings.update') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="types[]" value="email_order_notice_subject">
+                    <input type="hidden" name="types[]" value="email_order_notice_content">
+                    <input type="hidden" name="types[]" value="email_order_notice_footer">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">邮件主题</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="email_order_notice_subject" value="{{ get_setting('email_order_notice_subject') ?: 'New Order Notice' }}" placeholder="New Order Notice">
+                            <small class="text-muted">同时作为邮件标题和邮件内大标题显示</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">邮件正文</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" name="email_order_notice_content" rows="6" placeholder="Dear seller: {name}...">{{ get_setting('email_order_notice_content') }}</textarea>
+                            <small class="text-muted">{name} 会替换为卖家姓名,{url} 会替换为店铺前台地址</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">邮件页脚</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" name="email_order_notice_footer" rows="3" placeholder="">{{ get_setting('email_order_notice_footer') }}</textarea>
+                            <small class="text-muted">选填,显示在深蓝色页脚区域</small>
+                        </div>
+                    </div>
+                    <div class="form-group mb-0 text-right">
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
         <div class="card">
             <div class="card-header">
                 <h5 class="mb-0 h6">{{translate('Instruction')}}</h5>

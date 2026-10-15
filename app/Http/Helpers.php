@@ -1038,6 +1038,15 @@ if (!function_exists('get_email_reset_subject')) {
     }
 }
 
+// 新订单通知邮件标题：发送端与邮件拦截器共用
+if (!function_exists('get_email_order_notice_subject')) {
+    function get_email_order_notice_subject()
+    {
+        $subject = get_setting('email_order_notice_subject');
+        return empty($subject) ? 'New Order Notice' : $subject;
+    }
+}
+
 if (!function_exists('get_admin_setting')) {
     function get_admin_setting($key, $default = null, $lang = false)
     {

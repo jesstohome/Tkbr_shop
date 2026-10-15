@@ -65,6 +65,23 @@ class CommissionController extends Controller
         }
     }
 
+    /**
+     * 修改已拒绝提现申请的备注(不改变状态、不重复退款)
+     */
+    public function update_refuse_remarks(Request $request)
+    {
+        $withdrawRequest = SellerWithdrawRequest::find($request->withdraw_request_id);
+        if (!$withdrawRequest) {
+            flash('记录不存在')->error();
+            return back();
+        }
+        $withdrawRequest->remarks = $request->remarks;
+        $withdrawRequest->save();
+
+        flash('备注已更新')->success();
+        return back();
+    }
+
     public function refuse234(Request $request){
         $withdrawRequest = SellerWithdrawRequest::find($request->withdraw_request_id);
 

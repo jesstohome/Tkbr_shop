@@ -211,6 +211,13 @@ class SellerWithdrawRequestController extends Controller
         return view('backend.sellers.seller_withdraw_requests.refuse_modal', compact('user','seller_withdraw_request','id'));
     }
 
+    public function refuse_remark_edit_modal(Request $request)
+    {
+        $seller_withdraw_request = SellerWithdrawRequest::findOrFail($request->seller_withdraw_request_id);
+        $id = $seller_withdraw_request->id;
+        return view('backend.sellers.seller_withdraw_requests.refuse_remark_edit_modal', compact('seller_withdraw_request','id'));
+    }
+
     public function message_modal(Request $request)
     {
         $seller_withdraw_request = SellerWithdrawRequest::findOrFail($request->id);
